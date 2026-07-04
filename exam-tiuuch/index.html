@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מבחן רישוי תיווך נדל"ן</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a1a2e; direction: rtl; }
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+  
+  /* Header */
+  .header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 30px; border-radius: 16px; text-align: center; margin-bottom: 24px; }
+  .header h1 { font-size: 26px; margin-bottom: 8px; }
+  .header p { font-size: 15px; opacity: 0.85; }
+  
+  /* Progress */
+  .progress-bar { background: #e2e8f0; border-radius: 10px; height: 12px; margin-bottom: 8px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, #0f3460, #e94560); height: 100%; border-radius: 10px; transition: width 0.4s ease; }
+  .progress-text { font-size: 13px; color: #666; margin-bottom: 20px; text-align: center; }
+  
+  /* Question card */
+  .card { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .law-badge { display: inline-block; background: #e8f4fd; color: #0f3460; font-size: 12px; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; font-weight: 600; }
+  .question-text { font-size: 19px; font-weight: 700; line-height: 1.6; margin-bottom: 20px; }
+  .question-num { font-size: 13px; color: #999; margin-bottom: 6px; }
+  
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option-btn { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 16px; text-align: right; cursor: pointer; transition: all 0.2s; font-family: inherit; direction: rtl; width: 100%; }
+  .option-btn:hover:not(:disabled) { background: #e8f4fd; border-color: #0f3460; }
+  .option-btn.correct { background: #d1fae5; border-color: #059669; color: #065f46; font-weight: 700; }
+  .option-btn.wrong { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+  .option-btn:disabled { cursor: default; }
+  
+  /* Explanation */
+  .explanation { margin-top: 16px; background: #f0fdf4; border-right: 4px solid #059669; padding: 14px 16px; border-radius: 8px; font-size: 14px; line-height: 1.6; display: none; }
+  .explanation.show { display: block; }
+  .explanation.wrong-exp { background: #fff7ed; border-color: #f97316; }
+  
+  /* Next btn */
+  .next-btn { background: linear-gradient(135deg, #0f3460, #e94560); color: white; border: none; padding: 14px 32px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 16px; width: 100%; display: none; font-family: inherit; transition: opacity 0.2s; }
+  .next-btn:hover { opacity: 0.9; }
+  .next-btn.show { display: block; }
+  
+  /* Results */
+  .results { background: white; border-radius: 16px; padding: 32px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 20px auto; font-size: 42px; font-weight: 900; }
+  .pass { background: #d1fae5; color: #065f46; border: 6px solid #059669; }
+  .fail { background: #fee2e2; color: #991b1b; border: 6px solid #dc2626; }
+  .result-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .result-subtitle { font-size: 16px; color: #666; margin-bottom: 24px; }
+  
+  /* Mistakes review */
+  .mistakes-section { text-align: right; margin-top: 28px; }
+  .mistakes-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+  .mistake-item { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .mistake-q { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+  .mistake-your { color: #dc2626; font-size: 14px; margin-bottom: 4px; }
+  .mistake-correct { color: #059669; font-size: 14px; margin-bottom: 6px; font-weight: 700; }
+  .mistake-explain { font-size: 13px; color: #555; background: #fff; padding: 8px; border-radius: 8px; line-height: 1.6; }
+  
+  /* Retry btn */
+  .retry-btn { background: linear-gradient(135deg, #0f3460, #e94560); color: white; border: none; padding: 16px 40px; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 24px; font-family: inherit; }
+  .retry-btn:hover { opacity: 0.9; }
+  
+  /* Start screen */
+  .start-screen { background: white; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .start-screen h2 { font-size: 22px; margin-bottom: 16px; }
+  .start-screen p { color: #555; margin-bottom: 10px; line-height: 1.7; }
+  .start-btn { background: linear-gradient(135deg, #0f3460, #e94560); color: white; border: none; padding: 18px 50px; border-radius: 14px; font-size: 20px; font-weight: 700; cursor: pointer; margin-top: 24px; font-family: inherit; }
+  
+  @media (max-width: 480px) {
+    .question-text { font-size: 16px; }
+    .option-btn { font-size: 14px; padding: 12px 14px; }
+    .header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🏠 מבחן רישוי תיווך נדל"ן</h1>
+    <p>25 שאלות אקראיות | ציון עובר: 60 | בסגנון מבחן רשם המתווכים</p>
+  </div>
+  
+  <div id="app"></div>
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  { id:1, law:"חוק המתווכים", q:"מהו התנאי העיקרי לקבלת רישיון תיווך במקרקעין לפי חוק המתווכים?", opts:["גיל מינימום 21 ועמידה בבחינת רישוי","גיל מינימום 18 ועמידה בבחינת רישוי","תואר ראשון בנדל\"ן","5 שנות ניסיון בתחום"], correct:0, explain:"סעיף 6 לחוק קובע גיל מינימום ועמידה בבחינת הרישוי של רשם המתווכים." },
+  { id:2, law:"חוק המתווכים", q:"הסכם תיווך במקרקעין חייב להיות:", opts:["בכתב בלבד","בכתב או בעל פה","בכתב, חתום על ידי הלקוח","בכתב, חתום על ידי שני הצדדים"], correct:2, explain:"סעיף 9 לחוק: הסכם תיווך יהיה בכתב, יפרט את הפרטים הנדרשים ויחתם על ידי הלקוח." },
+  { id:3, law:"חוק המתווכים", q:"מתווך זכאי לדמי תיווך כאשר:", opts:["הציג את הנכס לקונה","היה הגורם היעיל בקשירת עסקת המכר","חתם על הסכם תיווך עם המוכר","פרסם את הנכס"], correct:1, explain:"סעיף 14 לחוק: המתווך זכאי לדמי תיווך רק אם היה הגורם היעיל שהביא לקשירת העסקה." },
+  { id:4, law:"חוק המתווכים", q:"מה חייב מתווך לגלות ללקוח לפני חתימה על הסכם תיווך?", opts:["רק את שכר טרחתו","אם יש לו עניין אישי בעסקה","פרטי הנכס בלבד","פרטי הצד השני"], correct:1, explain:"סעיף 11 לחוק: המתווך חייב לגלות ללקוח כל עניין אישי שיש לו בנכס או בעסקה." },
+  { id:5, law:"חוק המתווכים", q:"רישיון תיווך תקף לתקופה של:", opts:["שנה אחת","שנתיים","3 שנים","5 שנים"], correct:3, explain:"רישיון תיווך תקף ל-5 שנים ויש לחדשו לפני פקיעתו." },
+  { id:6, law:"חוק המתווכים", q:"תקופת הבלעדיות המרבית בהסכם תיווך לדירת מגורים היא:", opts:["30 יום","60 יום","90 יום","6 חודשים"], correct:1, explain:"תקנות המתווכים קובעות כי תקופת הבלעדיות לדירת מגורים לא תעלה על 60 יום." },
+  { id:7, law:"חוק המתווכים", q:"האם מתווך מחויב בביטוח אחריות מקצועית?", opts:["לא, זה רשות","כן, חובה לפי חוק","רק אם מתווך יותר מ-10 עסקאות בשנה","כן, אך רק לתיווך מסחרי"], correct:1, explain:"חוק המתווכים מחייב את המתווך לקיים ביטוח אחריות מקצועית כתנאי לרישיון." },
+  { id:8, law:"חוק המתווכים", q:"מתווך המתווך בעסקה גם עבור הקונה וגם עבור המוכר:", opts:["זה אסור לחלוטין","מותר ללא תנאים","מותר רק אם גילה זאת לשני הצדדים וקיבל הסכמתם","מותר רק בעסקאות השכרה"], correct:2, explain:"סעיף 11 לחוק: תיווך כפול מותר בתנאי גילוי מלא לשני הצדדים וקבלת הסכמתם מראש." },
+  { id:9, law:"חוק המתווכים", q:"הסכם תיווך שלא פורטו בו דמי התיווך המוסכמים:", opts:["תקף, והמתווך זכאי לשכר מקובל","בטל מעיקרו","ניתן לתיקון בהסכמת הצדדים","המתווך אינו זכאי לדמי תיווך"], correct:3, explain:"חוק המתווכים קובע כי הסכם ללא פירוט דמי תיווך שולל את זכות המתווך לתשלום." },
+  { id:10, law:"חוק המתווכים", q:"מתווך שפועל ללא רישיון צפוי ל:", opts:["קנס בלבד","מאסר עד שנה או קנס","מאסר עד 3 שנים","אזהרה בלבד בפעם הראשונה"], correct:1, explain:"סעיף 20 לחוק: עבודה ללא רישיון מהווה עבירה פלילית הצפויה למאסר עד שנה או קנס." },
+  { id:11, law:"חוק המתווכים", q:"אילו פרטים חייבים להופיע בהסכם תיווך לפי החוק?", opts:["שם המתווך, שם הלקוח ופרטי הנכס בלבד","שם המתווך, מספר רישיונו, פרטי הלקוח, תיאור הנכס, ודמי התיווך","שם המתווך ודמי התיווך בלבד","שם המתווך, שם הלקוח ומחיר הנכס"], correct:1, explain:"סעיף 9 לחוק מפרט רשימה מחייבת הכוללת פרטי המתווך, הלקוח, הנכס, ודמי התיווך." },
+  { id:12, law:"חוק המתווכים", q:"כמה שנים חייב מתווך לשמור תיעוד של עסקאות שביצע?", opts:["שנה אחת","3 שנים","5 שנים","7 שנים"], correct:3, explain:"חוק המתווכים מחייב שמירת מסמכי עסקאות למשך 7 שנים מיום ביצוע העסקה." },
+  { id:13, law:"חוק המתווכים", q:"מתווך שמפרסם נכס חייב לציין בפרסום:", opts:["מספר רישיונו","מחיר הנכס","שם הבעלים","שנת הבנייה"], correct:0, explain:"תקנות המתווכים מחייבות ציון מספר הרישיון בכל פרסום, כולל פרסום דיגיטלי." },
+  { id:14, law:"חוק המתווכים", q:"לקוח שחתם הסכם תיווך רשאי לבטלו:", opts:["בכל עת, ללא תשלום","תוך 3 ימי עסקים מיום החתימה ללא תשלום","רק בהסכמת המתווך","לאחר 30 יום"], correct:1, explain:"חוק הגנת הצרכן מעניק ללקוח 3 ימי עסקים לביטול עסקה שנחתמה מחוץ לעסק המתווך." },
+  { id:15, law:"חוק המתווכים", q:"האם מתווך יכול לייצג גם קונה וגם מוכר באותה עסקה?", opts:["לא בשום מקרה","כן, ללא הגבלה","כן, אם גילה את ניגוד העניינים לשני הצדדים וקיבל הסכמתם","כן, אם העמלה שווה לשני הצדדים"], correct:2, explain:"תיווך כפול מותר בתנאי גילוי ואישור מפורש של שני הצדדים לפי סעיף 11 לחוק." },
+  { id:16, law:"חוק מיסוי מקרקעין", q:"מהו 'שבח' לצורך חוק מיסוי מקרקעין?", opts:["ההכנסה ממכירת הנכס","ההפרש החיובי בין שווי המכירה לשווי הרכישה","מחיר המכירה","רווח נקי לאחר הוצאות"], correct:1, explain:"שבח הוא הרווח הריאלי ממכירת נכס — ההפרש בין שווי המכירה לשווי הרכישה בצירוף הוצאות מוכרות." },
+  { id:17, law:"חוק מיסוי מקרקעין", q:"תוך כמה ימים חייב הרוכש לדווח על רכישת מקרקעין לרשות המסים?", opts:["15 יום","30 יום","60 יום","90 יום"], correct:1, explain:"סעיף 73 לחוק: הרוכש חייב להגיש הצהרה על הרכישה תוך 30 יום ממועד העסקה." },
+  { id:18, law:"חוק מיסוי מקרקעין", q:"האם ניתן לקבל פטור ממס שבח בגין מכירת קרקע ריקה?", opts:["כן, תמיד","לא, קרקע ריקה אינה זכאית לפטור דירת מגורים","כן, אם הקרקע נרכשה לפני 1974","כן, אם שטחה מתחת לדונם"], correct:1, explain:"הפטורים במס שבח חלים על דירת מגורים מזכה בלבד. קרקע ריקה אינה מזכה לפטורים אלה." },
+  { id:19, law:"חוק מיסוי מקרקעין", q:"כמה פעמים ניתן לקבל פטור ממס שבח בגין 'דירה יחידה'?", opts:["פעם אחת בלבד לכל חיים","פעם אחת בכל 18 חודשים","פעם אחת בכל 4 שנים","ללא הגבלה"], correct:1, explain:"הפטור לדירת מגורים מזכה ניתן לקבל פעם אחת בכל 18 חודשים." },
+  { id:20, law:"חוק מיסוי מקרקעין", q:"מכירת דירת מגורים שהתקבלה בירושה — מה הדין?", opts:["פטורה ממס שבח תמיד","חייבת במס שבח ללא פטור","יורש רשאי לנצל פטור שהמוריש היה זכאי לו","פטורה אם הנכס היה של המוריש מעל 20 שנה"], correct:2, explain:"יורש 'נכנס לנעלי המוריש' ויכול לנצל פטורים שהמוריש היה זכאי להם." },
+  { id:21, law:"חוק מיסוי מקרקעין", q:"היטל השבחה משולם על ידי:", opts:["הרוכש בעת הרכישה","הבעלים בעת מימוש ההשבחה (מכירה/קבלת היתר)","הקבלן בלבד","העירייה גובה מהרוכש"], correct:1, explain:"היטל השבחה משולם לוועדה המקומית על ידי הבעלים בעת מימוש ההשבחה." },
+  { id:22, law:"חוק מיסוי מקרקעין", q:"מס רכישה לדירה שניה ומעלה מתחיל ב:", opts:["5%","6%","8%","10%"], correct:2, explain:"מס רכישה לדירה שניה ומעלה מתחיל ב-8% על כל הסכום (כפוף לעדכונים)." },
+  { id:23, law:"חוק המקרקעין", q:"עסקת מקרקעין — מתי היא תקפה לפי חוק המקרקעין?", opts:["עם חתימת החוזה","עם תשלום מלוא התמורה","עם רישום בלשכת רישום המקרקעין","עם מסירת החזקה"], correct:2, explain:"סעיף 7 לחוק: עסקה במקרקעין טעונה רישום ואינה נגמרת אלא ברישום." },
+  { id:24, law:"חוק המקרקעין", q:"מהי 'רכוש משותף' בבית משותף?", opts:["החניות בלבד","כל חלקי הבית שאינם רשומים כדירה ספציפית","הגינה המשותפת בלבד","חדרי המדרגות בלבד"], correct:1, explain:"הרכוש המשותף כולל את כל חלקי הבית המשותף שאינם רשומים כיחידות נפרדות." },
+  { id:25, law:"חוק המקרקעין", q:"שני שותפים בנכס — האם אחד מהם יכול לדרוש פירוק שיתוף?", opts:["רק אם הסכים השותף האחר","כן, בכל עת — זכות מוקנית","רק לאחר 5 שנות שיתוף","רק דרך בית משפט בנסיבות מיוחדות"], correct:1, explain:"סעיף 37 לחוק: כל שותף במקרקעין זכאי לדרוש פירוק השיתוף בכל עת — זכות מוקנית." },
+  { id:26, law:"חוק המקרקעין", q:"משכנתא על נכס נרשמת:", opts:["בחברת הביטוח","בבנק בלבד","בלשכת רישום המקרקעין","ברשות המסים"], correct:2, explain:"משכנתא היא שעבוד נדל\"ן ונרשמת בלשכת רישום המקרקעין (טאבו) לתת לה תוקף כלפי צדדים שלישיים." },
+  { id:27, law:"חוק המקרקעין", q:"מה הכלל לגבי רוכש בתום לב שרשם את הנכס?", opts:["הרוכש הראשון בזמן תמיד מנצח","מי שרשם ראשון גובר גם אם לא קנה ראשון","הרוכש בתום לב ובתמורה שרשם גובר על עסקה קודמת שלא נרשמה","אין הגנה לרוכש"], correct:2, explain:"סעיף 9 לחוק: מי שרכש מקרקעין בתמורה ובתום לב ורשם, גובר על עסקה קודמת שלא נרשמה." },
+  { id:28, law:"חוק המקרקעין", q:"מהי 'זיקת הנאה'?", opts:["זכות שכירות לטווח ארוך","זכות שימוש במקרקעין של אחר לצורך מוגדר","זכות קדימה לרכישת נכס","זכות מגורים ללא תמורה"], correct:1, explain:"זיקת הנאה היא זכות קניינית במקרקעין של אחר — כגון זכות מעבר, הנחת צנרת, אוויר ואור." },
+  { id:29, law:"חוק המקרקעין", q:"מהו 'נסח טאבו'?", opts:["חוזה רכישה","תעודת בעלות על נכס","תדפיס רשמי של רישום הנכס בלשכת רישום המקרקעין","תוכנית הבנייה של הנכס"], correct:2, explain:"נסח טאבו הוא תדפיס רשמי המופק מלשכת רישום המקרקעין ומפרט זכויות, עיקולים ושעבודים." },
+  { id:30, law:"חוק השכירות", q:"מי אחראי לתיקון ליקוי שנגרם מבלאי רגיל בנכס שכור?", opts:["השוכר תמיד","המשכיר תמיד","לפי מה שסוכם בחוזה","מחצה על מחצה"], correct:1, explain:"בחוק השכירות, תיקון ליקויים שנגרמו מבלאי סביר (לא מרשלנות השוכר) הוא באחריות המשכיר." },
+  { id:31, law:"חוק השכירות", q:"משכיר רוצה לפנות שוכר — מה הדרך המשפטית?", opts:["לנעול את הדירה","לפנות לבית משפט לצו פינוי","לבקש ממשטרה","לפנות לראש העיר"], correct:1, explain:"אסור למשכיר סילוק ידיים עצמי. הפינוי חייב להיעשות בצו בית משפט בלבד." },
+  { id:32, law:"חוק השכירות", q:"שוכר שרוצה להעביר את זכות השכירות לאחר:", opts:["יכול לעשות זאת בחופשיות","צריך הסכמת המשכיר, אלא אם ההסכם מתיר זאת","אסור לו בכל מקרה","יכול רק עם קרובי משפחה"], correct:1, explain:"העברת שכירות לאחר מחייבת בדרך כלל הסכמת המשכיר, אלא אם הוסכם אחרת בחוזה." },
+  { id:33, law:"אתיקה מקצועית", q:"מתווך שנודע לו מידע מהותי על הנכס שהלקוח לא יודע — חובתו:", opts:["לשמור בסוד","לגלות ללקוח","לדווח לרשויות","אין חובה"], correct:1, explain:"חובת הנאמנות מחייבת את המתווך לגלות ללקוח כל מידע מהותי שיכול להשפיע על החלטתו." },
+  { id:34, law:"אתיקה מקצועית", q:"מתווך שמפרסם נכס שאין לו הרשאה לשווקו:", opts:["עובר על תקנות הפרסום ועלול לאבד רישיון","זה מותר לצורך פרסום בלבד","בסדר אם יש כוונה לחתום הסכם בהמשך","יכול לפרסם אם יציין שאין לו הסכם"], correct:0, explain:"פרסום נכס ללא הסכם תיווך חתום מהווה הפרה של חוק המתווכים ואתיקה מקצועית." },
+  { id:35, law:"חוק המתווכים", q:"ניתן להאריך תקופת בלעדיות מעבר ל-60 יום:", opts:["בשום מקרה","בהסכמת שני הצדדים בכתב","רק בהוראת בית משפט","אוטומטית אם לא בוטל"], correct:1, explain:"תקופת הבלעדיות ניתנת להארכה מעבר ל-60 יום בהסכמת שני הצדדים בכתב בלבד." },
+  { id:36, law:"חוק מיסוי מקרקעין", q:"מס שבח ריאלי שנוצר לאחר 1.1.2014 חייב בשיעור של:", opts:["20%","25%","30%","שיעור מס שולי"], correct:1, explain:"השבח הריאלי שנוצר מיום 1.1.2014 חייב במס בשיעור 25% (לינאריות מוטבת)." },
+  { id:37, law:"חוק המקרקעין", q:"חכירה לדורות מוגדרת כחכירה לתקופה של:", opts:["מעל 5 שנים","מעל 10 שנים","מעל 25 שנים","מעל 99 שנים"], correct:2, explain:"חכירה לדורות היא חכירה לתקופה של 25 שנה ומעלה, המקנה לחוכר זכות קניינית במקרקעין." },
+  { id:38, law:"חוק המתווכים", q:"בהסכם תיווך ללא בלעדיות — האם הלקוח רשאי לפנות למתווכים אחרים?", opts:["לא, רק למתווך שחתם","כן, הלקוח חופשי לפנות לכל מתווך","רק לאחר 30 יום","רק לאחר הסרת ההסכם"], correct:1, explain:"הסכם תיווך רגיל (ללא בלעדיות) מאפשר ללקוח לפנות לכמה מתווכים בו-זמנית." },
+  { id:39, law:"חוק מיסוי מקרקעין", q:"מכירה בין קרובי משפחה (בן/בת זוג) — מה הדין לעניין מס שבח?", opts:["חייבת במס שבח תמיד","פטורה לפי סעיף 62 לחוק","פטורה רק אם זו הדירה היחידה","חייבת במס מופחת של 10%"], correct:1, explain:"סעיף 62 לחוק מיסוי מקרקעין מעניק פטור מלא ממס שבח על מכירה בין קרובי משפחה." },
+  { id:40, law:"חוק המקרקעין", q:"ועד הבית בבית משותף נבחר על ידי:", opts:["העירייה","דיירי הבית המשותף באסיפה כללית","מנהל מקרקעי ישראל","בית המשפט"], correct:1, explain:"ועד הבית נבחר על ידי בעלי הדירות בבית המשותף באסיפה כללית, לפי תקנון הבית." }
+];
+
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+let mistakes = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startExam() {
+  currentQuestions = shuffle(ALL_QUESTIONS).slice(0, 25);
+  currentIndex = 0;
+  score = 0;
+  mistakes = [];
+  answered = false;
+  renderQuestion();
+}
+
+function renderStart() {
+  document.getElementById('app').innerHTML = `
+    <div class="start-screen">
+      <h2>🎓 ברוכים הבאים למבחן ההכנה</h2>
+      <p>המבחן מכיל <strong>25 שאלות אקראיות</strong> מתוך בנק של 40 שאלות.</p>
+      <p>ציון עובר: <strong>60 ומעלה</strong> (15 שאלות נכונות).</p>
+      <p>בסוף המבחן — סיכום הטעויות עם הסבר לכל שאלה.</p>
+      <p>אם לא עברת — המבחן מתחיל מחדש עם שאלות חדשות!</p>
+      <button class="start-btn" onclick="startExam()">🚀 התחל מבחן</button>
+    </div>
+  `;
+}
+
+function renderQuestion() {
+  const q = currentQuestions[currentIndex];
+  const progress = ((currentIndex) / 25) * 100;
+  const shuffledOpts = shuffle(q.opts.map((o, i) => ({ text: o, origIdx: i })));
+  
+  document.getElementById('app').innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="progress-text">שאלה ${currentIndex + 1} מתוך 25 | ✓ נכון עד כה: ${score}</div>
+    <div class="card">
+      <div class="question-num">שאלה ${currentIndex + 1}</div>
+      <div class="law-badge">📋 ${q.law}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options" id="options">
+        ${shuffledOpts.map((o, i) => `
+          <button class="option-btn" onclick="selectAnswer(${o.origIdx}, this, ${JSON.stringify(shuffledOpts).replace(/"/g,'&quot;')})" data-idx="${i}">
+            ${'אבגד'[i]}. ${o.text}
+          </button>
+        `).join('')}
+      </div>
+      <div class="explanation" id="explanation"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${currentIndex < 24 ? 'שאלה הבאה ←' : 'סיים מבחן ✓'}
+      </button>
+    </div>
+  `;
+}
+
+function selectAnswer(origIdx, btn, shuffledOpts) {
+  if (answered) return;
+  answered = true;
+  const q = currentQuestions[currentIndex];
+  const isCorrect = origIdx === q.correct;
+  
+  // Disable all buttons
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    const bOrigIdx = shuffledOpts[parseInt(b.dataset.idx)].origIdx;
+    if (bOrigIdx === q.correct) b.classList.add('correct');
+  });
+  
+  if (!isCorrect) {
+    btn.classList.add('wrong');
+    mistakes.push({ q: q.q, law: q.law, yourAnswer: q.opts[origIdx], correctAnswer: q.opts[q.correct], explain: q.explain });
+  } else {
+    score++;
+  }
+  
+  // Show explanation
+  const expEl = document.getElementById('explanation');
+  expEl.innerHTML = `<strong>${isCorrect ? '✅ נכון!' : '❌ לא נכון'}</strong> — ${q.explain}`;
+  expEl.classList.add('show');
+  if (!isCorrect) expEl.classList.add('wrong-exp');
+  
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  answered = false;
+  if (currentIndex >= 25) {
+    renderResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderResults() {
+  const percent = Math.round((score / 25) * 100);
+  const passed = percent >= 60;
+  
+  const mistakesHtml = mistakes.length > 0 ? `
+    <div class="mistakes-section">
+      <div class="mistakes-title">📝 ניתוח הטעויות שלך (${mistakes.length} שאלות):</div>
+      ${mistakes.map((m, i) => `
+        <div class="mistake-item">
+          <div class="mistake-q">${i+1}. ${m.q}</div>
+          <div class="law-badge" style="margin-bottom:8px">📋 ${m.law}</div>
+          <div class="mistake-your">❌ התשובה שלך: ${m.yourAnswer}</div>
+          <div class="mistake-correct">✅ התשובה הנכונה: ${m.correctAnswer}</div>
+          <div class="mistake-explain">💡 הסבר: ${m.explain}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '<p style="color:#059669;font-weight:700;font-size:18px;margin-top:16px">🎉 מושלם! לא עשית אף טעות!</p>';
+  
+  document.getElementById('app').innerHTML = `
+    <div class="results">
+      <div class="score-circle ${passed ? 'pass' : 'fail'}">${percent}%</div>
+      <div class="result-title">${passed ? '🎉 עברת את המבחן!' : '😔 לא עברת הפעם'}</div>
+      <div class="result-subtitle">
+        ${score} מתוך 25 נכון | ציון: ${percent}% | ${passed ? 'מעל 60% ✓' : 'נדרש 60% לפחות'}
+      </div>
+      ${mistakesHtml}
+      <button class="retry-btn" onclick="startExam()">
+        ${passed ? '🔄 מבחן חדש' : '🔄 נסה שוב — מבחן חדש!'}
+      </button>
+    </div>
+  `;
+}
+
+// Start
+renderStart();
+</script>
+</body>
+</html>
