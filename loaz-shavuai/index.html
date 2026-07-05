@@ -103,7 +103,7 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn-goals" id="goalsBtn">🎯 מטרות השבוע</button>
-      <button class="btn-sample" id="sampleBtn">📝 טען לוז לדוגמה</button>
+      <button class="btn-sample" id="sampleBtn">🎲 טען לוז רנדומלי</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
   </div>
@@ -158,43 +158,37 @@ const WEEKLY_GOALS = [
   'ללמוד על זוגיות ובניית בית'
 ];
 
-// Pool of daily tasks — each can land on any day at varied hours
-const TASK_POOL = [
-  { task: 'קימה + סידור מיטה 🛏️', motivation: 8, preferredHour: 0 },
-  { task: 'הכנת שייק בוקר 🥤', motivation: 7, preferredHour: 1 },
-  { task: '5 דק מגע אוהב עם עצמי', motivation: 8, preferredHour: 2 },
-  { task: 'מדיטציה 5 דקות', motivation: 8, preferredHour: 2 },
-  { task: 'תפילת שחרית', motivation: 9, preferredHour: 3 },
-  { task: 'מרידיאנים', motivation: 7, preferredHour: 4 },
-  { task: 'כתיבת הרצון ✍️', motivation: 7, preferredHour: 4 },
-  { task: 'ארוחת בוקר + סלט 🥗', motivation: 8, preferredHour: 5 },
-  { task: 'חצי שעה לימוד רבי נחמן 📚', motivation: 9, preferredHour: 8 },
-  { task: 'חצי שעה סידור כתבי האדמו"ר מפיאסצנה', motivation: 8, preferredHour: 9 },
-  { task: '5 דק לימוד הלכה', motivation: 8, preferredHour: 10 },
-  { task: 'חצי שעה נגינה בפסנתר 🎹', motivation: 9, preferredHour: 11 },
-  { task: 'תפילת מנחה', motivation: 8, preferredHour: 14 },
-  { task: 'שיחה למישהי ב-Vibe (נתינה) 💬', motivation: 7, preferredHour: 16 },
-  { task: 'תפילת ערבית', motivation: 8, preferredHour: 20 },
-  { task: 'התבודדות יומית 🤲', motivation: 9, preferredHour: 22 },
-  { task: 'לו"ז יומי לפני שינה + הליכה לישון עד 1:00', motivation: 7, preferredHour: 26 },
-  { task: 'לימוד על זוגיות ובניית בית 💑', motivation: 8, preferredHour: 12 },
-  { task: 'סיכום לימוד בישיבה במחשב 💻', motivation: 7, preferredHour: 10 },
-  { task: 'עבודה על NLP 🧠', motivation: 8, preferredHour: 6 },
-  { task: 'קריאה / התפתחות אישית 📖', motivation: 7, preferredHour: 18 },
-  { task: 'זמן משפחה 👨‍👩‍👧‍👦', motivation: 10, preferredHour: 20 },
-  { task: 'אימון כוח/ריצה (בהתאם להחלמה) 💪', motivation: 6, preferredHour: 6 },
-  { task: 'קניית פירות וירקות + שמן קוקוס 🛒', motivation: 6, preferredHour: 14 },
-  { task: 'חיפוש תלמיד חדש לאימון כושר', motivation: 7, preferredHour: 18 },
-  { task: 'בדיקת הרשמה לתואר פסיכולוגיה 🎓', motivation: 6, preferredHour: 12 },
-  { task: 'הכנות לשבת ✡️', motivation: 9, preferredHour: 18, fridayOnly: true },
-  { task: 'קבלת שבת 🕯️', motivation: 10, preferredHour: 20, fridayOnly: true }
+// All daily tasks — each day gets ALL of these (with small random time/motivation variation)
+const DAILY_TASKS = [
+  { task: 'קימה + סידור מיטה 🛏️', baseHour: 0, baseMot: 8 },
+  { task: 'הכנת שייק בוקר 🥤', baseHour: 1, baseMot: 7 },
+  { task: '5 דק מגע אוהב עם עצמי', baseHour: 2, baseMot: 8 },
+  { task: 'מדיטציה 5 דקות', baseHour: 2, baseMot: 8 },
+  { task: 'תפילת שחרית', baseHour: 3, baseMot: 9 },
+  { task: 'מרידיאנים', baseHour: 4, baseMot: 7 },
+  { task: 'כתיבת הרצון ✍️', baseHour: 5, baseMot: 7 },
+  { task: 'ארוחת בוקר + סלט 🥗', baseHour: 6, baseMot: 8 },
+  { task: 'חצי שעה לימוד רבי נחמן 📚', baseHour: 8, baseMot: 9 },
+  { task: 'חצי שעה סידור כתבי האדמו"ר מפיאסצנה', baseHour: 9, baseMot: 8 },
+  { task: '5 דק לימוד הלכה', baseHour: 10, baseMot: 8 },
+  { task: 'חצי שעה נגינה בפסנתר 🎹', baseHour: 11, baseMot: 9 },
+  { task: 'תפילת מנחה', baseHour: 14, baseMot: 8 },
+  { task: 'שיחה למישהי ב-Vibe (נתינה) 💬', baseHour: 16, baseMot: 7 },
+  { task: 'תפילת ערבית', baseHour: 20, baseMot: 8 },
+  { task: 'התבודדות יומית 🤲', baseHour: 22, baseMot: 9 },
+  { task: 'לו"ז יומי לפני שינה + הליכה לישון עד 1:00', baseHour: 26, baseMot: 7 }
+];
+
+const FRIDAY_EXTRA = [
+  { task: 'הכנות לשבת ✡️', baseHour: 18, baseMot: 9 },
+  { task: 'קבלת שבת 🕯️', baseHour: 20, baseMot: 10 }
 ];
 
 function shuffleArray(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
@@ -204,36 +198,30 @@ function randomMotivation(base) {
 }
 
 function randomHourOffset(base) {
-  return base + (Math.floor(Math.random() * 5) - 2);
+  return Math.max(0, Math.min(HOURS.length - 1, base + Math.floor(Math.random() * 5) - 2));
 }
 
+// Generate a full week with all daily tasks, randomly distributed per day
 function generateRandomWeek() {
   const weekData = {};
   for (let d = 0; d < 6; d++) {
     weekData[d] = {};
-    // Friday gets special tasks
-    const pool = TASK_POOL.filter(function(t) {
-      if (t.fridayOnly) return d === 5;
-      if (d === 5) return !t.fridayOnly; // skip non-friday-only on friday (they get their own set)
-      return true;
-    });
-    // Randomly pick 8-12 tasks per day from the pool
-    const shuffled = shuffleArray(pool);
-    const numTasks = 8 + Math.floor(Math.random() * 5); // 8-12
-    const dayTasks = shuffled.slice(0, numTasks);
     const usedHours = {};
-    for (let i = 0; i < dayTasks.length; i++) {
-      const t = dayTasks[i];
-      let hour = randomHourOffset(t.preferredHour);
-      hour = Math.max(0, Math.min(HOURS.length - 1, hour));
-      // Avoid collisions — find nearest free slot
+    let tasks = DAILY_TASKS.slice();
+    if (d === 5) tasks = tasks.concat(FRIDAY_EXTRA);
+    // Shuffle task order for variety
+    const shuffled = shuffleArray(tasks);
+    for (let i = 0; i < shuffled.length; i++) {
+      const t = shuffled[i];
+      let hour = randomHourOffset(t.baseHour);
+      // Avoid collisions
       let attempts = 0;
-      while (usedHours[hour] && attempts < 10) {
+      while (usedHours[hour] && attempts < 15) {
         hour = (hour + 1) % HOURS.length;
         attempts++;
       }
       usedHours[hour] = true;
-      weekData[d][hour] = { task: t.task, motivation: randomMotivation(t.motivation) };
+      weekData[d][hour] = { task: t.task, motivation: randomMotivation(t.baseMot) };
     }
   }
   return weekData;
@@ -249,16 +237,40 @@ function getWeekStart(date) {
   return d;
 }
 function formatDate(d) { return d.getDate() + '/' + (d.getMonth()+1); }
-function getCellKey(dayIdx, hourIdx) { return 'loaz_' + currentWeekStart.toISOString().slice(0,10) + '_' + dayIdx + '_' + hourIdx; }
+function getCellKey(d, h) { return 'loaz_' + currentWeekStart.toISOString().slice(0,10) + '_' + d + '_' + h; }
 function getUserKey() { return document.getElementById('userName').value.trim() || 'משתמש'; }
 function getCellData(d, h) { const r = localStorage.getItem(getCellKey(d,h)+'_'+getUserKey()); if(!r) return null; try { return JSON.parse(r); } catch(e) { return null; } }
 function setCellData(d, h, data) { const k = getCellKey(d,h)+'_'+getUserKey(); if(data) localStorage.setItem(k, JSON.stringify(data)); else localStorage.removeItem(k); }
-function updateDisplayName() { const n = document.getElementById('userName').value.trim(); const el = document.getElementById('displayName'); if(n) { el.textContent = '👤 ' + n; el.classList.remove('empty'); } else { el.textContent = 'הכנס את שמך למטה כדי להתחיל'; el.classList.add('empty'); } }
+
+function hasAnyData() {
+  for (let h = 0; h < HOURS.length; h++)
+    for (let d = 0; d < 6; d++)
+      if (getCellData(d, h)) return true;
+  return false;
+}
+
+function updateDisplayName() {
+  const n = document.getElementById('userName').value.trim();
+  const el = document.getElementById('displayName');
+  if (n) { el.textContent = '👤 ' + n; el.classList.remove('empty'); }
+  else { el.textContent = 'הכנס את שמך למטה כדי להתחיל'; el.classList.add('empty'); }
+}
 function saveUserName() { localStorage.setItem('loaz_user_name', document.getElementById('userName').value); updateDisplayName(); }
-function loadUserName() { const n = localStorage.getItem('loaz_user_name'); if(n) { document.getElementById('userName').value = n; updateDisplayName(); } }
+function loadUserName() {
+  const n = localStorage.getItem('loaz_user_name');
+  if (n) { document.getElementById('userName').value = n; updateDisplayName(); }
+}
 function isToday(date) { const t = new Date(); return date.getDate()===t.getDate() && date.getMonth()===t.getMonth() && date.getFullYear()===t.getFullYear(); }
 function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
-function renderGoals() { const l = document.getElementById('goalsList'); l.innerHTML = ''; for(let i=0;i<WEEKLY_GOALS.length;i++){ const li=document.createElement('li'); li.textContent=WEEKLY_GOALS[i]; l.appendChild(li); } }
+function renderGoals() {
+  const l = document.getElementById('goalsList');
+  l.innerHTML = '';
+  for (let i = 0; i < WEEKLY_GOALS.length; i++) {
+    const li = document.createElement('li');
+    li.textContent = WEEKLY_GOALS[i];
+    l.appendChild(li);
+  }
+}
 
 function renderTable() {
   const table = document.getElementById('scheduleTable');
@@ -296,7 +308,6 @@ function updateStats() {
   document.getElementById('statSum').textContent=sum;
   document.getElementById('statAvg').textContent=total>0?(sum/total).toFixed(1):'—';
 }
-
 function renderWeekLabel() { const e=new Date(currentWeekStart); e.setDate(e.getDate()+5); document.getElementById('weekLabel').textContent=formatDate(currentWeekStart)+' - '+formatDate(e); }
 
 function openModal(d, h) {
@@ -312,7 +323,6 @@ function openModal(d, h) {
   document.getElementById('modalOverlay').classList.add('active');
   setTimeout(function() { document.getElementById('taskInput').focus(); }, 100);
 }
-
 function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); selectedCell = null; }
 function saveCell() {
   if (!selectedCell) return;
@@ -324,18 +334,21 @@ function saveCell() {
 function deleteCell() { if(!selectedCell) return; setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null); closeModal(); renderTable(); }
 function updateMotivationDisplay() { const v=document.getElementById('motivationInput').value; document.getElementById('motivationValue').textContent=v; document.getElementById('motivationEmoji').textContent=MOTIVATION_EMOJIS[v-1]; }
 
+function loadRandomSchedule() {
+  for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) setCellData(d,h,null);
+  const week = generateRandomWeek();
+  for (let d=0; d<6; d++) {
+    for (const hourStr in week[d]) {
+      setCellData(d, parseInt(hourStr), week[d][hourStr]);
+    }
+  }
+  renderTable();
+}
+
 function loadSampleSchedule() {
   if (!document.getElementById('userName').value.trim()) { alert('אנא הכנס את שמך תחילה'); document.getElementById('userName').focus(); return; }
-  if (confirm('טעינת לוז לדוגמה תמחק את הלוז הנוכחי. להמשיך?')) {
-    for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) setCellData(d,h,null);
-    const week = generateRandomWeek();
-    for (let d=0; d<6; d++) {
-      for (const hourStr in week[d]) {
-        const hourIdx = parseInt(hourStr);
-        setCellData(d, hourIdx, week[d][hourIdx]);
-      }
-    }
-    renderTable();
+  if (confirm('טעינת לוז רנדומלי תמחק את הלוז הנוכחי. להמשיך?')) {
+    loadRandomSchedule();
   }
 }
 
@@ -359,10 +372,15 @@ document.getElementById('goalsBtn').addEventListener('click', function() { docum
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
 document.addEventListener('keydown', function(e) { if(e.key==='Escape' && document.getElementById('modalOverlay').classList.contains('active')) closeModal(); });
 
+// Init — auto-load random schedule on first visit
 loadUserName();
 renderGoals();
 renderWeekLabel();
-renderTable();
+if (!hasAnyData()) {
+  loadRandomSchedule();
+} else {
+  renderTable();
+}
 </script>
 </body>
 </html>
