@@ -21,162 +21,98 @@ body {
   margin-bottom: 16px;
   text-align: center;
 }
-.top-banner h1 {
-  font-size: 22px;
-  color: #f0fdfa;
-  margin-bottom: 2px;
-}
+.top-banner h1 { font-size: 22px; color: #f0fdfa; margin-bottom: 2px; }
 .top-banner .trainee-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-top: 6px;
-  min-height: 24px;
+  font-size: 18px; font-weight: 700; color: #ffffff;
+  margin-top: 6px; min-height: 24px;
 }
 .top-banner .trainee-name.empty {
-  color: #99f6e4;
-  font-weight: 400;
-  font-size: 14px;
+  color: #99f6e4; font-weight: 400; font-size: 14px;
 }
-.subtitle {
-  text-align: center;
-  font-size: 13px;
-  color: #5eead4;
-  margin-bottom: 16px;
-}
+.subtitle { text-align: center; font-size: 13px; color: #5eead4; margin-bottom: 16px; }
 .header-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
-  background: #1e293b;
-  padding: 16px;
-  border-radius: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+  background: #1e293b; padding: 16px; border-radius: 12px;
 }
 .header-bar input, .header-bar select {
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: #e2e8f0;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
+  background: #0f172a; border: 1px solid #334155; color: #e2e8f0;
+  padding: 8px 12px; border-radius: 8px; font-size: 14px;
 }
 .header-bar input:focus, .header-bar select:focus {
-  outline: none;
-  border-color: #14b8a6;
+  outline: none; border-color: #14b8a6;
 }
-.header-bar input.name-input {
-  font-weight: 600;
-  min-width: 180px;
-}
-.week-nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.header-bar input.name-input { font-weight: 600; min-width: 180px; }
+.week-nav { display: flex; align-items: center; gap: 12px; }
 .week-nav button {
-  background: #1e293b;
-  border: 1px solid #334155;
-  color: #14b8a6;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  transition: all 0.2s;
+  background: #1e293b; border: 1px solid #334155; color: #14b8a6;
+  width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+  font-size: 18px; transition: all 0.2s;
 }
 .week-nav button:hover { background: #334155; }
 .week-label { font-size: 14px; color: #94a3b8; }
 .btn-sample {
-  background: #1e293b;
-  border: 1px solid #14b8a6;
-  color: #14b8a6;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s;
-  white-space: nowrap;
+  background: #1e293b; border: 1px solid #14b8a6; color: #14b8a6;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all 0.2s; white-space: nowrap;
 }
 .btn-sample:hover { background: #14b8a6; color: #0f172a; }
 .btn-clear {
-  background: #1e293b;
-  border: 1px solid #475569;
-  color: #94a3b8;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-  white-space: nowrap;
+  background: #1e293b; border: 1px solid #475569; color: #94a3b8;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; transition: all 0.2s; white-space: nowrap;
 }
 .btn-clear:hover { background: #475569; color: #e2e8f0; }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
+.btn-goals {
+  background: #1e293b; border: 1px solid #eab308; color: #eab308;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all 0.2s; white-space: nowrap;
 }
+.btn-goals:hover { background: #eab308; color: #0f172a; }
+.goals-section {
+  display: none; background: #1e293b; border-radius: 12px;
+  padding: 20px; margin-bottom: 16px; border: 1px solid #334155;
+}
+.goals-section.active { display: block; }
+.goals-section h2 {
+  font-size: 18px; color: #eab308; margin-bottom: 12px;
+}
+.goals-list { list-style: none; counter-reset: goal-counter; }
+.goals-list li {
+  padding: 8px 0; border-bottom: 1px solid #334155; font-size: 14px;
+  color: #e2e8f0; display: flex; align-items: flex-start; gap: 8px;
+}
+.goals-list li:last-child { border-bottom: none; }
+.goals-list li::before {
+  counter-increment: goal-counter; content: counter(goal-counter);
+  background: #eab308; color: #0f172a; font-weight: 700; font-size: 11px;
+  min-width: 22px; height: 22px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
 th {
-  position: sticky;
-  top: 0;
-  background: #1e293b;
-  color: #14b8a6;
-  padding: 10px 4px;
-  font-weight: 600;
-  text-align: center;
-  border: 1px solid #334155;
-  z-index: 10;
+  position: sticky; top: 0; background: #1e293b; color: #14b8a6;
+  padding: 10px 4px; font-weight: 600; text-align: center;
+  border: 1px solid #334155; z-index: 10;
 }
-th:first-child {
-  width: 60px;
-  color: #64748b;
-}
+th:first-child { width: 60px; color: #64748b; }
 td {
-  border: 1px solid #1e293b;
-  padding: 0;
-  vertical-align: top;
-  height: 52px;
-  transition: background 0.15s;
+  border: 1px solid #1e293b; padding: 0; vertical-align: top;
+  height: 52px; transition: background 0.15s;
 }
 td:hover { background: #1e293b; }
 td:first-child {
-  text-align: center;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 600;
-  background: #1e293b;
-  vertical-align: middle;
+  text-align: center; color: #64748b; font-size: 11px;
+  font-weight: 600; background: #1e293b; vertical-align: middle;
 }
 .cell-content {
-  padding: 4px 6px;
-  cursor: pointer;
-  min-height: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 4px 6px; cursor: pointer; min-height: 50px;
+  display: flex; flex-direction: column; justify-content: space-between;
 }
-.cell-task {
-  font-size: 11px;
-  color: #e2e8f0;
-  line-height: 1.3;
-  word-break: break-word;
-}
+.cell-task { font-size: 11px; color: #e2e8f0; line-height: 1.3; word-break: break-word; }
 .cell-task.empty { color: #475569; font-size: 10px; }
-.motivation-bar {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 2px;
-}
-.motivation-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.motivation-bar { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.motivation-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .motivation-text { font-size: 9px; color: #64748b; }
 .motivation-color-1 { background: #ef4444; }
 .motivation-color-2 { background: #f97316; }
@@ -191,72 +127,35 @@ td:first-child {
 .today-header { color: #f59e0b !important; }
 .today-col { background: rgba(245, 158, 11, 0.05); }
 .modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 100;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7); z-index: 100;
+  justify-content: center; align-items: center; padding: 16px;
 }
 .modal-overlay.active { display: flex; }
 .modal {
-  background: #1e293b;
-  border-radius: 16px;
-  padding: 24px;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  background: #1e293b; border-radius: 16px; padding: 24px;
+  max-width: 420px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
 }
 .modal-title { font-size: 18px; color: #14b8a6; margin-bottom: 4px; }
 .modal-subtitle { font-size: 13px; color: #64748b; margin-bottom: 20px; }
 .modal label {
-  display: block;
-  font-size: 13px;
-  color: #94a3b8;
-  margin-bottom: 6px;
-  margin-top: 16px;
+  display: block; font-size: 13px; color: #94a3b8;
+  margin-bottom: 6px; margin-top: 16px;
 }
 .modal textarea {
-  width: 100%;
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: #e2e8f0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 70px;
+  width: 100%; background: #0f172a; border: 1px solid #334155;
+  color: #e2e8f0; padding: 10px 12px; border-radius: 8px;
+  font-size: 14px; font-family: inherit; resize: vertical; min-height: 70px;
 }
 .modal textarea:focus { outline: none; border-color: #14b8a6; }
-.motivation-input {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.motivation-input input[type="range"] {
-  flex: 1;
-  accent-color: #14b8a6;
-  height: 6px;
-}
-.motivation-value {
-  font-size: 22px;
-  font-weight: 700;
-  min-width: 36px;
-  text-align: center;
-}
+.motivation-input { display: flex; align-items: center; gap: 10px; }
+.motivation-input input[type="range"] { flex: 1; accent-color: #14b8a6; height: 6px; }
+.motivation-value { font-size: 22px; font-weight: 700; min-width: 36px; text-align: center; }
 .motivation-emoji { font-size: 20px; margin-left: 4px; }
 .modal-buttons { display: flex; gap: 10px; margin-top: 24px; }
 .btn {
-  flex: 1;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
+  flex: 1; padding: 10px 16px; border-radius: 8px; border: none;
+  font-size: 14px; cursor: pointer; transition: all 0.2s;
 }
 .btn-save { background: #14b8a6; color: #0f172a; font-weight: 600; }
 .btn-save:hover { background: #0d9488; }
@@ -266,19 +165,12 @@ td:first-child {
 .btn-delete:hover { background: #991b1b; }
 .stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .stat-card {
-  background: #1e293b;
-  padding: 12px 16px;
-  border-radius: 10px;
-  flex: 1;
-  min-width: 140px;
+  background: #1e293b; padding: 12px 16px; border-radius: 10px;
+  flex: 1; min-width: 140px;
 }
 .stat-label { font-size: 11px; color: #64748b; }
 .stat-value { font-size: 22px; font-weight: 700; color: #14b8a6; }
-.table-wrapper {
-  overflow-x: auto;
-  border-radius: 12px;
-  border: 1px solid #1e293b;
-}
+.table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #1e293b; }
 @media (max-width: 768px) {
   .top-banner h1 { font-size: 18px; }
   table { font-size: 10px; }
@@ -288,7 +180,7 @@ td:first-child {
   .modal { padding: 16px; }
   .header-bar { flex-direction: column; align-items: stretch; }
   .header-bar input, .header-bar select { width: 100%; }
-  .btn-sample, .btn-clear { width: 100%; text-align: center; }
+  .btn-sample, .btn-clear, .btn-goals { width: 100%; text-align: center; }
 }
 </style>
 </head>
@@ -310,9 +202,15 @@ td:first-child {
       <button id="nextWeek">›</button>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-goals" id="goalsBtn">🎯 מטרות השבוע</button>
       <button class="btn-sample" id="sampleBtn">📝 טען לוז לדוגמה</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
+  </div>
+
+  <div class="goals-section" id="goalsSection">
+    <h2>🎯 מטרות לקדם השבוע</h2>
+    <ol class="goals-list" id="goalsList"></ol>
   </div>
 
   <div class="stats-bar" id="statsBar">
@@ -369,39 +267,67 @@ HOURS.push('00:00');
 
 const MOTIVATION_EMOJIS = ['😢','😞','😕','😐','🙂','😊','😄','😃','🔥','🚀'];
 
-// Sample schedule data — realistic weekly schedule
-const SAMPLE_SCHEDULE = [
-  { day: 0, hour: 0, task: 'קפה + תכנון שבועי', motivation: 8 },
-  { day: 0, hour: 2, task: 'פגישת צוות', motivation: 7 },
-  { day: 0, hour: 6, task: 'אימון אישי', motivation: 9 },
-  { day: 0, hour: 8, task: 'זמן משפחה', motivation: 9 },
-  { day: 0, hour: 14, task: 'קריאה / לימוד', motivation: 6 },
-  { day: 1, hour: 0, task: 'קפה + סידור יום', motivation: 7 },
-  { day: 1, hour: 2, task: 'עבודה מול לקוחות', motivation: 8 },
-  { day: 1, hour: 6, task: 'ארוחת צהריים', motivation: 7 },
-  { day: 1, hour: 8, task: 'פגישות אישיות', motivation: 6 },
-  { day: 1, hour: 12, task: 'זמן מנוחה', motivation: 5 },
-  { day: 1, hour: 16, task: 'סיכום יום', motivation: 6 },
-  { day: 2, hour: 0, task: 'קפה + תכנון', motivation: 7 },
-  { day: 2, hour: 4, task: 'עבודה על פרויקטים', motivation: 8 },
-  { day: 2, hour: 8, task: 'זמן משפחה', motivation: 9 },
-  { day: 2, hour: 14, task: 'קורס / התפתחות', motivation: 7 },
-  { day: 3, hour: 0, task: 'קפה + מיילים', motivation: 6 },
-  { day: 3, hour: 2, task: 'פגישות עבודה', motivation: 7 },
-  { day: 3, hour: 6, task: 'ארוחת צהריים', motivation: 6 },
-  { day: 3, hour: 10, task: 'ניהול משימות', motivation: 7 },
-  { day: 3, hour: 16, task: 'זמן אישי', motivation: 8 },
-  { day: 4, hour: 0, task: 'קפה + סיכום שבוע', motivation: 8 },
-  { day: 4, hour: 4, task: 'פגישת סיכום', motivation: 7 },
-  { day: 4, hour: 8, task: 'ארוחת שישי', motivation: 10 },
-  { day: 4, hour: 12, task: 'הכנות לשבת', motivation: 9 },
-  { day: 4, hour: 16, task: 'קבלת שבת', motivation: 10 },
-  { day: 5, hour: 0, task: 'תפילה + לימוד', motivation: 9 },
-  { day: 5, hour: 4, task: 'ארוחת שבת', motivation: 10 },
-  { day: 5, hour: 8, task: 'מנוחה / משפחה', motivation: 10 },
-  { day: 5, hour: 14, task: 'סעודה שלישית', motivation: 9 },
-  { day: 5, hour: 16, task: 'זמן אישי', motivation: 8 }
+const WEEKLY_GOALS = [
+  'להירשם לתואר בפסיכולוגיה',
+  'לשפר את היכולות בנגינה בפסנתר',
+  'להיות מנחה טוב יותר ב-NLP',
+  'להיות מחובר לרצון שלי ומפוקס עליו יותר',
+  'להתקדם בהיקף לימוד כתבי רבי נחמן מברסלב',
+  'לקבל עוד תלמיד לאימוני כושר ולהכניס עוד כסף',
+  'לשפר ידיעת וקיום הלכה (לימוד 5 דקות כל יום)',
+  'להשיג עוד 2 מונחים',
+  'לקנות שמן קוקוס + פירות וירקות לסלט יומי ואוכל בריא',
+  'לסכם את הלימוד בישיבה בכתבי הפיאסצנה ובעל שם טוב על התורה במחשב',
+  'ללמוד על זוגיות ובניית בית'
 ];
+
+// Daily schedule template — applied to each day
+// hour index: 0=8:00, 1=8:30, 2=9:00, 3=9:30, 4=10:00, 5=10:30,
+// 6=11:00, 7=11:30, 8=12:00, 9=12:30, 10=13:00, 11=13:30,
+// 12=14:00, 13=14:30, 14=15:00, 15=15:30, 16=16:00, 17=16:30,
+// 18=17:00, 19=17:30, 20=18:00, 21=18:30, 22=19:00, 23=19:30,
+// 24=20:00, 25=20:30, 26=21:00, 27=21:30, 28=22:00, 29=22:30,
+// 30=23:00, 31=23:30, 32=00:00
+
+function getDailyTasks(dayIdx) {
+  // Special Friday adjustments
+  if (dayIdx === 5) {
+    return [
+      { hour: 0, task: 'קימה + סידור מיטה', motivation: 8 },
+      { hour: 1, task: 'הכנת שייק בוקר', motivation: 7 },
+      { hour: 2, task: '5 דק מגע אוהב עצמי + מדיטציה', motivation: 8 },
+      { hour: 3, task: 'תפילת שחרית', motivation: 9 },
+      { hour: 4, task: 'מרידיאנים + כתיבת הרצון', motivation: 7 },
+      { hour: 5, task: 'ארוחת בוקר + סלט 🥗', motivation: 8 },
+      { hour: 8, task: 'חצי שעה לימוד רבי נחמן', motivation: 9 },
+      { hour: 9, task: 'חצי שעה סידור כתבי האדמו"ר מפיאסצנה', motivation: 8 },
+      { hour: 10, task: '5 דק לימוד הלכה', motivation: 8 },
+      { hour: 11, task: 'חצי שעה נגינה בפסנתר 🎹', motivation: 9 },
+      { hour: 14, task: 'תפילת מנחה', motivation: 8 },
+      { hour: 18, task: 'הכנות לשבת', motivation: 9 },
+      { hour: 20, task: 'קבלת שבת + תפילת ערבית', motivation: 10 },
+      { hour: 26, task: 'לו"ז יומי למחר + הליכה לישון', motivation: 7 }
+    ];
+  }
+  
+  return [
+    { hour: 0, task: 'קימה + סידור מיטה 🛏️', motivation: 8 },
+    { hour: 1, task: 'הכנת שייק בוקר 🥤', motivation: 7 },
+    { hour: 2, task: '5 דק מגע אוהב עם עצמי + מדיטציה 5 דק', motivation: 8 },
+    { hour: 3, task: 'תפילת שחרית', motivation: 9 },
+    { hour: 4, task: 'מרידיאנים + כתיבת הרצון ✍️', motivation: 7 },
+    { hour: 5, task: 'ארוחת בוקר + סלט 🥗', motivation: 8 },
+    { hour: 8, task: 'חצי שעה לימוד רבי נחמן מברסלב 📚', motivation: 9 },
+    { hour: 9, task: 'חצי שעה סידור כתבי האדמו"ר מפיאסצנה', motivation: 8 },
+    { hour: 10, task: '5 דק לימוד הלכה', motivation: 8 },
+    { hour: 11, task: 'חצי שעה נגינה בפסנתר 🎹', motivation: 9 },
+    { hour: 14, task: 'תפילת מנחה', motivation: 8 },
+    { hour: 16, task: 'שיחה למישהי ב-Vibe (נתינה) 💬', motivation: 7 },
+    { hour: 20, task: 'תפילת ערבית', motivation: 8 },
+    { hour: 22, task: 'התבודדות יומית 🤲', motivation: 9 },
+    { hour: 26, task: 'לו"ז יומי למחר + הליכה לישון עד 1:00', motivation: 7 }
+  ];
+}
 
 let currentWeekStart = getWeekStart(new Date());
 let selectedCell = null;
@@ -414,47 +340,34 @@ function getWeekStart(date) {
   return d;
 }
 
-function formatDate(d) {
-  return d.getDate() + '/' + (d.getMonth()+1);
-}
+function formatDate(d) { return d.getDate() + '/' + (d.getMonth()+1); }
 
 function getCellKey(dayIdx, hourIdx) {
-  const weekKey = currentWeekStart.toISOString().slice(0,10);
-  return 'loaz_' + weekKey + '_' + dayIdx + '_' + hourIdx;
+  return 'loaz_' + currentWeekStart.toISOString().slice(0,10) + '_' + dayIdx + '_' + hourIdx;
 }
 
 function getUserKey() {
   let name = document.getElementById('userName').value.trim();
-  if (!name) name = 'משתמש';
-  return name;
+  return name || 'משתמש';
 }
 
 function getCellData(dayIdx, hourIdx) {
-  const fullKey = getCellKey(dayIdx, hourIdx) + '_' + getUserKey();
-  const raw = localStorage.getItem(fullKey);
+  const raw = localStorage.getItem(getCellKey(dayIdx, hourIdx) + '_' + getUserKey());
   if (!raw) return null;
   try { return JSON.parse(raw); } catch(e) { return null; }
 }
 
 function setCellData(dayIdx, hourIdx, data) {
-  const fullKey = getCellKey(dayIdx, hourIdx) + '_' + getUserKey();
-  if (data) {
-    localStorage.setItem(fullKey, JSON.stringify(data));
-  } else {
-    localStorage.removeItem(fullKey);
-  }
+  const key = getCellKey(dayIdx, hourIdx) + '_' + getUserKey();
+  if (data) localStorage.setItem(key, JSON.stringify(data));
+  else localStorage.removeItem(key);
 }
 
 function updateDisplayName() {
   const name = document.getElementById('userName').value.trim();
   const el = document.getElementById('displayName');
-  if (name) {
-    el.textContent = '👤 ' + name;
-    el.classList.remove('empty');
-  } else {
-    el.textContent = 'הכנס את שמך למטה כדי להתחיל';
-    el.classList.add('empty');
-  }
+  if (name) { el.textContent = '👤 ' + name; el.classList.remove('empty'); }
+  else { el.textContent = 'הכנס את שמך למטה כדי להתחיל'; el.classList.add('empty'); }
 }
 
 function saveUserName() {
@@ -464,23 +377,28 @@ function saveUserName() {
 
 function loadUserName() {
   const name = localStorage.getItem('loaz_user_name');
-  if (name) {
-    document.getElementById('userName').value = name;
-    updateDisplayName();
-  }
+  if (name) { document.getElementById('userName').value = name; updateDisplayName(); }
 }
 
 function isToday(date) {
-  const today = new Date();
-  return date.getDate() === today.getDate() &&
-         date.getMonth() === today.getMonth() &&
-         date.getFullYear() === today.getFullYear();
+  const t = new Date();
+  return date.getDate() === t.getDate() && date.getMonth() === t.getMonth() && date.getFullYear() === t.getFullYear();
 }
 
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function renderGoals() {
+  const list = document.getElementById('goalsList');
+  list.innerHTML = '';
+  for (let i = 0; i < WEEKLY_GOALS.length; i++) {
+    const li = document.createElement('li');
+    li.textContent = WEEKLY_GOALS[i];
+    list.appendChild(li);
+  }
 }
 
 function renderTable() {
@@ -495,8 +413,7 @@ function renderTable() {
     const todayClass = isToday(date) ? 'today-header' : '';
     headerHTML += '<th class="' + todayClass + '">' + DAYS[d] + '<br><span style="font-size:10px;color:#64748b">' + formatDate(date) + '</span></th>';
   }
-  headerHTML += '</tr>';
-  thead.innerHTML = headerHTML;
+  thead.innerHTML = headerHTML + '</tr>';
   
   let bodyHTML = '';
   for (let h = 0; h < HOURS.length; h++) {
@@ -506,19 +423,15 @@ function renderTable() {
       date.setDate(date.getDate() + d);
       const todayClass = isToday(date) ? 'today-col' : '';
       const data = getCellData(d, h);
-      let cellHTML = '';
+      let cellHTML;
       if (data) {
         const motClass = 'motivation-color-' + data.motivation;
-        const task = escapeHtml(data.task);
         cellHTML = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')">' +
-          '<div class="cell-task">' + task + '</div>' +
-          '<div class="motivation-bar">' +
-          '<div class="motivation-dot ' + motClass + '"></div>' +
-          '<span class="motivation-text">⭐ ' + data.motivation + '/10</span>' +
-          '</div></div>';
+          '<div class="cell-task">' + escapeHtml(data.task) + '</div>' +
+          '<div class="motivation-bar"><div class="motivation-dot ' + motClass + '"></div>' +
+          '<span class="motivation-text">⭐ ' + data.motivation + '/10</span></div></div>';
       } else {
-        cellHTML = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')">' +
-          '<div class="cell-task empty">+ הוסף</div></div>';
+        cellHTML = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')"><div class="cell-task empty">+ הוסף</div></div>';
       }
       bodyHTML += '<td class="' + todayClass + '">' + cellHTML + '</td>';
     }
@@ -530,15 +443,11 @@ function renderTable() {
 
 function updateStats() {
   let total = 0, sum = 0;
-  for (let h = 0; h < HOURS.length; h++) {
+  for (let h = 0; h < HOURS.length; h++)
     for (let d = 0; d < 6; d++) {
       const data = getCellData(d, h);
-      if (data) {
-        total++;
-        sum += data.motivation;
-      }
+      if (data) { total++; sum += data.motivation; }
     }
-  }
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statSum').textContent = sum;
   document.getElementById('statAvg').textContent = total > 0 ? (sum/total).toFixed(1) : '—';
@@ -565,26 +474,20 @@ function openModal(dayIdx, hourIdx) {
   setTimeout(function() { document.getElementById('taskInput').focus(); }, 100);
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-  selectedCell = null;
-}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); selectedCell = null; }
 
 function saveCell() {
   if (!selectedCell) return;
   const task = document.getElementById('taskInput').value.trim();
-  const motivation = parseInt(document.getElementById('motivationInput').value);
   if (!task) { alert('אנא הכנס את הלו"ז שלך'); return; }
-  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: motivation });
-  closeModal();
-  renderTable();
+  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: parseInt(document.getElementById('motivationInput').value) });
+  closeModal(); renderTable();
 }
 
 function deleteCell() {
   if (!selectedCell) return;
   setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null);
-  closeModal();
-  renderTable();
+  closeModal(); renderTable();
 }
 
 function updateMotivationDisplay() {
@@ -594,71 +497,52 @@ function updateMotivationDisplay() {
 }
 
 function loadSampleSchedule() {
-  const name = document.getElementById('userName').value.trim();
-  if (!name) {
+  if (!document.getElementById('userName').value.trim()) {
     alert('אנא הכנס את שמך תחילה');
     document.getElementById('userName').focus();
     return;
   }
-  if (confirm('טעינת לוז לדוגמה תמחק את הלוז הנוכחי של השבוע. להמשיך?')) {
-    // Clear current week
-    for (let h = 0; h < HOURS.length; h++) {
-      for (let d = 0; d < 6; d++) {
-        setCellData(d, h, null);
-      }
-    }
-    // Load sample
-    for (let i = 0; i < SAMPLE_SCHEDULE.length; i++) {
-      const item = SAMPLE_SCHEDULE[i];
-      setCellData(item.day, item.hour, { task: item.task, motivation: item.motivation });
+  if (confirm('טעינת לוז לדוגמה תמחק את הלוז הנוכחי. להמשיך?')) {
+    for (let h = 0; h < HOURS.length; h++)
+      for (let d = 0; d < 6; d++) setCellData(d, h, null);
+    for (let d = 0; d < 6; d++) {
+      const tasks = getDailyTasks(d);
+      for (let i = 0; i < tasks.length; i++)
+        setCellData(d, tasks[i].hour, { task: tasks[i].task, motivation: tasks[i].motivation });
     }
     renderTable();
   }
 }
 
 function clearWeek() {
-  if (confirm('האם לנקות את כל הלוז של השבוע הזה?')) {
-    for (let h = 0; h < HOURS.length; h++) {
-      for (let d = 0; d < 6; d++) {
-        setCellData(d, h, null);
-      }
-    }
+  if (confirm('לנקות את כל הלוז של השבוע?')) {
+    for (let h = 0; h < HOURS.length; h++)
+      for (let d = 0; d < 6; d++) setCellData(d, h, null);
     renderTable();
   }
 }
 
-// Events
-document.getElementById('prevWeek').addEventListener('click', function() {
-  currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-  renderTable();
-  renderWeekLabel();
-});
-document.getElementById('nextWeek').addEventListener('click', function() {
-  currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-  renderTable();
-  renderWeekLabel();
-});
-document.getElementById('userName').addEventListener('input', function() {
-  saveUserName();
-  renderTable();
-});
+document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); renderTable(); renderWeekLabel(); });
+document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); renderTable(); renderWeekLabel(); });
+document.getElementById('userName').addEventListener('input', function() { saveUserName(); renderTable(); });
 document.getElementById('motivationInput').addEventListener('input', updateMotivationDisplay);
 document.getElementById('saveBtn').addEventListener('click', saveCell);
 document.getElementById('cancelBtn').addEventListener('click', closeModal);
 document.getElementById('deleteBtn').addEventListener('click', deleteCell);
 document.getElementById('sampleBtn').addEventListener('click', loadSampleSchedule);
 document.getElementById('clearBtn').addEventListener('click', clearWeek);
+document.getElementById('goalsBtn').addEventListener('click', function() {
+  document.getElementById('goalsSection').classList.toggle('active');
+});
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 });
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('active')) {
-    closeModal();
-  }
+  if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('active')) closeModal();
 });
 
-// Init
 loadUserName();
+renderGoals();
 renderWeekLabel();
 renderTable();
 </script>
