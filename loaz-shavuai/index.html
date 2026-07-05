@@ -14,17 +14,35 @@ body {
   padding: 16px;
 }
 .container { max-width: 1200px; margin: 0 auto; }
-h1 {
+.top-banner {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 4px;
-  color: #14b8a6;
+}
+.top-banner h1 {
+  font-size: 22px;
+  color: #f0fdfa;
+  margin-bottom: 2px;
+}
+.top-banner .trainee-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 6px;
+  min-height: 24px;
+}
+.top-banner .trainee-name.empty {
+  color: #99f6e4;
+  font-weight: 400;
+  font-size: 14px;
 }
 .subtitle {
   text-align: center;
-  font-size: 14px;
-  color: #64748b;
-  margin-bottom: 20px;
+  font-size: 13px;
+  color: #5eead4;
+  margin-bottom: 16px;
 }
 .header-bar {
   display: flex;
@@ -32,7 +50,7 @@ h1 {
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   background: #1e293b;
   padding: 16px;
   border-radius: 12px;
@@ -48,6 +66,10 @@ h1 {
 .header-bar input:focus, .header-bar select:focus {
   outline: none;
   border-color: #14b8a6;
+}
+.header-bar input.name-input {
+  font-weight: 600;
+  min-width: 180px;
 }
 .week-nav {
   display: flex;
@@ -67,6 +89,31 @@ h1 {
 }
 .week-nav button:hover { background: #334155; }
 .week-label { font-size: 14px; color: #94a3b8; }
+.btn-sample {
+  background: #1e293b;
+  border: 1px solid #14b8a6;
+  color: #14b8a6;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-sample:hover { background: #14b8a6; color: #0f172a; }
+.btn-clear {
+  background: #1e293b;
+  border: 1px solid #475569;
+  color: #94a3b8;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-clear:hover { background: #475569; color: #e2e8f0; }
 table {
   width: 100%;
   border-collapse: collapse;
@@ -130,10 +177,7 @@ td:first-child {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.motivation-text {
-  font-size: 9px;
-  color: #64748b;
-}
+.motivation-text { font-size: 9px; color: #64748b; }
 .motivation-color-1 { background: #ef4444; }
 .motivation-color-2 { background: #f97316; }
 .motivation-color-3 { background: #f97316; }
@@ -165,16 +209,8 @@ td:first-child {
   width: 100%;
   box-shadow: 0 25px 50px rgba(0,0,0,0.5);
 }
-.modal-title {
-  font-size: 18px;
-  color: #14b8a6;
-  margin-bottom: 4px;
-}
-.modal-subtitle {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 20px;
-}
+.modal-title { font-size: 18px; color: #14b8a6; margin-bottom: 4px; }
+.modal-subtitle { font-size: 13px; color: #64748b; margin-bottom: 20px; }
 .modal label {
   display: block;
   font-size: 13px;
@@ -211,15 +247,8 @@ td:first-child {
   min-width: 36px;
   text-align: center;
 }
-.motivation-emoji {
-  font-size: 20px;
-  margin-left: 4px;
-}
-.modal-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 24px;
-}
+.motivation-emoji { font-size: 20px; margin-left: 4px; }
+.modal-buttons { display: flex; gap: 10px; margin-top: 24px; }
 .btn {
   flex: 1;
   padding: 10px 16px;
@@ -229,28 +258,13 @@ td:first-child {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-save {
-  background: #14b8a6;
-  color: #0f172a;
-  font-weight: 600;
-}
+.btn-save { background: #14b8a6; color: #0f172a; font-weight: 600; }
 .btn-save:hover { background: #0d9488; }
-.btn-cancel {
-  background: #334155;
-  color: #e2e8f0;
-}
+.btn-cancel { background: #334155; color: #e2e8f0; }
 .btn-cancel:hover { background: #475569; }
-.btn-delete {
-  background: #7f1d1d;
-  color: #fca5a5;
-}
+.btn-delete { background: #7f1d1d; color: #fca5a5; }
 .btn-delete:hover { background: #991b1b; }
-.stats-bar {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
+.stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .stat-card {
   background: #1e293b;
   padding: 12px 16px;
@@ -266,7 +280,7 @@ td:first-child {
   border: 1px solid #1e293b;
 }
 @media (max-width: 768px) {
-  h1 { font-size: 18px; }
+  .top-banner h1 { font-size: 18px; }
   table { font-size: 10px; }
   th, td { padding: 2px; }
   .cell-content { padding: 3px 4px; min-height: 44px; }
@@ -274,28 +288,30 @@ td:first-child {
   .modal { padding: 16px; }
   .header-bar { flex-direction: column; align-items: stretch; }
   .header-bar input, .header-bar select { width: 100%; }
+  .btn-sample, .btn-clear { width: 100%; text-align: center; }
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>📋 לוז שבועי</h1>
-  <div class="subtitle">ניהול לו"ז ומוטיבציה — ראשון עד שישי</div>
+  <div class="top-banner">
+    <h1>📋 לוז שבועי</h1>
+    <div class="subtitle">ניהול לו"ז ומוטיבציה — ראשון עד שישי</div>
+    <div class="trainee-name empty" id="displayName">הכנס את שמך למטה כדי להתחיל</div>
+  </div>
 
   <div class="header-bar">
     <div>
-      <input type="text" id="userName" placeholder="הכנס את השם שלך" maxlength="30">
+      <input type="text" id="userName" class="name-input" placeholder="✍️ שם המתאמן" maxlength="30">
     </div>
     <div class="week-nav">
       <button id="prevWeek">‹</button>
       <span class="week-label" id="weekLabel"></span>
       <button id="nextWeek">›</button>
     </div>
-    <div>
-      <select id="viewMode">
-        <option value="edit">מצב עריכה</option>
-        <option value="view">מצב תצוגה</option>
-      </select>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-sample" id="sampleBtn">📝 טען לוז לדוגמה</button>
+      <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
   </div>
 
@@ -353,15 +369,47 @@ HOURS.push('00:00');
 
 const MOTIVATION_EMOJIS = ['😢','😞','😕','😐','🙂','😊','😄','😃','🔥','🚀'];
 
+// Sample schedule data — realistic weekly schedule
+const SAMPLE_SCHEDULE = [
+  { day: 0, hour: 0, task: 'קפה + תכנון שבועי', motivation: 8 },
+  { day: 0, hour: 2, task: 'פגישת צוות', motivation: 7 },
+  { day: 0, hour: 6, task: 'אימון אישי', motivation: 9 },
+  { day: 0, hour: 8, task: 'זמן משפחה', motivation: 9 },
+  { day: 0, hour: 14, task: 'קריאה / לימוד', motivation: 6 },
+  { day: 1, hour: 0, task: 'קפה + סידור יום', motivation: 7 },
+  { day: 1, hour: 2, task: 'עבודה מול לקוחות', motivation: 8 },
+  { day: 1, hour: 6, task: 'ארוחת צהריים', motivation: 7 },
+  { day: 1, hour: 8, task: 'פגישות אישיות', motivation: 6 },
+  { day: 1, hour: 12, task: 'זמן מנוחה', motivation: 5 },
+  { day: 1, hour: 16, task: 'סיכום יום', motivation: 6 },
+  { day: 2, hour: 0, task: 'קפה + תכנון', motivation: 7 },
+  { day: 2, hour: 4, task: 'עבודה על פרויקטים', motivation: 8 },
+  { day: 2, hour: 8, task: 'זמן משפחה', motivation: 9 },
+  { day: 2, hour: 14, task: 'קורס / התפתחות', motivation: 7 },
+  { day: 3, hour: 0, task: 'קפה + מיילים', motivation: 6 },
+  { day: 3, hour: 2, task: 'פגישות עבודה', motivation: 7 },
+  { day: 3, hour: 6, task: 'ארוחת צהריים', motivation: 6 },
+  { day: 3, hour: 10, task: 'ניהול משימות', motivation: 7 },
+  { day: 3, hour: 16, task: 'זמן אישי', motivation: 8 },
+  { day: 4, hour: 0, task: 'קפה + סיכום שבוע', motivation: 8 },
+  { day: 4, hour: 4, task: 'פגישת סיכום', motivation: 7 },
+  { day: 4, hour: 8, task: 'ארוחת שישי', motivation: 10 },
+  { day: 4, hour: 12, task: 'הכנות לשבת', motivation: 9 },
+  { day: 4, hour: 16, task: 'קבלת שבת', motivation: 10 },
+  { day: 5, hour: 0, task: 'תפילה + לימוד', motivation: 9 },
+  { day: 5, hour: 4, task: 'ארוחת שבת', motivation: 10 },
+  { day: 5, hour: 8, task: 'מנוחה / משפחה', motivation: 10 },
+  { day: 5, hour: 14, task: 'סעודה שלישית', motivation: 9 },
+  { day: 5, hour: 16, task: 'זמן אישי', motivation: 8 }
+];
+
 let currentWeekStart = getWeekStart(new Date());
 let selectedCell = null;
-let viewMode = 'edit';
 
 function getWeekStart(date) {
   const d = new Date(date);
   const day = d.getDay();
-  const diff = d.getDate() - day;
-  d.setDate(diff);
+  d.setDate(d.getDate() - day);
   d.setHours(0,0,0,0);
   return d;
 }
@@ -382,18 +430,14 @@ function getUserKey() {
 }
 
 function getCellData(dayIdx, hourIdx) {
-  const key = getCellKey(dayIdx, hourIdx);
-  const userKey = getUserKey();
-  const fullKey = key + '_' + userKey;
+  const fullKey = getCellKey(dayIdx, hourIdx) + '_' + getUserKey();
   const raw = localStorage.getItem(fullKey);
   if (!raw) return null;
   try { return JSON.parse(raw); } catch(e) { return null; }
 }
 
 function setCellData(dayIdx, hourIdx, data) {
-  const key = getCellKey(dayIdx, hourIdx);
-  const userKey = getUserKey();
-  const fullKey = key + '_' + userKey;
+  const fullKey = getCellKey(dayIdx, hourIdx) + '_' + getUserKey();
   if (data) {
     localStorage.setItem(fullKey, JSON.stringify(data));
   } else {
@@ -401,13 +445,29 @@ function setCellData(dayIdx, hourIdx, data) {
   }
 }
 
+function updateDisplayName() {
+  const name = document.getElementById('userName').value.trim();
+  const el = document.getElementById('displayName');
+  if (name) {
+    el.textContent = '👤 ' + name;
+    el.classList.remove('empty');
+  } else {
+    el.textContent = 'הכנס את שמך למטה כדי להתחיל';
+    el.classList.add('empty');
+  }
+}
+
 function saveUserName() {
   localStorage.setItem('loaz_user_name', document.getElementById('userName').value);
+  updateDisplayName();
 }
 
 function loadUserName() {
   const name = localStorage.getItem('loaz_user_name');
-  if (name) document.getElementById('userName').value = name;
+  if (name) {
+    document.getElementById('userName').value = name;
+    updateDisplayName();
+  }
 }
 
 function isToday(date) {
@@ -465,7 +525,6 @@ function renderTable() {
     bodyHTML += '</tr>';
   }
   tbody.innerHTML = bodyHTML;
-  
   updateStats();
 }
 
@@ -488,27 +547,21 @@ function updateStats() {
 function renderWeekLabel() {
   const end = new Date(currentWeekStart);
   end.setDate(end.getDate() + 5);
-  document.getElementById('weekLabel').textContent = 
-    formatDate(currentWeekStart) + ' - ' + formatDate(end);
+  document.getElementById('weekLabel').textContent = formatDate(currentWeekStart) + ' - ' + formatDate(end);
 }
 
 function openModal(dayIdx, hourIdx) {
-  if (viewMode === 'view') return;
-  selectedCell = { dayIdx, hourIdx };
+  selectedCell = { dayIdx: dayIdx, hourIdx: hourIdx };
   const data = getCellData(dayIdx, hourIdx);
-  
   const date = new Date(currentWeekStart);
   date.setDate(date.getDate() + dayIdx);
   document.getElementById('modalTitle').textContent = DAYS[dayIdx] + ' ' + formatDate(date) + ' — ' + HOURS[hourIdx];
   document.getElementById('modalSubtitle').textContent = 'שעה ' + HOURS[hourIdx] + ' | ' + DAYS[dayIdx];
-  
   document.getElementById('taskInput').value = data ? data.task : '';
   document.getElementById('motivationInput').value = data ? data.motivation : 5;
   updateMotivationDisplay();
-  
   document.getElementById('deleteBtn').style.display = data ? 'block' : 'none';
   document.getElementById('modalOverlay').classList.add('active');
-  
   setTimeout(function() { document.getElementById('taskInput').focus(); }, 100);
 }
 
@@ -521,12 +574,7 @@ function saveCell() {
   if (!selectedCell) return;
   const task = document.getElementById('taskInput').value.trim();
   const motivation = parseInt(document.getElementById('motivationInput').value);
-  
-  if (!task) {
-    alert('אנא הכנס את הלו"ז שלך');
-    return;
-  }
-  
+  if (!task) { alert('אנא הכנס את הלו"ז שלך'); return; }
   setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: motivation });
   closeModal();
   renderTable();
@@ -545,6 +593,40 @@ function updateMotivationDisplay() {
   document.getElementById('motivationEmoji').textContent = MOTIVATION_EMOJIS[val - 1];
 }
 
+function loadSampleSchedule() {
+  const name = document.getElementById('userName').value.trim();
+  if (!name) {
+    alert('אנא הכנס את שמך תחילה');
+    document.getElementById('userName').focus();
+    return;
+  }
+  if (confirm('טעינת לוז לדוגמה תמחק את הלוז הנוכחי של השבוע. להמשיך?')) {
+    // Clear current week
+    for (let h = 0; h < HOURS.length; h++) {
+      for (let d = 0; d < 6; d++) {
+        setCellData(d, h, null);
+      }
+    }
+    // Load sample
+    for (let i = 0; i < SAMPLE_SCHEDULE.length; i++) {
+      const item = SAMPLE_SCHEDULE[i];
+      setCellData(item.day, item.hour, { task: item.task, motivation: item.motivation });
+    }
+    renderTable();
+  }
+}
+
+function clearWeek() {
+  if (confirm('האם לנקות את כל הלוז של השבוע הזה?')) {
+    for (let h = 0; h < HOURS.length; h++) {
+      for (let d = 0; d < 6; d++) {
+        setCellData(d, h, null);
+      }
+    }
+    renderTable();
+  }
+}
+
 // Events
 document.getElementById('prevWeek').addEventListener('click', function() {
   currentWeekStart.setDate(currentWeekStart.getDate() - 7);
@@ -560,14 +642,12 @@ document.getElementById('userName').addEventListener('input', function() {
   saveUserName();
   renderTable();
 });
-document.getElementById('viewMode').addEventListener('change', function(e) {
-  viewMode = e.target.value;
-  renderTable();
-});
 document.getElementById('motivationInput').addEventListener('input', updateMotivationDisplay);
 document.getElementById('saveBtn').addEventListener('click', saveCell);
 document.getElementById('cancelBtn').addEventListener('click', closeModal);
 document.getElementById('deleteBtn').addEventListener('click', deleteCell);
+document.getElementById('sampleBtn').addEventListener('click', loadSampleSchedule);
+document.getElementById('clearBtn').addEventListener('click', clearWeek);
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 });
