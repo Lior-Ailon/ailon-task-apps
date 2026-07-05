@@ -103,6 +103,13 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
   .status-badge { font-size: 12px; top: 1px; left: 2px; }
   .status-done, .status-notdone { width: 14px; height: 14px; font-size: 9px; }
 }
+
+tfoot td { background: #1e293b; text-align: center; font-size: 11px; font-weight: 600; padding: 8px 4px; border: 1px solid #334155; color: #94a3b8; }
+tfoot td.day-done { color: #22c55e; }
+tfoot td.day-notdone { color: #ef4444; }
+tfoot td.day-total { color: #14b8a6; font-size: 13px; }
+tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
+
 </style>
 </head>
 <body>
@@ -136,7 +143,7 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
     <div class="stat-card"><div class="stat-label">⏳ ממתין</div><div class="stat-value" id="statPending">0</div></div>
     <div class="stat-card"><div class="stat-label">ממוצע מוטיבציה</div><div class="stat-value" id="statAvg">—</div></div>
   </div>
-  <div class="table-wrapper"><table id="scheduleTable"><thead></thead><tbody></tbody></table></div>
+  <div class="table-wrapper"><table id="scheduleTable"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
 </div>
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
@@ -280,6 +287,33 @@ function renderTable() {
     bh += '</tr>';
   }
   table.querySelector('tbody').innerHTML = bh;
+  
+  // Footer summary row
+  let fh = '<tr><td>📊 סיכום</td>';
+  let totalAll=0, doneAll=0, notDoneAll=0;
+  for (let d = 0; d < 6; d++) {
+    let dayTotal=0, dayDone=0, dayNotDone=0;
+    for (let h=0;h<HOURS.length;h++) {
+      const data=getCellData(d,h);
+      if(data){ dayTotal++; totalAll++;
+        if(data.status==='done'){dayDone++;doneAll++;}
+        else if(data.status==='notdone'){dayNotDone++;notDoneAll++;}
+      }
+    }
+    let cellClass = 'day-total';
+    if (dayTotal > 0) {
+      const pct = Math.round(dayDone/dayTotal*100);
+      fh += '<td class="'+cellClass+'">'+dayDone+'/'+dayTotal+'<br><span style="font-size:9px;color:#64748b">'+(dayTotal>0?pct+'% בוצע':'—')+'</span></td>';
+    } else {
+      fh += '<td style="color:#475569">—</td>';
+    }
+  }
+  fh += '</tr>';
+  // Grand total row
+  let pctAll = totalAll > 0 ? Math.round(doneAll/totalAll*100) : 0;
+  fh += '<tr><td class="footer-total">סה"כ</td><td colspan="6" class="footer-total">✅ '+doneAll+' בוצע &nbsp; ❌ '+notDoneAll+' לא בוצע &nbsp; ⏳ '+(totalAll-doneAll-notDoneAll)+' ממתין &nbsp; | &nbsp; סה"כ '+totalAll+' משימות &nbsp; | &nbsp; '+pctAll+'% ביצוע</td></tr>';
+  table.querySelector('tfoot').innerHTML = fh;
+  
   updateStats();
 }
 
