@@ -40,7 +40,7 @@ th:first-child { width: 60px; color: #64748b; }
 td { border: 1px solid #1e293b; padding: 0; vertical-align: top; height: 52px; transition: background 0.15s; }
 td:hover { background: #1e293b; }
 td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weight: 600; background: #1e293b; vertical-align: middle; }
-.cell-content { padding: 4px 6px; cursor: pointer; min-height: 50px; display: flex; flex-direction: column; justify-content: space-between; }
+.cell-content { padding: 4px 6px; cursor: pointer; min-height: 50px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
 .cell-task { font-size: 11px; color: #e2e8f0; line-height: 1.3; word-break: break-word; }
 .cell-task.empty { color: #475569; font-size: 10px; }
 .motivation-bar { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
@@ -52,6 +52,12 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .motivation-color-10 { background: #0ea5e9; }
 .today-header { color: #f59e0b !important; }
 .today-col { background: rgba(245,158,11,0.05); }
+/* Status badges */
+.status-badge { position: absolute; top: 2px; left: 4px; font-size: 14px; line-height: 1; }
+.status-done { background: #16a34a; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.status-notdone { background: #dc2626; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.cell-done { background: rgba(22,163,74,0.12); }
+.cell-notdone { background: rgba(220,38,38,0.08); }
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 16px; }
 .modal-overlay.active { display: flex; }
 .modal { background: #1e293b; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
@@ -64,6 +70,14 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .motivation-input input[type="range"] { flex: 1; accent-color: #14b8a6; height: 6px; }
 .motivation-value { font-size: 22px; font-weight: 700; min-width: 36px; text-align: center; }
 .motivation-emoji { font-size: 20px; margin-left: 4px; }
+.status-toggle { display: flex; gap: 8px; margin-top: 8px; }
+.status-btn { flex: 1; padding: 10px; border-radius: 8px; border: 2px solid; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; text-align: center; }
+.status-btn.done { border-color: #16a34a; color: #16a34a; background: transparent; }
+.status-btn.done.active { background: #16a34a; color: #fff; }
+.status-btn.notdone { border-color: #dc2626; color: #dc2626; background: transparent; }
+.status-btn.notdone.active { background: #dc2626; color: #fff; }
+.status-btn.pending { border-color: #64748b; color: #94a3b8; background: transparent; }
+.status-btn.pending.active { background: #334155; color: #e2e8f0; }
 .modal-buttons { display: flex; gap: 10px; margin-top: 24px; }
 .btn { flex: 1; padding: 10px 16px; border-radius: 8px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; }
 .btn-save { background: #14b8a6; color: #0f172a; font-weight: 600; }
@@ -73,9 +87,11 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .btn-delete { background: #7f1d1d; color: #fca5a5; }
 .btn-delete:hover { background: #991b1b; }
 .stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-.stat-card { background: #1e293b; padding: 12px 16px; border-radius: 10px; flex: 1; min-width: 140px; }
+.stat-card { background: #1e293b; padding: 12px 16px; border-radius: 10px; flex: 1; min-width: 120px; }
 .stat-label { font-size: 11px; color: #64748b; }
 .stat-value { font-size: 22px; font-weight: 700; color: #14b8a6; }
+.stat-value.green { color: #22c55e; }
+.stat-value.red { color: #ef4444; }
 .table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #1e293b; }
 @media (max-width: 768px) {
   .top-banner h1 { font-size: 18px; } table { font-size: 10px; }
@@ -84,6 +100,8 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
   .header-bar { flex-direction: column; align-items: stretch; }
   .header-bar input, .header-bar select { width: 100%; }
   .btn-sample, .btn-clear, .btn-goals { width: 100%; text-align: center; }
+  .status-badge { font-size: 12px; top: 1px; left: 2px; }
+  .status-done, .status-notdone { width: 14px; height: 14px; font-size: 9px; }
 }
 </style>
 </head>
@@ -112,9 +130,11 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
     <ol class="goals-list" id="goalsList"></ol>
   </div>
   <div class="stats-bar">
-    <div class="stat-card"><div class="stat-label">פעילויות השבוע</div><div class="stat-value" id="statTotal">0</div></div>
+    <div class="stat-card"><div class="stat-label">פעילויות</div><div class="stat-value" id="statTotal">0</div></div>
+    <div class="stat-card"><div class="stat-label">✅ בוצע</div><div class="stat-value green" id="statDone">0</div></div>
+    <div class="stat-card"><div class="stat-label">❌ לא בוצע</div><div class="stat-value red" id="statNotDone">0</div></div>
+    <div class="stat-card"><div class="stat-label">⏳ ממתין</div><div class="stat-value" id="statPending">0</div></div>
     <div class="stat-card"><div class="stat-label">ממוצע מוטיבציה</div><div class="stat-value" id="statAvg">—</div></div>
-    <div class="stat-card"><div class="stat-label">נקודות מוטיבציה</div><div class="stat-value" id="statSum">0</div></div>
   </div>
   <div class="table-wrapper"><table id="scheduleTable"><thead></thead><tbody></tbody></table></div>
 </div>
@@ -129,6 +149,12 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
       <input type="range" id="motivationInput" min="1" max="10" value="5">
       <span class="motivation-emoji" id="motivationEmoji">😐</span>
       <span class="motivation-value" id="motivationValue">5</span>
+    </div>
+    <label>סטטוס ביצוע</label>
+    <div class="status-toggle">
+      <div class="status-btn pending active" id="statusPending" onclick="setStatus('pending')">⏳ ממתין</div>
+      <div class="status-btn done" id="statusDoneBtn" onclick="setStatus('done')">✅ בוצע</div>
+      <div class="status-btn notdone" id="statusNotDoneBtn" onclick="setStatus('notdone')">❌ לא בוצע</div>
     </div>
     <div class="modal-buttons">
       <button class="btn btn-delete" id="deleteBtn" style="display:none">מחק</button>
@@ -145,20 +171,13 @@ HOURS.push('00:00');
 const MOTIVATION_EMOJIS = ['😢','😞','😕','😐','🙂','😊','😄','😃','🔥','🚀'];
 
 const WEEKLY_GOALS = [
-  'להירשם לתואר בפסיכולוגיה',
-  'לשפר את היכולות בנגינה בפסנתר',
-  'להיות מנחה טוב יותר ב-NLP',
-  'להיות מחובר לרצון שלי ומפוקס עליו יותר',
-  'להתקדם בהיקף לימוד כתבי רבי נחמן מברסלב',
-  'לקבל עוד תלמיד לאימוני כושר ולהכניס עוד כסף',
-  'לשפר ידיעת וקיום הלכה (לימוד 5 דקות כל יום)',
-  'להשיג עוד 2 מונחים',
-  'לקנות שמן קוקוס + פירות וירקות לסלט יומי ואוכל בריא',
-  'לסכם את הלימוד בישיבה בכתבי הפיאסצנה ובעל שם טוב על התורה במחשב',
-  'ללמוד על זוגיות ובניית בית'
+  'להירשם לתואר בפסיכולוגיה','לשפר את היכולות בנגינה בפסנתר','להיות מנחה טוב יותר ב-NLP',
+  'להיות מחובר לרצון שלי ומפוקס עליו יותר','להתקדם בהיקף לימוד כתבי רבי נחמן מברסלב',
+  'לקבל עוד תלמיד לאימוני כושר ולהכניס עוד כסף','לשפר ידיעת וקיום הלכה (לימוד 5 דקות כל יום)',
+  'להשיג עוד 2 מונחים','לקנות שמן קוקוס + פירות וירקות לסלט יומי ואוכל בריא',
+  'לסכם את הלימוד בישיבה בכתבי הפיאסצנה ובעל שם טוב על התורה במחשב','ללמוד על זוגיות ובניית בית'
 ];
 
-// All daily tasks — each day gets ALL of these (with small random time/motivation variation)
 const DAILY_TASKS = [
   { task: 'קימה + סידור מיטה 🛏️', baseHour: 0, baseMot: 8 },
   { task: 'הכנת שייק בוקר 🥤', baseHour: 1, baseMot: 7 },
@@ -178,98 +197,56 @@ const DAILY_TASKS = [
   { task: 'התבודדות יומית 🤲', baseHour: 22, baseMot: 9 },
   { task: 'לו"ז יומי לפני שינה + הליכה לישון עד 1:00', baseHour: 26, baseMot: 7 }
 ];
-
 const FRIDAY_EXTRA = [
   { task: 'הכנות לשבת ✡️', baseHour: 18, baseMot: 9 },
   { task: 'קבלת שבת 🕯️', baseHour: 20, baseMot: 10 }
 ];
 
-function shuffleArray(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+function shuffleArray(arr) { const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function randomMotivation(b) { return Math.max(1,Math.min(10,b+Math.floor(Math.random()*3)-1)); }
+function randomHourOffset(b) { return Math.max(0,Math.min(HOURS.length-1,b+Math.floor(Math.random()*5)-2)); }
 
-function randomMotivation(base) {
-  return Math.max(1, Math.min(10, base + Math.floor(Math.random() * 3) - 1));
-}
-
-function randomHourOffset(base) {
-  return Math.max(0, Math.min(HOURS.length - 1, base + Math.floor(Math.random() * 5) - 2));
-}
-
-// Generate a full week with all daily tasks, randomly distributed per day
 function generateRandomWeek() {
-  const weekData = {};
+  const wd = {};
   for (let d = 0; d < 6; d++) {
-    weekData[d] = {};
-    const usedHours = {};
+    wd[d] = {}; const usedH = {};
     let tasks = DAILY_TASKS.slice();
     if (d === 5) tasks = tasks.concat(FRIDAY_EXTRA);
-    // Shuffle task order for variety
-    const shuffled = shuffleArray(tasks);
-    for (let i = 0; i < shuffled.length; i++) {
-      const t = shuffled[i];
-      let hour = randomHourOffset(t.baseHour);
-      // Avoid collisions
-      let attempts = 0;
-      while (usedHours[hour] && attempts < 15) {
-        hour = (hour + 1) % HOURS.length;
-        attempts++;
-      }
-      usedHours[hour] = true;
-      weekData[d][hour] = { task: t.task, motivation: randomMotivation(t.baseMot) };
+    const sh = shuffleArray(tasks);
+    for (let i = 0; i < sh.length; i++) {
+      let hour = randomHourOffset(sh[i].baseHour);
+      let att = 0;
+      while (usedH[hour] && att < 15) { hour = (hour+1) % HOURS.length; att++; }
+      usedH[hour] = true;
+      wd[d][hour] = { task: sh[i].task, motivation: randomMotivation(sh[i].baseMot), status: 'pending' };
     }
   }
-  return weekData;
+  return wd;
 }
 
 let currentWeekStart = getWeekStart(new Date());
 let selectedCell = null;
+let currentStatus = 'pending';
 
-function getWeekStart(date) {
-  const d = new Date(date);
-  d.setDate(d.getDate() - d.getDay());
-  d.setHours(0,0,0,0);
-  return d;
-}
-function formatDate(d) { return d.getDate() + '/' + (d.getMonth()+1); }
-function getCellKey(d, h) { return 'loaz_' + currentWeekStart.toISOString().slice(0,10) + '_' + d + '_' + h; }
+function getWeekStart(date) { const d=new Date(date); d.setDate(d.getDate()-d.getDay()); d.setHours(0,0,0,0); return d; }
+function formatDate(d) { return d.getDate()+'/'+(d.getMonth()+1); }
+function getCellKey(d,h) { return 'loaz_'+currentWeekStart.toISOString().slice(0,10)+'_'+d+'_'+h; }
 function getUserKey() { return document.getElementById('userName').value.trim() || 'משתמש'; }
-function getCellData(d, h) { const r = localStorage.getItem(getCellKey(d,h)+'_'+getUserKey()); if(!r) return null; try { return JSON.parse(r); } catch(e) { return null; } }
-function setCellData(d, h, data) { const k = getCellKey(d,h)+'_'+getUserKey(); if(data) localStorage.setItem(k, JSON.stringify(data)); else localStorage.removeItem(k); }
+function getCellData(d,h) { const r=localStorage.getItem(getCellKey(d,h)+'_'+getUserKey()); if(!r) return null; try{return JSON.parse(r);}catch(e){return null;} }
+function setCellData(d,h,data) { const k=getCellKey(d,h)+'_'+getUserKey(); if(data) localStorage.setItem(k,JSON.stringify(data)); else localStorage.removeItem(k); }
+function hasAnyData() { for(let h=0;h<HOURS.length;h++) for(let d=0;d<6;d++) if(getCellData(d,h)) return true; return false; }
+function updateDisplayName() { const n=document.getElementById('userName').value.trim(); const el=document.getElementById('displayName'); if(n){el.textContent='👤 '+n;el.classList.remove('empty');}else{el.textContent='הכנס את שמך למטה כדי להתחיל';el.classList.add('empty');} }
+function saveUserName() { localStorage.setItem('loaz_user_name',document.getElementById('userName').value); updateDisplayName(); }
+function loadUserName() { const n=localStorage.getItem('loaz_user_name'); if(n){document.getElementById('userName').value=n;updateDisplayName();} }
+function isToday(date) { const t=new Date(); return date.getDate()===t.getDate()&&date.getMonth()===t.getMonth()&&date.getFullYear()===t.getFullYear(); }
+function escapeHtml(text) { const d=document.createElement('div'); d.textContent=text; return d.innerHTML; }
+function renderGoals() { const l=document.getElementById('goalsList'); l.innerHTML=''; for(let i=0;i<WEEKLY_GOALS.length;i++){const li=document.createElement('li');li.textContent=WEEKLY_GOALS[i];l.appendChild(li);} }
 
-function hasAnyData() {
-  for (let h = 0; h < HOURS.length; h++)
-    for (let d = 0; d < 6; d++)
-      if (getCellData(d, h)) return true;
-  return false;
-}
-
-function updateDisplayName() {
-  const n = document.getElementById('userName').value.trim();
-  const el = document.getElementById('displayName');
-  if (n) { el.textContent = '👤 ' + n; el.classList.remove('empty'); }
-  else { el.textContent = 'הכנס את שמך למטה כדי להתחיל'; el.classList.add('empty'); }
-}
-function saveUserName() { localStorage.setItem('loaz_user_name', document.getElementById('userName').value); updateDisplayName(); }
-function loadUserName() {
-  const n = localStorage.getItem('loaz_user_name');
-  if (n) { document.getElementById('userName').value = n; updateDisplayName(); }
-}
-function isToday(date) { const t = new Date(); return date.getDate()===t.getDate() && date.getMonth()===t.getMonth() && date.getFullYear()===t.getFullYear(); }
-function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
-function renderGoals() {
-  const l = document.getElementById('goalsList');
-  l.innerHTML = '';
-  for (let i = 0; i < WEEKLY_GOALS.length; i++) {
-    const li = document.createElement('li');
-    li.textContent = WEEKLY_GOALS[i];
-    l.appendChild(li);
-  }
+function setStatus(s) {
+  currentStatus = s;
+  document.getElementById('statusPending').classList.toggle('active', s === 'pending');
+  document.getElementById('statusDoneBtn').classList.toggle('active', s === 'done');
+  document.getElementById('statusNotDoneBtn').classList.toggle('active', s === 'notdone');
 }
 
 function renderTable() {
@@ -277,23 +254,28 @@ function renderTable() {
   let hh = '<tr><th>שעה</th>';
   for (let d = 0; d < 6; d++) {
     const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-    hh += '<th class="' + (isToday(date)?'today-header':'') + '">' + DAYS[d] + '<br><span style="font-size:10px;color:#64748b">' + formatDate(date) + '</span></th>';
+    hh += '<th class="'+(isToday(date)?'today-header':'')+'">'+DAYS[d]+'<br><span style="font-size:10px;color:#64748b">'+formatDate(date)+'</span></th>';
   }
   table.querySelector('thead').innerHTML = hh + '</tr>';
   let bh = '';
   for (let h = 0; h < HOURS.length; h++) {
-    bh += '<tr><td>' + HOURS[h] + '</td>';
+    bh += '<tr><td>'+HOURS[h]+'</td>';
     for (let d = 0; d < 6; d++) {
       const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-      const tc = isToday(date) ? 'today-col' : '';
+      let tc = isToday(date) ? 'today-col' : '';
       const data = getCellData(d, h);
       let ch;
       if (data) {
-        ch = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')"><div class="cell-task">' + escapeHtml(data.task) + '</div><div class="motivation-bar"><div class="motivation-dot motivation-color-' + data.motivation + '"></div><span class="motivation-text">⭐ ' + data.motivation + '/10</span></div></div>';
+        if (data.status === 'done') tc += ' cell-done';
+        else if (data.status === 'notdone') tc += ' cell-notdone';
+        let badge = '';
+        if (data.status === 'done') badge = '<div class="status-badge status-done">✓</div>';
+        else if (data.status === 'notdone') badge = '<div class="status-badge status-notdone">✕</div>';
+        ch = '<div class="cell-content" onclick="openModal('+d+','+h+')">'+badge+'<div class="cell-task">'+escapeHtml(data.task)+'</div><div class="motivation-bar"><div class="motivation-dot motivation-color-'+data.motivation+'"></div><span class="motivation-text">⭐ '+data.motivation+'/10</span></div></div>';
       } else {
-        ch = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')"><div class="cell-task empty">+ הוסף</div></div>';
+        ch = '<div class="cell-content" onclick="openModal('+d+','+h+')"><div class="cell-task empty">+ הוסף</div></div>';
       }
-      bh += '<td class="' + tc + '">' + ch + '</td>';
+      bh += '<td class="'+tc+'">'+ch+'</td>';
     }
     bh += '</tr>';
   }
@@ -302,33 +284,46 @@ function renderTable() {
 }
 
 function updateStats() {
-  let total=0, sum=0;
-  for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) { const data=getCellData(d,h); if(data){total++;sum+=data.motivation;} }
+  let total=0,sum=0,done=0,notdone=0,pending=0;
+  for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) {
+    const data=getCellData(d,h);
+    if(data){ total++; sum+=data.motivation;
+      if(data.status==='done') done++;
+      else if(data.status==='notdone') notdone++;
+      else pending++;
+    }
+  }
   document.getElementById('statTotal').textContent=total;
-  document.getElementById('statSum').textContent=sum;
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statNotDone').textContent=notdone;
+  document.getElementById('statPending').textContent=pending;
   document.getElementById('statAvg').textContent=total>0?(sum/total).toFixed(1):'—';
 }
+
 function renderWeekLabel() { const e=new Date(currentWeekStart); e.setDate(e.getDate()+5); document.getElementById('weekLabel').textContent=formatDate(currentWeekStart)+' - '+formatDate(e); }
 
 function openModal(d, h) {
   selectedCell = { dayIdx: d, hourIdx: h };
   const data = getCellData(d, h);
   const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-  document.getElementById('modalTitle').textContent = DAYS[d] + ' ' + formatDate(date) + ' — ' + HOURS[h];
-  document.getElementById('modalSubtitle').textContent = 'שעה ' + HOURS[h] + ' | ' + DAYS[d];
+  document.getElementById('modalTitle').textContent = DAYS[d]+' '+formatDate(date)+' — '+HOURS[h];
+  document.getElementById('modalSubtitle').textContent = 'שעה '+HOURS[h]+' | '+DAYS[d];
   document.getElementById('taskInput').value = data ? data.task : '';
   document.getElementById('motivationInput').value = data ? data.motivation : 5;
   updateMotivationDisplay();
+  const st = data ? (data.status || 'pending') : 'pending';
+  setStatus(st);
   document.getElementById('deleteBtn').style.display = data ? 'block' : 'none';
   document.getElementById('modalOverlay').classList.add('active');
   setTimeout(function() { document.getElementById('taskInput').focus(); }, 100);
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); selectedCell = null; }
+
 function saveCell() {
   if (!selectedCell) return;
   const task = document.getElementById('taskInput').value.trim();
   if (!task) { alert('אנא הכנס את הלו"ז שלך'); return; }
-  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: parseInt(document.getElementById('motivationInput').value) });
+  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: parseInt(document.getElementById('motivationInput').value), status: currentStatus });
   closeModal(); renderTable();
 }
 function deleteCell() { if(!selectedCell) return; setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null); closeModal(); renderTable(); }
@@ -337,27 +332,14 @@ function updateMotivationDisplay() { const v=document.getElementById('motivation
 function loadRandomSchedule() {
   for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) setCellData(d,h,null);
   const week = generateRandomWeek();
-  for (let d=0; d<6; d++) {
-    for (const hourStr in week[d]) {
-      setCellData(d, parseInt(hourStr), week[d][hourStr]);
-    }
-  }
+  for (let d=0; d<6; d++) for (const hs in week[d]) setCellData(d, parseInt(hs), week[d][hs]);
   renderTable();
 }
-
 function loadSampleSchedule() {
   if (!document.getElementById('userName').value.trim()) { alert('אנא הכנס את שמך תחילה'); document.getElementById('userName').focus(); return; }
-  if (confirm('טעינת לוז רנדומלי תמחק את הלוז הנוכחי. להמשיך?')) {
-    loadRandomSchedule();
-  }
+  if (confirm('טעינת לוז רנדומלי תמחק את הלוז הנוכחי. להמשיך?')) loadRandomSchedule();
 }
-
-function clearWeek() {
-  if (confirm('לנקות את כל הלוז של השבוע?')) {
-    for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) setCellData(d,h,null);
-    renderTable();
-  }
-}
+function clearWeek() { if (confirm('לנקות את כל הלוז של השבוע?')) { for(let h=0;h<HOURS.length;h++) for(let d=0;d<6;d++) setCellData(d,h,null); renderTable(); } }
 
 document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); renderTable(); renderWeekLabel(); });
 document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); renderTable(); renderWeekLabel(); });
@@ -372,15 +354,8 @@ document.getElementById('goalsBtn').addEventListener('click', function() { docum
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
 document.addEventListener('keydown', function(e) { if(e.key==='Escape' && document.getElementById('modalOverlay').classList.contains('active')) closeModal(); });
 
-// Init — auto-load random schedule on first visit
-loadUserName();
-renderGoals();
-renderWeekLabel();
-if (!hasAnyData()) {
-  loadRandomSchedule();
-} else {
-  renderTable();
-}
+loadUserName(); renderGoals(); renderWeekLabel();
+if (!hasAnyData()) loadRandomSchedule(); else renderTable();
 </script>
 </body>
 </html>
