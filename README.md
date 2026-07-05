@@ -12,5 +12,10 @@ AILON Task AI applications and tools.
 - Live: https://matpen-kariera.netlify.app
 - Peer-based career matching with Yes/No/Maybe logic
 
+### 3. Loaz Shavuai (Weekly Schedule)
+- Live: https://loaz-shavuai.netlify.app
+- Weekly schedule manager with motivation tracking (1-10)
+- Sunday-Friday, 8:00 AM to midnight
+
 ## Deploy
 All apps are auto-deployed to Netlify from this repo.
