@@ -146,7 +146,6 @@ td:first-child {
 .motivation-color-10 { background: #0ea5e9; }
 .today-header { color: #f59e0b !important; }
 .today-col { background: rgba(245, 158, 11, 0.05); }
-/* Modal */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -246,7 +245,6 @@ td:first-child {
   color: #fca5a5;
 }
 .btn-delete:hover { background: #991b1b; }
-/* Stats */
 .stats-bar {
   display: flex;
   gap: 12px;
@@ -262,20 +260,11 @@ td:first-child {
 }
 .stat-label { font-size: 11px; color: #64748b; }
 .stat-value { font-size: 22px; font-weight: 700; color: #14b8a6; }
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #475569;
-}
-.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-/* Scrollable table */
 .table-wrapper {
   overflow-x: auto;
   border-radius: 12px;
   border: 1px solid #1e293b;
 }
-/* Mobile */
 @media (max-width: 768px) {
   h1 { font-size: 18px; }
   table { font-size: 10px; }
@@ -333,7 +322,6 @@ td:first-child {
   </div>
 </div>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-title" id="modalTitle">עריכת פעילות</div>
@@ -384,7 +372,7 @@ function formatDate(d) {
 
 function getCellKey(dayIdx, hourIdx) {
   const weekKey = currentWeekStart.toISOString().slice(0,10);
-  return `loaz_${weekKey}_${dayIdx}_${hourIdx}`;
+  return 'loaz_' + weekKey + '_' + dayIdx + '_' + hourIdx;
 }
 
 function getUserKey() {
@@ -429,60 +417,56 @@ function isToday(date) {
          date.getFullYear() === today.getFullYear();
 }
 
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 function renderTable() {
   const table = document.getElementById('scheduleTable');
   const thead = table.querySelector('thead');
   const tbody = table.querySelector('tbody');
   
-  // Header
   let headerHTML = '<tr><th>שעה</th>';
   for (let d = 0; d < 6; d++) {
     const date = new Date(currentWeekStart);
     date.setDate(date.getDate() + d);
     const todayClass = isToday(date) ? 'today-header' : '';
-    headerHTML += `<th class="${todayClass}">${DAYS[d]}<br><span style="font-size:10px;color:#64748b">${formatDate(date)}</span></th>`;
+    headerHTML += '<th class="' + todayClass + '">' + DAYS[d] + '<br><span style="font-size:10px;color:#64748b">' + formatDate(date) + '</span></th>';
   }
   headerHTML += '</tr>';
   thead.innerHTML = headerHTML;
   
-  // Body
   let bodyHTML = '';
   for (let h = 0; h < HOURS.length; h++) {
-    bodyHTML += `<tr><td>${HOURS[h]}</td>`;
+    bodyHTML += '<tr><td>' + HOURS[h] + '</td>';
     for (let d = 0; d < 6; d++) {
       const date = new Date(currentWeekStart);
-      date.setDate(date.getDate() d);
+      date.setDate(date.getDate() + d);
       const todayClass = isToday(date) ? 'today-col' : '';
       const data = getCellData(d, h);
       let cellHTML = '';
       if (data) {
         const motClass = 'motivation-color-' + data.motivation;
         const task = escapeHtml(data.task);
-        cellHTML = `<div class="cell-content" onclick="openModal(${d},${h})">
-          <div class="cell-task">${task}</div>
-          <div class="motivation-bar">
-            <div class="motivation-dot ${motClass}"></div>
-            <span class="motivation-text">⭐ ${data.motivation}/10</span>
-          </div>
-        </div>`;
+        cellHTML = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')">' +
+          '<div class="cell-task">' + task + '</div>' +
+          '<div class="motivation-bar">' +
+          '<div class="motivation-dot ' + motClass + '"></div>' +
+          '<span class="motivation-text">⭐ ' + data.motivation + '/10</span>' +
+          '</div></div>';
       } else {
-        cellHTML = `<div class="cell-content" onclick="openModal(${d},${h})">
-          <div class="cell-task empty">+ הוסף</div>
-        </div>`;
+        cellHTML = '<div class="cell-content" onclick="openModal(' + d + ',' + h + ')">' +
+          '<div class="cell-task empty">+ הוסף</div></div>';
       }
-      bodyHTML += `<td class="${todayClass}">${cellHTML}</td>`;
+      bodyHTML += '<td class="' + todayClass + '">' + cellHTML + '</td>';
     }
     bodyHTML += '</tr>';
   }
   tbody.innerHTML = bodyHTML;
   
   updateStats();
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
 }
 
 function updateStats() {
@@ -525,7 +509,7 @@ function openModal(dayIdx, hourIdx) {
   document.getElementById('deleteBtn').style.display = data ? 'block' : 'none';
   document.getElementById('modalOverlay').classList.add('active');
   
-  setTimeout(() => document.getElementById('taskInput').focus(), 100);
+  setTimeout(function() { document.getElementById('taskInput').focus(); }, 100);
 }
 
 function closeModal() {
@@ -543,7 +527,7 @@ function saveCell() {
     return;
   }
   
-  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task, motivation });
+  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: motivation });
   closeModal();
   renderTable();
 }
@@ -562,21 +546,21 @@ function updateMotivationDisplay() {
 }
 
 // Events
-document.getElementById('prevWeek').addEventListener('click', () => {
+document.getElementById('prevWeek').addEventListener('click', function() {
   currentWeekStart.setDate(currentWeekStart.getDate() - 7);
   renderTable();
   renderWeekLabel();
 });
-document.getElementById('nextWeek').addEventListener('click', () => {
+document.getElementById('nextWeek').addEventListener('click', function() {
   currentWeekStart.setDate(currentWeekStart.getDate() + 7);
   renderTable();
   renderWeekLabel();
 });
-document.getElementById('userName').addEventListener('input', () => {
+document.getElementById('userName').addEventListener('input', function() {
   saveUserName();
   renderTable();
 });
-document.getElementById('viewMode').addEventListener('change', (e) => {
+document.getElementById('viewMode').addEventListener('change', function(e) {
   viewMode = e.target.value;
   renderTable();
 });
@@ -584,63 +568,14 @@ document.getElementById('motivationInput').addEventListener('input', updateMotiv
 document.getElementById('saveBtn').addEventListener('click', saveCell);
 document.getElementById('cancelBtn').addEventListener('click', closeModal);
 document.getElementById('deleteBtn').addEventListener('click', deleteCell);
-document.getElementById('modalOverlay').addEventListener('click', (e) => {
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 });
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('active')) {
     closeModal();
   }
 });
-
-// Fix the date in renderTable
-const origRender = renderTable;
-renderTable = function() {
-  const table = document.getElementById('scheduleTable');
-  const thead = table.querySelector('thead');
-  const tbody = table.querySelector('tbody');
-  
-  let headerHTML = '<tr><th>שעה</th>';
-  for (let d = 0; d < 6; d++) {
-    const date = new Date(currentWeekStart);
-    date.setDate(date.getDate() + d);
-    const todayClass = isToday(date) ? 'today-header' : '';
-    headerHTML += `<th class="${todayClass}">${DAYS[d]}<br><span style="font-size:10px;color:#64748b">${formatDate(date)}</span></th>`;
-  }
-  headerHTML += '</tr>';
-  thead.innerHTML = headerHTML;
-  
-  let bodyHTML = '';
-  for (let h = 0; h < HOURS.length; h++) {
-    bodyHTML += `<tr><td>${HOURS[h]}</td>`;
-    for (let d = 0; d < 6; d++) {
-      const date = new Date(currentWeekStart);
-      date.setDate(date.getDate() + d);
-      const todayClass = isToday(date) ? 'today-col' : '';
-      const data = getCellData(d, h);
-      let cellHTML = '';
-      if (data) {
-        const motClass = 'motivation-color-' + data.motivation;
-        const task = escapeHtml(data.task);
-        cellHTML = `<div class="cell-content" onclick="openModal(${d},${h})">
-          <div class="cell-task">${task}</div>
-          <div class="motivation-bar">
-            <div class="motivation-dot ${motClass}"></div>
-            <span class="motivation-text">⭐ ${data.motivation}/10</span>
-          </div>
-        </div>`;
-      } else {
-        cellHTML = `<div class="cell-content" onclick="openModal(${d},${h})">
-          <div class="cell-task empty">+ הוסף</div>
-        </div>`;
-      }
-      bodyHTML += `<td class="${todayClass}">${cellHTML}</td>`;
-    }
-    bodyHTML += '</tr>';
-  }
-  tbody.innerHTML = bodyHTML;
-  updateStats();
-};
 
 // Init
 loadUserName();
