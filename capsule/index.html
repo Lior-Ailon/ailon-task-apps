@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AILON Capsule — הצטרפות למתאמן</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e293b); color: #e2e8f0; direction: rtl; min-height: 100vh; }
+  .container { max-width: 520px; margin: 0 auto; padding: 24px 20px 60px; }
+  .header { text-align: center; margin-bottom: 28px; }
+  .header .logo { display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#14b8a6,#0891b2); font-size:28px; margin-bottom:14px; }
+  .header h1 { font-size: 24px; font-weight: 800; margin-bottom:6px; }
+  .header p { font-size: 14px; color:#94a3b8; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:18px; padding:26px; box-shadow:0 8px 30px rgba(0,0,0,0.3); }
+  .field { margin-bottom:18px; }
+  .field label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; color:#cbd5e1; }
+  .field input, .field select { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:15px; font-family:inherit; }
+  .field input:focus, .field select:focus { outline:none; border-color:#14b8a6; }
+  .tools { display:flex; flex-direction:column; gap:10px; }
+  .tool-opt { display:flex; align-items:center; gap:10px; background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 14px; cursor:pointer; transition:.2s; }
+  .tool-opt:hover { border-color:#14b8a6; }
+  .tool-opt.selected { border-color:#14b8a6; background:rgba(20,184,166,0.1); }
+  .tool-opt input { width:18px; height:18px; accent-color:#14b8a6; }
+  .tool-opt .t-name { font-weight:600; font-size:14px; }
+  .tool-opt .t-desc { font-size:12px; color:#94a3b8; }
+  .consent-box { background:#0f172a; border:1px solid #f59e0b; border-radius:12px; padding:16px; margin-top:6px; }
+  .consent-box .c-title { font-weight:700; font-size:14px; margin-bottom:8px; color:#fbbf24; }
+  .consent-box .c-desc { font-size:13px; color:#cbd5e1; line-height:1.6; margin-bottom:12px; }
+  .toggle-row { display:flex; gap:10px; }
+  .toggle-btn { flex:1; padding:12px; border-radius:10px; border:2px solid #334155; background:#1e293b; color:#e2e8f0; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:.2s; }
+  .toggle-btn.active-yes { border-color:#059669; background:rgba(5,150,105,0.2); color:#6ee7b7; }
+  .toggle-btn.active-no { border-color:#dc2626; background:rgba(220,38,38,0.2); color:#fca5a5; }
+  .submit-btn { width:100%; padding:16px; margin-top:22px; border:none; border-radius:12px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:white; font-size:17px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .success { display:none; text-align:center; padding:20px; }
+  .success .icon { font-size:48px; margin-bottom:10px; }
+  .success h2 { font-size:20px; margin-bottom:8px; }
+  .success p { color:#94a3b8; font-size:14px; }
+  .error-msg { color:#fca5a5; font-size:13px; margin-top:10px; text-align:center; display:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">🧭</div>
+    <h1>AILON Capsule</h1>
+    <p>הצטרפות לכלי האימון של המאמן שלך</p>
+  </div>
+
+  <div class="card" id="formCard">
+    <div class="field">
+      <label>השם שלך</label>
+      <input type="text" id="nameInput" placeholder="לדוגמה: דניאל כהן">
+    </div>
+    <div class="field">
+      <label>טלפון (לא חובה)</label>
+      <input type="tel" id="phoneInput" placeholder="050-0000000">
+    </div>
+    <div class="field">
+      <label>קוד מאמן</label>
+      <input type="text" id="mentorInput" placeholder="קיבלת קוד מהמאמן שלך" value="">
+    </div>
+    <div class="field">
+      <label>אילו כלים רלוונטיים לך?</label>
+      <div class="tools" id="toolsList">
+        <label class="tool-opt" data-tool="career_compass">
+          <input type="checkbox" value="career_compass">
+          <div><div class="t-name">🧭 מצפן הקריירה</div><div class="t-desc">בדיקת התאמה למקצועות</div></div>
+        </label>
+        <label class="tool-opt" data-tool="loaz_shavuai">
+          <input type="checkbox" value="loaz_shavuai">
+          <div><div class="t-name">📅 לוז שבועי</div><div class="t-desc">ניהול זמן ומעקב משימות</div></div>
+        </label>
+        <label class="tool-opt" data-tool="mind_track">
+          <input type="checkbox" value="mind_track">
+          <div><div class="t-name">🧠 MindTrack</div><div class="t-desc">ניהול טריגרים וחרדות</div></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="consent-box">
+      <div class="c-title">🔒 פרטיות המידע שלך</div>
+      <div class="c-desc">חלק מהכלים (כמו MindTrack) מכילים מידע רגיש. אתה מחליט אם המאמן שלך יכול לראות את התוצאות שלך או לא. אפשר לשנות את זה בכל שלב.</div>
+      <div class="toggle-row">
+        <button type="button" class="toggle-btn" id="consentYes" onclick="setConsent(true)">✅ כן, שהמאמן יראה</button>
+        <button type="button" class="toggle-btn" id="consentNo" onclick="setConsent(false)">🚫 לא כרגע</button>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">הצטרפות</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="card success" id="successCard">
+    <div class="icon">🎉</div>
+    <h2>נרשמת בהצלחה!</h2>
+    <p id="successText"></p>
+  </div>
+</div>
+
+<script>
+const API_URL = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/capsuleApi";
+let consentValue = false;
+let consentSet = false;
+
+// pre-fill mentor code from URL param ?mentor=lior
+const params = new URLSearchParams(window.location.search);
+if (params.get('mentor')) document.getElementById('mentorInput').value = params.get('mentor');
+
+document.querySelectorAll('.tool-opt').forEach(opt => {
+  opt.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'INPUT') {
+      const cb = opt.querySelector('input');
+      cb.checked = !cb.checked;
+    }
+    opt.classList.toggle('selected', opt.querySelector('input').checked);
+  });
+});
+
+function setConsent(val) {
+  consentValue = val;
+  consentSet = true;
+  document.getElementById('consentYes').classList.toggle('active-yes', val);
+  document.getElementById('consentNo').classList.toggle('active-no', !val);
+}
+
+async function submitForm() {
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const mentor_code = document.getElementById('mentorInput').value.trim();
+  const tools = Array.from(document.querySelectorAll('.tool-opt input:checked')).map(i => i.value);
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!name) { errEl.textContent = 'נא למלא שם'; errEl.style.display='block'; return; }
+  if (!mentor_code) { errEl.textContent = 'נא למלא קוד מאמן'; errEl.style.display='block'; return; }
+  if (tools.length === 0) { errEl.textContent = 'נא לבחור לפחות כלי אחד'; errEl.style.display='block'; return; }
+  if (!consentSet) { errEl.textContent = 'נא לבחור אם המאמן יכול לראות תוצאות רגישות'; errEl.style.display='block'; return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'שולח...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'signup', name, phone, mentor_code, tools_assigned: tools, share_with_mentor: consentValue })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error || 'שגיאה');
+
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('successCard').style.display = 'block';
+    document.getElementById('successText').textContent = `${name}, נרשמת בהצלחה עם ${tools.length} כלים. בהצלחה בתהליך! 💪`;
+  } catch (e) {
+    errEl.textContent = 'שגיאה בשליחה: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'הצטרפות';
+  }
+}
+</script>
+</body>
+</html>

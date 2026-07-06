@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AILON Capsule — דשבורד מאמן</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e293b); color: #e2e8f0; direction: rtl; min-height: 100vh; }
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+  .header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; flex-wrap:wrap; gap:14px; }
+  .header .titlebox { display:flex; align-items:center; gap:14px; }
+  .logo { display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#14b8a6,#0891b2); font-size:24px; }
+  .header h1 { font-size:22px; font-weight:800; }
+  .header p { font-size:13px; color:#94a3b8; }
+  .login-box { display:flex; gap:10px; }
+  .login-box input { padding:10px 14px; border-radius:10px; border:1px solid #334155; background:#1e293b; color:#e2e8f0; font-family:inherit; }
+  .login-box button { padding:10px 18px; border-radius:10px; border:none; background:#14b8a6; color:#0f172a; font-weight:700; cursor:pointer; font-family:inherit; }
+  .share-link { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px 18px; margin-bottom:20px; font-size:13px; color:#94a3b8; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .share-link code { background:#0f172a; padding:6px 10px; border-radius:8px; color:#5eead4; direction:ltr; }
+  .copy-btn { background:none; border:1px solid #334155; color:#e2e8f0; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; }
+  .stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:14px; margin-bottom:24px; }
+  .stat-card { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:18px; text-align:center; }
+  .stat-card .num { font-size:28px; font-weight:800; color:#5eead4; }
+  .stat-card .lbl { font-size:12px; color:#94a3b8; margin-top:4px; }
+  .table-wrap { background:#1e293b; border:1px solid #334155; border-radius:16px; overflow:hidden; }
+  table { width:100%; border-collapse:collapse; }
+  th { background:#0f172a; padding:14px; font-size:13px; text-align:right; color:#94a3b8; font-weight:700; }
+  td { padding:14px; border-top:1px solid #334155; font-size:14px; }
+  .badge { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700; }
+  .badge-yes { background:rgba(5,150,105,0.2); color:#6ee7b7; }
+  .badge-no { background:rgba(220,38,38,0.2); color:#fca5a5; }
+  .tool-tag { display:inline-block; background:#0f172a; border:1px solid #334155; padding:3px 9px; border-radius:8px; font-size:11px; margin-left:4px; margin-bottom:3px; }
+  .empty { text-align:center; padding:50px 20px; color:#64748b; }
+  .empty .icon { font-size:40px; margin-bottom:12px; }
+  @media (max-width:640px) {
+    table, thead, tbody, th, td, tr { display:block; }
+    thead { display:none; }
+    tr { border-top:1px solid #334155; padding:14px 0; }
+    td { border:none; padding:6px 14px; }
+    td:before { content: attr(data-label); font-weight:700; color:#94a3b8; display:block; font-size:11px; margin-bottom:2px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="titlebox">
+      <div class="logo">🧭</div>
+      <div>
+        <h1>דשבורד מאמן — AILON Capsule</h1>
+        <p id="mentorLabel">מציג נתונים עבור...</p>
+      </div>
+    </div>
+    <div class="login-box">
+      <input type="text" id="mentorCodeInput" placeholder="קוד מאמן (lior)">
+      <button onclick="loadDashboard()">טען</button>
+    </div>
+  </div>
+
+  <div class="share-link">
+    📎 לינק הרשמה למתאמנים שלך:
+    <code id="shareLink"></code>
+    <button class="copy-btn" onclick="copyLink()">העתק</button>
+  </div>
+
+  <div class="stats" id="statsRow"></div>
+  <div class="table-wrap" id="tableWrap"></div>
+</div>
+
+<script>
+const API_URL = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/capsuleApi";
+const TOOL_NAMES = { career_compass: '🧭 מצפן קריירה', loaz_shavuai: '📅 לוז שבועי', mind_track: '🧠 MindTrack' };
+
+const params = new URLSearchParams(window.location.search);
+let mentorCode = params.get('mentor') || 'lior';
+document.getElementById('mentorCodeInput').value = mentorCode;
+updateShareLink();
+
+function updateShareLink() {
+  const base = window.location.origin + '/index.html';
+  document.getElementById('shareLink').textContent = base + '?mentor=' + mentorCode;
+  document.getElementById('mentorLabel').textContent = 'מציג נתונים עבור מאמן: ' + mentorCode;
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(document.getElementById('shareLink').textContent);
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'הועתק! ✓';
+  setTimeout(() => btn.textContent = 'העתק', 1500);
+}
+
+async function loadDashboard() {
+  mentorCode = document.getElementById('mentorCodeInput').value.trim() || 'lior';
+  updateShareLink();
+  const tableWrap = document.getElementById('tableWrap');
+  tableWrap.innerHTML = '<div class="empty">טוען...</div>';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'dashboard', mentor_code: mentorCode })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    render(data.trainees);
+  } catch (e) {
+    tableWrap.innerHTML = '<div class="empty">❌ שגיאה בטעינה: ' + e.message + '</div>';
+  }
+}
+
+function render(trainees) {
+  const statsRow = document.getElementById('statsRow');
+  const tableWrap = document.getElementById('tableWrap');
+  const total = trainees.length;
+  const consented = trainees.filter(t => t.share_with_mentor).length;
+
+  statsRow.innerHTML = `
+    <div class="stat-card"><div class="num">${total}</div><div class="lbl">מתאמנים רשומים</div></div>
+    <div class="stat-card"><div class="num">${consented}</div><div class="lbl">שיתפו נתונים</div></div>
+    <div class="stat-card"><div class="num">${total-consented}</div><div class="lbl">פרטי (לא חשוף)</div></div>
+  `;
+
+  if (total === 0) {
+    tableWrap.innerHTML = '<div class="empty"><div class="icon">📭</div>אין מתאמנים רשומים עדיין עבור קוד "' + mentorCode + '".<br>שלח להם את לינק ההרשמה.</div>';
+    return;
+  }
+
+  let rows = trainees.map(t => `
+    <tr>
+      <td data-label="שם">${t.name}</td>
+      <td data-label="שיתוף מידע">${t.share_with_mentor ? '<span class="badge badge-yes">✅ משותף</span>' : '<span class="badge badge-no">🔒 פרטי</span>'}</td>
+      <td data-label="כלים">${t.share_with_mentor ? t.tools_assigned.map(tn => `<span class="tool-tag">${TOOL_NAMES[tn]||tn}</span>`).join('') : '<span style="color:#64748b">מוסתר</span>'}</td>
+      <td data-label="טלפון">${t.phone || '<span style="color:#64748b">מוסתר</span>'}</td>
+      <td data-label="נרשם">${new Date(t.created_date).toLocaleDateString('he-IL')}</td>
+    </tr>
+  `).join('');
+
+  tableWrap.innerHTML = `
+    <table>
+      <thead><tr><th>שם</th><th>שיתוף מידע</th><th>כלים</th><th>טלפון</th><th>נרשם</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+loadDashboard();
+</script>
+</body>
+</html>
