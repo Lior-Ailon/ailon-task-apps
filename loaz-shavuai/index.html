@@ -110,6 +110,10 @@ tfoot td.day-notdone { color: #ef4444; }
 tfoot td.day-total { color: #14b8a6; font-size: 13px; }
 tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 
+
+.congrats-toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); background: linear-gradient(135deg,#16a34a,#22c55e); color: #fff; padding: 14px 28px; border-radius: 14px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 200; opacity: 0; transition: all 0.35s ease; pointer-events: none; text-align: center; }
+.congrats-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.stat-value.blue { color: #38bdf8; }
 </style>
 </head>
 <body>
@@ -128,7 +132,7 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn-goals" id="goalsBtn">🎯 מטרות השבוע</button>
-      <button class="btn-sample" id="sampleBtn">🎲 טען לוז רנדומלי</button>
+      <button class="btn-sample" id="sampleBtn">🔄 אפס ללוז הקבוע</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
   </div>
@@ -142,9 +146,11 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     <div class="stat-card"><div class="stat-label">❌ לא בוצע</div><div class="stat-value red" id="statNotDone">0</div></div>
     <div class="stat-card"><div class="stat-label">⏳ ממתין</div><div class="stat-value" id="statPending">0</div></div>
     <div class="stat-card"><div class="stat-label">ממוצע מוטיבציה</div><div class="stat-value" id="statAvg">—</div></div>
+    <div class="stat-card"><div class="stat-label">📈 אחוז הצלחה</div><div class="stat-value blue" id="statPercent">—</div></div>
   </div>
   <div class="table-wrapper"><table id="scheduleTable"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
 </div>
+<div class="congrats-toast" id="congratsToast"></div>
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-title" id="modalTitle">עריכת פעילות</div>
@@ -209,23 +215,20 @@ const FRIDAY_EXTRA = [
   { task: 'קבלת שבת 🕯️', baseHour: 20, baseMot: 10 }
 ];
 
-function shuffleArray(arr) { const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-function randomMotivation(b) { return Math.max(1,Math.min(10,b+Math.floor(Math.random()*3)-1)); }
-function randomHourOffset(b) { return Math.max(0,Math.min(HOURS.length-1,b+Math.floor(Math.random()*5)-2)); }
-
-function generateRandomWeek() {
+// לוח זמנים קבוע: אותה משימה, באותה שעה, בכל שבוע — כדי לבנות הרגלים אמיתיים
+// (לא רנדומלי יותר, כך שאין צורך לארגן מחדש כל שבוע)
+function generateFixedWeek() {
   const wd = {};
   for (let d = 0; d < 6; d++) {
     wd[d] = {}; const usedH = {};
     let tasks = DAILY_TASKS.slice();
     if (d === 5) tasks = tasks.concat(FRIDAY_EXTRA);
-    const sh = shuffleArray(tasks);
-    for (let i = 0; i < sh.length; i++) {
-      let hour = randomHourOffset(sh[i].baseHour);
+    for (let i = 0; i < tasks.length; i++) {
+      let hour = Math.max(0, Math.min(HOURS.length-1, tasks[i].baseHour));
       let att = 0;
       while (usedH[hour] && att < 15) { hour = (hour+1) % HOURS.length; att++; }
       usedH[hour] = true;
-      wd[d][hour] = { task: sh[i].task, motivation: randomMotivation(sh[i].baseMot), status: 'pending' };
+      wd[d][hour] = { task: tasks[i].task, motivation: tasks[i].baseMot, status: 'pending' };
     }
   }
   return wd;
@@ -332,6 +335,8 @@ function updateStats() {
   document.getElementById('statNotDone').textContent=notdone;
   document.getElementById('statPending').textContent=pending;
   document.getElementById('statAvg').textContent=total>0?(sum/total).toFixed(1):'—';
+  const decided = done + notdone;
+  document.getElementById('statPercent').textContent = decided>0 ? Math.round(done/decided*100)+'%' : '—';
 }
 
 function renderWeekLabel() { const e=new Date(currentWeekStart); e.setDate(e.getDate()+5); document.getElementById('weekLabel').textContent=formatDate(currentWeekStart)+' - '+formatDate(e); }
@@ -353,30 +358,41 @@ function openModal(d, h) {
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); selectedCell = null; }
 
+const CONGRATS_MESSAGES = ['🎉 כל הכבוד!','💪 יאללה כזה!','🔥 ממשיכים ככה!','⭐ מצוין, המשך כך!','🚀 אלוף/ה!','✨ עוד הרגל שנבנה!'];
+function showCongrats() {
+  const el = document.getElementById('congratsToast');
+  el.textContent = CONGRATS_MESSAGES[Math.floor(Math.random()*CONGRATS_MESSAGES.length)];
+  el.classList.add('show');
+  clearTimeout(window._congratsTimer);
+  window._congratsTimer = setTimeout(function(){ el.classList.remove('show'); }, 1800);
+}
 function saveCell() {
   if (!selectedCell) return;
   const task = document.getElementById('taskInput').value.trim();
   if (!task) { alert('אנא הכנס את הלו"ז שלך'); return; }
+  const wasDone = currentStatus === 'done';
   setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: parseInt(document.getElementById('motivationInput').value), status: currentStatus });
   closeModal(); renderTable();
+  if (wasDone) showCongrats();
 }
 function deleteCell() { if(!selectedCell) return; setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null); closeModal(); renderTable(); }
 function updateMotivationDisplay() { const v=document.getElementById('motivationInput').value; document.getElementById('motivationValue').textContent=v; document.getElementById('motivationEmoji').textContent=MOTIVATION_EMOJIS[v-1]; }
 
-function loadRandomSchedule() {
+function loadFixedSchedule(silent) {
   for (let h=0;h<HOURS.length;h++) for (let d=0;d<6;d++) setCellData(d,h,null);
-  const week = generateRandomWeek();
+  const week = generateFixedWeek();
   for (let d=0; d<6; d++) for (const hs in week[d]) setCellData(d, parseInt(hs), week[d][hs]);
   renderTable();
 }
 function loadSampleSchedule() {
   if (!document.getElementById('userName').value.trim()) { alert('אנא הכנס את שמך תחילה'); document.getElementById('userName').focus(); return; }
-  if (confirm('טעינת לוז רנדומלי תמחק את הלוז הנוכחי. להמשיך?')) loadRandomSchedule();
+  if (confirm('איפוס ללוז הקבוע ימחק שינויים שביצעת השבוע. להמשיך?')) loadFixedSchedule();
 }
 function clearWeek() { if (confirm('לנקות את כל הלוז של השבוע?')) { for(let h=0;h<HOURS.length;h++) for(let d=0;d<6;d++) setCellData(d,h,null); renderTable(); } }
+function ensureWeekPopulated() { if (!hasAnyData()) loadFixedSchedule(true); else renderTable(); }
 
-document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); renderTable(); renderWeekLabel(); });
-document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); renderTable(); renderWeekLabel(); });
+document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); ensureWeekPopulated(); renderWeekLabel(); });
+document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); ensureWeekPopulated(); renderWeekLabel(); });
 document.getElementById('userName').addEventListener('input', function() { saveUserName(); renderTable(); });
 document.getElementById('motivationInput').addEventListener('input', updateMotivationDisplay);
 document.getElementById('saveBtn').addEventListener('click', saveCell);
@@ -389,7 +405,7 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) { 
 document.addEventListener('keydown', function(e) { if(e.key==='Escape' && document.getElementById('modalOverlay').classList.contains('active')) closeModal(); });
 
 loadUserName(); renderGoals(); renderWeekLabel();
-if (!hasAnyData()) loadRandomSchedule(); else renderTable();
+ensureWeekPopulated();
 </script>
 </body>
 </html>
