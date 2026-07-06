@@ -109,12 +109,9 @@ const params = new URLSearchParams(window.location.search);
 if (params.get('mentor')) document.getElementById('mentorInput').value = params.get('mentor');
 
 document.querySelectorAll('.tool-opt').forEach(opt => {
-  opt.addEventListener('click', (e) => {
-    if (e.target.tagName !== 'INPUT') {
-      const cb = opt.querySelector('input');
-      cb.checked = !cb.checked;
-    }
-    opt.classList.toggle('selected', opt.querySelector('input').checked);
+  const cb = opt.querySelector('input');
+  cb.addEventListener('change', () => {
+    opt.classList.toggle('selected', cb.checked);
   });
 });
 
