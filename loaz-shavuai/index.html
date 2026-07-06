@@ -114,6 +114,19 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 .congrats-toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); background: linear-gradient(135deg,#16a34a,#22c55e); color: #fff; padding: 14px 28px; border-radius: 14px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 200; opacity: 0; transition: all 0.35s ease; pointer-events: none; text-align: center; }
 .congrats-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .stat-value.blue { color: #38bdf8; }
+
+.chart-section { display: none; background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
+.chart-section.active { display: block; }
+.chart-section h2 { font-size: 18px; color: #38bdf8; margin-bottom: 4px; }
+.chart-section .chart-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+.chart-wrap { display: flex; align-items: flex-end; gap: 10px; height: 160px; padding: 0 4px; overflow-x: auto; }
+.chart-bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 46px; }
+.chart-bar { width: 28px; border-radius: 6px 6px 0 0; transition: height 0.3s ease; position: relative; }
+.chart-bar-pct { font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #e2e8f0; }
+.chart-bar-label { font-size: 10px; color: #64748b; margin-top: 6px; text-align: center; white-space: nowrap; }
+.chart-empty { color: #64748b; font-size: 13px; text-align: center; padding: 20px 0; }
+.btn-chart { background: #1e293b; border: 1px solid #38bdf8; color: #38bdf8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+.btn-chart:hover { background: #38bdf8; color: #0f172a; }
 </style>
 </head>
 <body>
@@ -132,6 +145,7 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn-goals" id="goalsBtn">🎯 מטרות השבוע</button>
+      <button class="btn-chart" id="chartBtn">📈 גרף התקדמות</button>
       <button class="btn-sample" id="sampleBtn">🔄 אפס ללוז הקבוע</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
@@ -139,6 +153,11 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
   <div class="goals-section" id="goalsSection">
     <h2>🎯 מטרות לקדם השבוע</h2>
     <ol class="goals-list" id="goalsList"></ol>
+  </div>
+  <div class="chart-section" id="chartSection">
+    <h2>📈 מגמת התקדמות לאורך זמן</h2>
+    <div class="chart-sub">אחוז ביצוע (V מתוך V+X) לכל שבוע</div>
+    <div class="chart-wrap" id="chartWrap"></div>
   </div>
   <div class="stats-bar">
     <div class="stat-card"><div class="stat-label">פעילויות</div><div class="stat-value" id="statTotal">0</div></div>
@@ -341,6 +360,68 @@ function updateStats() {
 
 function renderWeekLabel() { const e=new Date(currentWeekStart); e.setDate(e.getDate()+5); document.getElementById('weekLabel').textContent=formatDate(currentWeekStart)+' - '+formatDate(e); }
 
+function getWeekHistory() {
+  const userKey = getUserKey();
+  const suffix = '_' + userKey;
+  const weeks = {}; // weekStartISO -> {done, notdone, total}
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('loaz_') || !key.endsWith(suffix)) continue;
+    const body = key.slice(5, key.length - suffix.length); // YYYY-MM-DD_d_h
+    const parts = body.split('_');
+    if (parts.length < 3) continue;
+    const weekIso = parts[0];
+    let data;
+    try { data = JSON.parse(localStorage.getItem(key)); } catch(e) { continue; }
+    if (!data || !data.status) continue;
+    if (!weeks[weekIso]) weeks[weekIso] = { done: 0, notdone: 0, total: 0 };
+    weeks[weekIso].total++;
+    if (data.status === 'done') weeks[weekIso].done++;
+    else if (data.status === 'notdone') weeks[weekIso].notdone++;
+  }
+  const sortedIso = Object.keys(weeks).sort();
+  return sortedIso.map(function(iso) {
+    const w = weeks[iso];
+    const decided = w.done + w.notdone;
+    const pct = decided > 0 ? Math.round(w.done / decided * 100) : null;
+    const d = new Date(iso);
+    return { iso: iso, label: formatDate(d), pct: pct, done: w.done, notdone: w.notdone };
+  });
+}
+
+function pctColor(pct) {
+  if (pct === null) return '#475569';
+  if (pct >= 80) return '#22c55e';
+  if (pct >= 60) return '#84cc16';
+  if (pct >= 40) return '#eab308';
+  if (pct >= 20) return '#f97316';
+  return '#ef4444';
+}
+
+function renderChart() {
+  const wrap = document.getElementById('chartWrap');
+  const history = getWeekHistory().slice(-10); // last 10 weeks with any data
+  if (history.length === 0) {
+    wrap.innerHTML = '<div class="chart-empty">עדיין אין מספיק נתונים להצגת גרף — סמן V/X על משימות במשך כמה שבועות ותראה כאן את המגמה 📊</div>';
+    return;
+  }
+  let html = '';
+  for (let i = 0; i < history.length; i++) {
+    const w = history[i];
+    const pct = w.pct === null ? 0 : w.pct;
+    const barHeight = Math.max(4, Math.round(pct * 1.2)); // px, max ~120
+    const color = pctColor(w.pct);
+    const pctLabel = w.pct === null ? '—' : w.pct + '%';
+    html += '<div class="chart-bar-col">' +
+      '<div class="chart-bar-pct">' + pctLabel + '</div>' +
+      '<div class="chart-bar" style="height:' + barHeight + 'px;background:' + color + '"></div>' +
+      '<div class="chart-bar-label">' + w.label + '</div>' +
+    '</div>';
+  }
+  wrap.innerHTML = html;
+}
+
+
 function openModal(d, h) {
   selectedCell = { dayIdx: d, hourIdx: h };
   const data = getCellData(d, h);
@@ -373,6 +454,7 @@ function saveCell() {
   const wasDone = currentStatus === 'done';
   setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: parseInt(document.getElementById('motivationInput').value), status: currentStatus });
   closeModal(); renderTable();
+  if (document.getElementById('chartSection').classList.contains('active')) renderChart();
   if (wasDone) showCongrats();
 }
 function deleteCell() { if(!selectedCell) return; setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null); closeModal(); renderTable(); }
@@ -401,6 +483,7 @@ document.getElementById('deleteBtn').addEventListener('click', deleteCell);
 document.getElementById('sampleBtn').addEventListener('click', loadSampleSchedule);
 document.getElementById('clearBtn').addEventListener('click', clearWeek);
 document.getElementById('goalsBtn').addEventListener('click', function() { document.getElementById('goalsSection').classList.toggle('active'); });
+document.getElementById('chartBtn').addEventListener('click', function() { document.getElementById('chartSection').classList.toggle('active'); renderChart(); });
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
 document.addEventListener('keydown', function(e) { if(e.key==='Escape' && document.getElementById('modalOverlay').classList.contains('active')) closeModal(); });
 
