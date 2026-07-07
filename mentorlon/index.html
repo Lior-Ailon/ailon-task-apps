@@ -27,12 +27,22 @@
   .form-section { display:none; }
   .form-section.active { display:block; }
   .footer-note { text-align:center; font-size:12px; color:#64748b; margin-top:20px; }
+
+  .bg-video-wrap { position:fixed; inset:0; width:100%; height:100%; overflow:hidden; z-index:0; opacity:0.10; pointer-events:none; }
+  .bg-video-wrap video { width:100%; height:100%; object-fit:cover; }
+  .container { position:relative; z-index:1; }
+
 </style>
 </head>
 <body>
+<div class="bg-video-wrap">
+  <video autoplay muted loop playsinline>
+    <source src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/32b4a5875_ailon_intro_muted.mp4" type="video/mp4">
+  </video>
+</div>
 <div class="container">
   <div class="header">
-    <div class="logo"><img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON Task" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
+    <div class="logo"><img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/a8aadc757_ailon_hex_v2_final.png" alt="AILON Task" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
     <h1>Mentor-IT</h1>
     <p>פלטפורמת המנטורינג המרכזית של AILON Task</p>
   </div>
