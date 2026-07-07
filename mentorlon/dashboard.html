@@ -21,7 +21,8 @@
   .stat-card { background:#ffffff; border:1px solid #ccfbf1; border-radius:14px; padding:18px; text-align:center; box-shadow:0 4px 14px rgba(15,118,110,0.08); }
   .stat-card .num { font-size:28px; font-weight:800; color:#0d9488; }
   .stat-card .lbl { font-size:12px; color:#64748b; margin-top:4px; }
-  .section-title { font-size:16px; font-weight:800; margin:26px 0 14px; display:flex; align-items:center; gap:8px; }
+  .section-title { font-size:16px; font-weight:800; margin:26px 0 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .section-title .add-btn { font-size:13px; font-weight:700; background:linear-gradient(135deg,#14b8a6,#0891b2); color:#ffffff; border:none; padding:9px 16px; border-radius:10px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px; }
   .tools-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:14px; margin-bottom:10px; }
   .tool-card { background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; box-shadow:0 4px 14px rgba(15,118,110,0.06); }
   .tool-card.live { border-color:#14b8a6; }
@@ -38,9 +39,10 @@
   th { background:#f0fdfa; padding:14px; font-size:13px; text-align:right; color:#475569; font-weight:700; }
   td { padding:14px; border-top:1px solid #e2e8f0; font-size:14px; color:#0f172a; }
   .badge { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700; }
-  .badge-yes { background:rgba(5,150,105,0.2); color:#6ee7b7; }
-  .badge-no { background:rgba(220,38,38,0.2); color:#fca5a5; }
+  .badge-yes { background:rgba(13,148,136,0.15); color:#0d9488; }
+  .badge-no { background:rgba(148,163,184,0.18); color:#64748b; }
   .tool-tag { display:inline-block; background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; padding:3px 9px; border-radius:8px; font-size:11px; margin-left:4px; margin-bottom:3px; }
+  .tool-tag.shared { background:rgba(13,148,136,0.12); border-color:#99f6e4; color:#0d9488; }
   .empty { text-align:center; padding:50px 20px; color:#64748b; }
   .empty .icon { font-size:40px; margin-bottom:12px; }
   @media (max-width:640px) {
@@ -50,6 +52,26 @@
     td { border:none; padding:6px 14px; }
     td:before { content: attr(data-label); font-weight:700; color:#64748b; display:block; font-size:11px; margin-bottom:2px; }
   }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:100; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:#ffffff; border-radius:18px; width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:24px; box-shadow:0 20px 60px rgba(15,23,42,0.3); }
+  .modal h2 { font-size:18px; margin-bottom:16px; color:#0f172a; }
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:#334155; }
+  .field input { width:100%; padding:11px 13px; border-radius:9px; border:1px solid #e2e8f0; font-family:inherit; font-size:14px; background:#f8fafc; }
+  .field input:focus { outline:none; border-color:#14b8a6; background:#ffffff; }
+  .tool-checks { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .tool-check { display:flex; align-items:center; gap:8px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; padding:9px 11px; font-size:13px; cursor:pointer; }
+  .tool-check.disabled { opacity:0.5; cursor:not-allowed; }
+  .tool-check input { width:auto; }
+  .modal-actions { display:flex; gap:10px; margin-top:18px; }
+  .btn { flex:1; padding:12px; border-radius:10px; border:none; font-family:inherit; font-weight:700; font-size:14px; cursor:pointer; }
+  .btn-primary { background:linear-gradient(135deg,#14b8a6,#0891b2); color:#ffffff; }
+  .btn-secondary { background:#f1f5f9; color:#334155; }
+  .modal-msg { font-size:13px; margin-top:10px; padding:10px; border-radius:9px; display:none; }
+  .modal-msg.error { background:rgba(220,38,38,0.08); color:#dc2626; display:block; }
+  .modal-msg.success { background:rgba(13,148,136,0.1); color:#0d9488; display:block; }
+  .creds-box { background:#f0fdfa; border:1px dashed #14b8a6; border-radius:10px; padding:12px; margin-top:10px; font-size:13px; direction:ltr; text-align:left; }
 </style>
 </head>
 <body>
@@ -76,9 +98,44 @@
   <div class="section-title">🧰 כלי האימון שלך</div>
   <div class="tools-grid" id="toolsGrid"></div>
 
-  <div class="section-title">👥 המתאמנים שלך</div>
+  <div class="section-title">
+    <span>👥 המתאמנים שלך</span>
+    <button class="add-btn" onclick="openAddModal()">➕ מתאמן חדש</button>
+  </div>
   <div class="table-wrap" id="tableWrap">
     <div class="empty"><div class="icon">⏳</div>טוען נתונים...</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h2>➕ הוספת מתאמן חדש</h2>
+    <div class="field">
+      <label>שם המתאמן</label>
+      <input type="text" id="newName" placeholder="לדוגמה: ישראל ישראלי">
+    </div>
+    <div class="field">
+      <label>טלפון (לא חובה)</label>
+      <input type="text" id="newPhone" placeholder="05X-XXXXXXX">
+    </div>
+    <div class="field">
+      <label>שם משתמש להתחברות המתאמן</label>
+      <input type="text" id="newUsername" placeholder="אותיות אנגלית/מספרים, לדוגמה: yisrael1" style="direction:ltr;">
+    </div>
+    <div class="field">
+      <label>סיסמה למתאמן</label>
+      <input type="text" id="newPassword" placeholder="סיסמה זמנית שתמסור למתאמן" style="direction:ltr;">
+    </div>
+    <div class="field">
+      <label>כלים שהמתאמן יקבל גישה אליהם</label>
+      <div class="tool-checks" id="toolChecks"></div>
+    </div>
+    <div class="modal-msg" id="addMsg"></div>
+    <div class="creds-box" id="credsBox" style="display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeAddModal()">ביטול</button>
+      <button class="btn btn-primary" id="addSubmitBtn" onclick="submitAddTrainee()">צור מתאמן</button>
+    </div>
   </div>
 </div>
 
@@ -126,6 +183,59 @@ function renderTools() {
   `).join('');
 }
 
+function renderToolChecks() {
+  const wrap = document.getElementById('toolChecks');
+  wrap.innerHTML = TOOLS.map(t => `
+    <label class="tool-check">
+      <input type="checkbox" value="${t.key}">
+      <span>${t.icon} ${t.name}</span>
+    </label>
+  `).join('');
+}
+
+function openAddModal() {
+  document.getElementById('newName').value = '';
+  document.getElementById('newPhone').value = '';
+  document.getElementById('newUsername').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('addMsg').className = 'modal-msg';
+  document.getElementById('addMsg').textContent = '';
+  document.getElementById('credsBox').style.display = 'none';
+  document.getElementById('addSubmitBtn').style.display = 'block';
+  renderToolChecks();
+  document.getElementById('addModal').classList.add('open');
+}
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+
+async function submitAddTrainee() {
+  const name = document.getElementById('newName').value.trim();
+  const phone = document.getElementById('newPhone').value.trim();
+  const trainee_username = document.getElementById('newUsername').value.trim().toLowerCase();
+  const trainee_password = document.getElementById('newPassword').value;
+  const tools_assigned = Array.from(document.querySelectorAll('#toolChecks input:checked')).map(c=>c.value);
+  const msg = document.getElementById('addMsg');
+  msg.className = 'modal-msg'; msg.textContent = '';
+  if (!name || !trainee_username || !trainee_password) {
+    msg.className = 'modal-msg error'; msg.textContent = 'יש למלא שם, שם משתמש וסיסמה'; return;
+  }
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      action:'create_trainee', mentor_username: username, mentor_token: token,
+      name, phone, trainee_username, trainee_password, tools_assigned
+    })});
+    const data = await res.json();
+    if (!res.ok) { msg.className='modal-msg error'; msg.textContent = data.error || 'שגיאה'; return; }
+    msg.className = 'modal-msg success';
+    msg.textContent = 'המתאמן נוצר בהצלחה! מסור לו את פרטי ההתחברות:';
+    document.getElementById('credsBox').style.display = 'block';
+    document.getElementById('credsBox').innerHTML = `שם משתמש: <b>${data.trainee.username}</b><br>סיסמה: <b>${trainee_password}</b><br>כתובת התחברות: ${window.location.origin + window.location.pathname.replace('dashboard.html','trainee-login.html')}`;
+    document.getElementById('addSubmitBtn').style.display = 'none';
+    loadDashboard();
+  } catch(e) {
+    msg.className = 'modal-msg error'; msg.textContent = 'שגיאת רשת';
+  }
+}
+
 async function loadDashboard() {
   document.getElementById('shareLink').textContent = window.location.origin + window.location.pathname.replace('dashboard.html','signup.html') + '?mentor=' + username;
   renderTools();
@@ -140,27 +250,34 @@ async function loadDashboard() {
     document.getElementById('mentorLabel').textContent = 'שלום ' + data.mentor.display_name + (data.mentor.business_name ? ' · ' + data.mentor.business_name : '');
     const trainees = data.trainees || [];
     const totalTools = trainees.reduce((s,t)=> s + (t.tools_assigned||[]).length, 0);
-    const consented = trainees.filter(t=>t.share_with_mentor).length;
+    const sharing = trainees.filter(t=>(t.shared_tools||[]).length>0).length;
     document.getElementById('statsRow').innerHTML = `
       <div class="stat-card"><div class="num">${trainees.length}</div><div class="lbl">מתאמנים</div></div>
-      <div class="stat-card"><div class="num">${consented}</div><div class="lbl">משתפים נתונים</div></div>
+      <div class="stat-card"><div class="num">${sharing}</div><div class="lbl">משתפים נתונים</div></div>
       <div class="stat-card"><div class="num">${totalTools}</div><div class="lbl">שיוכי כלים</div></div>
     `;
     if (!trainees.length) {
-      document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">👥</div>עדיין אין מתאמנים רשומים.<br>שתף את הקישור למעלה כדי להתחיל.</div>';
+      document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">👥</div>עדיין אין מתאמנים רשומים.<br>לחץ על "מתאמן חדש" כדי ליצור אחד, או שתף את הקישור למעלה.</div>';
       return;
     }
-    const rows = trainees.map(t => `
+    const rows = trainees.map(t => {
+      const shared = t.shared_tools || [];
+      const toolsHtml = (t.tools_assigned||[]).map(k=>{
+        const tl = TOOLS.find(x=>x.key===k);
+        const isShared = shared.includes(k);
+        return `<span class="tool-tag ${isShared?'shared':''}">${tl?tl.icon+' '+tl.name:k}${isShared?' ✓':''}</span>`;
+      }).join('') || '—';
+      return `
       <tr>
         <td data-label="שם">${t.name}</td>
-        <td data-label="טלפון">${t.phone || '—'}</td>
-        <td data-label="כלים">${(t.tools_assigned||[]).map(k=>{const tl=TOOLS.find(x=>x.key===k); return '<span class="tool-tag">'+(tl?tl.icon+' '+tl.name:k)+'</span>';}).join('') || '—'}</td>
-        <td data-label="שיתוף עם מאמן"><span class="badge ${t.share_with_mentor?'badge-yes':'badge-no'}">${t.share_with_mentor?'✓ משתף':'✕ פרטי'}</span></td>
+        <td data-label="שם משתמש">${t.username ? '<span style="direction:ltr;display:inline-block;">'+t.username+'</span>' : '<span style="color:#94a3b8;">רשום עצמאית</span>'}</td>
+        <td data-label="כלים ושיתוף">${toolsHtml}</td>
+        <td data-label="סטטוס שיתוף"><span class="badge ${shared.length?'badge-yes':'badge-no'}">${shared.length ? '✓ משתף '+shared.length+' כלים' : '✕ אין שיתוף'}</span></td>
       </tr>
-    `).join('');
+    `}).join('');
     document.getElementById('tableWrap').innerHTML = `
       <table>
-        <thead><tr><th>שם</th><th>טלפון</th><th>כלים</th><th>שיתוף</th></tr></thead>
+        <thead><tr><th>שם</th><th>שם משתמש</th><th>כלים ושיתוף</th><th>סטטוס שיתוף</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     `;

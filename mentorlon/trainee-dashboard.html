@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentor-IT — הכלים שלי</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#f0fdfa,#ecfeff,#ffffff); color: #0f172a; direction: rtl; min-height: 100vh; }
+  .container { max-width: 760px; margin: 0 auto; padding: 24px 20px 60px; }
+  .header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; flex-wrap:wrap; gap:14px; }
+  .header .titlebox { display:flex; align-items:center; gap:14px; }
+  .logo { display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:14px; background:#ffffff; font-size:24px; box-shadow:0 6px 20px rgba(20,184,166,0.25); border:2px solid #14b8a6; overflow:hidden; }
+  .header h1 { font-size:20px; font-weight:800; background:linear-gradient(135deg,#5eead4,#67e8f9); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .header p { font-size:13px; color:#475569; }
+  .logout-btn { padding:9px 16px; border-radius:10px; border:1px solid #ccfbf1; background:#f0fdfa; color:#0f172a; cursor:pointer; font-family:inherit; font-size:13px; }
+  .info-banner { background:#f0fdfa; border:1px solid #ccfbf1; border-radius:12px; padding:14px 18px; margin-bottom:22px; font-size:13px; color:#475569; }
+  .section-title { font-size:16px; font-weight:800; margin:20px 0 14px; }
+  .tool-list { display:flex; flex-direction:column; gap:12px; }
+  .tool-row { background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 14px rgba(15,118,110,0.06); flex-wrap:wrap; }
+  .tool-row .t-icon { font-size:26px; }
+  .tool-row .t-info { flex:1; min-width:160px; }
+  .tool-row .t-name { font-weight:700; font-size:14px; }
+  .tool-row .t-desc { font-size:12px; color:#64748b; }
+  .open-link { padding:8px 14px; border-radius:9px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:#ffffff; font-weight:700; font-size:13px; text-decoration:none; }
+  .share-toggle { display:flex; align-items:center; gap:8px; font-size:12px; color:#475569; }
+  .switch { position:relative; width:44px; height:24px; background:#e2e8f0; border-radius:20px; cursor:pointer; transition:0.2s; flex-shrink:0; }
+  .switch.on { background:#14b8a6; }
+  .switch .knob { position:absolute; top:3px; right:3px; width:18px; height:18px; background:#ffffff; border-radius:50%; transition:0.2s; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+  .switch.on .knob { right:23px; }
+  .empty { text-align:center; padding:50px 20px; color:#64748b; }
+  .empty .icon { font-size:40px; margin-bottom:12px; }
+  .save-note { font-size:12px; color:#0d9488; text-align:center; margin-top:14px; height:16px; opacity:0; transition:opacity 0.3s; }
+  .save-note.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="titlebox">
+      <div class="logo"><img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON Task" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
+      <div>
+        <h1>Mentor-IT</h1>
+        <p id="traineeLabel">טוען...</p>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">התנתקות</button>
+  </div>
+
+  <div class="info-banner">💡 כאן תוכל לפתוח את הכלים שהוקצו לך, ולבחור לכל כלי אם ברצונך שהמאמן שלך יראה שהשתמשת בו. השיתוף הוא כללי (האם משתמשים בכלי) — לא מציג את התוכן הפרטי שלך.</div>
+
+  <div class="section-title">🧰 הכלים שלי</div>
+  <div class="tool-list" id="toolList">
+    <div class="empty"><div class="icon">⏳</div>טוען...</div>
+  </div>
+  <div class="save-note" id="saveNote">✓ נשמר</div>
+</div>
+
+<script>
+const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mentorlonApi';
+const TOOLS = [
+  { key:'career_compass', icon:'🧭', name:'מצפן הקריירה', desc:'התאמת מקצועות ומיצוב תעסוקתי', url:'../matpen-kariera/' },
+  { key:'loaz_shavuai', icon:'📅', name:'לוז שבועי', desc:'ניהול זמן, מוטיבציה ומיקוד יומי', url:'../loaz-shavuai/' },
+  { key:'mind_track', icon:'🧠', name:'MindTrack', desc:'ניהול טריגרים וחרדות', url:'#' },
+  { key:'positive_thinking', icon:'💭', name:'חשיבה חיובית', desc:'כלים לשינוי דפוסי חשיבה', url:'#' },
+  { key:'decision_making', icon:'⚖️', name:'אסטרטגיית יציאה AI', desc:'כלי לניתוח החלטות עבר ולמיפוי החלטות עתידיות', url:'../exit-strategy/' },
+  { key:'relationships', icon:'❤️', name:'ניהול זוגיות', desc:'כלים לחיזוק הזוגיות', url:'#' },
+  { key:'emotions', icon:'😊', name:'ניהול רגשות', desc:'זיהוי וויסות רגשי', url:'#' },
+  { key:'parenting', icon:'👨‍👧', name:'חינוך ילדים', desc:'כלים להורות מיטבית', url:'#' },
+];
+
+const username = localStorage.getItem('mentorlon_trainee_username');
+const token = localStorage.getItem('mentorlon_trainee_token');
+if (!username || !token) window.location.href = 'trainee-login.html';
+
+let currentShared = [];
+
+function logout() {
+  localStorage.removeItem('mentorlon_trainee_username');
+  localStorage.removeItem('mentorlon_trainee_token');
+  window.location.href = 'trainee-login.html';
+}
+
+function flashSaved() {
+  const el = document.getElementById('saveNote');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1500);
+}
+
+async function toggleShare(key) {
+  const idx = currentShared.indexOf(key);
+  if (idx >= 0) currentShared.splice(idx,1); else currentShared.push(key);
+  renderTools();
+  try {
+    await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'update_shared_tools', username, token, shared_tools: currentShared }) });
+    flashSaved();
+  } catch(e) {}
+}
+
+function renderTools() {
+  const list = document.getElementById('toolList');
+  if (!window.assignedTools || !window.assignedTools.length) {
+    list.innerHTML = '<div class="empty"><div class="icon">🧰</div>עדיין לא הוקצו לך כלים.<br>פנה למאמן שלך.</div>';
+    return;
+  }
+  list.innerHTML = window.assignedTools.map(key => {
+    const t = TOOLS.find(x=>x.key===key);
+    if (!t) return '';
+    const isShared = currentShared.includes(key);
+    const isLive = t.url !== '#';
+    return `
+      <div class="tool-row">
+        <div class="t-icon">${t.icon}</div>
+        <div class="t-info">
+          <div class="t-name">${t.name}</div>
+          <div class="t-desc">${t.desc}</div>
+        </div>
+        ${isLive ? `<a class="open-link" href="${t.url}" target="_blank">פתח כלי</a>` : `<span style="font-size:12px;color:#94a3b8;">בקרוב</span>`}
+        <div class="share-toggle">
+          <span>שתף עם המאמן</span>
+          <div class="switch ${isShared?'on':''}" onclick="toggleShare('${key}')"><div class="knob"></div></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function loadTraineeDashboard() {
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'trainee_dashboard', username, token }) });
+    const data = await res.json();
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      document.getElementById('toolList').innerHTML = '<div class="empty"><div class="icon">⚠️</div>' + (data.error||'שגיאה') + '</div>';
+      return;
+    }
+    document.getElementById('traineeLabel').textContent = 'שלום ' + data.trainee.name + ' · מלווה ע"י ' + data.trainee.mentor_display;
+    window.assignedTools = data.trainee.tools_assigned || [];
+    currentShared = data.trainee.shared_tools || [];
+    renderTools();
+  } catch(e) {
+    document.getElementById('toolList').innerHTML = '<div class="empty"><div class="icon">⚠️</div>שגיאת רשת</div>';
+  }
+}
+loadTraineeDashboard();
+</script>
+</body>
+</html>
