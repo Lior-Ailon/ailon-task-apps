@@ -6,30 +6,30 @@
 <title>MentorLON — הצטרפות למתאמן</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,rgba(15,23,42,0.94),rgba(30,41,59,0.94)), url('https://media.base44.com/images/public/69f63b4536d7a2c6688403df/1dbcf4721_generated_image.png') center/cover fixed no-repeat; color: #e2e8f0; direction: rtl; min-height: 100vh; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#f0fdfa,#ecfeff,#ffffff); color: #0f172a; direction: rtl; min-height: 100vh; }
   .container { max-width: 520px; margin: 0 auto; padding: 24px 20px 60px; }
   .header { text-align: center; margin-bottom: 28px; }
-  .header .logo { display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:18px; background:#0f172a; font-size:28px; margin-bottom:14px; box-shadow:0 8px 24px rgba(20,184,166,0.4); border:2px solid #14b8a6; overflow:hidden; }
+  .header .logo { display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:18px; background:#ffffff; font-size:28px; margin-bottom:14px; box-shadow:0 8px 24px rgba(20,184,166,0.25); border:2px solid #14b8a6; overflow:hidden; }
   .header h1 { font-size: 24px; font-weight: 800; margin-bottom:6px; }
-  .header p { font-size: 14px; color:#94a3b8; }
-  .mentor-tag { display:inline-block; background:#1e293b; border:1px solid #14b8a6; color:#5eead4; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; margin-top:8px; }
-  .card { background:#1e293b; border:1px solid #334155; border-radius:18px; padding:26px; box-shadow:0 8px 30px rgba(0,0,0,0.3); }
+  .header p { font-size: 14px; color:#475569; }
+  .mentor-tag { display:inline-block; background:#f0fdfa; border:1px solid #14b8a6; color:#0d9488; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; margin-top:8px; }
+  .card { background:#ffffff; border:1px solid #ccfbf1; border-radius:18px; padding:26px; box-shadow:0 8px 30px rgba(15,118,110,0.12); }
   .field { margin-bottom:18px; }
-  .field label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; color:#cbd5e1; }
-  .field input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:15px; font-family:inherit; }
+  .field label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; color:#334155; }
+  .field input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #ccfbf1; background:#f8fffe; color:#0f172a; font-size:15px; font-family:inherit; }
   .field input:focus { outline:none; border-color:#14b8a6; }
   .tools { display:flex; flex-direction:column; gap:10px; }
-  .tool-opt { display:flex; align-items:center; gap:10px; background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 14px; cursor:pointer; transition:.2s; }
+  .tool-opt { display:flex; align-items:center; gap:10px; background:#f8fffe; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; cursor:pointer; transition:.2s; }
   .tool-opt:hover { border-color:#14b8a6; }
   .tool-opt.selected { border-color:#14b8a6; background:rgba(20,184,166,0.1); }
   .tool-opt input { width:18px; height:18px; accent-color:#14b8a6; }
   .tool-opt .t-name { font-weight:600; font-size:14px; }
-  .tool-opt .t-desc { font-size:12px; color:#94a3b8; }
-  .consent-box { background:#0f172a; border:1px solid #f59e0b; border-radius:12px; padding:16px; margin-top:6px; }
+  .tool-opt .t-desc { font-size:12px; color:#64748b; }
+  .consent-box { background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:16px; margin-top:6px; }
   .consent-box .c-title { font-weight:700; font-size:14px; margin-bottom:8px; color:#fbbf24; }
-  .consent-box .c-desc { font-size:13px; color:#cbd5e1; line-height:1.6; margin-bottom:12px; }
+  .consent-box .c-desc { font-size:13px; color:#78350f; line-height:1.6; margin-bottom:12px; }
   .toggle-row { display:flex; gap:10px; }
-  .toggle-btn { flex:1; padding:12px; border-radius:10px; border:2px solid #334155; background:#1e293b; color:#e2e8f0; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:.2s; }
+  .toggle-btn { flex:1; padding:12px; border-radius:10px; border:2px solid #e2e8f0; background:#f8fafc; color:#0f172a; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:.2s; }
   .toggle-btn.active-yes { border-color:#059669; background:rgba(5,150,105,0.2); color:#6ee7b7; }
   .toggle-btn.active-no { border-color:#dc2626; background:rgba(220,38,38,0.2); color:#fca5a5; }
   .submit-btn { width:100%; padding:16px; margin-top:22px; border:none; border-radius:12px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:white; font-size:17px; font-weight:800; cursor:pointer; font-family:inherit; }
@@ -37,7 +37,7 @@
   .success { display:none; text-align:center; padding:20px; }
   .success .icon { font-size:48px; margin-bottom:10px; }
   .success h2 { font-size:20px; margin-bottom:8px; }
-  .success p { color:#94a3b8; font-size:14px; }
+  .success p { color:#64748b; font-size:14px; }
   .error-msg { color:#fca5a5; font-size:13px; margin-top:10px; text-align:center; display:none; }
 </style>
 </head>
