@@ -84,7 +84,10 @@
         <p id="mentorLabel">טוען...</p>
       </div>
     </div>
-    <button class="logout-btn" onclick="logout()">התנתקות</button>
+    <div style="display:flex;gap:8px;">
+      <button class="logout-btn" id="adminBtn" style="display:none;background:linear-gradient(135deg,#0f172a,#334155);color:#5eead4;" onclick="window.location.href='admin-dashboard.html'">⚙️ ניהול מערכת</button>
+      <button class="logout-btn" onclick="logout()">התנתקות</button>
+    </div>
   </div>
 
   <div class="share-link">
@@ -248,6 +251,7 @@ async function loadDashboard() {
       return;
     }
     document.getElementById('mentorLabel').textContent = 'שלום ' + data.mentor.display_name + (data.mentor.business_name ? ' · ' + data.mentor.business_name : '');
+    if (data.mentor.is_admin) { document.getElementById('adminBtn').style.display = 'inline-block'; }
     const trainees = data.trainees || [];
     const totalTools = trainees.reduce((s,t)=> s + (t.tools_assigned||[]).length, 0);
     const sharing = trainees.filter(t=>(t.shared_tools||[]).length>0).length;

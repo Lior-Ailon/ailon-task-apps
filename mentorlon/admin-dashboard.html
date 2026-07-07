@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentor-IT — ניהול מערכת</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#f0fdfa,#ecfeff,#ffffff); color: #0f172a; direction: rtl; min-height: 100vh; }
+  .container { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+  .header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px; flex-wrap:wrap; gap:14px; }
+  .header .titlebox { display:flex; align-items:center; gap:14px; }
+  .header .logo { width:56px; height:56px; border-radius:16px; background:#ffffff; box-shadow:0 6px 20px rgba(20,184,166,0.25); border:2px solid #14b8a6; overflow:hidden; flex-shrink:0; }
+  .header h1 { font-size:22px; font-weight:800; background:linear-gradient(135deg,#5eead4,#67e8f9); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .header p { font-size:13px; color:#475569; }
+  .back-btn { padding:9px 16px; border-radius:10px; border:1px solid #ccfbf1; background:#f0fdfa; color:#0f172a; cursor:pointer; font-family:inherit; font-size:13px; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
+  .stat-card { background:#ffffff; border:1px solid #ccfbf1; border-radius:14px; padding:16px; text-align:center; box-shadow:0 4px 16px rgba(15,118,110,0.08); }
+  .stat-card .num { font-size:26px; font-weight:800; color:#0d9488; }
+  .stat-card .lbl { font-size:12px; color:#64748b; margin-top:4px; }
+  .section-title { font-size:16px; font-weight:800; margin:26px 0 12px; display:flex; align-items:center; justify-content:space-between; }
+  .add-btn { background:linear-gradient(135deg,#14b8a6,#0891b2); color:#fff; border:none; padding:9px 16px; border-radius:10px; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px; }
+  .table-wrap { background:#ffffff; border:1px solid #ccfbf1; border-radius:16px; overflow:hidden; box-shadow:0 6px 24px rgba(15,118,110,0.08); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:#f0fdfa; color:#0f766e; text-align:right; padding:12px 14px; font-size:12px; font-weight:700; }
+  td { padding:12px 14px; border-top:1px solid #f1f5f9; vertical-align:middle; }
+  .badge { display:inline-block; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:700; }
+  .badge.active { background:rgba(13,148,136,0.12); color:#0d9488; }
+  .badge.suspended { background:rgba(220,38,38,0.1); color:#dc2626; }
+  .badge.admin { background:rgba(99,102,241,0.12); color:#4f46e5; margin-right:6px; }
+  .status-toggle { border:none; background:none; cursor:pointer; font-size:12px; color:#0891b2; font-weight:700; font-family:inherit; }
+  .empty { text-align:center; padding:50px 20px; color:#64748b; }
+  .empty .icon { font-size:34px; margin-bottom:10px; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:100; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:#ffffff; border-radius:18px; width:100%; max-width:460px; max-height:88vh; overflow-y:auto; padding:24px; box-shadow:0 20px 60px rgba(15,23,42,0.3); }
+  .modal h2 { font-size:18px; margin-bottom:16px; color:#0f172a; }
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:#334155; }
+  .field input { width:100%; padding:11px 13px; border-radius:10px; border:1px solid #e2e8f0; font-family:inherit; font-size:14px; background:#f8fafc; }
+  .field input:focus { outline:none; border-color:#14b8a6; background:#ffffff; }
+  .modal-actions { display:flex; gap:10px; margin-top:18px; }
+  .modal-actions button { flex:1; padding:12px; border-radius:10px; border:none; font-family:inherit; font-weight:700; font-size:14px; cursor:pointer; }
+  .btn-primary { background:linear-gradient(135deg,#14b8a6,#0891b2); color:#fff; }
+  .btn-secondary { background:#f1f5f9; color:#334155; }
+  .modal-msg { font-size:13px; margin-top:10px; padding:10px; border-radius:9px; display:none; }
+  .modal-msg.error { background:rgba(220,38,38,0.08); color:#dc2626; display:block; }
+  .modal-msg.success { background:rgba(13,148,136,0.1); color:#0d9488; display:block; }
+  .creds-box { background:#f0fdfa; border:1px dashed #14b8a6; border-radius:10px; padding:12px; margin-top:10px; font-size:13px; direction:ltr; text-align:left; }
+  .bg-video-wrap { position:fixed; inset:0; width:100%; height:100%; overflow:hidden; z-index:0; opacity:0.10; pointer-events:none; }
+  .bg-video-wrap video { width:100%; height:100%; object-fit:cover; }
+  .container { position:relative; z-index:1; }
+</style>
+</head>
+<body>
+<div class="bg-video-wrap">
+  <video autoplay muted loop playsinline>
+    <source src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/61b5c4d12_ailon_intro_full_muted.mp4" type="video/mp4">
+  </video>
+</div>
+<div class="container">
+  <div class="header">
+    <div class="titlebox">
+      <div class="logo"><img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
+      <div>
+        <h1>Mentor-IT — ניהול מערכת</h1>
+        <p>הקמה וניהול של חשבונות מאמנים</p>
+      </div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">⬅ חזרה לדשבורד</button>
+  </div>
+
+  <div class="stats" id="statsRow"></div>
+
+  <div class="section-title">
+    <span>🧑‍🏫 מאמנים במערכת</span>
+    <button class="add-btn" onclick="openAddModal()">➕ מאמן חדש</button>
+  </div>
+  <div class="table-wrap" id="tableWrap">
+    <div class="empty"><div class="icon">⏳</div>טוען נתונים...</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h2>➕ הוספת מאמן חדש</h2>
+    <div class="field">
+      <label>שם מלא</label>
+      <input type="text" id="newDisplayName" placeholder="לדוגמה: נריה חדד">
+    </div>
+    <div class="field">
+      <label>שם העסק / מיתוג (לא חובה)</label>
+      <input type="text" id="newBusinessName" placeholder="לדוגמה: AILON Task">
+    </div>
+    <div class="field">
+      <label>שם משתמש</label>
+      <input type="text" id="newMentorUsername" placeholder="באנגלית, ללא רווחים" style="direction:ltr">
+    </div>
+    <div class="field">
+      <label>סיסמה</label>
+      <input type="password" id="newMentorPassword" placeholder="לפחות 6 תווים">
+    </div>
+    <div class="modal-msg" id="addMsg"></div>
+    <div class="creds-box" id="credsBox" style="display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeAddModal()">סגור</button>
+      <button class="btn-primary" id="addSubmitBtn" onclick="submitAddMentor()">צור מאמן</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mentorlonApi';
+const username = localStorage.getItem('mentorlon_username');
+const token = localStorage.getItem('mentorlon_token');
+if (!username || !token) window.location.href = 'index.html';
+
+function openAddModal() {
+  document.getElementById('newDisplayName').value = '';
+  document.getElementById('newBusinessName').value = '';
+  document.getElementById('newMentorUsername').value = '';
+  document.getElementById('newMentorPassword').value = '';
+  document.getElementById('addMsg').className = 'modal-msg';
+  document.getElementById('addMsg').textContent = '';
+  document.getElementById('credsBox').style.display = 'none';
+  document.getElementById('addSubmitBtn').style.display = 'block';
+  document.getElementById('addModal').classList.add('open');
+}
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); loadAdmin(); }
+
+async function submitAddMentor() {
+  const display_name = document.getElementById('newDisplayName').value.trim();
+  const business_name = document.getElementById('newBusinessName').value.trim();
+  const new_username = document.getElementById('newMentorUsername').value.trim().toLowerCase();
+  const new_password = document.getElementById('newMentorPassword').value;
+  const msg = document.getElementById('addMsg');
+  msg.className = 'modal-msg'; msg.textContent = '';
+  if (!display_name || !new_username || !new_password) {
+    msg.className = 'modal-msg error'; msg.textContent = 'יש למלא שם, שם משתמש וסיסמה'; return;
+  }
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      action:'admin_create_mentor', username, token,
+      new_username, new_password, display_name, business_name
+    })});
+    const data = await res.json();
+    if (!res.ok) { msg.className='modal-msg error'; msg.textContent = data.error || 'שגיאה'; return; }
+    msg.className = 'modal-msg success';
+    msg.textContent = 'המאמן נוצר בהצלחה! מסור לו את פרטי ההתחברות:';
+    document.getElementById('credsBox').style.display = 'block';
+    document.getElementById('credsBox').innerHTML = `שם משתמש: <b>${data.mentor.username}</b><br>סיסמה: <b>${new_password}</b><br>כתובת התחברות: ${window.location.origin + window.location.pathname.replace('admin-dashboard.html','index.html')}`;
+    document.getElementById('addSubmitBtn').style.display = 'none';
+    loadAdmin();
+  } catch(e) {
+    msg.className = 'modal-msg error'; msg.textContent = 'שגיאת רשת';
+  }
+}
+
+async function toggleStatus(mentorId, currentStatus) {
+  const new_status = currentStatus === 'active' ? 'suspended' : 'active';
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      action:'admin_toggle_mentor_status', username, token, mentor_id: mentorId, new_status
+    })});
+    const data = await res.json();
+    if (res.ok) loadAdmin();
+  } catch(e) {}
+}
+
+async function loadAdmin() {
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'admin_list_mentors', username, token }) });
+    const data = await res.json();
+    if (!res.ok) {
+      if (res.status === 401) { window.location.href = 'index.html'; return; }
+      if (res.status === 403) { document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">🔒</div>אין לך הרשאת מנהל מערכת לצפייה בעמוד זה.</div>'; document.querySelector('.add-btn').style.display='none'; return; }
+      document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">⚠️</div>' + (data.error||'שגיאה') + '</div>';
+      return;
+    }
+    const mentors = data.mentors || [];
+    const totalTrainees = mentors.reduce((s,m)=> s + (m.trainee_count||0), 0);
+    const activeCount = mentors.filter(m=>m.status==='active').length;
+    document.getElementById('statsRow').innerHTML = `
+      <div class="stat-card"><div class="num">${mentors.length}</div><div class="lbl">מאמנים</div></div>
+      <div class="stat-card"><div class="num">${activeCount}</div><div class="lbl">פעילים</div></div>
+      <div class="stat-card"><div class="num">${totalTrainees}</div><div class="lbl">סה"כ מתאמנים</div></div>
+    `;
+    if (!mentors.length) {
+      document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">🧑‍🏫</div>עדיין אין מאמנים רשומים.</div>';
+      return;
+    }
+    const rows = mentors.map(m => `
+      <tr>
+        <td><b>${m.display_name}</b>${m.is_admin ? '<span class="badge admin">מנהל מערכת</span>' : ''}<br><span style="color:#94a3b8;font-size:12px;">${m.business_name||''}</span></td>
+        <td style="direction:ltr;text-align:right;">${m.username}</td>
+        <td>${m.trainee_count}</td>
+        <td><span class="badge ${m.status}">${m.status==='active'?'פעיל':'מושהה'}</span></td>
+        <td>${m.is_admin ? '—' : `<button class="status-toggle" onclick="toggleStatus('${m.id}','${m.status}')">${m.status==='active'?'השהה':'הפעל'}</button>`}</td>
+      </tr>
+    `).join('');
+    document.getElementById('tableWrap').innerHTML = `
+      <table>
+        <thead><tr><th>מאמן</th><th>שם משתמש</th><th>מתאמנים</th><th>סטטוס</th><th>פעולה</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  } catch(e) {
+    document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">⚠️</div>שגיאת רשת</div>';
+  }
+}
+
+loadAdmin();
+</script>
+</body>
+</html>
