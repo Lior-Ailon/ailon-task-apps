@@ -143,6 +143,11 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 .sleep-bar-awake { position: absolute; top: 0; bottom: 0; background: linear-gradient(90deg,#a78bfa,#818cf8); }
 .sleep-bar-hourmark { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.06); }
 .sleep-hours-total { font-size: 11px; color: #a78bfa; min-width: 60px; text-align: left; font-weight: 600; }
+.time-select-group { display: flex; align-items: center; gap: 2px; }
+.time-select-group select { background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 5px 4px; border-radius: 6px; font-size: 12px; font-family: inherit; cursor: pointer; }
+.time-select-group select:focus { outline: none; border-color: #a78bfa; }
+.time-select-group .colon { color: #64748b; font-size: 12px; }
+
 </style>
 </head>
 <body>
@@ -524,6 +529,21 @@ function sleepDurationLabel(wake, sleep) {
   return awakeH+' ש\' ער';
 }
 
+const HEB_HOURS = []; for (let h=0; h<24; h++) HEB_HOURS.push(h<10?'0'+h:''+h);
+const HEB_MINUTES = ['00','15','30','45'];
+function buildTimeSelects(kind, d, value) {
+  let hh = '', mm = '';
+  if (value) { const p = value.split(':'); hh = p[0]; mm = p[1]; }
+  let hourOpts = '<option value="">--</option>';
+  for (let i=0;i<HEB_HOURS.length;i++) hourOpts += '<option value="'+HEB_HOURS[i]+'"'+(HEB_HOURS[i]===hh?' selected':'')+'>'+HEB_HOURS[i]+'</option>';
+  let minOpts = '<option value="">--</option>';
+  for (let i=0;i<HEB_MINUTES.length;i++) minOpts += '<option value="'+HEB_MINUTES[i]+'"'+(HEB_MINUTES[i]===mm?' selected':'')+'>'+HEB_MINUTES[i]+'</option>';
+  return '<div class="time-select-group">' +
+    '<select class="'+kind+'Hour" data-day="'+d+'">'+hourOpts+'</select>' +
+    '<span class="colon">:</span>' +
+    '<select class="'+kind+'Min" data-day="'+d+'">'+minOpts+'</select>' +
+  '</div>';
+}
 function renderSleepSection() {
   const wrap = document.getElementById('sleepRows');
   let html = '';
@@ -532,19 +552,24 @@ function renderSleepSection() {
     const data = getSleepData(d) || { wake: '', sleep: '' };
     html += '<div class="sleep-row" data-day="'+d+'">' +
       '<div class="sleep-day-label">'+DAYS[d]+'<br><span style="font-size:10px;color:#64748b">'+formatDate(date)+'</span></div>' +
-      '<div class="sleep-inputs">🌅 קימה <input type="time" class="wakeInput" data-day="'+d+'" value="'+data.wake+'"></div>' +
-      '<div class="sleep-inputs">🌙 שינה <input type="time" class="sleepInput" data-day="'+d+'" value="'+data.sleep+'"></div>' +
+      '<div class="sleep-inputs">🌅 קימה בשעה '+buildTimeSelects('wake', d, data.wake)+'</div>' +
+      '<div class="sleep-inputs">🌙 הליכה לישון בשעה '+buildTimeSelects('sleep', d, data.sleep)+'</div>' +
       renderSleepRowBar(data.wake, data.sleep) +
       '<div class="sleep-hours-total">'+sleepDurationLabel(data.wake, data.sleep)+'</div>' +
     '</div>';
   }
   wrap.innerHTML = html;
-  wrap.querySelectorAll('.wakeInput, .sleepInput').forEach(function(inp) {
-    inp.addEventListener('change', function() {
+  function readTime(row, kind) {
+    const h = row.querySelector('.'+kind+'Hour').value;
+    const m = row.querySelector('.'+kind+'Min').value;
+    return (h && m) ? (h+':'+m) : '';
+  }
+  wrap.querySelectorAll('select').forEach(function(sel) {
+    sel.addEventListener('change', function() {
       const d = parseInt(this.getAttribute('data-day'));
       const row = wrap.querySelector('.sleep-row[data-day="'+d+'"]');
-      const wake = row.querySelector('.wakeInput').value;
-      const sleep = row.querySelector('.sleepInput').value;
+      const wake = readTime(row, 'wake');
+      const sleep = readTime(row, 'sleep');
       setSleepData(d, { wake: wake, sleep: sleep });
       renderSleepSection();
     });
