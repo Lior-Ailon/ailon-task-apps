@@ -134,6 +134,25 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 .sleep-section.active { display: block; }
 .sleep-section h2 { font-size: 18px; color: #a78bfa; margin-bottom: 4px; }
 .sleep-section .sleep-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+.focus-section { display: none; background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
+.focus-section.active { display: block; }
+.focus-section h2 { font-size: 18px; color: #f97316; margin-bottom: 4px; }
+.focus-section .focus-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+.focus-day-card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.focus-day-title { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.focus-day-title .focus-date { font-size: 11px; color: #64748b; font-weight: 400; }
+.focus-block { margin-bottom: 10px; }
+.focus-block label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 4px; font-weight: 600; }
+.focus-onetask { width: 100%; box-sizing: border-box; background: #1e293b; border: 2px solid #f97316; color: #fff; padding: 9px 10px; border-radius: 8px; font-size: 14px; font-family: inherit; font-weight: 600; }
+.focus-onetask::placeholder { color: #78716c; font-weight: 400; }
+.focus-onetask.filled { border-color: #22c55e; }
+.focus-textarea { width: 100%; box-sizing: border-box; background: #1e293b; border: 1px solid #334155; color: #e2e8f0; padding: 8px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 44px; }
+.focus-check-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.focus-check-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: #f97316; cursor: pointer; }
+.focus-check-row label { font-size: 13px; color: #cbd5e1; cursor: pointer; margin: 0; }
+.focus-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .focus-cols { grid-template-columns: 1fr; } }
+
 .sleep-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
 .sleep-day-label { min-width: 56px; font-size: 13px; font-weight: 600; color: #e2e8f0; }
 .sleep-inputs { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #94a3b8; }
@@ -168,6 +187,7 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
       <button class="btn-goals" id="goalsBtn">🎯 מטרות השבוע</button>
       <button class="btn-chart" id="chartBtn">📈 גרף התקדמות</button>
       <button class="btn-sleep" id="sleepBtn">🌙 שינה ויקיצה</button>
+      <button class="btn-sleep" id="focusBtn" style="background:#f97316">🎯 מיקוד יומי</button>
       <button class="btn-sample" id="sampleBtn">🔄 אפס ללוז הקבוע</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
@@ -185,6 +205,11 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     <h2>🌙 שינה ויקיצה — תצוגה שבועית</h2>
     <div class="sleep-sub">מתי התעוררת ומתי הלכת לישון בכל יום, ראשון עד שישי — פרוס על ציר 24 שעות</div>
     <div id="sleepRows"></div>
+  </div>
+  <div class="focus-section" id="focusSection">
+    <h2>🎯 מיקוד יומי — המשימה שחייבים, ולא רק רוצים</h2>
+    <div class="focus-sub">בכל בוקר: המשימה האחת שחייבים לבצע היום בכל הכוח. בכל ערב: חשבון נפש + תכנון למחר.</div>
+    <div id="focusRows"></div>
   </div>
   <div class="stats-bar">
     <div class="stat-card"><div class="stat-label">פעילויות</div><div class="stat-value" id="statTotal">0</div></div>
@@ -577,6 +602,59 @@ function renderSleepSection() {
 }
 
 function ensureWeekPopulated() { if (!hasAnyData()) loadFixedSchedule(true); else renderTable(); }
+
+
+// --- מיקוד יומי: משימה אחת חובה + חשבון נפש ערב + תכנון מחר ---
+function getFocusKey(d) { return 'loazfocus_'+currentWeekStart.toISOString().slice(0,10)+'_'+d+'_'+getUserKey(); }
+function getFocusData(d) { const r=localStorage.getItem(getFocusKey(d)); if(!r) return null; try{return JSON.parse(r);}catch(e){return null;} }
+function setFocusData(d,data) { const k=getFocusKey(d); localStorage.setItem(k,JSON.stringify(data)); }
+
+function renderFocusSection() {
+  const wrap = document.getElementById('focusRows');
+  let html = '';
+  for (let d = 0; d < 6; d++) {
+    const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
+    const data = getFocusData(d) || { oneTask: '', plannedTomorrow: false, whatWorked: '', whatDidntAndWhy: '' };
+    const filledClass = data.oneTask ? 'filled' : '';
+    html += '<div class="focus-day-card" data-day="'+d+'">' +
+      '<div class="focus-day-title">'+DAYS[d]+' <span class="focus-date">'+formatDate(date)+'</span></div>' +
+      '<div class="focus-block">' +
+        '<label>🎯 בוקר — מה המשימה האחת שאני *חייב* לבצע היום בכל הכוח? (חובה, לא רשות)</label>' +
+        '<input type="text" class="focus-onetask '+filledClass+'" data-day="'+d+'" data-field="oneTask" value="'+escapeHtml(data.oneTask)+'" placeholder="המשימה האחת שחייבים היום...">' +
+      '</div>' +
+      '<div class="focus-cols">' +
+        '<div class="focus-block">' +
+          '<label>✅ ערב — מה הצליח היום?</label>' +
+          '<textarea class="focus-textarea" data-day="'+d+'" data-field="whatWorked" placeholder="מה עבד היום...">'+escapeHtml(data.whatWorked)+'</textarea>' +
+        '</div>' +
+        '<div class="focus-block">' +
+          '<label>❌ ערב — מה פחות הצליח, ולמה?</label>' +
+          '<textarea class="focus-textarea" data-day="'+d+'" data-field="whatDidntAndWhy" placeholder="מה לא עבד, ומה הסיבה...">'+escapeHtml(data.whatDidntAndWhy)+'</textarea>' +
+        '</div>' +
+      '</div>' +
+      '<div class="focus-check-row">' +
+        '<input type="checkbox" id="planned_'+d+'" data-day="'+d+'" data-field="plannedTomorrow" '+(data.plannedTomorrow?'checked':'')+'>' +
+        '<label for="planned_'+d+'">☑️ תכננתי הערב את הלו"ז למחר</label>' +
+      '</div>' +
+    '</div>';
+  }
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.focus-onetask, .focus-textarea').forEach(function(el) {
+    el.addEventListener('change', function() { saveFocusField(this); if(this.classList.contains('focus-onetask')) this.classList.toggle('filled', !!this.value.trim()); });
+  });
+  wrap.querySelectorAll('input[type="checkbox"]').forEach(function(el) {
+    el.addEventListener('change', function() { saveFocusField(this); });
+  });
+}
+function saveFocusField(el) {
+  const d = parseInt(el.getAttribute('data-day'));
+  const field = el.getAttribute('data-field');
+  const data = getFocusData(d) || { oneTask: '', plannedTomorrow: false, whatWorked: '', whatDidntAndWhy: '' };
+  data[field] = (el.type === 'checkbox') ? el.checked : el.value;
+  setFocusData(d, data);
+}
+
+document.getElementById('focusBtn').addEventListener('click', function() { document.getElementById('focusSection').classList.toggle('active'); renderFocusSection(); });
 
 document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); ensureWeekPopulated(); renderWeekLabel(); if(document.getElementById('sleepSection').classList.contains('active')) renderSleepSection(); });
 document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); ensureWeekPopulated(); renderWeekLabel(); if(document.getElementById('sleepSection').classList.contains('active')) renderSleepSection(); });
