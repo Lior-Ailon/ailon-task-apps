@@ -127,6 +127,22 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 .chart-empty { color: #64748b; font-size: 13px; text-align: center; padding: 20px 0; }
 .btn-chart { background: #1e293b; border: 1px solid #38bdf8; color: #38bdf8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
 .btn-chart:hover { background: #38bdf8; color: #0f172a; }
+
+.btn-sleep { background: #1e293b; border: 1px solid #a78bfa; color: #a78bfa; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+.btn-sleep:hover { background: #a78bfa; color: #0f172a; }
+.sleep-section { display: none; background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
+.sleep-section.active { display: block; }
+.sleep-section h2 { font-size: 18px; color: #a78bfa; margin-bottom: 4px; }
+.sleep-section .sleep-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+.sleep-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.sleep-day-label { min-width: 56px; font-size: 13px; font-weight: 600; color: #e2e8f0; }
+.sleep-inputs { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #94a3b8; }
+.sleep-inputs input[type="time"] { background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 5px 8px; border-radius: 6px; font-size: 12px; }
+.sleep-inputs input[type="time"]:focus { outline: none; border-color: #a78bfa; }
+.sleep-bar-track { flex: 1; min-width: 180px; height: 22px; background: #0f172a; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #1e293b; }
+.sleep-bar-awake { position: absolute; top: 0; bottom: 0; background: linear-gradient(90deg,#a78bfa,#818cf8); }
+.sleep-bar-hourmark { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.06); }
+.sleep-hours-total { font-size: 11px; color: #a78bfa; min-width: 60px; text-align: left; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -146,6 +162,7 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn-goals" id="goalsBtn">🎯 מטרות השבוע</button>
       <button class="btn-chart" id="chartBtn">📈 גרף התקדמות</button>
+      <button class="btn-sleep" id="sleepBtn">🌙 שינה ויקיצה</button>
       <button class="btn-sample" id="sampleBtn">🔄 אפס ללוז הקבוע</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
@@ -158,6 +175,11 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     <h2>📈 מגמת התקדמות לאורך זמן</h2>
     <div class="chart-sub">אחוז ביצוע (V מתוך V+X) לכל שבוע</div>
     <div class="chart-wrap" id="chartWrap"></div>
+  </div>
+  <div class="sleep-section" id="sleepSection">
+    <h2>🌙 שינה ויקיצה — תצוגה שבועית</h2>
+    <div class="sleep-sub">מתי התעוררת ומתי הלכת לישון בכל יום, ראשון עד שישי — פרוס על ציר 24 שעות</div>
+    <div id="sleepRows"></div>
   </div>
   <div class="stats-bar">
     <div class="stat-card"><div class="stat-label">פעילויות</div><div class="stat-value" id="statTotal">0</div></div>
@@ -471,10 +493,68 @@ function loadSampleSchedule() {
   if (confirm('איפוס ללוז הקבוע ימחק שינויים שביצעת השבוע. להמשיך?')) loadFixedSchedule();
 }
 function clearWeek() { if (confirm('לנקות את כל הלוז של השבוע?')) { for(let h=0;h<HOURS.length;h++) for(let d=0;d<6;d++) setCellData(d,h,null); renderTable(); } }
+
+// --- שינה ויקיצה: מעקב שבועי ---
+function getSleepKey(d) { return 'loazsleep_'+currentWeekStart.toISOString().slice(0,10)+'_'+d+'_'+getUserKey(); }
+function getSleepData(d) { const r=localStorage.getItem(getSleepKey(d)); if(!r) return null; try{return JSON.parse(r);}catch(e){return null;} }
+function setSleepData(d,data) { const k=getSleepKey(d); if(data && (data.wake||data.sleep)) localStorage.setItem(k,JSON.stringify(data)); else localStorage.removeItem(k); }
+function timeToMinutes(t) { if(!t) return null; const p=t.split(':'); return parseInt(p[0])*60+parseInt(p[1]); }
+
+function renderSleepRowBar(wake, sleep) {
+  const wakeMin = timeToMinutes(wake);
+  const sleepMin = timeToMinutes(sleep);
+  let hourmarks = '';
+  for (let h = 1; h < 24; h++) { hourmarks += '<div class="sleep-bar-hourmark" style="left:'+(h/24*100)+'%"></div>'; }
+  if (wakeMin === null || sleepMin === null) {
+    return '<div class="sleep-bar-track">'+hourmarks+'</div>';
+  }
+  let sleepAdj = sleepMin;
+  if (sleepAdj <= wakeMin) sleepAdj += 24*60; // חצה חצות
+  const cappedSleep = Math.min(sleepAdj, 24*60);
+  const leftPct = wakeMin/(24*60)*100;
+  const widthPct = (cappedSleep-wakeMin)/(24*60)*100;
+  return '<div class="sleep-bar-track">'+hourmarks+'<div class="sleep-bar-awake" style="left:'+leftPct+'%;width:'+widthPct+'%"></div></div>';
+}
+
+function sleepDurationLabel(wake, sleep) {
+  const wakeMin = timeToMinutes(wake), sleepMin = timeToMinutes(sleep);
+  if (wakeMin === null || sleepMin === null) return '';
+  let sleepAdj = sleepMin; if (sleepAdj <= wakeMin) sleepAdj += 24*60;
+  const awakeH = ((sleepAdj-wakeMin)/60).toFixed(1);
+  return awakeH+' ש\' ער';
+}
+
+function renderSleepSection() {
+  const wrap = document.getElementById('sleepRows');
+  let html = '';
+  for (let d = 0; d < 6; d++) {
+    const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
+    const data = getSleepData(d) || { wake: '', sleep: '' };
+    html += '<div class="sleep-row" data-day="'+d+'">' +
+      '<div class="sleep-day-label">'+DAYS[d]+'<br><span style="font-size:10px;color:#64748b">'+formatDate(date)+'</span></div>' +
+      '<div class="sleep-inputs">🌅 קימה <input type="time" class="wakeInput" data-day="'+d+'" value="'+data.wake+'"></div>' +
+      '<div class="sleep-inputs">🌙 שינה <input type="time" class="sleepInput" data-day="'+d+'" value="'+data.sleep+'"></div>' +
+      renderSleepRowBar(data.wake, data.sleep) +
+      '<div class="sleep-hours-total">'+sleepDurationLabel(data.wake, data.sleep)+'</div>' +
+    '</div>';
+  }
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.wakeInput, .sleepInput').forEach(function(inp) {
+    inp.addEventListener('change', function() {
+      const d = parseInt(this.getAttribute('data-day'));
+      const row = wrap.querySelector('.sleep-row[data-day="'+d+'"]');
+      const wake = row.querySelector('.wakeInput').value;
+      const sleep = row.querySelector('.sleepInput').value;
+      setSleepData(d, { wake: wake, sleep: sleep });
+      renderSleepSection();
+    });
+  });
+}
+
 function ensureWeekPopulated() { if (!hasAnyData()) loadFixedSchedule(true); else renderTable(); }
 
-document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); ensureWeekPopulated(); renderWeekLabel(); });
-document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); ensureWeekPopulated(); renderWeekLabel(); });
+document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); ensureWeekPopulated(); renderWeekLabel(); if(document.getElementById('sleepSection').classList.contains('active')) renderSleepSection(); });
+document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); ensureWeekPopulated(); renderWeekLabel(); if(document.getElementById('sleepSection').classList.contains('active')) renderSleepSection(); });
 document.getElementById('userName').addEventListener('input', function() { saveUserName(); renderTable(); });
 document.getElementById('motivationInput').addEventListener('input', updateMotivationDisplay);
 document.getElementById('saveBtn').addEventListener('click', saveCell);
@@ -484,6 +564,7 @@ document.getElementById('sampleBtn').addEventListener('click', loadSampleSchedul
 document.getElementById('clearBtn').addEventListener('click', clearWeek);
 document.getElementById('goalsBtn').addEventListener('click', function() { document.getElementById('goalsSection').classList.toggle('active'); });
 document.getElementById('chartBtn').addEventListener('click', function() { document.getElementById('chartSection').classList.toggle('active'); renderChart(); });
+document.getElementById('sleepBtn').addEventListener('click', function() { document.getElementById('sleepSection').classList.toggle('active'); renderSleepSection(); });
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
 document.addEventListener('keydown', function(e) { if(e.key==='Escape' && document.getElementById('modalOverlay').classList.contains('active')) closeModal(); });
 
