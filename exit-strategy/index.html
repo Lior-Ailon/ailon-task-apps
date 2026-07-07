@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אסטרטגיית יציאה — כלי קבלת החלטות | AILON Task</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#f0fdfa,#ecfeff,#ffffff); color: #0f172a; direction: rtl; min-height: 100vh; }
+  .container { max-width: 720px; margin: 0 auto; padding: 24px 20px 80px; }
+  .header { text-align:center; margin-bottom:24px; }
+  .header .logo { display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:18px; background:#ffffff; margin-bottom:12px; box-shadow:0 8px 24px rgba(20,184,166,0.25); border:2px solid #14b8a6; overflow:hidden; }
+  .header .logo img { width:100%; height:100%; object-fit:cover; border-radius:inherit; }
+  .header h1 { font-size:26px; font-weight:800; background:linear-gradient(135deg,#0d9488,#0891b2); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px; }
+  .header p { font-size:14px; color:#475569; }
+  .back-link { display:inline-block; margin-bottom:16px; font-size:13px; color:#0d9488; text-decoration:none; font-weight:700; }
+
+  .tabs { display:flex; gap:8px; margin-bottom:20px; background:#f0fdfa; padding:5px; border-radius:12px; }
+  .tab { flex:1; text-align:center; padding:10px; border-radius:9px; cursor:pointer; font-weight:700; font-size:14px; color:#64748b; }
+  .tab.active { background:#14b8a6; color:#ffffff; }
+
+  .card { background:#ffffff; border:1px solid #ccfbf1; border-radius:18px; padding:26px; box-shadow:0 8px 30px rgba(15,118,110,0.1); margin-bottom:18px; }
+  .hidden { display:none !important; }
+
+  .start-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:560px){ .start-grid{ grid-template-columns:1fr; } }
+  .start-opt { background:#ffffff; border:2px solid #ccfbf1; border-radius:16px; padding:24px 16px; text-align:center; cursor:pointer; transition:.2s; }
+  .start-opt:hover { border-color:#14b8a6; box-shadow:0 6px 20px rgba(20,184,166,0.15); }
+  .start-opt .icon { font-size:38px; margin-bottom:10px; }
+  .start-opt .title { font-weight:800; font-size:16px; margin-bottom:6px; }
+  .start-opt .desc { font-size:13px; color:#64748b; }
+
+  .field { margin-bottom:18px; }
+  .field label { display:block; font-size:14px; font-weight:700; margin-bottom:8px; color:#334155; }
+  .field textarea, .field input[type=text] { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #ccfbf1; background:#f8fffe; color:#0f172a; font-size:15px; font-family:inherit; resize:vertical; }
+  .field textarea { min-height:80px; }
+  .field .hint { font-size:12px; color:#64748b; margin-top:5px; }
+
+  .choice-row { display:flex; gap:12px; }
+  .choice-btn { flex:1; padding:16px; border-radius:12px; border:2px solid #e2e8f0; background:#f8fafc; color:#0f172a; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; transition:.2s; }
+  .choice-btn.yes-active { border-color:#059669; background:rgba(5,150,105,0.12); color:#047857; }
+  .choice-btn.no-active { border-color:#dc2626; background:rgba(220,38,38,0.1); color:#b91c1c; }
+
+  .chip-grid { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .chip { padding:9px 14px; border-radius:20px; border:1px solid #ccfbf1; background:#f0fdfa; color:#0d9488; font-size:13px; cursor:pointer; font-family:inherit; }
+  .chip.selected { background:#14b8a6; color:#fff; border-color:#14b8a6; }
+
+  .reason-grid { display:flex; flex-wrap:wrap; gap:10px; }
+  .reason-opt { flex:1; min-width:140px; padding:14px; border-radius:12px; border:2px solid #e2e8f0; background:#f8fafc; text-align:center; cursor:pointer; font-weight:700; font-size:14px; }
+  .reason-opt.selected { border-color:#14b8a6; background:rgba(20,184,166,0.1); color:#0d9488; }
+
+  .btn-row { display:flex; gap:10px; margin-top:20px; }
+  .btn { flex:1; padding:14px; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .btn-primary { background:linear-gradient(135deg,#14b8a6,#0891b2); color:#fff; }
+  .btn-secondary { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+  .btn:disabled { opacity:0.45; cursor:not-allowed; }
+
+  .step-dots { display:flex; gap:6px; justify-content:center; margin-bottom:18px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#e2e8f0; }
+  .dot.active { background:#14b8a6; width:22px; border-radius:5px; }
+
+  .option-card { background:#f8fffe; border:1px solid #ccfbf1; border-radius:14px; padding:16px; margin-bottom:12px; }
+  .option-card .opt-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .option-card .opt-head input { font-weight:800; font-size:15px; border:none; background:transparent; width:80%; }
+  .remove-opt { background:none; border:none; color:#dc2626; cursor:pointer; font-size:18px; }
+  .add-opt-btn { width:100%; padding:12px; border:2px dashed #99f6e4; border-radius:12px; background:#f0fdfa; color:#0d9488; font-weight:700; cursor:pointer; font-family:inherit; }
+
+  .outcome-tags { display:flex; gap:8px; margin-top:8px; }
+  .otag { flex:1; padding:8px; border-radius:8px; text-align:center; font-size:12px; font-weight:700; cursor:pointer; border:2px solid #e2e8f0; }
+  .otag.pos.selected { border-color:#059669; background:rgba(5,150,105,0.12); color:#047857; }
+  .otag.neg.selected { border-color:#dc2626; background:rgba(220,38,38,0.1); color:#b91c1c; }
+  .otag.neu.selected { border-color:#64748b; background:rgba(100,116,139,0.1); color:#475569; }
+
+  /* tree summary */
+  .tree { text-align:center; }
+  .tree .root { display:inline-block; background:linear-gradient(135deg,#0d9488,#0891b2); color:#fff; padding:14px 20px; border-radius:14px; font-weight:800; font-size:15px; max-width:90%; margin-bottom:22px; }
+  .branches { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .branch { flex:1; min-width:180px; max-width:230px; background:#fff; border:2px solid #e2e8f0; border-radius:14px; padding:14px; text-align:right; }
+  .branch.pos { border-color:#6ee7b7; background:rgba(5,150,105,0.05); }
+  .branch.neg { border-color:#fca5a5; background:rgba(220,38,38,0.05); }
+  .branch .b-name { font-weight:800; font-size:14px; margin-bottom:6px; }
+  .branch .b-outcome { font-size:13px; color:#475569; }
+  .branch.final { box-shadow:0 0 0 3px #14b8a6 inset; }
+  .final-badge { display:inline-block; margin-top:8px; background:#14b8a6; color:#fff; font-size:11px; font-weight:800; padding:3px 10px; border-radius:20px; }
+
+  .history-item { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:12px; cursor:pointer; }
+  .history-item .h-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .history-item .h-type { font-size:11px; font-weight:800; padding:3px 10px; border-radius:20px; }
+  .h-type.past { background:rgba(148,163,184,0.15); color:#475569; }
+  .h-type.future { background:rgba(20,184,166,0.15); color:#0d9488; }
+  .history-item .h-date { font-size:11px; color:#94a3b8; }
+  .history-item .h-title { font-weight:700; font-size:14px; margin-bottom:4px; }
+  .history-item .h-sub { font-size:12px; color:#64748b; }
+  .empty { text-align:center; padding:40px 20px; color:#94a3b8; }
+  .empty .icon { font-size:36px; margin-bottom:10px; }
+
+  .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+  .stat { background:#fff; border:1px solid #ccfbf1; border-radius:12px; padding:14px; text-align:center; }
+  .stat .num { font-size:22px; font-weight:800; color:#0d9488; }
+  .stat .lbl { font-size:11px; color:#64748b; margin-top:2px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo"><img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON Task"></div>
+    <h1>אסטרטגיית יציאה</h1>
+    <p>כלי לניתוח החלטות עבר ולמיפוי החלטות עתידיות</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tabNew" onclick="switchMain('new')">אירוע חדש</div>
+    <div class="tab" id="tabHistory" onclick="switchMain('history')">היסטוריה</div>
+  </div>
+
+  <!-- ================= NEW EVENT FLOW ================= -->
+  <div id="mainNew">
+
+    <!-- Step 0: choose past/future -->
+    <div id="stepChoose" class="card">
+      <div class="field"><label style="margin-bottom:14px;font-size:16px;">האם מדובר באירוע שכבר קרה, או בהחלטה שעומדת בפניך?</label></div>
+      <div class="start-grid">
+        <div class="start-opt" onclick="startFlow('past')">
+          <div class="icon">🔙</div>
+          <div class="title">אירוע מהעבר</div>
+          <div class="desc">קרה כבר — בוא ננתח אותו וללמוד ממנו</div>
+        </div>
+        <div class="start-opt" onclick="startFlow('future')">
+          <div class="icon">🔮</div>
+          <div class="title">החלטה עתידית</div>
+          <div class="desc">עוד לא קרה — בוא נמפה לאן כל אפשרות מובילה</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAST FLOW ===== -->
+    <div id="pastFlow" class="hidden">
+      <div class="step-dots" id="pastDots"></div>
+
+      <div class="card past-step" data-step="0">
+        <div class="field">
+          <label>תאר את הסיטואציה שקרתה</label>
+          <textarea id="pSituation" placeholder="מה קרה? מי היה מעורב? מה הרקע?"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="cancelFlow()">ביטול</button>
+          <button class="btn btn-primary" onclick="pastNext(0)">המשך</button>
+        </div>
+      </div>
+
+      <div class="card past-step hidden" data-step="1">
+        <div class="field">
+          <label>איך הגבת בפועל?</label>
+          <textarea id="pReaction" placeholder="מה עשית / אמרת בפועל באותו רגע?"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="pastBack(1)">חזור</button>
+          <button class="btn btn-primary" onclick="pastNext(1)">המשך</button>
+        </div>
+      </div>
+
+      <div class="card past-step hidden" data-step="2">
+        <div class="field"><label>האם לדעתך פעלת נכון?</label></div>
+        <div class="choice-row">
+          <button class="choice-btn" id="pYesBtn" onclick="setActedRight(true)">כן, פעלתי נכון</button>
+          <button class="choice-btn" id="pNoBtn" onclick="setActedRight(false)">לא, יכולתי אחרת</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="pastBack(2)">חזור</button>
+          <button class="btn btn-primary" id="pStep2Next" onclick="pastNext(2)" disabled>המשך</button>
+        </div>
+      </div>
+
+      <!-- if acted right -->
+      <div class="card past-step hidden" data-step="3yes">
+        <div class="field">
+          <label>מעולה! מה עזר לך להחליט נכון? (לא חובה)</label>
+          <textarea id="pWhatHelped" placeholder="למשל: עצרתי לפני שהגבתי, זכרתי את הערכים שלי..."></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="pastBack('3yes')">חזור</button>
+          <button class="btn btn-primary" onclick="savePastEvent(true)">שמור</button>
+        </div>
+      </div>
+
+      <!-- if acted wrong -->
+      <div class="card past-step hidden" data-step="3no-alt">
+        <div class="field">
+          <label>מה יכולת לעשות אחרת? בחר אפשרות או כתוב משלך</label>
+          <div class="chip-grid" id="altChips">
+            <div class="chip" data-v="לעצור ולנשום לפני שמגיבים">לעצור ולנשום לפני שמגיבים</div>
+            <div class="chip" data-v="לשאול שאלה במקום להאשים">לשאול שאלה במקום להאשים</div>
+            <div class="chip" data-v="לדחות את התגובה לרגע רגוע יותר">לדחות את התגובה לרגע רגוע יותר</div>
+            <div class="chip" data-v="לבקש הבהרה לפני שמגיבים">לבקש הבהרה לפני שמגיבים</div>
+            <div class="chip" data-v="לשתף איך אני מרגיש בלי להאשים">לשתף איך אני מרגיש בלי להאשים</div>
+          </div>
+          <textarea id="pAltCustom" placeholder="או כתוב כאן במילים שלך..."></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="pastBack('3no-alt')">חזור</button>
+          <button class="btn btn-primary" onclick="pastNext('3no-alt')">המשך</button>
+        </div>
+      </div>
+
+      <div class="card past-step hidden" data-step="3no-reason">
+        <div class="field"><label>מה לדעתך גרם להחלטה הלא נכונה?</label></div>
+        <div class="reason-grid" id="reasonGrid">
+          <div class="reason-opt" data-v="emotional">😤 סיבה רגשית</div>
+          <div class="reason-opt" data-v="info">📋 חוסר מידע</div>
+          <div class="reason-opt" data-v="other">❓ משהו אחר</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="pastBack('3no-reason')">חזור</button>
+          <button class="btn btn-primary" id="pReasonNext" onclick="savePastEvent(false)" disabled>שמור</button>
+        </div>
+      </div>
+
+      <div class="card past-step hidden" data-step="done">
+        <div style="text-align:center;padding:10px 0 20px;">
+          <div style="font-size:44px;margin-bottom:10px;">✅</div>
+          <div style="font-weight:800;font-size:17px;margin-bottom:6px;">נשמר בהצלחה</div>
+          <div style="color:#64748b;font-size:13px;">האירוע נוסף להיסטוריה שלך ללמידה עתידית</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="switchMain('history')">לצפייה בהיסטוריה</button>
+          <button class="btn btn-primary" onclick="resetToChoose()">אירוע נוסף</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FUTURE FLOW ===== -->
+    <div id="futureFlow" class="hidden">
+      <div class="step-dots" id="futureDots"></div>
+
+      <div class="card future-step" data-step="0">
+        <div class="field">
+          <label>מה ההחלטה שעומדת בפניך?</label>
+          <textarea id="fDecision" placeholder="תאר את הסיטואציה ואת ההחלטה שאתה צריך לקבל"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="cancelFlow()">ביטול</button>
+          <button class="btn btn-primary" onclick="futureNext(0)">המשך</button>
+        </div>
+      </div>
+
+      <div class="card future-step hidden" data-step="1">
+        <div class="field"><label>אילו אפשרויות עומדות בפניך? (לפחות 2)</label></div>
+        <div id="optionsList"></div>
+        <div class="add-opt-btn" onclick="addOption()">➕ הוסף אפשרות</div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="futureBack(1)">חזור</button>
+          <button class="btn btn-primary" id="fOptNext" onclick="futureNext(1)">המשך</button>
+        </div>
+      </div>
+
+      <div class="card future-step hidden" data-step="2">
+        <div class="field"><label style="margin-bottom:6px;">לכל אפשרות — מה צפוי לקרות אם תבחר בה?</label></div>
+        <div id="outcomesList"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="futureBack(2)">חזור</button>
+          <button class="btn btn-primary" onclick="futureNext(2)">המשך</button>
+        </div>
+      </div>
+
+      <div class="card future-step hidden" data-step="3">
+        <div class="field"><label>מבט מלמעלה על ההחלטה שלך</label></div>
+        <div class="tree" id="treeView"></div>
+      </div>
+
+      <div class="card future-step hidden" data-step="4">
+        <div class="field"><label>אז באיזו אפשרות אתה בוחר?</label></div>
+        <div class="chip-grid" id="finalChoiceGrid"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="futureBack(3)">חזור</button>
+          <button class="btn btn-primary" id="fFinalSave" onclick="saveFutureEvent()" disabled>שמור החלטה</button>
+        </div>
+      </div>
+
+      <div class="card future-step hidden" data-step="done">
+        <div style="text-align:center;padding:10px 0 20px;">
+          <div style="font-size:44px;margin-bottom:10px;">✅</div>
+          <div style="font-weight:800;font-size:17px;margin-bottom:6px;">ההחלטה נשמרה</div>
+          <div style="color:#64748b;font-size:13px;">בהצלחה עם הבחירה שלך!</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="switchMain('history')">לצפייה בהיסטוריה</button>
+          <button class="btn btn-primary" onclick="resetToChoose()">החלטה נוספת</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= HISTORY ================= -->
+  <div id="mainHistory" class="hidden">
+    <div class="stats-row" id="statsRow"></div>
+    <div id="historyList"></div>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'exitStrategyEvents';
+
+function loadEvents(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }catch(e){ return []; } }
+function saveEvents(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+function switchMain(which){
+  document.getElementById('tabNew').classList.toggle('active', which==='new');
+  document.getElementById('tabHistory').classList.toggle('active', which==='history');
+  document.getElementById('mainNew').classList.toggle('hidden', which!=='new');
+  document.getElementById('mainHistory').classList.toggle('hidden', which!=='history');
+  if(which==='history') renderHistory();
+  if(which==='new') resetToChoose();
+}
+
+function resetToChoose(){
+  document.getElementById('stepChoose').classList.remove('hidden');
+  document.getElementById('pastFlow').classList.add('hidden');
+  document.getElementById('futureFlow').classList.add('hidden');
+  resetPastState();
+  resetFutureState();
+}
+function cancelFlow(){ resetToChoose(); }
+
+function startFlow(kind){
+  document.getElementById('stepChoose').classList.add('hidden');
+  if(kind==='past'){
+    document.getElementById('pastFlow').classList.remove('hidden');
+    showPastStep(0);
+  } else {
+    document.getElementById('futureFlow').classList.remove('hidden');
+    optionCount = 0; optionsData = [];
+    addOption(); addOption();
+    showFutureStep(0);
+  }
+}
+
+/* ===================== PAST FLOW LOGIC ===================== */
+let pastActedRight = null;
+const pastStepsOrder = [0,1,2]; // then branches to 3yes or 3no-alt/3no-reason
+
+function resetPastState(){
+  pastActedRight = null;
+  document.getElementById('pSituation').value='';
+  document.getElementById('pReaction').value='';
+  document.getElementById('pWhatHelped').value='';
+  document.getElementById('pAltCustom').value='';
+  document.querySelectorAll('#altChips .chip').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('#reasonGrid .reason-opt').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('pYesBtn').classList.remove('yes-active');
+  document.getElementById('pNoBtn').classList.remove('no-active');
+  document.getElementById('pStep2Next').disabled = true;
+  document.getElementById('pReasonNext').disabled = true;
+  selectedReason = null;
+}
+
+function showPastStep(step){
+  document.querySelectorAll('.past-step').forEach(el=>el.classList.add('hidden'));
+  const el = document.querySelector('.past-step[data-step="'+step+'"]');
+  if(el) el.classList.remove('hidden');
+  renderDots('pastDots', pastDotIndexFor(step));
+}
+function pastDotIndexFor(step){
+  const map = {0:0,1:1,2:2,'3yes':3,'3no-alt':3,'3no-reason':4,'done':5};
+  return map[step] ?? 0;
+}
+function renderDots(containerId, activeIdx, total){
+  total = total || (containerId==='pastDots'?5:5);
+  const c = document.getElementById(containerId);
+  c.innerHTML='';
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i<=activeIdx?' active':'');
+    c.appendChild(d);
+  }
+}
+
+function pastNext(fromStep){
+  if(fromStep===0){
+    if(!document.getElementById('pSituation').value.trim()){ alert('נא לתאר את הסיטואציה'); return; }
+    showPastStep(1);
+  } else if(fromStep===1){
+    if(!document.getElementById('pReaction').value.trim()){ alert('נא לתאר איך הגבת'); return; }
+    showPastStep(2);
+  } else if(fromStep===2){
+    if(pastActedRight===true) showPastStep('3yes');
+    else showPastStep('3no-alt');
+  } else if(fromStep==='3no-alt'){
+    showPastStep('3no-reason');
+  }
+}
+function pastBack(fromStep){
+  if(fromStep===1) showPastStep(0);
+  else if(fromStep===2) showPastStep(1);
+  else if(fromStep==='3yes') showPastStep(2);
+  else if(fromStep==='3no-alt') showPastStep(2);
+  else if(fromStep==='3no-reason') showPastStep('3no-alt');
+}
+
+function setActedRight(val){
+  pastActedRight = val;
+  document.getElementById('pYesBtn').classList.toggle('yes-active', val===true);
+  document.getElementById('pNoBtn').classList.toggle('no-active', val===false);
+  document.getElementById('pStep2Next').disabled = false;
+}
+
+document.getElementById('altChips').addEventListener('click', (e)=>{
+  if(e.target.classList.contains('chip')){
+    e.target.classList.toggle('selected');
+  }
+});
+let selectedReason = null;
+document.getElementById('reasonGrid').addEventListener('click', (e)=>{
+  const opt = e.target.closest('.reason-opt');
+  if(!opt) return;
+  document.querySelectorAll('#reasonGrid .reason-opt').forEach(o=>o.classList.remove('selected'));
+  opt.classList.add('selected');
+  selectedReason = opt.dataset.v;
+  document.getElementById('pReasonNext').disabled = false;
+});
+
+function savePastEvent(actedRight){
+  const events = loadEvents();
+  const base = {
+    id: Date.now().toString(),
+    type: 'past',
+    date: new Date().toISOString(),
+    situation: document.getElementById('pSituation').value.trim(),
+    reaction: document.getElementById('pReaction').value.trim(),
+    actedRight: actedRight
+  };
+  if(actedRight){
+    base.whatHelped = document.getElementById('pWhatHelped').value.trim();
+  } else {
+    const chips = Array.from(document.querySelectorAll('#altChips .chip.selected')).map(c=>c.dataset.v);
+    const custom = document.getElementById('pAltCustom').value.trim();
+    base.alternatives = chips.concat(custom?[custom]:[]);
+    base.reasonType = selectedReason;
+  }
+  events.unshift(base);
+  saveEvents(events);
+  showPastStep('done');
+}
+
+/* ===================== FUTURE FLOW LOGIC ===================== */
+let optionCount = 0;
+let optionsData = []; // {id, name, outcome, tag}
+
+function resetFutureState(){
+  document.getElementById('fDecision').value='';
+  optionsData = [];
+  optionCount = 0;
+  document.getElementById('optionsList').innerHTML='';
+  document.getElementById('outcomesList').innerHTML='';
+  document.getElementById('treeView').innerHTML='';
+  document.getElementById('finalChoiceGrid').innerHTML='';
+  document.getElementById('fFinalSave').disabled = true;
+}
+
+function showFutureStep(step){
+  document.querySelectorAll('.future-step').forEach(el=>el.classList.add('hidden'));
+  const el = document.querySelector('.future-step[data-step="'+step+'"]');
+  if(el) el.classList.remove('hidden');
+  const map = {0:0,1:1,2:2,3:3,4:4,'done':5};
+  renderDots('futureDots', map[step] ?? 0);
+}
+
+function addOption(){
+  optionCount++;
+  const id = 'opt'+optionCount+'_'+Date.now();
+  optionsData.push({id, name:'', outcome:'', tag:''});
+  renderOptionsList();
+}
+function removeOption(id){
+  optionsData = optionsData.filter(o=>o.id!==id);
+  renderOptionsList();
+}
+function renderOptionsList(){
+  const list = document.getElementById('optionsList');
+  list.innerHTML='';
+  optionsData.forEach((o,idx)=>{
+    const div = document.createElement('div');
+    div.className='option-card';
+    div.innerHTML = `<div class="opt-head">
+      <input type="text" placeholder="אפשרות ${idx+1} (למשל: לקבל את העבודה)" value="${o.name.replace(/"/g,'&quot;')}" data-id="${o.id}" class="opt-name-input">
+      ${optionsData.length>2 ? `<button class="remove-opt" onclick="removeOption('${o.id}')">✕</button>` : ''}
+    </div>`;
+    list.appendChild(div);
+  });
+  list.querySelectorAll('.opt-name-input').forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      const o = optionsData.find(x=>x.id===e.target.dataset.id);
+      if(o) o.name = e.target.value;
+    });
+  });
+}
+
+function futureNext(fromStep){
+  if(fromStep===0){
+    if(!document.getElementById('fDecision').value.trim()){ alert('נא לתאר את ההחלטה'); return; }
+    showFutureStep(1);
+  } else if(fromStep===1){
+    const empties = optionsData.filter(o=>!o.name.trim());
+    if(optionsData.length<2){ alert('נא להוסיף לפחות 2 אפשרויות'); return; }
+    if(empties.length){ alert('נא למלא שם לכל אפשרות'); return; }
+    renderOutcomesList();
+    showFutureStep(2);
+  } else if(fromStep===2){
+    const missing = optionsData.filter(o=>!o.outcome.trim());
+    if(missing.length){ alert('נא למלא תוצאה צפויה לכל אפשרות'); return; }
+    renderTree();
+    showFutureStep(3);
+    renderFinalChoiceGrid();
+  }
+}
+function futureBack(fromStep){
+  if(fromStep===1) showFutureStep(0);
+  else if(fromStep===2) showFutureStep(1);
+  else if(fromStep===3){ showFutureStep(2); }
+}
+
+function renderOutcomesList(){
+  const list = document.getElementById('outcomesList');
+  list.innerHTML='';
+  optionsData.forEach(o=>{
+    const div = document.createElement('div');
+    div.className='option-card';
+    div.innerHTML = `<div class="opt-head"><span style="font-weight:800;font-size:15px;">${o.name}</span></div>
+      <textarea placeholder="מה צפוי לקרות אם תבחר באפשרות הזו?" data-id="${o.id}" class="outcome-input" style="width:100%;min-height:60px;padding:10px;border-radius:8px;border:1px solid #ccfbf1;font-family:inherit;">${o.outcome}</textarea>
+      <div class="outcome-tags">
+        <div class="otag pos ${o.tag==='pos'?'selected':''}" data-id="${o.id}" data-tag="pos">🟢 חיובי</div>
+        <div class="otag neu ${o.tag==='neu'?'selected':''}" data-id="${o.id}" data-tag="neu">⚪ ניטרלי</div>
+        <div class="otag neg ${o.tag==='neg'?'selected':''}" data-id="${o.id}" data-tag="neg">🔴 שלילי</div>
+      </div>`;
+    list.appendChild(div);
+  });
+  list.querySelectorAll('.outcome-input').forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      const o = optionsData.find(x=>x.id===e.target.dataset.id);
+      if(o) o.outcome = e.target.value;
+    });
+  });
+  list.querySelectorAll('.otag').forEach(tag=>{
+    tag.addEventListener('click', (e)=>{
+      const id = e.target.dataset.id, tagVal = e.target.dataset.tag;
+      const o = optionsData.find(x=>x.id===id);
+      if(o) o.tag = tagVal;
+      list.querySelectorAll('.otag[data-id="'+id+'"]').forEach(t=>t.classList.remove('selected'));
+      e.target.classList.add('selected');
+    });
+  });
+}
+
+function renderTree(){
+  const tree = document.getElementById('treeView');
+  let html = `<div class="root">${escapeHtml(document.getElementById('fDecision').value.trim())}</div><div class="branches">`;
+  optionsData.forEach(o=>{
+    const cls = o.tag==='pos'?'pos':(o.tag==='neg'?'neg':'');
+    html += `<div class="branch ${cls}"><div class="b-name">${escapeHtml(o.name)}</div><div class="b-outcome">${escapeHtml(o.outcome)}</div></div>`;
+  });
+  html += `</div>`;
+  tree.innerHTML = html;
+}
+function escapeHtml(s){ const d=document.createElement('div'); d.innerText=s; return d.innerHTML; }
+
+let finalChoiceId = null;
+function renderFinalChoiceGrid(){
+  const grid = document.getElementById('finalChoiceGrid');
+  grid.innerHTML='';
+  finalChoiceId = null;
+  document.getElementById('fFinalSave').disabled = true;
+  optionsData.forEach(o=>{
+    const chip = document.createElement('div');
+    chip.className='chip';
+    chip.textContent = o.name;
+    chip.dataset.id = o.id;
+    chip.onclick = ()=>{
+      finalChoiceId = o.id;
+      grid.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      document.getElementById('fFinalSave').disabled = false;
+    };
+    grid.appendChild(chip);
+  });
+}
+
+function saveFutureEvent(){
+  const events = loadEvents();
+  const finalOpt = optionsData.find(o=>o.id===finalChoiceId);
+  events.unshift({
+    id: Date.now().toString(),
+    type: 'future',
+    date: new Date().toISOString(),
+    decision: document.getElementById('fDecision').value.trim(),
+    options: optionsData.map(o=>({name:o.name, outcome:o.outcome, tag:o.tag})),
+    finalChoice: finalOpt ? finalOpt.name : null
+  });
+  saveEvents(events);
+  document.querySelectorAll('.future-step').forEach(el=>el.classList.add('hidden'));
+  showFutureStep('done');
+}
+
+/* ===================== HISTORY ===================== */
+function renderHistory(){
+  const events = loadEvents();
+  const total = events.length;
+  const pastEvents = events.filter(e=>e.type==='past');
+  const rightCount = pastEvents.filter(e=>e.actedRight).length;
+  const emotionalCount = pastEvents.filter(e=>e.reasonType==='emotional').length;
+  const infoCount = pastEvents.filter(e=>e.reasonType==='info').length;
+
+  const stats = document.getElementById('statsRow');
+  stats.innerHTML = `
+    <div class="stat"><div class="num">${total}</div><div class="lbl">סה"כ אירועים</div></div>
+    <div class="stat"><div class="num">${emotionalCount}</div><div class="lbl">טעויות מסיבה רגשית</div></div>
+    <div class="stat"><div class="num">${infoCount}</div><div class="lbl">טעויות מחוסר מידע</div></div>`;
+
+  const list = document.getElementById('historyList');
+  if(total===0){
+    list.innerHTML = `<div class="empty"><div class="icon">🗂️</div>עדיין לא שמרת אירועים. לחץ על "אירוע חדש" כדי להתחיל.</div>`;
+    return;
+  }
+  list.innerHTML = events.map(ev=>{
+    if(ev.type==='past'){
+      const sub = ev.actedRight ? '✅ פעלת נכון' : '⚠️ ניתן לשפר — ' + (ev.reasonType==='emotional'?'סיבה רגשית':ev.reasonType==='info'?'חוסר מידע':'סיבה אחרת');
+      return `<div class="history-item">
+        <div class="h-top"><span class="h-type past">אירוע מהעבר</span><span class="h-date">${formatDate(ev.date)}</span></div>
+        <div class="h-title">${escapeHtml(truncate(ev.situation,80))}</div>
+        <div class="h-sub">${sub}</div>
+      </div>`;
+    } else {
+      return `<div class="history-item">
+        <div class="h-top"><span class="h-type future">החלטה עתידית</span><span class="h-date">${formatDate(ev.date)}</span></div>
+        <div class="h-title">${escapeHtml(truncate(ev.decision,80))}</div>
+        <div class="h-sub">${ev.finalChoice ? '🎯 נבחר: '+escapeHtml(ev.finalChoice) : 'לא נבחרה החלטה סופית'}</div>
+      </div>`;
+    }
+  }).join('');
+}
+function truncate(s,n){ return s.length>n ? s.slice(0,n)+'…' : s; }
+function formatDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('he-IL', {day:'2-digit',month:'2-digit',year:'2-digit'});
+}
+
+// init
+resetToChoose();
+</script>
+</body>
+</html>
