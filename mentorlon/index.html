@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MentorLON — פלטפורמת המנטורינג של AILON Task</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e293b); color: #e2e8f0; direction: rtl; min-height: 100vh; }
+  .container { max-width: 460px; margin: 0 auto; padding: 40px 20px 60px; }
+  .header { text-align: center; margin-bottom: 28px; }
+  .header .logo { display:inline-flex; align-items:center; justify-content:center; width:72px; height:72px; border-radius:20px; background:linear-gradient(135deg,#14b8a6,#0891b2); font-size:32px; margin-bottom:14px; box-shadow:0 8px 24px rgba(20,184,166,0.3); }
+  .header h1 { font-size: 28px; font-weight: 800; margin-bottom:6px; background:linear-gradient(135deg,#5eead4,#67e8f9); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .header p { font-size: 14px; color:#94a3b8; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:18px; padding:26px; box-shadow:0 8px 30px rgba(0,0,0,0.3); }
+  .tabs { display:flex; gap:8px; margin-bottom:20px; background:#0f172a; padding:5px; border-radius:12px; }
+  .tab { flex:1; text-align:center; padding:10px; border-radius:9px; cursor:pointer; font-weight:700; font-size:14px; color:#94a3b8; }
+  .tab.active { background:#14b8a6; color:#0f172a; }
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; color:#cbd5e1; }
+  .field input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:15px; font-family:inherit; direction:ltr; text-align:right; }
+  .field input:focus { outline:none; border-color:#14b8a6; }
+  .field .hint { font-size:12px; color:#64748b; margin-top:5px; }
+  .submit-btn { width:100%; padding:15px; margin-top:8px; border:none; border-radius:12px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:white; font-size:16px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .error-msg { color:#fca5a5; font-size:13px; margin-top:12px; text-align:center; display:none; background:rgba(220,38,38,0.1); border:1px solid #dc2626; border-radius:8px; padding:10px; }
+  .form-section { display:none; }
+  .form-section.active { display:block; }
+  .footer-note { text-align:center; font-size:12px; color:#64748b; margin-top:20px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">🌐</div>
+    <h1>MentorLON</h1>
+    <p>פלטפורמת המנטורינג המרכזית של AILON Task</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active" id="tabLogin" onclick="switchTab('login')">התחברות</div>
+      <div class="tab" id="tabRegister" onclick="switchTab('register')">מאמן חדש</div>
+    </div>
+
+    <div class="form-section active" id="loginSection">
+      <div class="field">
+        <label>שם משתמש</label>
+        <input type="text" id="loginUsername" placeholder="lior">
+      </div>
+      <div class="field">
+        <label>סיסמה</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="submit-btn" id="loginBtn" onclick="doLogin()">התחבר לדשבורד</button>
+    </div>
+
+    <div class="form-section" id="registerSection">
+      <div class="field">
+        <label>שם מלא</label>
+        <input type="text" id="regDisplayName" placeholder="לדוגמה: ליאור סופר">
+      </div>
+      <div class="field">
+        <label>שם העסק / מיתוג (לא חובה)</label>
+        <input type="text" id="regBusinessName" placeholder="לדוגמה: AILON Task">
+      </div>
+      <div class="field">
+        <label>שם משתמש</label>
+        <input type="text" id="regUsername" placeholder="באנגלית, ללא רווחים" style="direction:ltr">
+        <div class="hint">זה יהיה גם קוד המאמן שתשלח למתאמנים שלך</div>
+      </div>
+      <div class="field">
+        <label>סיסמה</label>
+        <input type="password" id="regPassword" placeholder="לפחות 6 תווים">
+      </div>
+      <button class="submit-btn" id="registerBtn" onclick="doRegister()">צור חשבון מאמן</button>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="footer-note">🔒 כל מאמן מקבל מרחב נתונים נפרד ומאובטח</div>
+</div>
+
+<script>
+const API = 'https://69f63b4536d7a2c6688403df.base44.app/functions/mentorlonApi';
+
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('loginSection').classList.toggle('active', tab==='login');
+  document.getElementById('registerSection').classList.toggle('active', tab==='register');
+  document.getElementById('errorMsg').style.display='none';
+}
+
+function showError(msg) {
+  const e = document.getElementById('errorMsg');
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+
+async function doLogin() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!username || !password) { showError('נא למלא שם משתמש וסיסמה'); return; }
+  document.getElementById('loginBtn').disabled = true;
+  document.getElementById('loginBtn').textContent = 'מתחבר...';
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'login', username, password }) });
+    const data = await res.json();
+    if (!res.ok) { showError(data.error || 'שגיאה בהתחברות'); document.getElementById('loginBtn').disabled=false; document.getElementById('loginBtn').textContent='התחבר לדשבורד'; return; }
+    localStorage.setItem('mentorlon_username', data.username);
+    localStorage.setItem('mentorlon_token', data.token);
+    localStorage.setItem('mentorlon_display_name', data.display_name);
+    window.location.href = 'dashboard.html';
+  } catch(e) {
+    showError('שגיאת רשת, נסה שוב');
+    document.getElementById('loginBtn').disabled=false; document.getElementById('loginBtn').textContent='התחבר לדשבורד';
+  }
+}
+
+async function doRegister() {
+  const display_name = document.getElementById('regDisplayName').value.trim();
+  const business_name = document.getElementById('regBusinessName').value.trim();
+  const username = document.getElementById('regUsername').value.trim().toLowerCase();
+  const password = document.getElementById('regPassword').value;
+  if (!display_name || !username || !password) { showError('נא למלא את כל השדות הנדרשים'); return; }
+  if (password.length < 6) { showError('הסיסמה חייבת להיות לפחות 6 תווים'); return; }
+  document.getElementById('registerBtn').disabled = true;
+  document.getElementById('registerBtn').textContent = 'יוצר חשבון...';
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'register', username, password, display_name, business_name }) });
+    const data = await res.json();
+    if (!res.ok) { showError(data.error || 'שגיאה ביצירת חשבון'); document.getElementById('registerBtn').disabled=false; document.getElementById('registerBtn').textContent='צור חשבון מאמן'; return; }
+    localStorage.setItem('mentorlon_username', data.username);
+    localStorage.setItem('mentorlon_token', data.token);
+    localStorage.setItem('mentorlon_display_name', data.display_name);
+    window.location.href = 'dashboard.html';
+  } catch(e) {
+    showError('שגיאת רשת, נסה שוב');
+    document.getElementById('registerBtn').disabled=false; document.getElementById('registerBtn').textContent='צור חשבון מאמן';
+  }
+}
+</script>
+</body>
+</html>

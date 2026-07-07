@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MentorLON — הצטרפות למתאמן</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e293b); color: #e2e8f0; direction: rtl; min-height: 100vh; }
+  .container { max-width: 520px; margin: 0 auto; padding: 24px 20px 60px; }
+  .header { text-align: center; margin-bottom: 28px; }
+  .header .logo { display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#14b8a6,#0891b2); font-size:28px; margin-bottom:14px; }
+  .header h1 { font-size: 24px; font-weight: 800; margin-bottom:6px; }
+  .header p { font-size: 14px; color:#94a3b8; }
+  .mentor-tag { display:inline-block; background:#1e293b; border:1px solid #14b8a6; color:#5eead4; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; margin-top:8px; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:18px; padding:26px; box-shadow:0 8px 30px rgba(0,0,0,0.3); }
+  .field { margin-bottom:18px; }
+  .field label { display:block; font-size:14px; font-weight:600; margin-bottom:8px; color:#cbd5e1; }
+  .field input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #334155; background:#0f172a; color:#e2e8f0; font-size:15px; font-family:inherit; }
+  .field input:focus { outline:none; border-color:#14b8a6; }
+  .tools { display:flex; flex-direction:column; gap:10px; }
+  .tool-opt { display:flex; align-items:center; gap:10px; background:#0f172a; border:1px solid #334155; border-radius:10px; padding:12px 14px; cursor:pointer; transition:.2s; }
+  .tool-opt:hover { border-color:#14b8a6; }
+  .tool-opt.selected { border-color:#14b8a6; background:rgba(20,184,166,0.1); }
+  .tool-opt input { width:18px; height:18px; accent-color:#14b8a6; }
+  .tool-opt .t-name { font-weight:600; font-size:14px; }
+  .tool-opt .t-desc { font-size:12px; color:#94a3b8; }
+  .consent-box { background:#0f172a; border:1px solid #f59e0b; border-radius:12px; padding:16px; margin-top:6px; }
+  .consent-box .c-title { font-weight:700; font-size:14px; margin-bottom:8px; color:#fbbf24; }
+  .consent-box .c-desc { font-size:13px; color:#cbd5e1; line-height:1.6; margin-bottom:12px; }
+  .toggle-row { display:flex; gap:10px; }
+  .toggle-btn { flex:1; padding:12px; border-radius:10px; border:2px solid #334155; background:#1e293b; color:#e2e8f0; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:.2s; }
+  .toggle-btn.active-yes { border-color:#059669; background:rgba(5,150,105,0.2); color:#6ee7b7; }
+  .toggle-btn.active-no { border-color:#dc2626; background:rgba(220,38,38,0.2); color:#fca5a5; }
+  .submit-btn { width:100%; padding:16px; margin-top:22px; border:none; border-radius:12px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:white; font-size:17px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .success { display:none; text-align:center; padding:20px; }
+  .success .icon { font-size:48px; margin-bottom:10px; }
+  .success h2 { font-size:20px; margin-bottom:8px; }
+  .success p { color:#94a3b8; font-size:14px; }
+  .error-msg { color:#fca5a5; font-size:13px; margin-top:10px; text-align:center; display:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">🌐</div>
+    <h1>MentorLON</h1>
+    <p>הצטרפות לכלי האימון של המאמן שלך</p>
+    <div class="mentor-tag" id="mentorTag" style="display:none">מאמן: ...</div>
+  </div>
+
+  <div class="card" id="formCard">
+    <div class="field">
+      <label>השם שלך</label>
+      <input type="text" id="nameInput" placeholder="לדוגמה: דניאל כהן">
+    </div>
+    <div class="field">
+      <label>טלפון (לא חובה)</label>
+      <input type="tel" id="phoneInput" placeholder="050-0000000">
+    </div>
+    <div class="field" id="mentorCodeField">
+      <label>קוד מאמן</label>
+      <input type="text" id="mentorInput" placeholder="קיבלת קוד מהמאמן שלך" value="">
+    </div>
+    <div class="field">
+      <label>אילו כלים רלוונטיים לך?</label>
+      <div class="tools" id="toolsList">
+        <label class="tool-opt" data-tool="career_compass">
+          <input type="checkbox" value="career_compass">
+          <div><div class="t-name">🧭 מצפן הקריירה</div><div class="t-desc">בדיקת התאמה למקצועות</div></div>
+        </label>
+        <label class="tool-opt" data-tool="loaz_shavuai">
+          <input type="checkbox" value="loaz_shavuai">
+          <div><div class="t-name">📅 לוז שבועי</div><div class="t-desc">ניהול זמן ומעקב משימות</div></div>
+        </label>
+        <label class="tool-opt" data-tool="mind_track">
+          <input type="checkbox" value="mind_track">
+          <div><div class="t-name">🧠 MindTrack</div><div class="t-desc">ניהול טריגרים וחרדות</div></div>
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <div class="consent-box">
+        <div class="c-title">🔒 שיתוף נתונים עם המאמן</div>
+        <div class="c-desc">האם אתה מאשר שהמאמן שלך יוכל לראות את הנתונים והתקדמות שלך בכלים? תמיד תוכל לשנות זאת מאוחר יותר.</div>
+        <div class="toggle-row">
+          <button type="button" class="toggle-btn" id="consentYes" onclick="setConsent(true)">✓ כן, לשתף</button>
+          <button type="button" class="toggle-btn" id="consentNo" onclick="setConsent(false)">✕ לא, פרטי</button>
+        </div>
+      </div>
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()" disabled>הצטרפות</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="card success" id="successCard">
+    <div class="icon">🎉</div>
+    <h2>נרשמת בהצלחה!</h2>
+    <p>המאמן שלך יוכל כעת לעקוב אחרי ההתקדמות שלך בכלים שבחרת.</p>
+  </div>
+</div>
+
+<script>
+const API = 'https://69f63b4536d7a2c6688403df.base44.app/functions/mentorlonApi';
+let consentValue = null;
+const params = new URLSearchParams(window.location.search);
+const mentorFromUrl = params.get('mentor');
+
+if (mentorFromUrl) {
+  document.getElementById('mentorInput').value = mentorFromUrl;
+  document.getElementById('mentorCodeField').style.display = 'none';
+  fetch(API + '?action=mentor_info&mentor_code=' + encodeURIComponent(mentorFromUrl))
+    .then(r=>r.json()).then(d=>{
+      if (d.success) {
+        document.getElementById('mentorTag').style.display = 'inline-block';
+        document.getElementById('mentorTag').textContent = '🧑‍🏫 מאמן: ' + d.display_name + (d.business_name ? ' · ' + d.business_name : '');
+      }
+    }).catch(()=>{});
+}
+
+document.querySelectorAll('.tool-opt').forEach(opt => {
+  opt.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'INPUT') {
+      const cb = opt.querySelector('input'); cb.checked = !cb.checked;
+    }
+    opt.classList.toggle('selected', opt.querySelector('input').checked);
+  });
+});
+
+function setConsent(val) {
+  consentValue = val;
+  document.getElementById('consentYes').classList.toggle('active-yes', val===true);
+  document.getElementById('consentNo').classList.toggle('active-no', val===false);
+  checkFormValid();
+}
+
+function checkFormValid() {
+  const name = document.getElementById('nameInput').value.trim();
+  const mentor = document.getElementById('mentorInput').value.trim();
+  document.getElementById('submitBtn').disabled = !(name && mentor && consentValue !== null);
+}
+document.getElementById('nameInput').addEventListener('input', checkFormValid);
+document.getElementById('mentorInput').addEventListener('input', checkFormValid);
+
+async function submitForm() {
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const mentor_code = document.getElementById('mentorInput').value.trim();
+  const tools_assigned = Array.from(document.querySelectorAll('.tool-opt input:checked')).map(c=>c.value);
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.style.display = 'none';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = 'שולח...';
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'signup', name, phone, mentor_code, tools_assigned, share_with_mentor: consentValue }) });
+    const data = await res.json();
+    if (!res.ok) { errorMsg.textContent = data.error || 'שגיאה, נסה שוב'; errorMsg.style.display='block'; document.getElementById('submitBtn').disabled=false; document.getElementById('submitBtn').textContent='הצטרפות'; return; }
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('successCard').style.display = 'block';
+  } catch(e) {
+    errorMsg.textContent = 'שגיאת רשת, נסה שוב'; errorMsg.style.display='block';
+    document.getElementById('submitBtn').disabled=false; document.getElementById('submitBtn').textContent='הצטרפות';
+  }
+}
+</script>
+</body>
+</html>

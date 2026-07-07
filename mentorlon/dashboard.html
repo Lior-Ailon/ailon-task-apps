@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MentorLON — דשבורד מאמן</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#0f172a,#1e293b); color: #e2e8f0; direction: rtl; min-height: 100vh; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px 60px; }
+  .header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px; flex-wrap:wrap; gap:14px; }
+  .header .titlebox { display:flex; align-items:center; gap:14px; }
+  .logo { display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#14b8a6,#0891b2); font-size:24px; }
+  .header h1 { font-size:22px; font-weight:800; background:linear-gradient(135deg,#5eead4,#67e8f9); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .header p { font-size:13px; color:#94a3b8; }
+  .logout-btn { padding:9px 16px; border-radius:10px; border:1px solid #334155; background:#1e293b; color:#e2e8f0; cursor:pointer; font-family:inherit; font-size:13px; }
+  .share-link { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:14px 18px; margin-bottom:20px; font-size:13px; color:#94a3b8; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .share-link code { background:#0f172a; padding:6px 10px; border-radius:8px; color:#5eead4; direction:ltr; word-break:break-all; }
+  .copy-btn { background:none; border:1px solid #334155; color:#e2e8f0; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px; font-family:inherit; }
+  .stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:14px; margin-bottom:26px; }
+  .stat-card { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:18px; text-align:center; }
+  .stat-card .num { font-size:28px; font-weight:800; color:#5eead4; }
+  .stat-card .lbl { font-size:12px; color:#94a3b8; margin-top:4px; }
+  .section-title { font-size:16px; font-weight:800; margin:26px 0 14px; display:flex; align-items:center; gap:8px; }
+  .tools-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:14px; margin-bottom:10px; }
+  .tool-card { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:16px; }
+  .tool-card.live { border-color:#14b8a6; }
+  .tool-card .t-icon { font-size:26px; margin-bottom:8px; }
+  .tool-card .t-name { font-weight:700; font-size:14px; margin-bottom:4px; }
+  .tool-card .t-desc { font-size:12px; color:#94a3b8; margin-bottom:12px; min-height:32px; }
+  .tool-card .t-status { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; display:inline-block; margin-bottom:10px; }
+  .status-live { background:rgba(20,184,166,0.15); color:#5eead4; }
+  .status-soon { background:rgba(148,163,184,0.15); color:#94a3b8; }
+  .tool-card a.open-btn { display:block; text-align:center; padding:9px; border-radius:9px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:#0f172a; font-weight:700; font-size:13px; text-decoration:none; }
+  .tool-card .disabled-btn { display:block; text-align:center; padding:9px; border-radius:9px; background:#0f172a; color:#64748b; font-weight:700; font-size:13px; border:1px solid #334155; }
+  .table-wrap { background:#1e293b; border:1px solid #334155; border-radius:16px; overflow:hidden; }
+  table { width:100%; border-collapse:collapse; }
+  th { background:#0f172a; padding:14px; font-size:13px; text-align:right; color:#94a3b8; font-weight:700; }
+  td { padding:14px; border-top:1px solid #334155; font-size:14px; }
+  .badge { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700; }
+  .badge-yes { background:rgba(5,150,105,0.2); color:#6ee7b7; }
+  .badge-no { background:rgba(220,38,38,0.2); color:#fca5a5; }
+  .tool-tag { display:inline-block; background:#0f172a; border:1px solid #334155; padding:3px 9px; border-radius:8px; font-size:11px; margin-left:4px; margin-bottom:3px; }
+  .empty { text-align:center; padding:50px 20px; color:#64748b; }
+  .empty .icon { font-size:40px; margin-bottom:12px; }
+  @media (max-width:640px) {
+    table, thead, tbody, th, td, tr { display:block; }
+    thead { display:none; }
+    tr { border-top:1px solid #334155; padding:14px 0; }
+    td { border:none; padding:6px 14px; }
+    td:before { content: attr(data-label); font-weight:700; color:#94a3b8; display:block; font-size:11px; margin-bottom:2px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="titlebox">
+      <div class="logo">🌐</div>
+      <div>
+        <h1>MentorLON</h1>
+        <p id="mentorLabel">טוען...</p>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">התנתקות</button>
+  </div>
+
+  <div class="share-link">
+    <span>🔗 קישור ההצטרפות שלך:</span>
+    <code id="shareLink">...</code>
+    <button class="copy-btn" onclick="copyLink()">העתק</button>
+  </div>
+
+  <div class="stats" id="statsRow"></div>
+
+  <div class="section-title">🧰 כלי האימון שלך</div>
+  <div class="tools-grid" id="toolsGrid"></div>
+
+  <div class="section-title">👥 המתאמנים שלך</div>
+  <div class="table-wrap" id="tableWrap">
+    <div class="empty"><div class="icon">⏳</div>טוען נתונים...</div>
+  </div>
+</div>
+
+<script>
+const API = 'https://69f63b4536d7a2c6688403df.base44.app/functions/mentorlonApi';
+const TOOLS = [
+  { key:'career_compass', icon:'🧭', name:'מצפן הקריירה', desc:'התאמת מקצועות ומיצוב תעסוקתי', url:'../matpen-kariera/', live:true },
+  { key:'loaz_shavuai', icon:'📅', name:'לוז שבועי', desc:'ניהול זמן, מוטיבציה ומיקוד יומי', url:'../loaz-shavuai/', live:true },
+  { key:'mind_track', icon:'🧠', name:'MindTrack', desc:'ניהול טריגרים וחרדות', url:'#', live:false },
+  { key:'positive_thinking', icon:'💭', name:'חשיבה חיובית', desc:'כלים לשינוי דפוסי חשיבה', url:'#', live:false },
+  { key:'decision_making', icon:'⚖️', name:'קבלת החלטות', desc:'מסגרת מובנית לקבלת החלטות', url:'#', live:false },
+  { key:'relationships', icon:'❤️', name:'ניהול זוגיות', desc:'כלים לחיזוק הזוגיות', url:'#', live:false },
+  { key:'emotions', icon:'😊', name:'ניהול רגשות', desc:'זיהוי וויסות רגשי', url:'#', live:false },
+  { key:'parenting', icon:'👨‍👧', name:'חינוך ילדים', desc:'כלים להורות מיטבית', url:'#', live:false },
+];
+
+const username = localStorage.getItem('mentorlon_username');
+const token = localStorage.getItem('mentorlon_token');
+if (!username || !token) window.location.href = 'index.html';
+
+function logout() {
+  localStorage.removeItem('mentorlon_username');
+  localStorage.removeItem('mentorlon_token');
+  localStorage.removeItem('mentorlon_display_name');
+  window.location.href = 'index.html';
+}
+
+function copyLink() {
+  const t = document.getElementById('shareLink').textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    const b = event.target; const old = b.textContent; b.textContent='הועתק!'; setTimeout(()=>b.textContent=old, 1500);
+  });
+}
+
+function renderTools() {
+  const grid = document.getElementById('toolsGrid');
+  grid.innerHTML = TOOLS.map(t => `
+    <div class="tool-card ${t.live?'live':''}">
+      <div class="t-icon">${t.icon}</div>
+      <div class="t-name">${t.name}</div>
+      <div class="t-desc">${t.desc}</div>
+      <div class="t-status ${t.live?'status-live':'status-soon'}">${t.live?'זמין':'בקרוב'}</div>
+      ${t.live ? `<a class="open-btn" href="${t.url}" target="_blank">פתח כלי</a>` : `<div class="disabled-btn">בפיתוח</div>`}
+    </div>
+  `).join('');
+}
+
+async function loadDashboard() {
+  document.getElementById('shareLink').textContent = window.location.origin + window.location.pathname.replace('dashboard.html','signup.html') + '?mentor=' + username;
+  renderTools();
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'dashboard', username, token }) });
+    const data = await res.json();
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">⚠️</div>' + (data.error||'שגיאה') + '</div>';
+      return;
+    }
+    document.getElementById('mentorLabel').textContent = 'שלום ' + data.mentor.display_name + (data.mentor.business_name ? ' · ' + data.mentor.business_name : '');
+    const trainees = data.trainees || [];
+    const totalTools = trainees.reduce((s,t)=> s + (t.tools_assigned||[]).length, 0);
+    const consented = trainees.filter(t=>t.share_with_mentor).length;
+    document.getElementById('statsRow').innerHTML = `
+      <div class="stat-card"><div class="num">${trainees.length}</div><div class="lbl">מתאמנים</div></div>
+      <div class="stat-card"><div class="num">${consented}</div><div class="lbl">משתפים נתונים</div></div>
+      <div class="stat-card"><div class="num">${totalTools}</div><div class="lbl">שיוכי כלים</div></div>
+    `;
+    if (!trainees.length) {
+      document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">👥</div>עדיין אין מתאמנים רשומים.<br>שתף את הקישור למעלה כדי להתחיל.</div>';
+      return;
+    }
+    const rows = trainees.map(t => `
+      <tr>
+        <td data-label="שם">${t.name}</td>
+        <td data-label="טלפון">${t.phone || '—'}</td>
+        <td data-label="כלים">${(t.tools_assigned||[]).map(k=>{const tl=TOOLS.find(x=>x.key===k); return '<span class="tool-tag">'+(tl?tl.icon+' '+tl.name:k)+'</span>';}).join('') || '—'}</td>
+        <td data-label="שיתוף עם מאמן"><span class="badge ${t.share_with_mentor?'badge-yes':'badge-no'}">${t.share_with_mentor?'✓ משתף':'✕ פרטי'}</span></td>
+      </tr>
+    `).join('');
+    document.getElementById('tableWrap').innerHTML = `
+      <table>
+        <thead><tr><th>שם</th><th>טלפון</th><th>כלים</th><th>שיתוף</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  } catch(e) {
+    document.getElementById('tableWrap').innerHTML = '<div class="empty"><div class="icon">⚠️</div>שגיאת רשת</div>';
+  }
+}
+loadDashboard();
+</script>
+</body>
+</html>
