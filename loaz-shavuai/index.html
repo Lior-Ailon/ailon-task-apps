@@ -267,6 +267,8 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
       <span class="motivation-emoji" id="motivationEmoji">😐</span>
       <span class="motivation-value" id="motivationValue">5</span>
     </div>
+    <label>🔁 להוסיף את הפעולה הזאת גם באופן קבוע בימים נוספים:</label>
+    <div class="recurring-days" id="modalDaysPicker" style="margin-bottom:14px"></div>
     <label>סטטוס ביצוע</label>
     <div class="status-toggle">
       <div class="status-btn pending active" id="statusPending" onclick="setStatus('pending')">⏳ ממתין</div>
@@ -340,6 +342,7 @@ function generateFixedWeek() {
 
 let currentWeekStart = getWeekStart(new Date());
 let selectedCell = null;
+let modalSelectedDays = [false,false,false,false,false,false];
 let currentStatus = 'pending';
 
 function getWeekStart(date) { const d=new Date(date); d.setDate(d.getDate()-d.getDay()); d.setHours(0,0,0,0); return d; }
@@ -507,6 +510,24 @@ function renderChart() {
 }
 
 
+
+function renderModalDaysPicker() {
+  const wrap = document.getElementById('modalDaysPicker');
+  wrap.innerHTML = '';
+  for (let d = 0; d < 6; d++) {
+    const isCurrent = selectedCell && d === selectedCell.dayIdx;
+    const chip = document.createElement('div');
+    chip.className = 'recurring-day-chip' + ((modalSelectedDays[d] || isCurrent) ? ' selected' : '');
+    chip.textContent = DAYS[d] + (isCurrent ? ' (היום הזה)' : '');
+    if (isCurrent) {
+      chip.style.opacity = '0.6'; chip.style.cursor = 'default';
+    } else {
+      chip.onclick = function() { modalSelectedDays[d] = !modalSelectedDays[d]; renderModalDaysPicker(); };
+    }
+    wrap.appendChild(chip);
+  }
+}
+
 function openModal(d, h) {
   selectedCell = { dayIdx: d, hourIdx: h };
   const data = getCellData(d, h);
@@ -519,6 +540,8 @@ function openModal(d, h) {
   const st = data ? (data.status || 'pending') : 'pending';
   setStatus(st);
   document.getElementById('deleteBtn').style.display = data ? 'block' : 'none';
+  modalSelectedDays = [false,false,false,false,false,false];
+  renderModalDaysPicker();
   document.getElementById('modalOverlay').classList.add('active');
   setTimeout(function() { document.getElementById('taskInput').focus(); }, 100);
 }
@@ -537,10 +560,30 @@ function saveCell() {
   const task = document.getElementById('taskInput').value.trim();
   if (!task) { alert('אנא הכנס את הלו"ז שלך'); return; }
   const wasDone = currentStatus === 'done';
-  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: parseInt(document.getElementById('motivationInput').value), status: currentStatus });
+  const mot = parseInt(document.getElementById('motivationInput').value);
+  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: mot, status: currentStatus });
+  const extraDays = [];
+  for (let d = 0; d < 6; d++) { if (d !== selectedCell.dayIdx && modalSelectedDays[d]) extraDays.push(d); }
+  if (extraDays.length) {
+    extraDays.forEach(function(d) {
+      setCellData(d, selectedCell.hourIdx, { task: task, motivation: mot, status: 'pending' });
+    });
+    const allDays = [false,false,false,false,false,false];
+    allDays[selectedCell.dayIdx] = true;
+    extraDays.forEach(function(d) { allDays[d] = true; });
+    const list = getRecurringEvents();
+    const existingIdx = list.findIndex(function(ev) { return ev.task === task && ev.hour === selectedCell.hourIdx; });
+    if (existingIdx >= 0) {
+      for (let d = 0; d < 6; d++) if (allDays[d]) list[existingIdx].days[d] = true;
+    } else {
+      list.push({ task: task, hour: selectedCell.hourIdx, days: allDays, motivation: mot });
+    }
+    setRecurringEvents(list);
+  }
   closeModal(); renderTable();
   if (document.getElementById('chartSection').classList.contains('active')) renderChart();
   if (wasDone) showCongrats();
+  if (extraDays.length) alert('הפעולה נוספה גם ל-' + extraDays.length + ' ימים נוספים, ותוגדר כאירוע קבוע לשבועות הבאים.');
 }
 function deleteCell() { if(!selectedCell) return; setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null); closeModal(); renderTable(); }
 function updateMotivationDisplay() { const v=document.getElementById('motivationInput').value; document.getElementById('motivationValue').textContent=v; document.getElementById('motivationEmoji').textContent=MOTIVATION_EMOJIS[v-1]; }
