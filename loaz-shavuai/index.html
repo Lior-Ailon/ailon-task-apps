@@ -152,6 +152,24 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 .focus-check-row label { font-size: 13px; color: #cbd5e1; cursor: pointer; margin: 0; }
 .focus-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media (max-width: 640px) { .focus-cols { grid-template-columns: 1fr; } }
+.recurring-section { display: none; background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
+.recurring-section.active { display: block; }
+.recurring-section h2 { font-size: 18px; color: #22d3ee; margin-bottom: 4px; }
+.recurring-section .recurring-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+.recurring-form { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+.recurring-form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.recurring-form-row input[type="text"], .recurring-form-row select { background: #1e293b; border: 1px solid #334155; color: #e2e8f0; padding: 8px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; }
+.recurring-form-row input[type="text"] { flex: 1; min-width: 160px; }
+.recurring-days { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.recurring-day-chip { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; user-select: none; }
+.recurring-day-chip.selected { background: #0891b2; border-color: #0891b2; color: #fff; }
+.recurring-add-btn { background: #0891b2; color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.recurring-list-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+.recurring-list-item .ri-name { font-weight: 600; color: #f1f5f9; font-size: 14px; }
+.recurring-list-item .ri-detail { font-size: 11px; color: #64748b; margin-top: 2px; }
+.recurring-list-item .ri-del { background: #7f1d1d; color: #fecaca; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+.recurring-apply-btn { background: #16a34a; color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 6px; }
+
 
 .sleep-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
 .sleep-day-label { min-width: 56px; font-size: 13px; font-weight: 600; color: #e2e8f0; }
@@ -188,6 +206,7 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
       <button class="btn-chart" id="chartBtn">📈 גרף התקדמות</button>
       <button class="btn-sleep" id="sleepBtn">🌙 שינה ויקיצה</button>
       <button class="btn-sleep" id="focusBtn" style="background:#f97316">🎯 מיקוד יומי</button>
+      <button class="btn-sleep" id="recurringBtn" style="background:#0891b2">🔁 אירועים קבועים</button>
       <button class="btn-sample" id="sampleBtn">🔄 אפס ללוז הקבוע</button>
       <button class="btn-clear" id="clearBtn">🗑️ נקה שבוע</button>
     </div>
@@ -210,6 +229,20 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
     <h2>🎯 מיקוד יומי — המשימה שחייבים, ולא רק רוצים</h2>
     <div class="focus-sub">בכל בוקר: המשימה האחת שחייבים לבצע היום בכל הכוח. בכל ערב: חשבון נפש + תכנון למחר.</div>
     <div id="focusRows"></div>
+  </div>
+  <div class="recurring-section" id="recurringSection">
+    <h2>🔁 אירועים קבועים ביומן</h2>
+    <div class="recurring-sub">הגדר פעם אחת אירוע שחוזר על עצמו (למשל: תפילת שחרית ב-8:00), בחר באילו ימים — והוא יתווסף אוטומטית ללו"ז בכל שבוע, בלי להזין אותו שוב ושוב.</div>
+    <div class="recurring-form">
+      <div class="recurring-form-row">
+        <input type="text" id="recurringTaskInput" placeholder="שם האירוע (לדוגמה: תפילת שחרית)">
+        <select id="recurringHourInput"></select>
+      </div>
+      <div class="recurring-days" id="recurringDaysPicker"></div>
+      <button class="recurring-add-btn" id="recurringAddBtn">➕ הוסף אירוע קבוע</button>
+    </div>
+    <div id="recurringList"></div>
+    <button class="recurring-apply-btn" id="recurringApplyBtn">✅ החל את האירועים הקבועים על השבוע הנוכחי</button>
   </div>
   <div class="stats-bar">
     <div class="stat-card"><div class="stat-label">פעילויות</div><div class="stat-value" id="statTotal">0</div></div>
@@ -601,7 +634,7 @@ function renderSleepSection() {
   });
 }
 
-function ensureWeekPopulated() { if (!hasAnyData()) loadFixedSchedule(true); else renderTable(); }
+function ensureWeekPopulated() { if (!hasAnyData()) loadFixedSchedule(true); else renderTable(); applyRecurringEvents(true); }
 
 
 // --- מיקוד יומי: משימה אחת חובה + חשבון נפש ערב + תכנון מחר ---
@@ -655,6 +688,92 @@ function saveFocusField(el) {
 }
 
 document.getElementById('focusBtn').addEventListener('click', function() { document.getElementById('focusSection').classList.toggle('active'); renderFocusSection(); });
+
+// --- אירועים קבועים ביומן: מוגדרים פעם אחת, מתווספים אוטומטית לכל שבוע ---
+const RECURRING_DAY_LABELS = ['א','ב','ג','ד','ה','ו'];
+function getRecurringKey() { return 'loazrecurring_'+getUserKey(); }
+function getRecurringEvents() { const r=localStorage.getItem(getRecurringKey()); if(!r) return []; try{return JSON.parse(r);}catch(e){return [];} }
+function setRecurringEvents(list) { localStorage.setItem(getRecurringKey(), JSON.stringify(list)); }
+
+let recurringSelectedDays = [true,true,true,true,true,true];
+
+function populateRecurringHourSelect() {
+  const sel = document.getElementById('recurringHourInput');
+  sel.innerHTML = '';
+  for (let h = 0; h < HOURS.length; h++) {
+    const opt = document.createElement('option');
+    opt.value = h; opt.textContent = HOURS[h];
+    sel.appendChild(opt);
+  }
+}
+function renderRecurringDaysPicker() {
+  const wrap = document.getElementById('recurringDaysPicker');
+  wrap.innerHTML = '';
+  for (let d = 0; d < 6; d++) {
+    const chip = document.createElement('div');
+    chip.className = 'recurring-day-chip' + (recurringSelectedDays[d] ? ' selected' : '');
+    chip.textContent = DAYS[d];
+    chip.onclick = function() { recurringSelectedDays[d] = !recurringSelectedDays[d]; renderRecurringDaysPicker(); };
+    wrap.appendChild(chip);
+  }
+}
+function renderRecurringList() {
+  const list = getRecurringEvents();
+  const wrap = document.getElementById('recurringList');
+  if (!list.length) { wrap.innerHTML = '<div style="color:#64748b;font-size:13px;padding:8px 0">עדיין לא הוגדרו אירועים קבועים.</div>'; return; }
+  let html = '';
+  list.forEach(function(ev, idx) {
+    const daysStr = ev.days.map(function(v,i){ return v ? RECURRING_DAY_LABELS[i] : null; }).filter(Boolean).join(', ');
+    html += '<div class="recurring-list-item"><div><div class="ri-name">'+escapeHtml(ev.task)+' — '+HOURS[ev.hour]+'</div><div class="ri-detail">ימים: '+daysStr+'</div></div><button class="ri-del" data-idx="'+idx+'">🗑️ מחק</button></div>';
+  });
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.ri-del').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const i = parseInt(this.getAttribute('data-idx'));
+      const l = getRecurringEvents(); l.splice(i,1); setRecurringEvents(l); renderRecurringList();
+    });
+  });
+}
+function addRecurringEvent() {
+  const task = document.getElementById('recurringTaskInput').value.trim();
+  if (!task) { alert('אנא הכנס שם לאירוע'); return; }
+  const hour = parseInt(document.getElementById('recurringHourInput').value);
+  if (!recurringSelectedDays.some(Boolean)) { alert('בחר לפחות יום אחד'); return; }
+  const list = getRecurringEvents();
+  list.push({ task: task, hour: hour, days: recurringSelectedDays.slice(), motivation: 8 });
+  setRecurringEvents(list);
+  document.getElementById('recurringTaskInput').value = '';
+  recurringSelectedDays = [true,true,true,true,true,true];
+  renderRecurringDaysPicker();
+  renderRecurringList();
+}
+function applyRecurringEvents(silent) {
+  const list = getRecurringEvents();
+  if (!list.length) { if(!silent) alert('אין עדיין אירועים קבועים מוגדרים.'); return; }
+  let added = 0, skipped = 0;
+  list.forEach(function(ev) {
+    for (let d = 0; d < 6; d++) {
+      if (!ev.days[d]) continue;
+      const existing = getCellData(d, ev.hour);
+      if (existing) { skipped++; continue; }
+      setCellData(d, ev.hour, { task: ev.task, motivation: ev.motivation || 8, status: 'pending' });
+      added++;
+    }
+  });
+  renderTable();
+  if (!silent) alert('נוספו '+added+' אירועים ללו"ז. '+(skipped ? (skipped+' דולגו כי כבר היה תוכן בשעה הזו.') : ''));
+}
+
+document.getElementById('recurringBtn').addEventListener('click', function() {
+  document.getElementById('recurringSection').classList.toggle('active');
+  renderRecurringList();
+});
+document.getElementById('recurringAddBtn').addEventListener('click', addRecurringEvent);
+document.getElementById('recurringApplyBtn').addEventListener('click', function() { applyRecurringEvents(false); });
+populateRecurringHourSelect();
+renderRecurringDaysPicker();
+
+
 
 document.getElementById('prevWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()-7); ensureWeekPopulated(); renderWeekLabel(); if(document.getElementById('sleepSection').classList.contains('active')) renderSleepSection(); });
 document.getElementById('nextWeek').addEventListener('click', function() { currentWeekStart.setDate(currentWeekStart.getDate()+7); ensureWeekPopulated(); renderWeekLabel(); if(document.getElementById('sleepSection').classList.contains('active')) renderSleepSection(); });
