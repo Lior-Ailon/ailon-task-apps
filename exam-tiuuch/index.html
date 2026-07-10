@@ -342,9 +342,118 @@ const ALL_QUESTIONS = [
 { id:"may25_24", source:"מאי 2025", law:"חוק המקרקעין", q:"אברהם חפר והתקין צינור מתחת לאדמה של יצחק שכנו (ללא הסכמה) להעברת כבלים. יצחק דרש להוציא את הכבלים. האם אברהם חייב להיענות?", opts:["לא; יכול להעביר צינור ללא הסכמה כל עוד אינו מזיק באופן בלתי סביר","לא; אך על אברהם לשלם ליצחק בגין זיקת הנאה","כן; אברהם חייב לפרק מיידית — החפירה נעשתה ללא הסכמת שכנו","כן; בעלות יצחק מתפשטת לעומק הקרקע ואין חריגים"], correct:0, explain:"לפי חוק המקרקעין: ניתן להעביר צינורות מתחת לאדמת שכן ללא הסכמה — כל עוד אינם מזיקים או מפריעים באופן בלתי סביר לשימוש השכן במקרקעין." },
 
 { id:"may25_25", source:"מאי 2025", law:"ניהול עיזבון", q:"רמי מונה כמנהל עיזבון. גילה שיש חוב של 500,000 ₪ לבנק. הדרך היחידה לפרעו היא מכירת דירה. אחד הילדים מתנגד. רמי מכר את הדירה וחילק את היתרה ליורשים. האם פעל כדין?", opts:["כן; מנהל עיזבון כיד המוריש ורשאי לסלק חובות העיזבון","כן; אך רק אם הציע תחילה לכל היורשים לרכוש במחיר שוק","לא; לא יכול למכור ללא הסכמת כל היורשים","לא; רמי היה צריך לקבל אישור בית משפט לפני מכירת דירת העיזבון"], correct:3, explain:"מנהל עיזבון אינו יכול למכור נכסי עיזבון ללא אישור בית המשפט — זהו תנאי מהותי בחוק הירושה, גם אם יש חובות דחופים." }
-];
 
 ];
+
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let mistakes = [];
+let answered = false;
+
+function shuffle(a) {
+  const arr = [...a];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startExam() {
+  currentQuestions = shuffle(ALL_QUESTIONS).slice(0, 25);
+  currentIndex = 0;
+  score = 0;
+  mistakes = [];
+  answered = false;
+  renderQuestion();
+}
+
+function renderStart() {
+  document.getElementById('app').innerHTML = `
+    <div class="start-screen">
+      <h2>🎓 ברוכים הבאים למבחן ההכנה</h2>
+      <p>המבחן מכיל <strong>25 שאלות אקראיות</strong> מתוך בנק של <strong>75 שאלות ממבחנים רשמיים</strong>.</p>
+      <p>המקורות: ינואר 2023, מאי 2023, יולי 2023 — שאלות ותשובות אמיתיות של רשם המתווכים.</p>
+      <p>ציון עובר: <strong>60 ומעלה</strong> (15 שאלות נכונות).</p>
+      <p>בסוף המבחן — סיכום הטעויות עם הסבר לכל שאלה.</p>
+      <button class="start-btn" onclick="startExam()">🚀 התחל מבחן</button>
+    </div>
+  `;
+}
+
+function renderQuestion() {
+  const q = currentQuestions[currentIndex];
+  const progress = ((currentIndex) / 25) * 100;
+  const shuffledOpts = shuffle(q.opts.map((o, i) => ({ text: o, origIdx: i })));
+
+  document.getElementById('app').innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="progress-text">שאלה ${currentIndex + 1} מתוך 25 | ✓ נכון עד כה: ${score} | 📁 ${q.source}</div>
+    <div class="card">
+      <div class="question-num">שאלה ${currentIndex + 1}</div>
+      <div class="law-badge">📋 ${q.law}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options" id="options">
+        ${shuffledOpts.map((o, i) => `
+          <button class="option-btn" onclick="selectAnswer(${o.origIdx}, this, ${JSON.stringify(shuffledOpts).replace(/"/g,'&quot;')})" data-idx="${i}">
+            ${'אבגד'[i]}. ${o.text}
+          </button>
+        `).join('')}
+      </div>
+      <div class="explanation" id="explanation"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${currentIndex < 24 ? 'שאלה הבאה ←' : 'סיים מבחן ✓'}
+      </button>
+    </div>
+  `;
+}
+
+function selectAnswer(origIdx, btn, shuffledOpts) {
+  if (answered) return;
+  answered = true;
+  const q = currentQuestions[currentIndex];
+  const isCorrect = origIdx === q.correct;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    const bOrigIdx = shuffledOpts[parseInt(b.dataset.idx)].origIdx;
+    if (bOrigIdx === q.correct) b.classList.add('correct');
+  });
+
+  if (!isCorrect) {
+    btn.classList.add('wrong');
+    mistakes.push({ q: q.q, law: q.law, source: q.source, yourAnswer: q.opts[origIdx], correctAnswer: q.opts[q.correct], explain: q.explain });
+  } else {
+    score++;
+  }
+
+  const expEl = document.getElementById('explanation');
+  expEl.innerHTML = `<strong>${isCorrect ? '✅ נכון!' : '❌ לא נכון'}</strong> — ${q.explain}`;
+  expEl.classList.add('show');
+  if (!isCorrect) expEl.classList.add('wrong-exp');
+
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  answered = false;
+  if (currentIndex >= 25) {
+    renderResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderResults() {
+  const percent = Math.round((score / 25) * 100);
+  const passed = percent >= 60;
+
+  const mistakesHtml = mistakes.length > 0 ? `
+    <div class="mistakes-section">
+      <div class="mistakes-title">📝 ניתוח הטעויות שלך (${mistakes.length} שאלות):</div>
       ${mistakes.map((m, i) => `
         <div class="mistake-item">
           <div class="mistake-q">${i+1}. ${m.q}</div>
