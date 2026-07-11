@@ -35,13 +35,17 @@
 
   /* HEADER */
   .header {
-    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-light) 100%);
-    padding: 20px 24px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+    background-image: url('shkuf_bg.png');
+    background-size: cover;
+    background-position: center 30%;
+    position: relative;
   }
+  .header::before {
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(5,150,105,0.8),rgba(8,145,178,0.8));
+  }
+  .header > * { position:relative; z-index:1; }
   .header-logo {
     display: flex;
     align-items: center;
