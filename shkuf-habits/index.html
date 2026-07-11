@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ש.ק.ו.פ — הטמעת הרגלים | AILON Task</title>
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --teal-dark: #0f766e;
+    --mint: #f0fdfa;
+    --navy: #0f172a;
+    --navy2: #1e293b;
+    --white: #ffffff;
+    --gray: #64748b;
+    --gray-light: #f1f5f9;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gold: #f59e0b;
+    --shadow: 0 4px 24px rgba(13,148,136,0.12);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7f4 0%, #f0fdfa 50%, #e8f5f0 100%);
+    min-height: 100vh;
+    color: var(--navy);
+    direction: rtl;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 60%, var(--teal-light) 100%);
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-logo img { width: 42px; height: 42px; border-radius: 10px; }
+  .header-title { color: white; font-size: 1.2rem; font-weight: 700; }
+  .header-sub { color: rgba(255,255,255,0.8); font-size: 0.75rem; }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  /* SCREENS */
+  .screen { display: none; padding: 20px 16px; max-width: 700px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* WELCOME */
+  .welcome-hero {
+    text-align: center;
+    padding: 32px 20px 24px;
+    background: linear-gradient(135deg, white 0%, #f0fdfa 100%);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .welcome-hero .big-icon { font-size: 3.5rem; margin-bottom: 12px; }
+  .welcome-hero h1 { font-size: 1.8rem; font-weight: 800; color: var(--teal-dark); margin-bottom: 8px; }
+  .welcome-hero .tagline { color: var(--gray); font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+
+  .shkuf-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .shkuf-item {
+    background: var(--mint);
+    border: 2px solid var(--teal-light);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .shkuf-letter { font-size: 2rem; font-weight: 800; color: var(--teal); }
+  .shkuf-word { font-size: 0.85rem; font-weight: 600; color: var(--navy2); margin-top: 2px; }
+  .shkuf-desc { font-size: 0.72rem; color: var(--gray); margin-top: 2px; }
+
+  /* FORM */
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--navy2);
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    direction: rtl;
+    transition: border-color 0.2s;
+    background: #fafafa;
+    color: var(--navy);
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: white;
+  }
+  .form-textarea { min-height: 80px; resize: vertical; }
+
+  .toggle-row {
+    display: flex;
+    gap: 8px;
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray);
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    border-color: var(--teal);
+    background: var(--teal);
+    color: white;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-align: center;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(13,148,136,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13,148,136,0.45); }
+  .btn-secondary {
+    background: var(--mint);
+    color: var(--teal-dark);
+    border: 2px solid var(--teal-light);
+  }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--teal);
+    color: var(--teal);
+  }
+  .btn-sm { padding: 8px 16px; font-size: 0.85rem; border-radius: 8px; }
+  .btn-inline { display: inline-block; width: auto; }
+
+  /* PLAN PREVIEW */
+  .plan-header {
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    color: white;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .plan-header h2 { font-size: 1.3rem; margin-bottom: 4px; }
+  .plan-header p { font-size: 0.85rem; opacity: 0.85; }
+
+  .phase-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .phase-1 { background: #fef3c7; color: #92400e; }
+  .phase-2 { background: #d1fae5; color: #065f46; }
+  .phase-3 { background: #dbeafe; color: #1e40af; }
+
+  .day-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .day-row:hover { background: #f0fdfa; border-color: var(--teal-light); }
+  .day-row.completed { background: #f0fdf4; border-color: #86efac; }
+  .day-row.today { background: linear-gradient(135deg, #f0fdfa, #e0f7f4); border-color: var(--teal); border-width: 2px; }
+  .day-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .day-number.done { background: var(--success); color: white; }
+  .day-number.active { background: var(--teal); color: white; }
+  .day-number.pending { background: #e2e8f0; color: var(--gray); }
+  .day-info { flex: 1; }
+  .day-title { font-weight: 600; font-size: 0.9rem; color: var(--navy2); }
+  .day-sub { font-size: 0.78rem; color: var(--gray); margin-top: 1px; }
+  .day-progress { font-size: 0.8rem; font-weight: 700; color: var(--teal); }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: #e2e8f0;
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    margin: 6px 0;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    transition: width 0.5s ease;
+  }
+
+  /* BIG PROGRESS */
+  .big-progress {
+    text-align: center;
+    padding: 20px;
+  }
+  .progress-circle-wrap {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 12px;
+  }
+  .progress-circle-svg { transform: rotate(-90deg); }
+  .progress-circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 10; }
+  .progress-circle-fill {
+    fill: none;
+    stroke: url(#grad);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease;
+  }
+  .progress-circle-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--teal-dark);
+  }
+
+  /* TASK CARD */
+  .task-card {
+    background: var(--mint);
+    border: 2px solid var(--teal-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .task-card:hover { background: #ccfbf1; }
+  .task-card.done-task { background: #f0fdf4; border-color: #86efac; opacity: 0.8; }
+  .task-check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+  }
+  .task-check.checked { background: var(--success); border-color: var(--success); color: white; font-size: 0.8rem; }
+  .task-info { flex: 1; }
+  .task-title { font-weight: 600; font-size: 0.92rem; color: var(--navy2); }
+  .task-desc { font-size: 0.8rem; color: var(--gray); margin-top: 3px; }
+
+  /* CELEBRATION */
+  .celebration {
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .celebration .big-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .celebration h2 { font-size: 1.5rem; font-weight: 800; color: var(--teal-dark); margin-bottom: 8px; }
+  .celebration p { color: var(--gray); line-height: 1.5; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .stat-box {
+    background: var(--mint);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    border: 1px solid var(--teal-light);
+  }
+  .stat-num { font-size: 1.4rem; font-weight: 800; color: var(--teal); }
+  .stat-label { font-size: 0.72rem; color: var(--gray); margin-top: 2px; }
+
+  /* QUOTE */
+  .quote-box {
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    color: white;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .quote-box .quote-text { font-size: 0.95rem; font-style: italic; line-height: 1.5; }
+  .quote-box .quote-author { font-size: 0.8rem; opacity: 0.8; margin-top: 8px; }
+
+  /* NOTIFICATION SETUP */
+  .time-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    direction: ltr;
+    justify-content: center;
+  }
+  .time-input {
+    width: 70px;
+    padding: 10px;
+    border: 2px solid var(--teal);
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--teal-dark);
+  }
+  .time-sep { font-size: 1.4rem; font-weight: 700; color: var(--teal); }
+
+  /* STREAK */
+  .streak-dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 12px 0;
+  }
+  .streak-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+  }
+  .streak-dot.done-dot { background: var(--success); color: white; }
+  .streak-dot.fail-dot { background: var(--danger); color: white; }
+  .streak-dot.skip-dot { background: #e2e8f0; color: var(--gray); }
+  .streak-dot.today-dot { background: var(--teal); color: white; }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 2px solid #e2e8f0;
+    display: flex;
+    z-index: 100;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
+  .nav-item {
+    flex: 1;
+    padding: 10px 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--gray);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  .nav-item.active { color: var(--teal); }
+  .nav-icon { font-size: 1.3rem; margin-bottom: 2px; }
+  body.has-nav { padding-bottom: 70px; }
+
+  /* MISC */
+  .divider { height: 1px; background: #e2e8f0; margin: 16px 0; }
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .tag-teal { background: #ccfbf1; color: var(--teal-dark); }
+  .tag-gold { background: #fef3c7; color: #92400e; }
+  .tag-red { background: #fee2e2; color: #991b1b; }
+  .alert {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+  .alert-warning { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+  .alert-info { background: #f0fdfa; border: 1px solid var(--teal-light); color: var(--teal-dark); }
+
+  @media (max-width: 480px) {
+    .shkuf-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-row { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body class="has-nav">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON">
+    <div>
+      <div class="header-title">ש.ק.ו.פ — הרגלים</div>
+      <div class="header-sub">שיפורים קטנים ובלתי פוסקים</div>
+    </div>
+  </div>
+  <div class="header-badge">21 ימים</div>
+</div>
+
+<!-- ===== SCREEN 1: WELCOME ===== -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-hero">
+    <div class="big-icon">🌱</div>
+    <h1>ש.ק.ו.פ</h1>
+    <p class="tagline">שיפורים קטנים ובלתי פוסקים.<br>21 ימים לשנות הרגל אחד — לתמיד.</p>
+  </div>
+
+  <div class="shkuf-grid">
+    <div class="shkuf-item">
+      <div class="shkuf-letter">ש</div>
+      <div class="shkuf-word">שיפורים</div>
+      <div class="shkuf-desc">כל יום שיפור קטן</div>
+    </div>
+    <div class="shkuf-item">
+      <div class="shkuf-letter">ק</div>
+      <div class="shkuf-word">קטנים</div>
+      <div class="shkuf-desc">צעד אחד בכל פעם</div>
+    </div>
+    <div class="shkuf-item">
+      <div class="shkuf-letter">ו</div>
+      <div class="shkuf-word">ובלתי</div>
+      <div class="shkuf-desc">מחויבות מלאה</div>
+    </div>
+    <div class="shkuf-item">
+      <div class="shkuf-letter">פ</div>
+      <div class="shkuf-word">פוסקים</div>
+      <div class="shkuf-desc">כל יום, בלי חריגות</div>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <div class="quote-text">"לא הדרך הגדולה עושה את ההבדל — ההרגל הקטן שנצבר כל יום."</div>
+    <div class="quote-author">— AILON Task | עיקרון ש.ק.ו.פ</div>
+  </div>
+
+  <button class="btn btn-primary" onclick="goTo('screen-setup')">🚀 בוא נתחיל!</button>
+</div>
+
+<!-- ===== SCREEN 2: SETUP ===== -->
+<div id="screen-setup" class="screen">
+  <div class="card">
+    <div class="card-title">🎯 מה ההרגל שאתה רוצה לשנות?</div>
+
+    <div class="form-group">
+      <label class="form-label">שם ההרגל</label>
+      <input type="text" id="habit-name" class="form-input" placeholder="לדוגמה: לקום בחמש בבוקר" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">סוג השינוי</label>
+      <div class="toggle-row">
+        <button class="toggle-btn active" id="type-new" onclick="selectType('new')">➕ הרגל חדש</button>
+        <button class="toggle-btn" id="type-remove" onclick="selectType('remove')">🗑️ לסלק הרגל</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">המצב הנוכחי שלי</label>
+      <input type="text" id="habit-current" class="form-input" placeholder="לדוגמה: עכשיו אני קם בשעה 9" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">המטרה שלי</label>
+      <input type="text" id="habit-goal" class="form-input" placeholder="לדוגמה: לקום בחמש בבוקר" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">מדוע זה חשוב לי?</label>
+      <textarea id="habit-why" class="form-textarea" placeholder="הסיבה שלי לשנות את ההרגל הזה..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">קטגוריה</label>
+      <select id="habit-category" class="form-select">
+        <option value="wake">⏰ שינה וקימה</option>
+        <option value="health">💪 בריאות וספורט</option>
+        <option value="food">🥗 תזונה</option>
+        <option value="mind">🧠 מיינדסט ולמידה</option>
+        <option value="work">💼 עבודה ופרודוקטיביות</option>
+        <option value="social">👥 מערכות יחסים</option>
+        <option value="other">✨ אחר</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="generatePlan()">✨ צור לי את התוכנית שלי!</button>
+  <div style="height:8px"></div>
+  <button class="btn btn-secondary" onclick="goTo('screen-welcome')">⬅️ חזרה</button>
+</div>
+
+<!-- ===== SCREEN 3: PLAN PREVIEW ===== -->
+<div id="screen-plan" class="screen">
+  <div class="plan-header">
+    <div style="font-size:0.8rem;opacity:0.8;margin-bottom:4px">התוכנית שלך</div>
+    <h2 id="plan-title">לקום בחמש בבוקר</h2>
+    <p id="plan-subtitle">21 ימים • 3 שלבים • ש.ק.ו.פ</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-num">21</div>
+      <div class="stat-label">ימים בסה"כ</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">3</div>
+      <div class="stat-label">שלבים</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="plan-steps-count">63</div>
+      <div class="stat-label">משימות</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 שלושת השלבים</div>
+    
+    <div style="margin-bottom:14px">
+      <div class="phase-badge phase-1">שלב א׳ — ימים 1-7</div>
+      <div style="font-weight:600;color:var(--navy2);margin-bottom:4px" id="phase1-title">הכנה והתאמה</div>
+      <div style="font-size:0.82rem;color:var(--gray)" id="phase1-desc">בניית תשתית, הרגלי תמיכה, ניסויים קטנים</div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="phase-badge phase-2">שלב ב׳ — ימים 8-14</div>
+      <div style="font-weight:600;color:var(--navy2);margin-bottom:4px" id="phase2-title">חיזוק ועמקות</div>
+      <div style="font-size:0.82rem;color:var(--gray)" id="phase2-desc">מימוש בפועל, חיזוק ההרגל, טיפול בחסמים</div>
+    </div>
+    <div>
+      <div class="phase-badge phase-3">שלב ג׳ — ימים 15-21</div>
+      <div style="font-weight:600;color:var(--navy2);margin-bottom:4px" id="phase3-title">הטמעה וציון הדרך</div>
+      <div style="font-size:0.82rem;color:var(--gray)" id="phase3-desc">אוטומטיות, שגרה, חגיגת הצלחה</div>
+    </div>
+  </div>
+
+  <div id="plan-days-list"></div>
+
+  <button class="btn btn-primary" onclick="startJourney()">🎯 מתחילים עכשיו!</button>
+  <div style="height:8px"></div>
+  <button class="btn btn-secondary" onclick="goTo('screen-setup')">⬅️ ערוך פרטים</button>
+</div>
+
+<!-- ===== SCREEN 4: DAILY TRACKER ===== -->
+<div id="screen-tracker" class="screen">
+  <div id="tracker-content"></div>
+</div>
+
+<!-- ===== SCREEN 5: JOURNEY MAP ===== -->
+<div id="screen-journey" class="screen">
+  <div class="card">
+    <div class="card-title">🗺️ מפת המסע שלך</div>
+    <div id="journey-map"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 סטטיסטיקות</div>
+    <div id="journey-stats"></div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 6: PROFILE ===== -->
+<div id="screen-profile" class="screen">
+  <div id="profile-content"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav" style="display:none">
+  <div class="nav-item active" id="nav-tracker" onclick="navTo('tracker')">
+    <div class="nav-icon">📅</div>
+    <div>היום</div>
+  </div>
+  <div class="nav-item" id="nav-journey" onclick="navTo('journey')">
+    <div class="nav-icon">🗺️</div>
+    <div>מסע</div>
+  </div>
+  <div class="nav-item" id="nav-profile" onclick="navTo('profile')">
+    <div class="nav-icon">👤</div>
+    <div>פרופיל</div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let state = {
+  habitName: '', habitType: 'new', habitCurrent: '', habitGoal: '',
+  habitWhy: '', habitCategory: 'wake',
+  startDate: null, currentDay: 1, days: [],
+  selectedType: 'new'
+};
+
+// Load from localStorage
+const saved = localStorage.getItem('shkuf_state');
+if (saved) {
+  try {
+    state = { ...state, ...JSON.parse(saved) };
+    if (state.startDate) {
+      document.getElementById('bottom-nav').style.display = 'flex';
+      goTo('screen-tracker');
+      renderTracker();
+    }
+  } catch(e) {}
+}
+
+function save() {
+  localStorage.setItem('shkuf_state', JSON.stringify(state));
+}
+
+// ===== NAVIGATION =====
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function navTo(tab) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('nav-'+tab).classList.add('active');
+  if (tab === 'tracker') { goTo('screen-tracker'); renderTracker(); }
+  else if (tab === 'journey') { goTo('screen-journey'); renderJourney(); }
+  else if (tab === 'profile') { goTo('screen-profile'); renderProfile(); }
+}
+
+function selectType(type) {
+  state.selectedType = type;
+  document.getElementById('type-new').classList.toggle('active', type === 'new');
+  document.getElementById('type-remove').classList.toggle('active', type === 'remove');
+}
+
+// ===== PLAN GENERATION =====
+const WAKE_PLAN = [
+  // Phase 1
+  { phase:1, title:'הגדר את הסיבה שלך', task:'כתוב 3 סיבות למה אתה רוצה לקום מוקדם', tip:'הסיבה היא הדלק. בלי סיבה חזקה — הלחץ יגבר.', points:10 },
+  { phase:1, title:'שעון מעורר — 15 דקות מוקדם יותר', task:`קבע שעון מעורר ל-${calcWakeTime(8,45)}`, tip:'ש.ק.ו.פ: צעד קטן ראשון. 15 דקות זה לא הרבה — אבל זה ההתחלה.', points:15 },
+  { phase:1, title:'סגרת מסך שעה לפני שינה', task:'כבה את כל המסכים שעה לפני שאתה הולך לישון', tip:'המוח צריך להכין את עצמו לשינה. המסך מרמה אותו.', points:15 },
+  { phase:1, title:'הכן את המיטה מחר', task:'הכן בגדים ומשימה אחת שתחכה לך בבוקר', tip:'כשיש לך "למה לקום" — הקימה קלה יותר.', points:10 },
+  { phase:1, title:'15 דקות מוקדם יותר — יום שני', task:`קבע שעון ל-${calcWakeTime(8,45)} ועמוד בו`, tip:'אם עמדת — מעולה! אם לא — נסה שוב. זה לא כישלון, זה לימוד.', points:20 },
+  { phase:1, title:'הגדר שגרת ערב קצרה', task:'כתוב 3 דברים שעשית טוב היום לפני השינה', tip:'חשבון נפש ערב מייצר שינה עמוקה יותר.', points:10 },
+  { phase:1, title:'הקדמה של 30 דקות', task:`שעון מעורר ל-${calcWakeTime(8,30)}`, tip:'כבר עברת שבוע! הגוף מתרגל. הצעד הבא קל יותר.', points:20 },
+  // Phase 2
+  { phase:2, title:'בוקר עם מטרה', task:`קום ב-${calcWakeTime(8,30)} ועשה משימה אחת לפני הטלפון`, tip:'הבוקר הוא שלך — לפני שכולם ידרשו ממך.', points:25 },
+  { phase:2, title:'הוסף שגרת בוקר קצרה', task:'5 דקות מדיטציה / תנועה / תפילה מיד עם הקימה', tip:'הגוף לא רוצה לקום — אבל הנפש שמחה כשאתה עושה זאת.', points:20 },
+  { phase:2, title:'הקדמה של 45 דקות', task:`שעון ל-${calcWakeTime(8,15)}`, tip:'כבר 10 ימים! הגוף מתחיל להסתגל לשעון הביולוגי החדש.', points:25 },
+  { phase:2, title:'שמור על הרצף', task:'יום שלישי ברצף — קום בשעה המתוכננת', tip:'רצף זה הדלק. כל יום שעמדת בזה — מחזק את ההרגל.', points:30 },
+  { phase:2, title:'מה עוצר אותך?', task:'כתוב מה הכי קשה בקימה המוקדמת ואיך אתה פותר', tip:'הכרה בחסם היא 50% מהפתרון.', points:15 },
+  { phase:2, title:'אחד שאחראי לך', task:'שתף חבר/בן זוג במטרה שלך ובקש ממנו לבדוק', tip:'אחריות חיצונית מגדילה הצלחה ב-65%.', points:20 },
+  { phase:2, title:'הקדמה של שעה', task:`שעון ל-${calcWakeTime(8,0)} — בעוד שעה מהמצב ההתחלתי!`, tip:'חצי הדרך! אתה כבר לא אותו אדם שהתחיל לפני שבועיים.', points:30 },
+  // Phase 3
+  { phase:3, title:'הקדמה של שעה ורבע', task:`שעון ל-${calcWakeTime(7,45)}`, tip:'כבר רגיש את ההבדל? הבוקר שלך הוא שלך.', points:30 },
+  { phase:3, title:'שגרת בוקר מלאה', task:'קום, שתה מים, תנועה 5 דקות, משימה אחת חשובה', tip:'זו שגרת מנהיגים. כל יום שאתה עושה זאת — אתה בוחר להיות טוב יותר.', points:35 },
+  { phase:3, title:'הקדמה של שעה וחצי', task:`שעון ל-${calcWakeTime(7,30)}`, tip:'75% מהדרך! הגוף כבר מכיר את השעון החדש.', points:35 },
+  { phase:3, title:'ניסוי סוף שבוע', task:'שמור על הקימה המוקדמת גם ביום המנוחה', tip:'ש.ק.ו.פ לא לוקח יום חופש — גם לא הגוף שלך.', points:25 },
+  { phase:3, title:'הקדמה של שעתיים', task:`שעון ל-${calcWakeTime(7,0)} — שעתיים לפני המצב ההתחלתי!`, tip:'כמעט שם! הרגיש את הגאוות? זה מה שקורה כשעומדים בהתחייבות.', points:40 },
+  { phase:3, title:'הקדמה של שעתיים ורבע', task:`שעון ל-${calcWakeTime(6,45)}`, tip:'יום לפני הסיום. אתה כבר שם. ההרגל הוטמע.', points:40 },
+  { phase:3, title:'יום 21 — הטמעת ההרגל!', task:`קום ב-${calcWakeTime(6,30)} — המטרה הסופית! חגוג! 🎉`, tip:'21 ימים. עשית את זה. ההרגל הוא חלק ממי שאתה עכשיו.', points:50 },
+];
+
+const GENERIC_PLAN = (name, type) => Array.from({length:21}, (_,i) => {
+  const phase = i < 7 ? 1 : i < 14 ? 2 : 3;
+  const phaseLabels = ['', 'הכנה והתאמה', 'חיזוק ועמקות', 'הטמעה סופית'];
+  const phaseTips = [
+    '', 
+    'צעד קטן כל יום. אל תמהר.',
+    'כל יום שעמדת בזה — מחזק את ההרגל.',
+    'אתה כמעט שם! הרגל שמוטמע 21 יום — שייך לך לחיים.'
+  ];
+  return {
+    phase,
+    title: `יום ${i+1} — ${phaseLabels[phase]}`,
+    task: type === 'remove' 
+      ? `זהה את הטריגר שמוביל לhרגל הישן ועצור 30 שניות לפניו` 
+      : `יישם את הצעד הבא ב"${name}" למשך 10 דקות`,
+    tip: phaseTips[phase],
+    points: 10 + phase * 5 + (i % 3) * 3
+  };
+});
+
+function calcWakeTime(baseH, baseM) {
+  return `${String(baseH).padStart(2,'0')}:${String(baseM).padStart(2,'0')}`;
+}
+
+function generatePlan() {
+  const name = document.getElementById('habit-name').value.trim();
+  if (!name) { alert('אנא הכנס שם להרגל'); return; }
+  
+  state.habitName = name;
+  state.habitType = state.selectedType;
+  state.habitCurrent = document.getElementById('habit-current').value.trim();
+  state.habitGoal = document.getElementById('habit-goal').value.trim();
+  state.habitWhy = document.getElementById('habit-why').value.trim();
+  state.habitCategory = document.getElementById('habit-category').value;
+
+  const isWake = state.habitCategory === 'wake';
+  const rawPlan = isWake ? WAKE_PLAN : GENERIC_PLAN(name, state.selectedType);
+  
+  state.days = rawPlan.map((d, i) => ({
+    day: i + 1,
+    phase: d.phase,
+    title: d.title,
+    task: d.task,
+    tip: d.tip,
+    points: d.points,
+    status: 'pending', // pending / done / failed
+    notes: ''
+  }));
+
+  // Update plan screen
+  document.getElementById('plan-title').textContent = name;
+  document.getElementById('plan-subtitle').textContent = '21 ימים • 3 שלבים • ש.ק.ו.פ';
+  document.getElementById('plan-steps-count').textContent = state.days.length * 3;
+
+  const phaseDescs = {
+    wake: {
+      p1: ['ימים 1-7 — הכנה', 'שינויים קטנים של 15 דקות, בניית שגרת ערב'],
+      p2: ['ימים 8-14 — חיזוק', 'הקדמה הדרגתית, בניית שגרת בוקר'],
+      p3: ['ימים 15-21 — הטמעה', 'הגעה למטרה, אוטומטיות, חגיגת הצלחה']
+    },
+    default: {
+      p1: ['ימים 1-7 — הכנה', 'הבנת ההרגל, ניסויים קטנים, בניית תשתית'],
+      p2: ['ימים 8-14 — חיזוק', 'יישום בפועל, טיפול בחסמים, חיזוק רצף'],
+      p3: ['ימים 15-21 — הטמעה', 'אוטומטיות, עמקות, חגיגת ההטמעה']
+    }
+  };
+  const pd = isWake ? phaseDescs.wake : phaseDescs.default;
+  document.getElementById('phase1-title').textContent = pd.p1[0];
+  document.getElementById('phase1-desc').textContent = pd.p1[1];
+  document.getElementById('phase2-title').textContent = pd.p2[0];
+  document.getElementById('phase2-desc').textContent = pd.p2[1];
+  document.getElementById('phase3-title').textContent = pd.p3[0];
+  document.getElementById('phase3-desc').textContent = pd.p3[1];
+
+  // Days list
+  const list = document.getElementById('plan-days-list');
+  list.innerHTML = state.days.slice(0,7).map(d => `
+    <div class="day-row">
+      <div class="day-number pending">${d.day}</div>
+      <div class="day-info">
+        <div class="day-title">${d.title}</div>
+        <div class="day-sub">${d.task.substring(0,55)}${d.task.length > 55 ? '...' : ''}</div>
+      </div>
+      <span class="tag tag-${d.phase === 1 ? 'gold' : d.phase === 2 ? 'teal' : 'teal'}">${d.points} נק׳</span>
+    </div>
+  `).join('') + `<div style="text-align:center;color:var(--gray);font-size:0.85rem;padding:8px 0">+ עוד 14 ימים בתוכנית</div>`;
+
+  goTo('screen-plan');
+}
+
+function startJourney() {
+  state.startDate = new Date().toISOString().split('T')[0];
+  state.currentDay = 1;
+  save();
+  document.getElementById('bottom-nav').style.display = 'flex';
+  renderTracker();
+  navTo('tracker');
+}
+
+// ===== TRACKER =====
+function getCurrentDay() {
+  if (!state.startDate) return 1;
+  const start = new Date(state.startDate);
+  const today = new Date();
+  const diff = Math.floor((today - start) / (1000*60*60*24));
+  return Math.min(diff + 1, 21);
+}
+
+function renderTracker() {
+  const day = getCurrentDay();
+  const d = state.days[day - 1];
+  if (!d) { renderComplete(); return; }
+
+  const totalPoints = state.days.reduce((s,x) => s + (x.status === 'done' ? x.points : 0), 0);
+  const maxPoints = state.days.reduce((s,x) => s + x.points, 0);
+  const doneCount = state.days.filter(x => x.status === 'done').length;
+  const pct = Math.round((doneCount / 21) * 100);
+  const phaseName = ['', 'שלב א׳ — הכנה', 'שלב ב׳ — חיזוק', 'שלב ג׳ — הטמעה'][d.phase];
+
+  document.getElementById('tracker-content').innerHTML = `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <div style="font-size:0.8rem;color:var(--gray)">יום</div>
+          <div style="font-size:1.8rem;font-weight:800;color:var(--teal-dark)">${day}/21</div>
+        </div>
+        <div class="big-progress">
+          <div class="progress-circle-wrap">
+            <svg class="progress-circle-svg" width="130" height="130">
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#0d9488"/>
+                  <stop offset="100%" style="stop-color:#14b8a6"/>
+                </linearGradient>
+              </defs>
+              <circle class="progress-circle-bg" cx="65" cy="65" r="55"/>
+              <circle class="progress-circle-fill" cx="65" cy="65" r="55"
+                stroke-dasharray="${2 * Math.PI * 55}"
+                stroke-dashoffset="${2 * Math.PI * 55 * (1 - pct/100)}"/>
+            </svg>
+            <div class="progress-circle-text">${pct}%</div>
+          </div>
+        </div>
+        <div style="text-align:left">
+          <div style="font-size:0.8rem;color:var(--gray)">נקודות</div>
+          <div style="font-size:1.5rem;font-weight:800;color:var(--gold)">${totalPoints}</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--gray);margin-top:4px">
+        <span>${doneCount} ימים הושלמו</span>
+        <span>${21-doneCount} ימים נותרו</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="margin-bottom:8px">
+        <span class="phase-badge phase-${d.phase}">${phaseName}</span>
+        <div class="card-title" style="margin-top:6px;margin-bottom:4px">📌 ${d.title}</div>
+      </div>
+      <div class="alert alert-info">💡 <strong>מה לעשות היום:</strong><br>${d.task}</div>
+      <div style="font-size:0.85rem;color:var(--gray);margin-bottom:14px">
+        🧠 <em>${d.tip}</em>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm btn-inline" style="flex:1" onclick="markDay('done')">✅ בוצע! (${d.points} נק׳)</button>
+        <button class="btn btn-secondary btn-sm btn-inline" style="flex:1" onclick="markDay('failed')">😅 לא הצלחתי</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 הרצף שלך</div>
+      <div class="streak-dots">
+        ${state.days.slice(0,21).map((x,i) => {
+          const cls = x.status === 'done' ? 'done-dot' : x.status === 'failed' ? 'fail-dot' : i === day-1 ? 'today-dot' : 'skip-dot';
+          return `<div class="streak-dot ${cls}">${i+1}</div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="quote-box">
+      <div class="quote-text">"כל יום שאתה עושה את הדבר הקטן — אתה הופך להיות אדם גדול יותר."</div>
+      <div class="quote-author">— ש.ק.ו.פ | AILON Task</div>
+    </div>
+  `;
+}
+
+function markDay(status) {
+  const day = getCurrentDay();
+  if (day > 21) return;
+  state.days[day - 1].status = status;
+  save();
+  
+  if (status === 'done') {
+    showSuccess(day);
+  } else {
+    showEncouragement(day);
+  }
+}
+
+function showSuccess(day) {
+  const msgs = [
+    '🎉 מעולה! צעד קטן, שינוי גדול!',
+    '💪 כן! זה ש.ק.ו.פ בפעולה!',
+    '🌟 יום נוסף שאתה מנצח!',
+    '🔥 הרצף ממשיך! אל תעצור!',
+    '✨ אתה בדרך הנכונה!'
+  ];
+  const msg = msgs[Math.floor(Math.random() * msgs.length)];
+  
+  document.getElementById('tracker-content').innerHTML = `
+    <div class="celebration">
+      <div class="big-emoji">🎯</div>
+      <h2>יום ${day} הושלם!</h2>
+      <p style="font-size:1.1rem;font-weight:600;color:var(--teal);margin:8px 0">${msg}</p>
+      <p>כל יום שאתה עומד בהתחייבות — ההרגל מתחזק ב-3%.</p>
+    </div>
+    ${day < 21 ? `
+    <div class="alert alert-success">🌅 מחר: יום ${day+1} — ${state.days[day]?.title || 'המשך המסע'}</div>
+    ` : `<div class="alert alert-success">🏆 השלמת 21 ימים! ההרגל הוטמע!</div>`}
+    <button class="btn btn-primary" onclick="renderTracker()">📅 חזור למסך הבוקר</button>
+  `;
+}
+
+function showEncouragement(day) {
+  const msgs = [
+    'זה בסדר. כישלון הוא חלק מהמסע.',
+    'ש.ק.ו.פ לא אומר שלמות — אומר התמדה.',
+    'הנפילה לא קובעת — הקימה קובעת.',
+    'כל מנהיג גדול נפל בדרך. הוא קם.'
+  ];
+  const msg = msgs[Math.floor(Math.random() * msgs.length)];
+  
+  document.getElementById('tracker-content').innerHTML = `
+    <div class="celebration">
+      <div class="big-emoji">💙</div>
+      <h2>קרה. זה בסדר.</h2>
+      <p style="font-size:1rem;font-weight:600;color:var(--teal);margin:8px 0">${msg}</p>
+      <p>מחר יש הזדמנות חדשה. המסע לא נגמר.</p>
+    </div>
+    <div class="alert alert-warning">💡 <strong>טיפ:</strong> מה הוביל לקושי היום? כתוב זאת לעצמך — תכיר את החסם ותנצח אותו מחר.</div>
+    <button class="btn btn-primary" onclick="renderTracker()">📅 חזור למסך הבוקר</button>
+  `;
+}
+
+function renderComplete() {
+  document.getElementById('tracker-content').innerHTML = `
+    <div class="celebration">
+      <div class="big-emoji">🏆</div>
+      <h2>הטמעת את ההרגל!</h2>
+      <p>21 ימים. הצלחת. "${state.habitName}" הוא עכשיו חלק ממי שאתה.</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">${state.days.filter(d=>d.status==='done').length}</div>
+        <div class="stat-label">ימים הושלמו</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">${state.days.reduce((s,d)=>s+(d.status==='done'?d.points:0),0)}</div>
+        <div class="stat-label">נקודות</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">21</div>
+        <div class="stat-label">ימי מסע</div>
+      </div>
+    </div>
+    <div class="quote-box">
+      <div class="quote-text">"כשנביא מת — כוחו מתחיל. כשהרגל מוטמע — ניצחון האמת מתחיל."</div>
+      <div class="quote-author">— בהשראת הרב יונתן זקס | AILON Task</div>
+    </div>
+    <button class="btn btn-primary" onclick="resetApp()">🌱 התחל הרגל חדש</button>
+  `;
+}
+
+// ===== JOURNEY =====
+function renderJourney() {
+  const map = document.getElementById('journey-map');
+  map.innerHTML = state.days.map(d => `
+    <div class="day-row ${d.status === 'done' ? 'completed' : d.day === getCurrentDay() ? 'today' : ''}">
+      <div class="day-number ${d.status === 'done' ? 'done' : d.day === getCurrentDay() ? 'active' : 'pending'}">
+        ${d.status === 'done' ? '✓' : d.day}
+      </div>
+      <div class="day-info">
+        <div class="day-title">${d.title}</div>
+        <div class="day-sub">${d.task.substring(0,50)}${d.task.length>50?'...':''}</div>
+      </div>
+      <span class="tag tag-${d.status === 'done' ? 'teal' : d.status === 'failed' ? 'red' : 'gold'}">
+        ${d.status === 'done' ? '+'+d.points+' נק׳' : d.status === 'failed' ? '😅' : d.points+' נק׳'}
+      </span>
+    </div>
+  `).join('');
+
+  const stats = document.getElementById('journey-stats');
+  const done = state.days.filter(d=>d.status==='done').length;
+  const failed = state.days.filter(d=>d.status==='failed').length;
+  const pts = state.days.reduce((s,d)=>s+(d.status==='done'?d.points:0),0);
+  stats.innerHTML = `
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num" style="color:var(--success)">${done}</div><div class="stat-label">✅ הושלם</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--danger)">${failed}</div><div class="stat-label">😅 נפל</div></div>
+      <div class="stat-box"><div class="stat-num" style="color:var(--gold)">${pts}</div><div class="stat-label">⭐ נקודות</div></div>
+    </div>
+  `;
+}
+
+// ===== PROFILE =====
+function renderProfile() {
+  document.getElementById('profile-content').innerHTML = `
+    <div class="card">
+      <div class="card-title">👤 הפרופיל שלי</div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.8rem;color:var(--gray)">ההרגל שלי</div>
+        <div style="font-size:1.1rem;font-weight:700;color:var(--teal-dark)">${state.habitName}</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.8rem;color:var(--gray)">המצב ההתחלתי</div>
+        <div style="font-size:0.9rem;color:var(--navy2)">${state.habitCurrent || 'לא הוגדר'}</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.8rem;color:var(--gray)">המטרה שלי</div>
+        <div style="font-size:0.9rem;color:var(--navy2)">${state.habitGoal || 'לא הוגדר'}</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.8rem;color:var(--gray)">הסיבה שלי</div>
+        <div style="font-size:0.9rem;color:var(--navy2);font-style:italic">"${state.habitWhy || 'לא הוגדר'}"</div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:0.8rem;color:var(--gray)">תאריך התחלה: ${state.startDate || 'טרם התחיל'}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏰ תזכורת יומית</div>
+      <p style="font-size:0.85rem;color:var(--gray);margin-bottom:12px">הגדר שעה שתקבל תזכורת יומית לבצע את המשימה</p>
+      <div class="time-picker">
+        <input type="number" class="time-input" id="reminder-h" value="07" min="0" max="23" placeholder="שעה">
+        <div class="time-sep">:</div>
+        <input type="number" class="time-input" id="reminder-m" value="00" min="0" max="59" placeholder="דקות">
+      </div>
+      <div style="height:12px"></div>
+      <button class="btn btn-primary" onclick="setReminder()">🔔 הגדר תזכורת</button>
+    </div>
+
+    <div style="height:8px"></div>
+    <button class="btn btn-outline" onclick="if(confirm('האם אתה בטוח?')) resetApp()">🔄 התחל מחדש</button>
+  `;
+}
+
+function setReminder() {
+  const h = document.getElementById('reminder-h').value;
+  const m = document.getElementById('reminder-m').value;
+  alert(`✅ תזכורת הוגדרה ל-${h}:${String(m).padStart(2,'0')}\n\n💡 כדי שהתזכורת תעבוד:\n1. הוסף אפליקציה זו למסך הבית\n2. אפשר התראות בדפדפן`);
+}
+
+function resetApp() {
+  localStorage.removeItem('shkuf_state');
+  location.reload();
+}
+</script>
+</body>
+</html>
