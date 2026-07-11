@@ -59,15 +59,36 @@ input:focus { outline: none; border-color: #f5a623; }
 .a-blue { background: rgba(79,172,254,0.12); border: 1px solid rgba(79,172,254,0.25); color: #4facfe; }
 .a-green { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: #10b981; }
 .ucard { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+
+  .hdr-bg {
+    background-image: url('compass_bg.jpg');
+    background-size: cover;
+    background-position: center 40%;
+    padding: 40px 16px 28px;
+    position: relative;
+    border-radius:20px;
+  }
+  .hdr-bg::before {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(15,12,41,0.55) 0%, rgba(15,12,41,0.82) 100%);
+    border-radius:20px;
+  }
+  .hdr-content { position:relative; z-index:1; }
+  .hdr { border-radius:20px; overflow:hidden; margin-bottom:18px; position:relative; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hdr">
-    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:48px;height:48px;border-radius:13px;box-shadow:0 4px 18px rgba(20,184,166,0.35);margin-bottom:10px;">
-    <div style="font-size:48px">🧭</div>
-    <h1>מצפן הקריירה</h1>
-    <p>גלה את הקריירה שמתאימה לך</p>
+    <div class="hdr-bg">
+      <div class="hdr-content">
+        <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:48px;height:48px;border-radius:13px;box-shadow:0 4px 18px rgba(20,184,166,0.35);margin-bottom:10px;">
+        <div style="font-size:48px">🧭</div>
+        <h1 style="text-shadow:0 2px 8px rgba(0,0,0,0.5);">מצפן הקריירה</h1>
+        <p style="color:rgba(255,255,255,0.85);">גלה את הקריירה שמתאימה לך</p>
+      </div>
+    </div>
   </div>
   <div id="root"></div>
 </div>
