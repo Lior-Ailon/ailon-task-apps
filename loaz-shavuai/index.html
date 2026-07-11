@@ -901,5 +901,27 @@ function loadDailyFocus() {
 document.addEventListener('DOMContentLoaded', loadDailyFocus);
 
 </script>
+
+  <!-- טיפ ניהול אנרגיה מהמאגר -->
+  <div style="background:linear-gradient(135deg,#fefce8,#fef9c3);border:1px solid #fde047;border-radius:12px;padding:12px 16px;margin:12px 0;text-align:right;direction:rtl;">
+    <div style="font-size:12px;color:#854d0e;font-weight:700;">⚡ ניהול אנרגיה — טיפ יומי</div>
+    <div id="energy-tip-text" style="font-size:12px;color:#374151;margin-top:4px;line-height:1.6;"></div>
+  </div>
+<script>
+(function(){
+  var et = [
+    "הסיפור על שני חוטבי העצים — הנוצח לא היה החזק יותר, אלא זה שהשחיז את הגרזן. הקצה זמן לחופש ולהתחדשות.",
+    "ניהול אנרגיה: כמו פנס — יש לנו כח להאיר יום של מישהו. מחמאה היא קרן אור מילולית.",
+    "אנלוגיה לאימון: רק לאורך זמן רואים תוצאות. צחצוח שיניים, חדר כושר, ניהול רגשות — כולם עובדים על זמן.",
+    "הסטת מרכז האש: 80% מהזמן לפתרונות, 20% לבעיה — לא ההפך.",
+    "מה שלא ניתן למדוד — לא ניתן לנהל. ומה שלא ניתן לנהל — לא ניתן לשפר.",
+    "מיקוד שליטה פנימי: האירועים לא קובעים — התגובה שלך קובעת. E+R=O."
+  ];
+  var idx = new Date().getDay() % et.length;
+  var el = document.getElementById('energy-tip-text');
+  if(el) el.textContent = et[idx];
+})();
+</script>
+
 </body>
 </html>

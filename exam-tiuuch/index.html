@@ -573,5 +573,25 @@ function initTopicFilter() {
 document.addEventListener('DOMContentLoaded', initTopicFilter);
 
 </script>
+
+  <!-- ציטוט ביטחון עצמי לפני המבחן -->
+  <div id="pre-exam-quote" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:14px;padding:16px 20px;margin-bottom:16px;text-align:right;direction:rtl;">
+    <div style="font-size:12px;color:#166534;font-weight:700;margin-bottom:6px;">💪 לפני שמתחילים</div>
+    <div id="exam-motivate" style="font-size:13px;color:#1f2937;line-height:1.7;font-style:italic;"></div>
+  </div>
+<script>
+(function(){
+  var mq = [
+    "אתה לא צריך ביטחון בשביל לעשות משהו. אתה צריך לעשות משהו כדי לבנות לך את הביטחון.",
+    "תוצאות יוצרות אמונות. כל שאלה שאתה עונה נכון — בונה אותך.",
+    "הכישלון הגדול ביותר הוא לא לנסות. תנסה — מקסימום תצליח.",
+    "העריך את עצמך על פי השאיפות שלך, לא על פי המגבלות שלך.",
+    "המטרה אינה להיות הטוב ביותר — אלא הטוב ביותר שאתה יכול להיות."
+  ];
+  var idx = new Date().getDay() % mq.length;
+  document.getElementById('exam-motivate').textContent = '"' + mq[idx] + '"';
+})();
+</script>
+
 </body>
 </html>

@@ -1110,5 +1110,30 @@ function resetApp() {
   location.reload();
 }
 </script>
+
+  <!-- ציטוטים מהמאגר - ש.ק.ו.פ -->
+  <div id="quote-of-day" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #a7f3d0;border-radius:14px;padding:18px 20px;margin-top:20px;text-align:right;direction:rtl;">
+    <div style="font-size:13px;color:#065f46;font-weight:700;margin-bottom:8px;">💡 מחשבה לדרך</div>
+    <div id="daily-quote" style="font-size:14px;color:#1f2937;line-height:1.7;font-style:italic;"></div>
+    <div id="quote-author" style="font-size:12px;color:#6b7280;margin-top:8px;"></div>
+  </div>
+
+<script>
+(function(){
+  var quotes = [
+    { q: "הרגלים טובים הם כמו פרחי סחלב — צריך להשקות אותם, לטפל בהם ולטפח אותם כדי שיפרחו.", a: "מאגר ליאור סופר" },
+    { q: "תעשה לפחות פעם אחת ביום משהו שאתה לא רוצה לעשות — זו משמעת עצמית.", a: "ליאור סופר" },
+    { q: "בשביל שדברים ישתנו — אתה צריך להשתנות. בשביל שדברים יהיו טובים יותר — אתה תצטרך להיות טוב יותר.", a: "מאגר ליאור סופר" },
+    { q: "לפני שקובעים מטרה חדשה — בדוק אם סט ההרגלים הקיימים אצלך מהווים בסיס להגשמתה.", a: "מאגר ליאור סופר" },
+    { q: "כמה זמן לוקח לעשות שינוי? שנייה. שימור השינוי הוא מה שלוקח עד 21 יום.", a: "מאגר ליאור סופר" },
+    { q: "אנחנו לא צריכים סיבה בשביל לעשות שינוי בחיינו.", a: "מאגר ליאור סופר" },
+    { q: "כשיש לנו תקווה — אנחנו מתקדמים. כשאנחנו מאמינים שיש סוף לקושי — אנחנו דוחפים את עצמנו לביצועים שלא ידענו שיש בנו.", a: "מחקר החולדות — מאגר ליאור סופר" }
+  ];
+  var idx = new Date().getDay() % quotes.length;
+  document.getElementById('daily-quote').textContent = '"' + quotes[idx].q + '"';
+  document.getElementById('quote-author').textContent = '— ' + quotes[idx].a;
+})();
+</script>
+
 </body>
 </html>

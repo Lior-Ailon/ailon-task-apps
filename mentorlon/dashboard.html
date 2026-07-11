@@ -146,6 +146,31 @@
 </head>
 <body>
 <div class="container">
+
+  <!-- ציטוט מנהיגות מהמאגר - מציג בדשבורד -->
+  <div id="leadership-quote-bar" style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:12px;padding:14px 18px;margin-bottom:16px;text-align:right;direction:rtl;display:flex;align-items:center;gap:12px;">
+    <div style="font-size:22px;flex-shrink:0;">🌟</div>
+    <div>
+      <div id="leader-quote-text" style="font-size:13px;color:#e2e8f0;line-height:1.6;font-style:italic;"></div>
+      <div style="font-size:11px;color:#64748b;margin-top:4px;">— מאגר הידע של ליאור סופר</div>
+    </div>
+  </div>
+<script>
+(function(){
+  var lq = [
+    "מנהיג טוב מייצר תלמידים — מנהיג מצוין מייצר מנהיגים.",
+    "מנהיגות היא היכולת להניע אנשים לביצוע משימות ללא אמצעי כפייה.",
+    "תמיד תן את הקרדיט של ההצלחות לצוות שלך, ותמיד קח אחריות על הכשלונות.",
+    "מנהיגים מבלים 5% מזמנם במחשבה על הבעיה, ו-95% על הפתרון.",
+    "כוח = סכום אפס. השפעה = אש שמתרבה. בחר השפעה.",
+    "כשמלך מת — כוחו נגמר. כשנביא מת — השפעתו מתחילה. (הרב יונתן זקס)"
+  ];
+  var idx = new Date().getDay() % lq.length;
+  var el = document.getElementById('leader-quote-text');
+  if(el) el.textContent = lq[idx];
+})();
+</script>
+
   <div class="header">
     <div class="titlebox">
       <div class="logo"><img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
