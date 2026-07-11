@@ -55,6 +55,16 @@
   .btn-secondary { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
   .btn:disabled { opacity:0.45; cursor:not-allowed; }
 
+  
+  .example-box { background: rgba(13,148,136,0.08); border: 1px solid rgba(13,148,136,0.25); border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; font-size: 13px; color: #0d9488; }
+  .example-box .ex-title { font-weight: 800; margin-bottom: 4px; }
+  .history-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: .2s; }
+  .history-card:hover { border-color: #14b8a6; }
+  .history-card .h-title { font-weight: 700; margin-bottom: 4px; }
+  .history-card .h-date { font-size: 12px; color: #64748b; }
+  .share-result-btn { width:100%; padding:12px; border:none; border-radius:10px; background: linear-gradient(135deg,#14b8a6,#0891b2); color:#fff; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit; margin-top:12px; }
+  .empty-history { text-align:center; padding:40px 20px; color:#94a3b8; }
+
   .step-dots { display:flex; gap:6px; justify-content:center; margin-bottom:18px; }
   .dot { width:8px; height:8px; border-radius:50%; background:#e2e8f0; }
   .dot.active { background:#14b8a6; width:22px; border-radius:5px; }
@@ -119,7 +129,11 @@
     <!-- Step 0: choose past/future -->
     <div id="stepChoose" class="card">
       <div class="field"><label style="margin-bottom:14px;font-size:16px;">האם מדובר באירוע שכבר קרה, או בהחלטה שעומדת בפניך?</label></div>
-      <div class="start-grid">
+      <div class="example-box">
+    <div class="ex-title">💡 לדוגמה — שאלות שאנשים מנתחים כאן:</div>
+    "האם לעזוב את העבודה?" · "האם לעבור דירה?" · "האם לפתוח עסק?"
+  </div>
+  <div class="start-grid">
         <div class="start-opt" onclick="startFlow('past')">
           <div class="icon">🔙</div>
           <div class="title">אירוע מהעבר</div>
@@ -650,6 +664,45 @@ function formatDate(iso){
 
 // init
 resetToChoose();
+
+// === HISTORY PERSISTENCE ===
+function saveToHistory(title, summary) {
+  const key = 'exit_history';
+  const hist = JSON.parse(localStorage.getItem(key) || '[]');
+  hist.unshift({ title, summary, date: new Date().toLocaleDateString('he-IL'), id: Date.now() });
+  if (hist.length > 20) hist.pop();
+  localStorage.setItem(key, JSON.stringify(hist));
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (!el) return;
+  const hist = JSON.parse(localStorage.getItem('exit_history') || '[]');
+  if (hist.length === 0) {
+    el.innerHTML = '<div class="empty-history">📭 עדיין אין ניתוחים שמורים<br><small>הניתוחים שתעשה ישמרו כאן אוטומטית</small></div>';
+    return;
+  }
+  el.innerHTML = hist.map(h => `
+    <div class="history-card">
+      <div class="h-title">${h.title || 'ניתוח'}</div>
+      <div class="h-date">📅 ${h.date}</div>
+      ${h.summary ? '<div style="font-size:13px;color:#475569;margin-top:6px;">'+h.summary+'</div>' : ''}
+    </div>
+  `).join('');
+}
+
+function shareResult() {
+  const text = document.querySelector('#resultSection')?.innerText || 'תוצאת ניתוח מ-Exit Strategy AI';
+  if (navigator.share) {
+    navigator.share({ title: 'Exit Strategy AI', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('הועתק ✅ — תוכל להדביק ולשלוח למנטור שלך'));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderHistory);
+
 </script>
 </body>
 </html>

@@ -9,8 +9,8 @@
 body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); min-height: 100vh; color: #fff; direction: rtl; }
 .wrap { max-width: 820px; margin: 0 auto; padding: 16px; }
 .hdr { text-align: center; padding: 24px 0 16px; }
-.hdr h1 { font-size: 28px; font-weight: 900; color: #f5a623; margin-bottom: 4px; }
-.hdr p { font-size: 14px; opacity: 0.7; }
+.hdr h1 { font-size: 28px; font-weight: 900; color: #fbbf24; margin-bottom: 4px; text-shadow: 0 2px 10px rgba(245,166,35,0.5); }
+.hdr p { font-size: 14px; color: #cbd5e1; }
 .card { background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.15); border-radius: 18px; padding: 24px; margin-bottom: 18px; }
 input { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; font-size: 15px; margin-bottom: 12px; font-family: Arial; direction: rtl; }
 input::placeholder { color: rgba(255,255,255,0.4); }
@@ -18,7 +18,7 @@ input:focus { outline: none; border-color: #f5a623; }
 .lbl { font-size: 13px; opacity: 0.65; margin-bottom: 4px; display: block; }
 .btn { display: block; width: 100%; padding: 13px; border-radius: 11px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Arial; margin-bottom: 10px; }
 .btn-gold { background: linear-gradient(135deg, #f5a623, #f093fb); color: #1a1a2e; }
-.btn-clear { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+.btn-clear { background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.4); font-weight: 700; }
 .err { color: #f87171; font-size: 13px; margin: -8px 0 10px; }
 .prog-wrap { margin-bottom: 6px; background: rgba(255,255,255,0.1); border-radius: 8px; height: 8px; overflow: hidden; }
 .prog-bar { background: linear-gradient(90deg, #f093fb, #f5a623); height: 100%; border-radius: 8px; transition: width .3s; }
@@ -51,6 +51,10 @@ input:focus { outline: none; border-color: #f5a623; }
 .p-blue { background: rgba(79,172,254,0.2); color: #4facfe; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 7px; font-size: 11px; font-weight: 700; background: rgba(240,147,251,0.2); color: #f093fb; }
 .rtitle { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+
+  .tip-box { background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 13px; color: #fbbf24; line-height: 1.6; }
+  .tip-box .tip-title { font-weight: 800; margin-bottom: 5px; font-size: 14px; }
+
 .alert { padding: 11px 15px; border-radius: 11px; font-size: 13px; margin-bottom: 14px; }
 .a-blue { background: rgba(79,172,254,0.12); border: 1px solid rgba(79,172,254,0.25); color: #4facfe; }
 .a-green { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: #10b981; }
@@ -60,6 +64,7 @@ input:focus { outline: none; border-color: #f5a623; }
 <body>
 <div class="wrap">
   <div class="hdr">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:48px;height:48px;border-radius:13px;box-shadow:0 4px 18px rgba(20,184,166,0.35);margin-bottom:10px;">
     <div style="font-size:48px">🧭</div>
     <h1>מצפן הקריירה</h1>
     <p>גלה את הקריירה שמתאימה לך</p>

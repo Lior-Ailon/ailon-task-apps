@@ -27,6 +27,19 @@ body { font-family: 'Segoe UI','Helvetica Neue',Arial,sans-serif; background: #0
 .btn-clear:hover { background: #475569; color: #e2e8f0; }
 .btn-goals { background: #1e293b; border: 1px solid #eab308; color: #eab308; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
 .btn-goals:hover { background: #eab308; color: #0f172a; }
+
+.daily-focus-banner { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #14b8a6; border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; display:flex; align-items:center; gap:14px; }
+.daily-focus-banner .focus-icon { font-size: 32px; flex-shrink: 0; }
+.daily-focus-banner .focus-title { font-size: 12px; color: #5eead4; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+.daily-focus-banner .focus-task { font-size: 16px; font-weight: 800; color: #f0fdfa; }
+.search-bar { width: 100%; background: #1e293b; border: 1px solid #334155; color: #e2e8f0; padding: 10px 14px; border-radius: 10px; font-size: 14px; font-family: inherit; margin-bottom: 14px; }
+.search-bar:focus { outline: none; border-color: #14b8a6; }
+@media (max-width: 640px) {
+  .desktop-only { display: none !important; }
+  .table-wrap { overflow-x: auto; }
+  table { min-width: 500px; }
+}
+
 .goals-section { display: none; background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
 .goals-section.active { display: block; }
 .goals-section h2 { font-size: 18px; color: #eab308; margin-bottom: 12px; }
@@ -189,9 +202,12 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
 </head>
 <body>
 <div class="container">
-  <div class="top-banner">
+  <div class="top-banner" style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:40px;height:40px;border-radius:10px;box-shadow:0 3px 12px rgba(0,0,0,0.3);">
+    <div>
     <h1>📋 לוז שבועי</h1>
     <div class="subtitle">ניהול לו"ז ומוטיבציה — ראשון עד שישי</div>
+    </div>
     <div class="trainee-name empty" id="displayName">הכנס את שמך למטה כדי להתחיל</div>
   </div>
   <div class="header-bar">
@@ -835,6 +851,34 @@ document.addEventListener('keydown', function(e) { if(e.key==='Escape' && docume
 
 loadUserName(); renderGoals(); renderWeekLabel();
 ensureWeekPopulated();
+
+// === SEARCH ===
+function searchTasks(q) {
+  const lower = q.toLowerCase();
+  document.querySelectorAll('.cell-task').forEach(el => {
+    const row = el.closest('tr');
+    if (!lower) { if(row) row.style.opacity='1'; el.style.background=''; return; }
+    if (el.textContent.toLowerCase().includes(lower)) {
+      el.style.background = 'rgba(20,184,166,0.15)';
+    } else {
+      el.style.background = '';
+    }
+  });
+}
+
+// === DAILY FOCUS ===
+function setDailyFocus(task) {
+  const key = 'loaz_daily_focus_' + new Date().toDateString();
+  localStorage.setItem(key, task);
+  document.getElementById('dailyFocusText').textContent = task || 'אין משימת מיקוד להיום';
+}
+function loadDailyFocus() {
+  const key = 'loaz_daily_focus_' + new Date().toDateString();
+  const task = localStorage.getItem(key);
+  if (task) document.getElementById('dailyFocusText').textContent = task;
+}
+document.addEventListener('DOMContentLoaded', loadDailyFocus);
+
 </script>
 </body>
 </html>

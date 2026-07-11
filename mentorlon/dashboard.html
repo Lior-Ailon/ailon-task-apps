@@ -13,6 +13,13 @@
   .logo { display:flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:14px; background:#ffffff; font-size:24px; box-shadow:0 6px 20px rgba(20,184,166,0.25); border:2px solid #14b8a6; overflow:hidden; }
   .header h1 { font-size:22px; font-weight:800; background:linear-gradient(135deg,#5eead4,#67e8f9); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .header p { font-size:13px; color:#475569; }
+  
+  .greeting-bar { background: linear-gradient(135deg,#f0fdfa,#ecfeff); border: 1px solid #ccfbf1; border-radius: 14px; padding: 16px 20px; margin-bottom: 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .greeting-bar .g-text { font-size: 16px; font-weight: 700; color: #0d9488; }
+  .greeting-bar .g-sub { font-size: 13px; color: #475569; margin-top: 3px; }
+  .quick-share { display:flex; align-items:center; gap:8px; }
+  .quick-share-btn { background: linear-gradient(135deg,#14b8a6,#0891b2); color:#fff; border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:800; font-size:13px; font-family:inherit; }
+
   .logout-btn { padding:9px 16px; border-radius:10px; border:1px solid #ccfbf1; background:#f0fdfa; color:#0f172a; cursor:pointer; font-family:inherit; font-size:13px; }
   .share-link { background:#f0fdfa; border:1px solid #ccfbf1; border-radius:12px; padding:14px 18px; margin-bottom:20px; font-size:13px; color:#475569; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
   .share-link code { background:#ffffff; padding:6px 10px; border-radius:8px; color:#0d9488; border:1px solid #ccfbf1; direction:ltr; word-break:break-all; }
@@ -90,6 +97,15 @@
     </div>
   </div>
 
+  <div class="greeting-bar" id="greetingBar">
+    <div>
+      <div class="g-text">👋 שלום, <span id="greetName">...</span>!</div>
+      <div class="g-sub" id="greetSub">טוען נתונים...</div>
+    </div>
+    <div class="quick-share">
+      <button class="quick-share-btn" onclick="copyLink()">📤 שתף קישור הצטרפות</button>
+    </div>
+  </div>
   <div class="share-link">
     <span>🔗 קישור ההצטרפות שלך:</span>
     <code id="shareLink">...</code>
@@ -290,6 +306,16 @@ async function loadDashboard() {
   }
 }
 loadDashboard();
+
+// Greeting
+function updateGreeting(displayName, trainees) {
+  document.getElementById('greetName').textContent = displayName || 'מאמן';
+  const count = trainees ? trainees.length : 0;
+  const hour = new Date().getHours();
+  const timeGreet = hour < 12 ? 'בוקר טוב' : hour < 17 ? 'צהריים טובים' : 'ערב טוב';
+  document.getElementById('greetSub').textContent = timeGreet + ' | ' + count + ' מתאמנים במערכת';
+}
+
 </script>
 </body>
 </html>

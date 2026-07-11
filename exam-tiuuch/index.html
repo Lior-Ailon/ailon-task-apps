@@ -15,6 +15,16 @@
   .header p { font-size: 15px; opacity: 0.85; }
   
   /* Progress */
+  
+  .timer-bar { display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:12px; padding:10px 18px; margin-bottom:16px; box-shadow:0 2px 10px rgba(0,0,0,0.06); }
+  .timer-display { font-size:20px; font-weight:800; color:#0f3460; font-variant-numeric:tabular-nums; }
+  .timer-display.warning { color:#e94560; animation:pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+  .topic-filter { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .topic-btn { padding:7px 14px; border-radius:20px; border:1px solid #e2e8f0; background:#fff; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; color:#555; transition:all .2s; }
+  .topic-btn.active { background:#0f3460; color:#fff; border-color:#0f3460; }
+  .question-counter { text-align:center; font-size:13px; color:#888; margin-bottom:6px; }
+
   .progress-bar { background: #e2e8f0; border-radius: 10px; height: 12px; margin-bottom: 8px; overflow: hidden; }
   .progress-fill { background: linear-gradient(90deg, #0f3460, #e94560); height: 100%; border-radius: 10px; transition: width 0.4s ease; }
   .progress-text { font-size: 13px; color: #666; margin-bottom: 20px; text-align: center; }
@@ -80,10 +90,31 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>🏠 מבחן רישוי תיווך נדל"ן</h1>
-    <p>25 שאלות אקראיות | ציון עובר: 60 | בסגנון מבחן רשם המתווכים</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px;">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:44px;height:44px;border-radius:12px;box-shadow:0 4px 14px rgba(20,184,166,0.3);">
+      <div style="text-align:right;">
+        <div style="font-size:11px;opacity:0.7;letter-spacing:1px;">AILON TASK</div>
+        <h1 style="font-size:22px;margin:0;">🏠 מבחן תיווך נדל"ן</h1>
+      </div>
+    </div>
+    <p>25 שאלות אקראיות | ציון עובר: 60% | בסגנון מבחן רשם המתווכים</p>
   </div>
   
+  <div class="timer-bar" id="timerBar" style="display:none;">
+    <div>
+      <div style="font-size:11px;color:#888;margin-bottom:2px;">⏱ זמן שנותר</div>
+      <div class="timer-display" id="timerDisplay">45:00</div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#555;">
+      <input type="checkbox" id="timerToggle" onchange="toggleTimer()" style="accent-color:#0f3460;width:16px;height:16px;"> הפעל טיימר
+    </label>
+  </div>
+
+  <div id="topicFilterWrap" style="display:none;">
+    <div style="font-size:13px;color:#555;margin-bottom:8px;font-weight:700;">🔍 סנן לפי נושא:</div>
+    <div class="topic-filter" id="topicFilter"></div>
+  </div>
+
   <div id="app"></div>
 </div>
 
@@ -482,6 +513,47 @@ function renderResults() {
 }
 
 renderStart();
+
+// === TIMER ===
+let timerInterval = null, timerSeconds = 2700, timerActive = false;
+function toggleTimer() {
+  timerActive = document.getElementById('timerToggle').checked;
+  document.getElementById('timerBar').style.display = 'flex';
+  if (timerActive && !timerInterval) {
+    timerSeconds = 2700;
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      const m = Math.floor(timerSeconds/60), s = timerSeconds%60;
+      const disp = document.getElementById('timerDisplay');
+      disp.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      if (timerSeconds <= 300) disp.classList.add('warning');
+      if (timerSeconds <= 0) { clearInterval(timerInterval); alert('הזמן נגמר! ⏰'); showResults(); }
+    }, 1000);
+  } else if (!timerActive && timerInterval) {
+    clearInterval(timerInterval); timerInterval = null;
+  }
+}
+
+// === TOPIC FILTER ===
+const allTopics = [...new Set(ALL_QUESTIONS.map(q => q.law))];
+let selectedTopic = null;
+function initTopicFilter() {
+  const wrap = document.getElementById('topicFilterWrap');
+  const cont = document.getElementById('topicFilter');
+  wrap.style.display = 'block';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'topic-btn active'; allBtn.textContent = 'הכל';
+  allBtn.onclick = () => { selectedTopic = null; document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active')); allBtn.classList.add('active'); };
+  cont.appendChild(allBtn);
+  allTopics.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'topic-btn'; b.textContent = t;
+    b.onclick = () => { selectedTopic = t; document.querySelectorAll('.topic-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); };
+    cont.appendChild(b);
+  });
+}
+document.addEventListener('DOMContentLoaded', initTopicFilter);
+
 </script>
 </body>
 </html>

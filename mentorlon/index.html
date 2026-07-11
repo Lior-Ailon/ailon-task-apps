@@ -26,6 +26,11 @@
   .error-msg { color:#fca5a5; font-size:13px; margin-top:12px; text-align:center; display:none; background:rgba(220,38,38,0.1); border:1px solid #dc2626; border-radius:8px; padding:10px; }
   .form-section { display:none; }
   .form-section.active { display:block; }
+  
+  .pwd-strength { margin-top: 6px; height: 4px; border-radius: 2px; transition: all .3s; }
+  .pwd-hint { font-size: 11px; margin-top: 4px; }
+  .forgot-link { text-align: center; margin-top: 12px; font-size: 13px; color: #0d9488; cursor: pointer; text-decoration: underline; }
+
   .footer-note { text-align:center; font-size:12px; color:#64748b; margin-top:20px; }
 
   .bg-video-wrap { position:fixed; inset:0; width:100%; height:100%; overflow:hidden; z-index:0; opacity:0.10; pointer-events:none; }
@@ -63,6 +68,7 @@
         <input type="password" id="loginPassword" placeholder="••••••••">
       </div>
       <button class="submit-btn" id="loginBtn" onclick="doLogin()">התחבר לדשבורד</button>
+      <div class="forgot-link" onclick="alert('לאיפוס סיסמה צור קשר עם מנהל המערכת בכתובת: liors@ailon-task.com')">שכחתי סיסמה</div>
     </div>
 
     <div class="form-section" id="registerSection">
@@ -81,7 +87,9 @@
       </div>
       <div class="field">
         <label>סיסמה</label>
-        <input type="password" id="regPassword" placeholder="לפחות 6 תווים">
+        <input type="password" id="regPassword" placeholder="לפחות 6 תווים" oninput="checkPwdStrength(this.value)">
+        <div class="pwd-strength" id="pwdStrength"></div>
+        <div class="pwd-hint" id="pwdHint"></div>
       </div>
       <button class="submit-btn" id="registerBtn" onclick="doRegister()">צור חשבון מאמן</button>
     </div>
@@ -151,6 +159,25 @@ async function doRegister() {
     document.getElementById('registerBtn').disabled=false; document.getElementById('registerBtn').textContent='צור חשבון מאמן';
   }
 }
+
+function checkPwdStrength(v) {
+  const bar = document.getElementById('pwdStrength');
+  const hint = document.getElementById('pwdHint');
+  if (!bar) return;
+  let score = 0;
+  if (v.length >= 6) score++;
+  if (v.length >= 10) score++;
+  if (/[A-Z]/.test(v)) score++;
+  if (/[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  const colors = ['#ef4444','#f97316','#eab308','#22c55e','#0d9488'];
+  const labels = ['חלשה מאוד','חלשה','בינונית','חזקה','חזקה מאוד'];
+  bar.style.background = colors[Math.min(score-1,4)] || '#e2e8f0';
+  bar.style.width = (score*20) + '%';
+  hint.textContent = v.length > 0 ? 'חוזק סיסמה: ' + (labels[Math.min(score-1,4)] || 'חלשה מאוד') : '';
+  hint.style.color = colors[Math.min(score-1,4)] || '#94a3b8';
+}
+
 </script>
 </body>
 </html>
