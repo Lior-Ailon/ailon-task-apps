@@ -30,17 +30,76 @@
   .stat-card .lbl { font-size:12px; color:#64748b; margin-top:4px; }
   .section-title { font-size:16px; font-weight:800; margin:26px 0 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
   .section-title .add-btn { font-size:13px; font-weight:700; background:linear-gradient(135deg,#14b8a6,#0891b2); color:#ffffff; border:none; padding:9px 16px; border-radius:10px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px; }
-  .tools-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:14px; margin-bottom:10px; }
-  .tool-card { background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; box-shadow:0 4px 14px rgba(15,118,110,0.06); }
-  .tool-card.live { border-color:#14b8a6; }
-  .tool-card .t-icon { font-size:26px; margin-bottom:8px; }
-  .tool-card .t-name { font-weight:700; font-size:14px; margin-bottom:4px; }
-  .tool-card .t-desc { font-size:12px; color:#64748b; margin-bottom:12px; min-height:32px; }
-  .tool-card .t-status { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; display:inline-block; margin-bottom:10px; }
-  .status-live { background:rgba(20,184,166,0.12); color:#0d9488; }
-  .status-soon { background:rgba(148,163,184,0.15); color:#64748b; }
-  .tool-card a.open-btn { display:block; text-align:center; padding:9px; border-radius:9px; background:linear-gradient(135deg,#14b8a6,#0891b2); color:#0f172a; font-weight:700; font-size:13px; text-decoration:none; }
-  .tool-card .disabled-btn { display:block; text-align:center; padding:9px; border-radius:9px; background:#f1f5f9; color:#64748b; font-weight:700; font-size:13px; border:1px solid #e2e8f0; }
+  .tools-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:18px; margin-bottom:10px; }
+  .tool-card {
+    background:#ffffff;
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 6px 28px rgba(15,23,42,0.10);
+    transition: transform .22s ease, box-shadow .22s ease;
+    position:relative;
+  }
+  .tool-card:hover { transform:translateY(-4px); box-shadow:0 16px 44px rgba(15,23,42,0.16); }
+  .tool-banner {
+    height: 130px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .tool-banner .banner-icon {
+    font-size: 56px;
+    z-index:2;
+    filter:drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+    animation: floatIcon 3s ease-in-out infinite;
+  }
+  .tool-banner .banner-bg {
+    position:absolute; inset:0;
+    opacity:0.18;
+    background-size:60px 60px;
+  }
+  .tool-banner .coming-tag {
+    position:absolute; top:10px; left:10px;
+    background:rgba(255,255,255,0.25);
+    backdrop-filter:blur(6px);
+    color:#fff;
+    font-size:11px; font-weight:700;
+    padding:4px 10px; border-radius:20px;
+    border:1px solid rgba(255,255,255,0.3);
+  }
+  .tool-banner .live-tag {
+    position:absolute; top:10px; left:10px;
+    background:rgba(255,255,255,0.3);
+    backdrop-filter:blur(6px);
+    color:#fff;
+    font-size:11px; font-weight:700;
+    padding:4px 10px; border-radius:20px;
+    border:1px solid rgba(255,255,255,0.35);
+  }
+  @keyframes floatIcon {
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-7px);}
+  }
+  .tool-body { padding:16px 18px 18px; }
+  .tool-card .t-name { font-weight:800; font-size:15px; margin-bottom:6px; color:#0f172a; }
+  .tool-card .t-desc { font-size:12.5px; color:#64748b; margin-bottom:14px; line-height:1.55; min-height:36px; }
+  .tool-card a.open-btn {
+    display:block; text-align:center; padding:10px;
+    border-radius:11px; color:#ffffff; font-weight:800;
+    font-size:13px; text-decoration:none;
+    transition: opacity .18s;
+  }
+  .tool-card a.open-btn:hover { opacity:0.9; }
+  .tool-card .disabled-btn {
+    display:block; text-align:center; padding:10px;
+    border-radius:11px; background:#f1f5f9; color:#94a3b8;
+    font-weight:700; font-size:13px; border:1px solid #e2e8f0;
+    cursor:not-allowed;
+  }
+  .status-live { display:none; }
+  .status-soon { display:none; }
   .table-wrap { background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden; box-shadow:0 4px 14px rgba(15,118,110,0.06); }
   table { width:100%; border-collapse:collapse; }
   th { background:#f0fdfa; padding:14px; font-size:13px; text-align:right; color:#475569; font-weight:700; }
@@ -161,15 +220,15 @@
 <script>
 const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mentorlonApi';
 const TOOLS = [
-  { key:'career_compass', icon:'🧭', name:'מצפן הקריירה', desc:'התאמת מקצועות ומיצוב תעסוקתי', url:'../matpen-kariera/', live:true },
-  { key:'loaz_shavuai', icon:'📅', name:'לוז שבועי', desc:'ניהול זמן, מוטיבציה ומיקוד יומי', url:'../loaz-shavuai/', live:true },
-  { key:'shkuf_habits', icon:'🔄', name:'ש.ק.ו.פ — הטמעת הרגלים', desc:'תוכנית 21 ימים לשינוי הרגלים בשיטת שיפורים קטנים ובלתי פוסקים', url:'../shkuf-habits/', live:true },
-  { key:'mind_track', icon:'🧠', name:'MindTrack', desc:'מעקב בריאותי חכם - מצב רוח, אירועים ותובנות AI', url:'../mindtrack/', live:true },
-  { key:'positive_thinking', icon:'💭', name:'חשיבה חיובית', desc:'כלים לשינוי דפוסי חשיבה', url:'#', live:false },
-  { key:'decision_making', icon:'⚖️', name:'אסטרטגיית יציאה AI', desc:'כלי לניתוח החלטות עבר ולמיפוי החלטות עתידיות', url:'../exit-strategy/', live:true },
-  { key:'relationships', icon:'❤️', name:'ניהול זוגיות', desc:'כלים לחיזוק הזוגיות', url:'#', live:false },
-  { key:'emotions', icon:'😊', name:'ניהול רגשות', desc:'זיהוי וויסות רגשי', url:'#', live:false },
-  { key:'parenting', icon:'👨‍👧', name:'חינוך ילדים', desc:'כלים להורות מיטבית', url:'#', live:false },
+  { key:'career_compass', icon:'🧭', name:'מצפן הקריירה', desc:'גלה את המקצוע שמדבר אל הנשמה שלך — מיצוב, כיוון ופוטנציאל', url:'../matpen-kariera/', live:true, color:'#f59e0b,#ef4444', bg:'career' },
+  { key:'loaz_shavuai', icon:'📅', name:'לוז שבועי', desc:'ניהול הזמן שלך: מיקוד יומי, מטרות שבועיות ומעקב התקדמות', url:'../loaz-shavuai/', live:true, color:'#0891b2,#14b8a6', bg:'schedule' },
+  { key:'shkuf_habits', icon:'🔄', name:'ש.ק.ו.פ — הרגלים', desc:'21 ימים של שינוי אמיתי — שיפורים קטנים שמובילים לתוצאות גדולות', url:'../shkuf-habits/', live:true, color:'#8b5cf6,#06b6d4', bg:'habits' },
+  { key:'mind_track', icon:'🧠', name:'MindTrack', desc:'מעקב חכם אחר מצב הרוח, הבריאות והאנרגיה שלך בכל יום', url:'../mindtrack/', live:true, color:'#10b981,#3b82f6', bg:'mind' },
+  { key:'decision_making', icon:'⚖️', name:'Exit Strategy AI', desc:'כלי AI לניתוח החלטות — הבן את העבר, תכנן את העתיד', url:'../exit-strategy/', live:true, color:'#6366f1,#8b5cf6', bg:'exit' },
+  { key:'positive_thinking', icon:'💭', name:'חשיבה חיובית', desc:'שנה את הדפוסים, שנה את החיים — כלים מבוססי מדע לחשיבה חיובית', url:'#', live:false, color:'#f472b6,#fb923c', bg:'think' },
+  { key:'relationships', icon:'❤️', name:'ניהול זוגיות', desc:'כלים מעשיים לתקשורת, חיבור רגשי ובניית קשר עמוק', url:'#', live:false, color:'#f43f5e,#ec4899', bg:'love' },
+  { key:'emotions', icon:'😊', name:'ניהול רגשות', desc:'זיהוי, הבנה וויסות רגשי — מבוסס CBT ומיינדפולנס', url:'#', live:false, color:'#f97316,#facc15', bg:'emotion' },
+  { key:'parenting', icon:'👨‍👧', name:'חינוך ילדים', desc:'הורות מיטבית — כלים לחיבור, גבולות ויצירת ילדים מאושרים', url:'#', live:false, color:'#22c55e,#84cc16', bg:'parent' },
 ];
 
 const username = localStorage.getItem('mentorlon_username');
