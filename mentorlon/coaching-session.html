@@ -225,105 +225,84 @@ textarea.q-input::placeholder, input.q-input::placeholder { color:#475569; }
 <script>
 const STAGES = [
   {
-    id: 'covenant',
-    icon: '🤝', iconClass: 'icon-covenant',
+    id: 'covenant', icon: '🤝', iconClass: 'icon-covenant',
     title: 'ברית האימון',
-    desc: 'הגדרת מסגרת ומטרת הפגישה',
+    desc: 'מה הנושא ומה המטרה לפגישה',
     quote: 'הברית היא המחויבות ההדדית — המאמן מתחייב להיות שם, המתאמן מתחייב לפעול.',
     questions: [
-      { id:'q_topic', label:'מה הנושא עליו תרצה להתאמן?', type:'textarea', placeholder:'תן/י ביטוי חופשי לנושא שמעסיק אותך...' },
-      { id:'q_goal_session', label:'מה תהיה התוצאה אותה תרצה לראות בסוף השיחה?', type:'textarea', placeholder:'מה אתה/את רוצה לצאת איתו מהפגישה הזו?' },
+      { id:'q_topic', label:'מה הנושא עליו תרצה להתאמן, ומה תרצה לצאת איתו מהפגישה?', type:'textarea', placeholder:'נושא + תוצאה רצויה לפגישה זו...' },
     ]
   },
   {
-    id: 'future',
-    icon: '🔭', iconClass: 'icon-future',
-    title: 'עיצוב העתיד — תמונת עתיד',
-    desc: 'ראייה לטווח ארוך וחזון אישי',
-    quote: 'מנהיגות מתחילה בתמונת עתיד ברורה — כי אם אתה לא יודע לאן אתה הולך, כל דרך תביא אותך לשם.',
+    id: 'future', icon: '🔭', iconClass: 'icon-future',
+    title: 'תמונת עתיד',
+    desc: 'איך החיים נראים בעוד שנה',
+    quote: 'אם אתה לא יודע לאן אתה הולך — כל דרך תביא אותך לשם.',
     questions: [
-      { id:'q_future_vision', label:'איך אתה/את רוצה שהחיים שלך יראו בעוד שנה בנושא הנ"ל?', type:'textarea', placeholder:'תאר/י את החיים האידיאליים בנושא זה...' },
-      { id:'q_future_more', label:'וכשזה יקרה — מה תרצה עוד?', type:'textarea', placeholder:'מה מעבר לזה? לאן ממשיך המסע?' },
+      { id:'q_future', label:'איך תרצה שהחיים שלך יראו בעוד שנה בנושא זה? ומה עוד?', type:'textarea', placeholder:'תאר/י את התמונה העתידית...' },
     ]
   },
   {
-    id: 'dream',
-    icon: '💎', iconClass: 'icon-dream',
+    id: 'dream', icon: '💎', iconClass: 'icon-dream',
     title: 'חלום וערכים',
-    desc: 'מה מניע ומשמעות עמוקה',
-    quote: 'Start With Why — הלמה לפני המה. כשאתה יודע את הלמה, כל האיך מתחיל לזרום. (Simon Sinek)',
+    desc: 'למה זה חשוב לך',
+    quote: 'Start With Why — הלמה לפני המה. (Simon Sinek)',
     questions: [
-      { id:'q_why', label:'למה זה חשוב/משמעותי? איזה ערך זה מביא לחייך? לעולם?', type:'textarea', placeholder:'חפש/י את המשמעות העמוקה — לא רק "מה אקבל" אלא "מה אתן"...' },
-      { id:'q_purpose', label:'איך זה משרת את ייעודך?', type:'textarea', placeholder:'כיצד הנושא מחובר לשליחות ולייעוד שלך?' },
+      { id:'q_why', label:'למה זה חשוב לך? איזה ערך זה מביא לחייך ולעולם? איך זה משרת את ייעודך?', type:'textarea', placeholder:'חפש/י את המשמעות העמוקה...' },
     ]
   },
   {
-    id: 'being',
-    icon: '🌟', iconClass: 'icon-being',
+    id: 'being', icon: '🌟', iconClass: 'icon-being',
     title: 'הוויה',
-    desc: 'מי אתה צריך להיות',
-    quote: 'לפני שאתה עושה — אתה צריך להיות. הוויה קודמת לפעולה. (ליאור סופר)',
+    desc: 'מי אתה צריך להיות שזה יקרה',
+    quote: 'לפני שאתה עושה — אתה צריך להיות. הוויה קודמת לפעולה.',
     questions: [
-      { id:'q_feel', label:'איך תרגיש/תחוש כשזה יקרה?', type:'textarea', placeholder:'תאר/י את ההרגשה, התחושה הפיזית, מה ישתנה...' },
-      { id:'q_who_be', label:'מי אתה/את צריך להיות שזה יקרה?', type:'textarea', placeholder:'איזה גרסה של עצמך צריכה להתעורר?' },
+      { id:'q_being', label:'איך תרגיש כשזה יקרה? ומי אתה/את צריך להיות שזה יקרה?', type:'textarea', placeholder:'הוויה + תחושה...' },
     ]
   },
   {
-    id: 'goals',
-    icon: '🎯', iconClass: 'icon-goals',
+    id: 'goals', icon: '🎯', iconClass: 'icon-goals',
     title: 'מטרות ויעדים',
-    desc: 'מדידים, ברורים, עם אבני דרך',
+    desc: 'מטרה שנתית + אבני דרך',
     quote: 'מטרה בלי תאריך היא חלום. מטרה עם תאריך היא תוכנית.',
     questions: [
-      { id:'q_annual_goal', label:'מה המטרה שלך השנה?', type:'textarea', placeholder:'נסח/י מטרה ספציפית, מדידה וברורה...' },
-      { id:'q_milestones', label:'אילו יעדים מדידים ואבני דרך צריכים להיות מושגים שתגיע למטרה?', type:'textarea', placeholder:'פרק/י לצעדים קטנים — 3, 6, 9 חודשים...' },
+      { id:'q_goals', label:'מה המטרה שלך השנה? ואילו אבני דרך מדידות יעזרו לך להגיע אליה?', type:'textarea', placeholder:'מטרה + 2-3 אבני דרך קונקרטיות...' },
     ]
   },
   {
-    id: 'action',
-    icon: '⚡', iconClass: 'icon-action',
-    title: 'הנעה לפעולה — איתגור',
-    desc: 'מה קורה כבר השבוע הזה',
-    quote: 'ש.ק.ו.פ — שיפורים קטנים ובלתי פוסקים. שאל: מה הצעד הקטן ביותר שאוכל לעשות עוד היום?',
+    id: 'action', icon: '⚡', iconClass: 'icon-action',
+    title: 'הנעה לפעולה',
+    desc: 'מה קורה כבר השבוע',
+    quote: 'ש.ק.ו.פ — מה הצעד הקטן ביותר שאוכל לעשות עוד היום?',
     questions: [
-      { id:'q_this_week', label:'מה אתה/את הולך לעשות עוד השבוע שזה יקרה?', type:'textarea', placeholder:'פעולה ספציפית אחת לפחות — עם יום ושעה...' },
-      { id:'q_more_action', label:'מה עוד אתה/את יכול לעשות?', type:'textarea', placeholder:'אתגר את עצמך — מה אפשרי שלא חשבת עליו?' },
+      { id:'q_action', label:'מה אתה/את הולך לעשות עוד השבוע שזה יקרה? מה עוד אפשרי?', type:'textarea', placeholder:'פעולה ספציפית + יום ושעה...' },
     ]
   },
   {
-    id: 'env',
-    icon: '🌿', iconClass: 'icon-env',
-    title: 'סביבות מקדמות',
-    desc: 'חוזקות, נקודות תורפה, תמיכה',
-    quote: 'אל תנסה להיות חזק לבד — צור את הסביבה שתעשה אותך חזק. (ליאור סופר)',
+    id: 'env', icon: '🌿', iconClass: 'icon-env',
+    title: 'חוזקות ומכשולים',
+    desc: 'מה יעזור ומה יכול לעכב',
+    quote: 'אל תנסה להיות חזק לבד — צור את הסביבה שתעשה אותך חזק.',
     questions: [
-      { id:'q_strengths', label:'מה בחוזקות שלך יכול לסייע לך להצליח?', type:'textarea', placeholder:'אילו כישורים, תכונות, יתרונות יעזרו לך כאן?' },
-      { id:'q_weaknesses', label:'מה בנקודות התורפה יכול לעכב? איך תתגבר?', type:'textarea', placeholder:'זהה/י את המכשולים — ואז תכנן/י כיצד לעבור אותם...' },
-      { id:'q_support', label:'האם אתה/את צריך מישהו שירתם לעזרתך?', type:'input', placeholder:'שם, תפקיד, כיצד יעזרו...' },
+      { id:'q_env', label:'מה בחוזקות שלך יסייע? מה יכול לעכב — ואיך תתגבר? מי יכול לעזור?', type:'textarea', placeholder:'חוזקות + מכשולים + תמיכה...' },
     ]
   },
   {
-    id: 'beliefs',
-    icon: '🧠', iconClass: 'icon-beliefs',
-    title: 'פרדיגמות ואמונות מעכבות',
-    desc: 'הקול הפנימי שמעכב — ומה עונים לו',
-    quote: '"השד שאתה מכיר עדיף על השד שאתה לא מכיר" — זו אמונה מעכבת. הגיע הזמן לפגוש את השד החדש.',
+    id: 'beliefs', icon: '🧠', iconClass: 'icon-beliefs',
+    title: 'אמונות מעכבות',
+    desc: 'הקול הפנימי — ומה עונים לו',
+    quote: 'האמונה שלך היא לא האמת — היא רק הסיפור שאמרת לעצמך מספיק פעמים.',
     questions: [
-      { id:'q_blocking_belief', label:'איזו אמונה שלך מעכבת את הביצוע?', type:'textarea', placeholder:'מה אתה/את אומר לעצמך ש"לא יקרה" או ש"לא מסוגל/ת"?' },
-      { id:'q_empowering_belief', label:'מהי האמונה שיכולה לשרת את הביצוע?', type:'textarea', placeholder:'מה אמונה חלופית שתאפשר לך לפעול?' },
-      { id:'q_inner_voice', label:'איזה קול בתוכך מחליש את המוטיבציה — ומה אתה/את עונה לו?', type:'textarea', placeholder:'תן/י ביטוי לקול הזה, ואז ענה/י לו בחזרה...' },
+      { id:'q_beliefs', label:'איזו אמונה מעכבת? מהי האמונה המחזקת? מה אתה/את עונה לקול שמחליש?', type:'textarea', placeholder:'אמונה מעכבת → אמונה מחזקת...' },
     ]
   },
   {
-    id: 'summary_stage',
-    icon: '✅', iconClass: 'icon-summary',
+    id: 'summary_stage', icon: '✅', iconClass: 'icon-summary',
     title: 'סיכום — ברית הביצוע',
-    desc: 'מחויבות, אחריות ושלב הבא',
-    quote: 'החלטה אמיתית נמדדת בפעולה. אם אין פעולה — לא באמת קיבלת החלטה. (ליאור סופר)',
+    desc: 'התחייבות, אחריות, שלב הבא',
+    quote: 'החלטה אמיתית נמדדת בפעולה. אם אין פעולה — לא באמת קיבלת החלטה.',
     questions: [
-      { id:'q_commit', label:'מה לקחת על עצמך לבצע?', type:'textarea', placeholder:'פרט/י את ההתחייבות שלך — ספציפי, מדיד, עם תאריך...' },
-      { id:'q_environment_set', label:'מה הסביבות שיצרת להבטיח ביצוע?', type:'textarea', placeholder:'מה תעשה/י שזה יקרה — תזכורות, שותף, כלים...' },
-      { id:'q_commitment_level', label:'מהי רמת האחריות והמחוייבות שלך למשימה? (1-10)', type:'input', placeholder:'1 = נמוכה, 10 = מוחלטת' },
+      { id:'q_commit', label:'מה לקחת על עצמך? מה הסביבות שיבטיחו ביצוע? רמת מחויבות 1-10:', type:'textarea', placeholder:'התחייבות + סביבות + ציון...' },
     ]
   },
 ];
