@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מעגל החיים | Mentor-IT</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh; color: #e2e8f0; direction: rtl;
+  padding: 16px;
+}
+
+/* ANIMATED BG */
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(13,148,136,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.06) 0%, transparent 50%);
+  animation: bgPulse 8s ease-in-out infinite alternate;
+  z-index: 0; pointer-events: none;
+}
+@keyframes bgPulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.wrap { max-width: 520px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* HEADER */
+.header {
+  text-align: center; padding: 20px 0 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 20px;
+}
+.header .logo-row {
+  display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;
+}
+.header .logo-img { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; }
+.header h1 { font-size: 22px; font-weight: 900; color: #14b8a6; }
+.header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+
+/* TRAINEE INFO */
+.trainee-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;
+}
+.trainee-box input {
+  width: 100%; background: rgba(255,255,255,0.06); border: 1px solid #334155;
+  color: #e2e8f0; padding: 10px 14px; border-radius: 10px; font-size: 14px;
+  font-family: inherit; direction: rtl; margin-bottom: 10px;
+}
+.trainee-box input::placeholder { color: #475569; }
+.trainee-box input:last-child { margin-bottom: 0; }
+
+/* QUESTION CARDS */
+.question-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 18px 16px; margin-bottom: 14px;
+  transition: all 0.3s;
+}
+.question-card.answered {
+  border-color: rgba(20,184,166,0.4);
+  background: rgba(13,148,136,0.06);
+}
+.q-number {
+  font-size: 11px; font-weight: 700; color: #14b8a6;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.q-text {
+  font-size: 15px; font-weight: 700; color: #e2e8f0; margin-bottom: 16px; line-height: 1.4;
+}
+.q-emoji { font-size: 24px; margin-left: 8px; }
+
+/* SLIDER */
+.slider-wrap { position: relative; }
+.score-display {
+  text-align: center; font-size: 36px; font-weight: 900;
+  margin-bottom: 10px; min-height: 48px;
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  transition: all 0.2s;
+}
+.score-display.not-set { color: #475569 !important; background: none; -webkit-background-clip: unset; font-size: 20px; font-weight: 400; }
+input[type=range] {
+  width: 100%; -webkit-appearance: none; appearance: none;
+  height: 6px; border-radius: 10px; outline: none; cursor: pointer;
+  background: linear-gradient(to left, #0d9488 var(--val,50%), #334155 var(--val,50%));
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 26px; height: 26px;
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  border-radius: 50%; box-shadow: 0 0 0 4px rgba(20,184,166,0.2);
+  cursor: pointer; transition: transform 0.2s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.scale-labels {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: #475569; margin-top: 6px;
+}
+
+/* WHEEL CANVAS */
+.wheel-section {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 20px; margin-bottom: 16px;
+  display: none; text-align: center;
+}
+.wheel-section h3 { color: #14b8a6; font-size: 16px; margin-bottom: 14px; }
+canvas#wheel-canvas { max-width: 100%; }
+
+/* INSIGHTS */
+.insights-section {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 20px; margin-bottom: 16px; display: none;
+}
+.insights-section h3 { color: #14b8a6; font-size: 16px; margin-bottom: 14px; }
+.insight-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(255,255,255,0.04); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 10px; font-size: 13px; line-height: 1.5;
+}
+.insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.insight-text { color: #cbd5e1; }
+.insight-text strong { color: #e2e8f0; }
+.score-bar-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.score-bar-label { width: 110px; font-size: 12px; color: #94a3b8; text-align: right; }
+.score-bar-track { flex: 1; height: 8px; background: #1e293b; border-radius: 10px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+.score-bar-num { width: 24px; font-size: 12px; font-weight: 700; color: #e2e8f0; }
+
+/* BUTTONS */
+.btn-primary {
+  display: block; width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: white; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: opacity 0.2s; margin-bottom: 10px;
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary {
+  display: block; width: 100%; padding: 12px;
+  background: rgba(255,255,255,0.06); color: #94a3b8;
+  border: 1px solid #334155; border-radius: 12px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: inherit; transition: all 0.2s; margin-bottom: 10px;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+
+/* BACK LINK */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: #64748b; font-size: 13px; text-decoration: none;
+  margin-bottom: 16px; transition: color 0.2s;
+}
+.back-link:hover { color: #14b8a6; }
+
+/* SHARE BOX */
+.share-box {
+  background: rgba(13,148,136,0.08); border: 1px solid rgba(13,148,136,0.2);
+  border-radius: 14px; padding: 16px; margin-bottom: 16px; display: none;
+  text-align: center;
+}
+.share-box p { color: #94a3b8; font-size: 13px; margin-bottom: 10px; }
+
+/* PROGRESS BAR */
+.global-progress {
+  background: #1e293b; border-radius: 10px; height: 6px; margin-bottom: 20px; overflow: hidden;
+}
+.global-progress-fill {
+  height: 100%; border-radius: 10px;
+  background: linear-gradient(90deg, #0d9488, #14b8a6);
+  transition: width 0.5s ease;
+}
+.progress-text { font-size: 12px; color: #64748b; text-align: center; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="./index.html" class="back-link">← חזרה ל-Mentor-IT</a>
+
+  <div class="header">
+    <div class="logo-row">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png"
+           class="logo-img" alt="AILON Task">
+      <h1>🔄 מעגל החיים</h1>
+    </div>
+    <p>הערכה עצמית מקיפה — 8 תחומי חיים מרכזיים</p>
+  </div>
+
+  <!-- TRAINEE INFO -->
+  <div class="trainee-box">
+    <input type="text" id="trainee-name" placeholder="שם המתאמן" />
+    <input type="text" id="session-date" id="session-date" placeholder="תאריך הפגישה" />
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-text" id="progress-text">0 מתוך 8 שאלות נענו</div>
+  <div class="global-progress"><div class="global-progress-fill" id="global-bar" style="width:0%"></div></div>
+
+  <!-- QUESTIONS -->
+  <div id="questions-container"></div>
+
+  <!-- ACTIONS -->
+  <button class="btn-primary" onclick="showResults()" id="btn-results" style="display:none">
+    🔍 הצג תובנות ומעגל החיים
+  </button>
+
+  <!-- WHEEL CANVAS -->
+  <div class="wheel-section" id="wheel-section">
+    <h3>🔄 מעגל החיים שלך</h3>
+    <canvas id="wheel-canvas" width="320" height="320"></canvas>
+  </div>
+
+  <!-- SCORE BARS -->
+  <div class="insights-section" id="insights-section">
+    <h3>📊 סקירת תחומי החיים</h3>
+    <div id="score-bars"></div>
+    <div id="insights-list" style="margin-top:16px"></div>
+  </div>
+
+  <!-- SHARE -->
+  <div class="share-box" id="share-box">
+    <p>שתף את התוצאות עם המנטור שלך</p>
+    <button class="btn-secondary" onclick="copyResults()">📋 העתק סיכום</button>
+    <button class="btn-primary" onclick="printResults()">🖨️ הדפס / שמור PDF</button>
+  </div>
+
+  <div style="height:40px"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  { id: 'confidence',  emoji: '💪', text: 'מה רמת הביטחון העצמי שלך?',                area: 'ביטחון עצמי' },
+  { id: 'relationship',emoji: '❤️', text: 'מה מצב הזוגיות שלך?',                       area: 'זוגיות' },
+  { id: 'friends',     emoji: '👥', text: 'איך הקשר שלך עם החברים שלך?',               area: 'חברות' },
+  { id: 'family',      emoji: '🏡', text: 'איך הקשר שלך עם המשפחה הקרובה שלך?',       area: 'משפחה' },
+  { id: 'health',      emoji: '🌿', text: 'מה מצב הבריאות שלך?',                       area: 'בריאות' },
+  { id: 'studies',     emoji: '📚', text: 'מה המצב שלך בלימודים? (אם רלוונטי)',        area: 'לימודים' },
+  { id: 'career',      emoji: '💼', text: 'מה המצב בקריירה שלך?',                      area: 'קריירה' },
+  { id: 'growth',      emoji: '🌱', text: 'איזה ציון אתה נותן להתפתחות האישית שלך?',  area: 'התפתחות אישית' },
+];
+
+const scores = {};
+
+function getColor(score) {
+  if (score <= 3) return '#ef4444';
+  if (score <= 5) return '#f97316';
+  if (score <= 7) return '#eab308';
+  return '#10b981';
+}
+
+function buildQuestions() {
+  const container = document.getElementById('questions-container');
+  QUESTIONS.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'card-' + q.id;
+    card.innerHTML = `
+      <div class="q-number">שאלה ${i+1} מתוך ${QUESTIONS.length}</div>
+      <div class="q-text"><span class="q-emoji">${q.emoji}</span>${q.text}</div>
+      <div class="score-display not-set" id="disp-${q.id}">הזז את הסרגל</div>
+      <div class="slider-wrap">
+        <input type="range" min="1" max="10" value="5" id="slider-${q.id}"
+          oninput="updateScore('${q.id}', this.value)"
+          style="--val:50%"
+        />
+        <div class="scale-labels">
+          <span>1 — נמוך מאוד</span>
+          <span>10 — מעולה</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function updateScore(id, val) {
+  val = parseInt(val);
+  scores[id] = val;
+  const disp = document.getElementById('disp-' + id);
+  disp.textContent = val;
+  disp.className = 'score-display';
+  const pct = ((val - 1) / 9 * 100).toFixed(0);
+  document.getElementById('slider-' + id).style.setProperty('--val', pct + '%');
+  document.getElementById('card-' + id).className = 'question-card answered';
+  updateProgress();
+}
+
+function updateProgress() {
+  const answered = Object.keys(scores).length;
+  const total = QUESTIONS.length;
+  document.getElementById('progress-text').textContent = `${answered} מתוך ${total} שאלות נענו`;
+  document.getElementById('global-bar').style.width = (answered / total * 100) + '%';
+  document.getElementById('btn-results').style.display = answered >= total ? 'block' : 'none';
+}
+
+function showResults() {
+  // WHEEL
+  document.getElementById('wheel-section').style.display = 'block';
+  document.getElementById('insights-section').style.display = 'block';
+  document.getElementById('share-box').style.display = 'block';
+  drawWheel();
+  buildScoreBars();
+  buildInsights();
+  document.getElementById('wheel-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function drawWheel() {
+  const canvas = document.getElementById('wheel-canvas');
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  const maxR = 130;
+  const n = QUESTIONS.length;
+  const angleStep = (Math.PI * 2) / n;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw grid circles
+  [2,4,6,8,10].forEach(level => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR * level / 10, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '9px Arial';
+    ctx.fillText(level, cx + maxR * level / 10 + 2, cy - 2);
+  });
+
+  // Draw spokes
+  QUESTIONS.forEach((q, i) => {
+    const angle = angleStep * i - Math.PI / 2;
+    const x = cx + Math.cos(angle) * maxR;
+    const y = cy + Math.sin(angle) * maxR;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // Labels
+    const lx = cx + Math.cos(angle) * (maxR + 20);
+    const ly = cy + Math.sin(angle) * (maxR + 20);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 10px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(q.emoji, lx, ly);
+    ctx.font = '9px Arial';
+    ctx.fillText(q.area, lx, ly + 12);
+  });
+
+  // Draw filled polygon
+  ctx.beginPath();
+  QUESTIONS.forEach((q, i) => {
+    const score = scores[q.id] || 5;
+    const r = maxR * score / 10;
+    const angle = angleStep * i - Math.PI / 2;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(13,148,136,0.25)';
+  ctx.fill();
+  ctx.strokeStyle = '#14b8a6';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Dots
+  QUESTIONS.forEach((q, i) => {
+    const score = scores[q.id] || 5;
+    const r = maxR * score / 10;
+    const angle = angleStep * i - Math.PI / 2;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = getColor(score);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  ctx.textAlign = 'start';
+}
+
+function buildScoreBars() {
+  const container = document.getElementById('score-bars');
+  const sorted = QUESTIONS.map(q => ({ ...q, score: scores[q.id] || 5 }))
+                           .sort((a, b) => b.score - a.score);
+  container.innerHTML = sorted.map(q => `
+    <div class="score-bar-row">
+      <div class="score-bar-label">${q.emoji} ${q.area}</div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill" style="width:${q.score*10}%; background:${getColor(q.score)}"></div>
+      </div>
+      <div class="score-bar-num">${q.score}</div>
+    </div>
+  `).join('');
+}
+
+function buildInsights() {
+  const container = document.getElementById('insights-list');
+  const allScores = QUESTIONS.map(q => scores[q.id] || 5);
+  const avg = (allScores.reduce((a,b)=>a+b,0) / allScores.length).toFixed(1);
+  const lowest = QUESTIONS.reduce((a,b) => (scores[a.id]||5) < (scores[b.id]||5) ? a : b);
+  const highest = QUESTIONS.reduce((a,b) => (scores[a.id]||5) > (scores[b.id]||5) ? a : b);
+  const critical = QUESTIONS.filter(q => (scores[q.id]||5) <= 4);
+  const name = document.getElementById('trainee-name').value || 'המתאמן';
+
+  let insights = [];
+
+  insights.push({
+    icon: '📊',
+    text: `<strong>ממוצע כללי: ${avg}/10</strong> — ${avg >= 7 ? 'איזון טוב לחיים מלאים!' : avg >= 5 ? 'יש מקום לשיפור בכמה תחומים' : 'ישנם תחומים שדורשים תשומת לב מיידית'}`
+  });
+
+  insights.push({
+    icon: '💪',
+    text: `<strong>החוזקה הגדולה של ${name}:</strong> ${highest.emoji} ${highest.area} (${scores[highest.id]}/10) — זה המקום שממנו נבנה!`
+  });
+
+  insights.push({
+    icon: '🎯',
+    text: `<strong>התחום לפיתוח:</strong> ${lowest.emoji} ${lowest.area} (${scores[lowest.id]}/10) — כאן יש ההזדמנות הגדולה ביותר לצמיחה`
+  });
+
+  if (critical.length > 0) {
+    insights.push({
+      icon: '🔴',
+      text: `<strong>תחומים דחופים (1-4):</strong> ${critical.map(q=>`${q.emoji} ${q.area}`).join(', ')} — ממליץ להתחיל כאן בפגישות הקרובות`
+    });
+  }
+
+  // E+R=O insight
+  insights.push({
+    icon: '🌟',
+    text: `<strong>E+R=O — תובנת מפתח:</strong> המצב הנוכחי (E) לא קובע את העתיד — התגובה שלך (R) קובעת את התוצאה (O). בואו נבחר את ה-R הנכון יחד!`
+  });
+
+  container.innerHTML = insights.map(ins => `
+    <div class="insight-item">
+      <span class="insight-icon">${ins.icon}</span>
+      <div class="insight-text">${ins.text}</div>
+    </div>
+  `).join('');
+}
+
+function copyResults() {
+  const name = document.getElementById('trainee-name').value || 'לא הוזן';
+  const date = document.getElementById('session-date').value || new Date().toLocaleDateString('he-IL');
+  const allScores = QUESTIONS.map(q => scores[q.id] || 5);
+  const avg = (allScores.reduce((a,b)=>a+b,0) / allScores.length).toFixed(1);
+  let text = `🔄 מעגל החיים — ${name}\n📅 ${date}\n\n`;
+  QUESTIONS.forEach(q => { text += `${q.emoji} ${q.area}: ${scores[q.id]||5}/10\n`; });
+  text += `\n📊 ממוצע כללי: ${avg}/10\n\nנוצר ע"י Mentor-IT | AILON Task`;
+  navigator.clipboard.writeText(text).then(() => alert('✅ הסיכום הועתק!'));
+}
+
+function printResults() {
+  window.print();
+}
+
+buildQuestions();
+// Auto-fill date
+document.getElementById('session-date').value = new Date().toLocaleDateString('he-IL');
+</script>
+</body>
+</html>
