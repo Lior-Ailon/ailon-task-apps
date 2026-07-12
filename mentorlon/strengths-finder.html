@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מגלה החוזקות | Mentor-IT</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f8fafc; min-height: 100vh;
+  color: #1e293b; direction: rtl; padding: 16px;
+}
+.wrap { max-width: 540px; margin: 0 auto; }
+
+/* HEADER */
+.header {
+  text-align: center; padding: 18px 0 14px;
+  border-bottom: 1px solid #e2e8f0; margin-bottom: 18px;
+}
+.logo-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:6px; }
+.logo-img { width:38px; height:38px; border-radius:9px; object-fit:cover; }
+.header h1 { font-size: 20px; font-weight: 900; color: #f59e0b; }
+.header p { font-size: 12px; color: #94a3b8; margin-top: 4px; line-height: 1.5; }
+.header .sub-badge {
+  display:inline-block; margin-top:8px; background:#fef3c7; border:1px solid #fcd34d;
+  border-radius:20px; padding:4px 14px; font-size:12px; color:#92400e; font-weight:700;
+}
+
+/* TRAINEE */
+.trainee-box { display:flex; gap:8px; margin-bottom:16px; }
+.trainee-box input {
+  flex:1; background:#fff; border:1.5px solid #e2e8f0;
+  color:#1e293b; padding:9px 13px; border-radius:10px; font-size:13px;
+  font-family:inherit; direction:rtl;
+}
+.trainee-box input:focus { outline:none; border-color:#f59e0b; }
+.trainee-box input::placeholder { color:#94a3b8; }
+
+/* PROGRESS */
+.progress-wrap { margin-bottom:16px; }
+.progress-bar { height:6px; background:#e2e8f0; border-radius:10px; overflow:hidden; margin-bottom:6px; }
+.progress-fill { height:100%; background:linear-gradient(90deg,#f59e0b,#fbbf24); border-radius:10px; transition:width 0.4s; }
+.progress-text { font-size:12px; color:#94a3b8; text-align:center; }
+
+/* PHASE TABS */
+.phase-tabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.phase-tab {
+  flex:1; min-width:80px; padding:8px 6px; border-radius:10px; text-align:center;
+  font-size:11px; font-weight:700; border:1.5px solid #e2e8f0;
+  background:#fff; color:#94a3b8; cursor:pointer; transition:all 0.2s;
+}
+.phase-tab.active { border-color:#f59e0b; background:#fef3c7; color:#92400e; }
+.phase-tab.done { border-color:#10b981; background:#d1fae5; color:#065f46; }
+
+/* PHASE CARDS */
+.phase-card { display:none; animation: fadeIn 0.3s ease; }
+.phase-card.visible { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+
+/* SECTION CARD */
+.section-card {
+  background:#fff; border-radius:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.07);
+  padding:16px; margin-bottom:12px;
+}
+.section-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.section-icon {
+  width:40px; height:40px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
+}
+.section-title { font-size:15px; font-weight:800; color:#1e293b; }
+.section-desc { font-size:11px; color:#94a3b8; margin-top:2px; }
+
+/* QUESTION ROWS */
+.q-block { margin-bottom:14px; }
+.q-label { font-size:13px; font-weight:600; color:#334155; margin-bottom:6px; display:block; line-height:1.4; }
+textarea.q-inp {
+  width:100%; background:#f8fafc; border:1.5px solid #e2e8f0;
+  color:#1e293b; padding:9px 12px; border-radius:10px; font-size:13px;
+  font-family:inherit; direction:rtl; resize:vertical; min-height:60px; line-height:1.5;
+}
+textarea.q-inp:focus { outline:none; border-color:#f59e0b; background:#fff; }
+textarea.q-inp::placeholder { color:#94a3b8; }
+
+/* STAR RATING */
+.star-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:4px; }
+.star-group label {
+  display:inline-flex; align-items:center; gap:4px;
+  background:#f1f5f9; border:1.5px solid #e2e8f0; border-radius:8px;
+  padding:6px 10px; font-size:12px; font-weight:700; cursor:pointer;
+  transition:all 0.15s; color:#475569;
+}
+.star-group input[type=radio] { display:none; }
+.star-group input[type=radio]:checked + label {
+  background:#fef3c7; border-color:#f59e0b; color:#92400e;
+}
+.star-group label:hover { border-color:#f59e0b; }
+
+/* TAGS */
+.tags-wrap { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.tag-chip {
+  padding:5px 11px; border-radius:20px; font-size:12px; font-weight:600;
+  border:1.5px solid #e2e8f0; background:#f8fafc; color:#475569;
+  cursor:pointer; transition:all 0.15s;
+}
+.tag-chip.selected { background:#fef3c7; border-color:#f59e0b; color:#92400e; }
+
+/* RESULT AREA */
+.results-section {
+  background:#fff; border-radius:16px;
+  box-shadow:0 2px 16px rgba(0,0,0,0.08);
+  padding:18px; margin-bottom:14px; display:none;
+}
+.results-section h3 { font-size:16px; font-weight:800; color:#f59e0b; margin-bottom:14px; }
+
+.strength-card {
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  border:1.5px solid #fcd34d; border-radius:12px;
+  padding:14px; margin-bottom:10px;
+}
+.strength-rank {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%;
+  background:#f59e0b; color:#fff; font-size:12px; font-weight:900;
+  margin-left:8px; flex-shrink:0;
+}
+.strength-name { font-size:15px; font-weight:800; color:#92400e; display:inline; }
+.strength-desc { font-size:12px; color:#78350f; margin-top:6px; line-height:1.5; }
+.strength-evidence {
+  margin-top:8px; font-size:12px; color:#92400e;
+  background:rgba(255,255,255,0.6); border-radius:8px; padding:8px 10px;
+}
+
+.insight-box {
+  background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px;
+  padding:14px; margin-bottom:10px; font-size:13px; color:#166534; line-height:1.6;
+}
+.insight-box strong { color:#14532d; }
+
+.buffett-box {
+  background:linear-gradient(135deg,#1e293b,#334155);
+  border-radius:12px; padding:14px; margin-bottom:14px; color:#f1f5f9;
+  font-size:13px; line-height:1.6; font-style:italic;
+}
+.buffett-box span { display:block; font-size:11px; color:#94a3b8; margin-top:6px; font-style:normal; }
+
+/* BUTTONS */
+.btn-primary {
+  display:block; width:100%; padding:13px;
+  background:linear-gradient(135deg,#f59e0b,#fbbf24);
+  color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700;
+  cursor:pointer; font-family:inherit; margin-bottom:9px;
+}
+.btn-primary:hover { opacity:0.9; }
+.btn-secondary {
+  display:block; width:100%; padding:11px;
+  background:#f1f5f9; color:#475569; border:1.5px solid #e2e8f0;
+  border-radius:12px; font-size:13px; font-weight:600;
+  cursor:pointer; font-family:inherit; margin-bottom:9px;
+}
+.btn-nav {
+  display:flex; gap:8px; margin-top:12px;
+}
+.btn-prev {
+  flex:1; padding:11px; background:#f1f5f9; color:#64748b;
+  border:1.5px solid #e2e8f0; border-radius:11px; font-size:13px; font-weight:700;
+  cursor:pointer; font-family:inherit;
+}
+.btn-next {
+  flex:2; padding:11px; background:linear-gradient(135deg,#f59e0b,#fbbf24);
+  color:#fff; border:none; border-radius:11px; font-size:14px; font-weight:700;
+  cursor:pointer; font-family:inherit;
+}
+.back-link {
+  display:inline-flex; align-items:center; gap:5px;
+  color:#94a3b8; font-size:13px; text-decoration:none; margin-bottom:14px;
+}
+.back-link:hover { color:#f59e0b; }
+
+/* QUOTE */
+.q-quote {
+  background:#fffbeb; border-right:3px solid #f59e0b;
+  border-radius:0 8px 8px 0; padding:8px 12px; margin-bottom:12px;
+  font-size:12px; color:#78350f; font-style:italic; line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="./index.html" class="back-link">← Mentor-IT</a>
+
+  <div class="header">
+    <div class="logo-row">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" class="logo-img" alt="AILON">
+      <h1>💪 מגלה החוזקות</h1>
+    </div>
+    <p>גלה את החוזקות האמיתיות שלך — מה אתה עושה ברמה גבוהה ואוהב לעשות</p>
+    <div class="sub-badge">מבוסס מחקר גאלופ | מרקוס בקינגהם</div>
+  </div>
+
+  <div class="trainee-box">
+    <input type="text" id="trainee-name" placeholder="שם המתאמן/ת" />
+    <input type="text" id="session-date" placeholder="תאריך" />
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="prog-text">שלב 1 מתוך 4</div>
+  </div>
+
+  <!-- PHASE TABS -->
+  <div class="phase-tabs">
+    <div class="phase-tab active" id="tab-0">1️⃣ הצלחות</div>
+    <div class="phase-tab" id="tab-1">2️⃣ Flow</div>
+    <div class="phase-tab" id="tab-2">3️⃣ משוב חברים</div>
+    <div class="phase-tab" id="tab-3">4️⃣ ערוצי חוזקה</div>
+  </div>
+
+  <!-- PHASE 1 — SUCCESSES -->
+  <div class="phase-card visible" id="phase-0">
+    <div class="q-quote">וורן באפט לא משקיע בהייטק — זה לא החוזקה שלו. הוא משקיע במה שהוא מבין. האם אתה מבסס את הקריירה שלך על החוזקות שלך?</div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon" style="background:#fef3c7">🏆</div>
+        <div>
+          <div class="section-title">ההצלחות הגדולות שלי</div>
+          <div class="section-desc">מה הושג? איזה כישורים הובילו לשם?</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">בשנה האחרונה — ההישג שאני הכי גאה בו הוא:</label>
+        <textarea class="q-inp" id="a_achievement" placeholder="תאר/י את ההישג — מה עשית? מה קרה? מה הרגשת?"></textarea>
+      </div>
+      <div class="q-block">
+        <label class="q-label">אם חברים/עמיתים היו מתארים אותי — הם היו אומרים שאני הכי טוב/ה ב:</label>
+        <textarea class="q-inp" id="a_others_say" placeholder="כתוב/י מה הם אומרים — בדיוק בלשונם..."></textarea>
+      </div>
+      <div class="q-block">
+        <label class="q-label">הרגשתי הכי טוב בעבודה / בחיים כש:</label>
+        <textarea class="q-inp" id="a_best_feel" placeholder="תאר/י סיטואציה ספציפית..."></textarea>
+      </div>
+      <div class="q-block">
+        <label class="q-label">מה התנאים שיצרו את ההצלחות האלה? (סביבה, כלים, אנשים, נסיבות)</label>
+        <textarea class="q-inp" id="a_conditions" placeholder="מה היה שם שאפשר לי להצליח?"></textarea>
+      </div>
+
+      <div class="btn-nav">
+        <button class="btn-next" onclick="goPhase(1)">הבא — Flow ←</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 — FLOW -->
+  <div class="phase-card" id="phase-1">
+    <div class="q-quote">חוזקה = ביצוע ברמה גבוהה לאורך זמן + שמח לבצע אותה. אם אתה ממש טוב אבל שונא — זו חוזקה מצמצמת.</div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon" style="background:#dbeafe">⚡</div>
+        <div>
+          <div class="section-title">מצבי Flow — כשהזמן עוצר</div>
+          <div class="section-desc">מה גורם לך לשכוח את השעה?</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">אני לא מרגיש/ה שהזמן עובר כאשר אני עסוק/ה ב:</label>
+        <textarea class="q-inp" id="a_flow" placeholder="פעילויות, תחומים, משימות שגורמים לך להיכנס לזרם..."></textarea>
+      </div>
+      <div class="q-block">
+        <label class="q-label">אחרי אילו פעילויות אני מרגיש/ה אנרגיה — ולא עייפות?</label>
+        <textarea class="q-inp" id="a_energizing" placeholder="מה טוען אותך? (לא מה שמותש)"></textarea>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">עד כמה אתה נהנה מהפעילויות האלה?</label>
+        <div class="star-row">
+          <div class="star-group">
+            <input type="radio" name="flow_level" id="fl1" value="1"><label for="fl1">😐 קצת</label>
+            <input type="radio" name="flow_level" id="fl2" value="2"><label for="fl2">😊 הרבה</label>
+            <input type="radio" name="flow_level" id="fl3" value="3" checked><label for="fl3">🔥 מאוד</label>
+            <input type="radio" name="flow_level" id="fl4" value="4"><label for="fl4">⚡ תמיד!</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">הצמיחה האישית הכי משמעותית שלי בשנה האחרונה:</label>
+        <textarea class="q-inp" id="a_growth" placeholder="מה למדת? מה השתפר?"></textarea>
+      </div>
+
+      <div class="btn-nav">
+        <button class="btn-prev" onclick="goPhase(0)">← הקודם</button>
+        <button class="btn-next" onclick="goPhase(2)">הבא — משוב ←</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 — FEEDBACK -->
+  <div class="phase-card" id="phase-2">
+    <div class="q-quote">חקר מוקיר — התמקד בהצלחות, לא בחסרונות. מה כבר עובד? בנה על זה.</div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon" style="background:#f3e8ff">👥</div>
+        <div>
+          <div class="section-title">משוב מהסביבה</div>
+          <div class="section-desc">מה אחרים רואים בך שאתה לא תמיד רואה?</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">מחמאות שחוזרות על עצמן — מה אנשים אומרים לי שאני טוב/ה בו?</label>
+        <textarea class="q-inp" id="a_compliments" placeholder="כתוב/י מחמאות ספציפיות שקיבלת לאחרונה..."></textarea>
+      </div>
+      <div class="q-block">
+        <label class="q-label">מה אנשים מבקשים ממני לעשות — כי הם יודעים שאני טוב/ה בזה?</label>
+        <textarea class="q-inp" id="a_asked_for" placeholder="מה פונים אליך לעזרה? מה מבקשים?"></textarea>
+      </div>
+      <div class="q-block">
+        <label class="q-label">אם הייתי שואל/ת 3 אנשים קרובים "מה החוזקה הגדולה שלי?" — הם היו אומרים:</label>
+        <textarea class="q-inp" id="a_close_say" placeholder="כתוב/י את שמותיהם ומה הם היו אומרים..."></textarea>
+      </div>
+
+      <div class="btn-nav">
+        <button class="btn-prev" onclick="goPhase(1)">← הקודם</button>
+        <button class="btn-next" onclick="goPhase(3)">הבא — ערוצים ←</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 — STRENGTH CHANNELS -->
+  <div class="phase-card" id="phase-3">
+    <div class="q-quote">ביצוע = יכולת × מוטיבציה. פיתוח חוזקה = לשכלל, להשתמש יותר, ללמד אחרים, להתמקד, להעצים.</div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon" style="background:#d1fae5">🔬</div>
+        <div>
+          <div class="section-title">ערוצי החוזקה שלי</div>
+          <div class="section-desc">איך להפוך את החוזקה לנכס קריירתי</div>
+        </div>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">בחר/י את תחומי החוזקה שמתאימים לך:</label>
+        <div class="tags-wrap" id="strength-tags">
+          <span class="tag-chip" onclick="toggleTag(this)">💡 יצירתיות</span>
+          <span class="tag-chip" onclick="toggleTag(this)">📊 ניתוח נתונים</span>
+          <span class="tag-chip" onclick="toggleTag(this)">👥 עבודת צוות</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🎯 מיקוד ויעדים</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🗣️ תקשורת ודיבור</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🤝 פיתוח קשרים</span>
+          <span class="tag-chip" onclick="toggleTag(this)">⚡ מנהיגות</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🔧 פתרון בעיות</span>
+          <span class="tag-chip" onclick="toggleTag(this)">📚 למידה</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🌱 אימון והדרכה</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🎨 עיצוב וחזותי</span>
+          <span class="tag-chip" onclick="toggleTag(this)">⚙️ ארגון ותכנון</span>
+          <span class="tag-chip" onclick="toggleTag(this)">💰 מכירות ושכנוע</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🏃 ביצוע ויישום</span>
+          <span class="tag-chip" onclick="toggleTag(this)">🧠 חשיבה אסטרטגית</span>
+          <span class="tag-chip" onclick="toggleTag(this)">❤️ אמפתיה ורגש</span>
+        </div>
+      </div>
+
+      <div class="q-block" style="margin-top:14px;">
+        <label class="q-label">מה עוד? חוזקה שלא ראית ברשימה:</label>
+        <textarea class="q-inp" id="a_extra_strength" placeholder="הוסף/י חוזקה שייחודית לך..."></textarea>
+      </div>
+
+      <div class="q-block">
+        <label class="q-label">אם היית יכול/ה לעשות רק דבר אחד כל היום — מה זה היה?</label>
+        <textarea class="q-inp" id="a_one_thing" placeholder="דבר אחד בלבד — מה שהכי מגדיר אותך..."></textarea>
+      </div>
+
+      <button class="btn-primary" style="margin-top:14px;" onclick="generateResults()">
+        💪 גלה את החוזקות שלי!
+      </button>
+
+      <div class="btn-nav">
+        <button class="btn-prev" onclick="goPhase(2)">← הקודם</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="results-section">
+    <h3>🌟 החוזקות שלך</h3>
+
+    <div class="buffett-box">
+      "וורן באפט לא משקיע בהייטק — הוא משקיע בחוזקות שלו. האם הקריירה שלך מבוססת על החוזקות שלך?"
+      <span>— ליאור סופר | AILON Task</span>
+    </div>
+
+    <div id="strengths-output"></div>
+    <div id="formula-box"></div>
+    <div id="insights-output"></div>
+    <div id="next-steps"></div>
+
+    <div style="margin-top:14px;display:flex;gap:8px;">
+      <button class="btn-secondary" style="flex:1" onclick="copySummary()">📋 העתק</button>
+      <a href="./coaching-session.html" style="flex:1;display:block;text-align:center;padding:11px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;border-radius:12px;font-size:13px;font-weight:700;text-decoration:none;">🤝 לשיחת אימון</a>
+    </div>
+    <button class="btn-secondary" onclick="resetAll()">🔄 התחל מחדש</button>
+  </div>
+
+  <div style="height:30px"></div>
+</div>
+
+<script>
+let currentPhase = 0;
+
+function goPhase(n) {
+  document.getElementById('phase-'+currentPhase).classList.remove('visible');
+  document.getElementById('tab-'+currentPhase).className = 'phase-tab done';
+  currentPhase = n;
+  document.getElementById('phase-'+currentPhase).classList.add('visible');
+  document.getElementById('tab-'+currentPhase).className = 'phase-tab active';
+  document.getElementById('prog-fill').style.width = ((n/4)*100)+'%';
+  document.getElementById('prog-text').textContent = `שלב ${n+1} מתוך 4`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleTag(el) {
+  el.classList.toggle('selected');
+}
+
+function getSelectedTags() {
+  return [...document.querySelectorAll('#strength-tags .tag-chip.selected')]
+    .map(t => t.textContent.trim());
+}
+
+function generateResults() {
+  const name = document.getElementById('trainee-name').value || 'המתאמן';
+  const achievement = document.getElementById('a_achievement').value.trim();
+  const othersSay = document.getElementById('a_others_say').value.trim();
+  const bestFeel = document.getElementById('a_best_feel').value.trim();
+  const flow = document.getElementById('a_flow').value.trim();
+  const energizing = document.getElementById('a_energizing').value.trim();
+  const compliments = document.getElementById('a_compliments').value.trim();
+  const askedFor = document.getElementById('a_asked_for').value.trim();
+  const oneThing = document.getElementById('a_one_thing').value.trim();
+  const tags = getSelectedTags();
+
+  // Build strength cards from input
+  const strengths = [];
+
+  if(tags.length > 0) {
+    tags.slice(0,5).forEach((tag, i) => {
+      let evidence = '';
+      if(i===0 && othersSay) evidence = `עמיתים ומקורבים אומרים: "${othersSay.substring(0,80)}..."`;
+      else if(i===1 && compliments) evidence = `מחמאות שחוזרות: "${compliments.substring(0,80)}..."`;
+      else if(i===2 && askedFor) evidence = `מבקשים ממך: "${askedFor.substring(0,80)}..."`;
+      else if(achievement) evidence = `הוכחה מהמציאות: "${achievement.substring(0,80)}..."`;
+      strengths.push({ name: tag, evidence });
+    });
+  }
+
+  if(oneThing) {
+    strengths.unshift({ name: `💫 ${oneThing.substring(0,40)}`, evidence: 'הדבר שהכי מגדיר אותך — הנחת-יסוד לקריירה שלך' });
+  }
+
+  // OUTPUT
+  document.getElementById('strengths-output').innerHTML = strengths.length > 0
+    ? strengths.slice(0,5).map((s,i) => `
+      <div class="strength-card">
+        <span class="strength-rank">${i+1}</span>
+        <span class="strength-name">${s.name}</span>
+        ${s.evidence ? `<div class="strength-evidence">📌 ${s.evidence}</div>` : ''}
+      </div>
+    `).join('')
+    : `<div class="insight-box">💡 בחר/י תחומים בשלב ד' כדי לראות את החוזקות שלך</div>`;
+
+  // FORMULA
+  if(flow || energizing) {
+    document.getElementById('formula-box').innerHTML = `
+      <div class="insight-box">
+        <strong>⚡ ה-Flow שלך:</strong><br>
+        ${flow ? `"${flow.substring(0,120)}"` : ''}
+        ${energizing ? `<br><br><strong>מה טוען אותך:</strong> "${energizing.substring(0,120)}"` : ''}
+      </div>
+    `;
+  }
+
+  // INSIGHTS
+  const allInputs = [achievement, othersSay, bestFeel, flow, compliments, askedFor].filter(Boolean);
+  document.getElementById('insights-output').innerHTML = `
+    <div class="insight-box">
+      <strong>📊 הנוסחה שלך:</strong><br>
+      ביצוע = יכולת × מוטיבציה<br>
+      <br>
+      <strong>יכולת ${name}:</strong> ${tags.slice(0,3).join(' + ') || 'בחר/י תחומים'}<br>
+      <strong>מוטיבציה:</strong> ${oneThing ? `"${oneThing.substring(0,60)}"` : 'הפעילויות שנותנות אנרגיה'}<br>
+      <br>
+      <strong>מסקנה:</strong> ${allInputs.length > 0 ? 'יש כאן תמונה ברורה — הקריירה שלך שווה להיות בנויה על הבסיס הזה!' : 'מלא/י את השדות לקבלת תובנות אישיות'}
+    </div>
+  `;
+
+  // NEXT STEPS
+  document.getElementById('next-steps').innerHTML = `
+    <div class="insight-box" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af;">
+      <strong>🚀 צעדים לפיתוח החוזקות:</strong><br>
+      1. לשכלל — למד/י עוד בתחום החוזקה<br>
+      2. להשתמש יותר — בקש/י משימות שמנצלות אותה<br>
+      3. ללמד — הדרך הכי טובה להעמיק היא ללמד<br>
+      4. להתמקד — הגדל/י את האחוז שהחוזקה תופסת בעבודתך<br>
+      5. להעצים — צור/י תנאים שמאפשרים לחוזקה לפרוח
+    </div>
+  `;
+
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-text').textContent = '✅ הושלם!';
+  document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+}
+
+function copySummary() {
+  const name = document.getElementById('trainee-name').value || 'המתאמן';
+  const date = document.getElementById('session-date').value || new Date().toLocaleDateString('he-IL');
+  const tags = getSelectedTags();
+  const one = document.getElementById('a_one_thing').value;
+  let text = `💪 מגלה החוזקות — ${name} | ${date}\n\n`;
+  text += `🏆 חוזקות מרכזיות:\n${tags.map((t,i)=>`${i+1}. ${t}`).join('\n')}\n\n`;
+  if(one) text += `⭐ הדבר שמגדיר: "${one}"\n\n`;
+  text += `נוצר ע"י Mentor-IT | AILON Task`;
+  navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!'));
+}
+
+function resetAll() {
+  currentPhase = 0;
+  ['phase-0','phase-1','phase-2','phase-3'].forEach((id,i) => {
+    document.getElementById(id).classList.toggle('visible', i===0);
+    document.getElementById('tab-'+i).className = i===0 ? 'phase-tab active' : 'phase-tab';
+  });
+  document.querySelectorAll('.q-inp').forEach(el=>el.value='');
+  document.querySelectorAll('.tag-chip').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('results-section').style.display='none';
+  document.getElementById('prog-fill').style.width='0%';
+  document.getElementById('prog-text').textContent='שלב 1 מתוך 4';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('session-date').value = new Date().toLocaleDateString('he-IL');
+</script>
+</body>
+</html>
