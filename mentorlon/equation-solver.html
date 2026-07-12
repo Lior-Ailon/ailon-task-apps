@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תורת הפתרונות | Mentor-IT</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #0f172a 100%);
+  min-height: 100vh; color: #e2e8f0; direction: rtl; padding: 16px;
+}
+
+/* ANIMATED MATH BG */
+#math-canvas {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  z-index:0; pointer-events:none; opacity:0.25;
+}
+.wrap { max-width: 560px; margin: 0 auto; position: relative; z-index:1; }
+
+/* HEADER */
+.header { text-align:center; padding: 20px 0 16px; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.07); }
+.logo-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px; }
+.logo-img { width:40px; height:40px; border-radius:9px; object-fit:cover; }
+.header h1 { font-size:22px; font-weight:900; background:linear-gradient(135deg,#14b8a6,#818cf8); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.header p { font-size:13px; color:#64748b; margin-top:4px; line-height:1.5; }
+
+/* EQUATION DISPLAY */
+.eq-visual {
+  display:flex; align-items:center; justify-content:center;
+  gap:8px; flex-wrap:wrap;
+  background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px; padding:16px; margin-bottom:20px;
+  font-size:15px; font-weight:800;
+}
+.eq-part {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.eq-label {
+  font-size:10px; font-weight:600; letter-spacing:1px; opacity:0.6;
+  text-transform:uppercase;
+}
+.eq-box {
+  padding:10px 14px; border-radius:10px; min-width:80px; text-align:center;
+  font-size:14px; font-weight:700; border:2px solid transparent;
+  transition: all 0.3s;
+}
+.eq-box.data    { background:rgba(20,184,166,0.15); border-color:rgba(20,184,166,0.4); color:#14b8a6; }
+.eq-box.unknown { background:rgba(139,92,246,0.15); border-color:rgba(139,92,246,0.4); color:#a78bfa; }
+.eq-box.limit   { background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:#fbbf24; }
+.eq-box.result  { background:rgba(239,68,68,0.15);  border-color:rgba(239,68,68,0.4);  color:#f87171; }
+.eq-box.problem { background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.4); color:#34d399; }
+.eq-operator { font-size:20px; color:#475569; font-weight:900; align-self:center; }
+
+/* STEP CARDS */
+.step-card {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px; padding:18px 16px; margin-bottom:14px;
+  transition: border-color 0.3s;
+}
+.step-card.active { border-color:rgba(20,184,166,0.35); }
+.step-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.step-num {
+  width:32px; height:32px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:13px; font-weight:900; flex-shrink:0;
+}
+.step-num.problem-num { background:linear-gradient(135deg,#10b981,#059669); color:#fff; }
+.step-num.data-num    { background:linear-gradient(135deg,#14b8a6,#0d9488); color:#fff; }
+.step-num.limit-num   { background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
+.step-num.unknown-num { background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:#fff; }
+.step-num.result-num  { background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; }
+.step-num.insight-num { background:linear-gradient(135deg,#06b6d4,#0891b2); color:#fff; }
+.step-title { font-size:14px; font-weight:800; }
+.step-subtitle { font-size:12px; color:#64748b; margin-top:2px; }
+.step-badge {
+  margin-right:auto; font-size:11px; padding:3px 10px; border-radius:20px; font-weight:700;
+}
+.badge-problem { background:rgba(16,185,129,0.15); color:#34d399; }
+.badge-data    { background:rgba(20,184,166,0.15); color:#14b8a6; }
+.badge-limit   { background:rgba(245,158,11,0.15); color:#fbbf24; }
+.badge-unknown { background:rgba(139,92,246,0.15); color:#a78bfa; }
+.badge-result  { background:rgba(239,68,68,0.15);  color:#f87171; }
+
+/* TAGS INPUT */
+.tags-input-wrap {
+  display:flex; gap:8px; margin-bottom:8px;
+}
+.tags-input-wrap input {
+  flex:1; background:rgba(255,255,255,0.05); border:1px solid #334155;
+  color:#e2e8f0; padding:9px 13px; border-radius:9px; font-size:13px;
+  font-family:inherit; direction:rtl;
+}
+.tags-input-wrap input::placeholder { color:#475569; }
+.tags-input-wrap input:focus { outline:none; border-color:#14b8a6; }
+.add-tag-btn {
+  background:rgba(20,184,166,0.15); border:1px solid rgba(20,184,166,0.35);
+  color:#14b8a6; border-radius:9px; padding:9px 14px; font-size:13px;
+  font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap;
+  transition:all 0.2s;
+}
+.add-tag-btn:hover { background:rgba(20,184,166,0.25); }
+.tags-container { display:flex; flex-wrap:wrap; gap:6px; min-height:28px; }
+.tag {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 10px; border-radius:20px; font-size:12px; font-weight:600;
+}
+.tag.tag-data    { background:rgba(20,184,166,0.15); color:#14b8a6; border:1px solid rgba(20,184,166,0.3); }
+.tag.tag-limit   { background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); }
+.tag.tag-unknown { background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
+.tag.tag-result  { background:rgba(239,68,68,0.15);  color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+.tag-remove { cursor:pointer; opacity:0.6; font-size:14px; line-height:1; }
+.tag-remove:hover { opacity:1; }
+
+/* TEXTAREA */
+.field-textarea {
+  width:100%; background:rgba(255,255,255,0.05); border:1px solid #334155;
+  color:#e2e8f0; padding:10px 13px; border-radius:10px; font-size:14px;
+  font-family:inherit; direction:rtl; resize:vertical; min-height:70px; line-height:1.5;
+}
+.field-textarea:focus { outline:none; border-color:#14b8a6; }
+.field-textarea::placeholder { color:#475569; }
+
+/* INSIGHT BOX */
+.insight-generated {
+  background:linear-gradient(135deg,rgba(6,182,212,0.1),rgba(139,92,246,0.08));
+  border:1px solid rgba(6,182,212,0.3); border-radius:14px;
+  padding:16px; margin-top:12px; display:none;
+}
+.insight-generated h4 { color:#06b6d4; font-size:13px; margin-bottom:10px; }
+.insight-item {
+  display:flex; gap:8px; align-items:flex-start;
+  font-size:13px; color:#cbd5e1; margin-bottom:8px; line-height:1.5;
+}
+.insight-icon { flex-shrink:0; font-size:15px; margin-top:1px; }
+
+/* EQUATION FULL VIEW */
+.eq-full-view {
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:16px; margin-bottom:16px; display:none; font-size:13px;
+}
+.eq-full-view h4 { color:#14b8a6; margin-bottom:10px; font-size:14px; }
+.eq-line { display:flex; align-items:baseline; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
+.eq-key { font-weight:700; width:80px; flex-shrink:0; }
+.eq-key.k-problem { color:#34d399; }
+.eq-key.k-data    { color:#14b8a6; }
+.eq-key.k-limit   { color:#fbbf24; }
+.eq-key.k-unknown { color:#a78bfa; }
+.eq-key.k-result  { color:#f87171; }
+.eq-val { color:#e2e8f0; }
+.eq-divider { height:1px; background:rgba(255,255,255,0.07); margin:8px 0; }
+
+/* QUOTE */
+.lior-quote {
+  background:rgba(20,184,166,0.06); border-right:3px solid #14b8a6;
+  border-radius:0 10px 10px 0; padding:10px 14px; margin-bottom:16px;
+  font-size:13px; color:#94a3b8; font-style:italic; line-height:1.5;
+}
+.lior-quote span { color:#14b8a6; font-style:normal; font-weight:700; display:block; margin-bottom:4px; }
+
+/* BUTTONS */
+.btn-primary {
+  display:block; width:100%; padding:14px;
+  background:linear-gradient(135deg,#14b8a6,#0891b2);
+  color:white; border:none; border-radius:12px; font-size:16px; font-weight:700;
+  cursor:pointer; font-family:inherit; transition:opacity 0.2s; margin-bottom:10px;
+}
+.btn-primary:hover { opacity:0.9; }
+.btn-secondary {
+  display:block; width:100%; padding:12px;
+  background:rgba(255,255,255,0.05); color:#94a3b8;
+  border:1px solid #334155; border-radius:12px; font-size:14px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all 0.2s; margin-bottom:10px;
+}
+.btn-secondary:hover { background:rgba(255,255,255,0.1); color:#e2e8f0; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:#64748b; font-size:13px; text-decoration:none; margin-bottom:16px; transition:color 0.2s; }
+.back-link:hover { color:#14b8a6; }
+
+/* EXAMPLES */
+.examples-bar {
+  display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;
+}
+.example-chip {
+  padding:6px 12px; background:rgba(255,255,255,0.05); border:1px solid #334155;
+  border-radius:20px; font-size:12px; color:#94a3b8; cursor:pointer;
+  font-family:inherit; transition:all 0.2s;
+}
+.example-chip:hover { border-color:#14b8a6; color:#14b8a6; background:rgba(20,184,166,0.08); }
+
+/* HISTORY */
+.history-section { margin-bottom:20px; }
+.history-section h3 { font-size:14px; color:#64748b; margin-bottom:10px; }
+.history-item {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px; padding:12px 14px; margin-bottom:8px; cursor:pointer;
+  transition:border-color 0.2s; font-size:13px;
+}
+.history-item:hover { border-color:rgba(20,184,166,0.3); }
+.history-item .hi-title { font-weight:700; color:#e2e8f0; margin-bottom:4px; }
+.history-item .hi-date { font-size:11px; color:#475569; }
+.history-item .hi-tags { display:flex; gap:4px; margin-top:6px; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+<canvas id="math-canvas"></canvas>
+<div class="wrap">
+  <a href="./index.html" class="back-link">← חזרה ל-Mentor-IT</a>
+
+  <div class="header">
+    <div class="logo-row">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" class="logo-img" alt="AILON Task">
+      <h1>∑ תורת הפתרונות</h1>
+    </div>
+    <p>כל בעיה בחיים היא משוואה מתמטית — מצא את הנעלם, שנה את התוצאה</p>
+  </div>
+
+  <div class="lior-quote">
+    <span>💡 ליאור סופר — תורת הפתרונות</span>
+    "הגדרת הבעיה נכון היא חצי מהפתרון. רוב האנשים מטפלים בתוצאה — לא בבעיה עצמה."
+  </div>
+
+  <!-- EQUATION VISUAL -->
+  <div class="eq-visual" id="eq-visual">
+    <div class="eq-part">
+      <div class="eq-label">נתונים</div>
+      <div class="eq-box data" id="eq-data">?</div>
+    </div>
+    <div class="eq-operator">+</div>
+    <div class="eq-part">
+      <div class="eq-label">אילוצים</div>
+      <div class="eq-box limit" id="eq-limit">?</div>
+    </div>
+    <div class="eq-operator">+</div>
+    <div class="eq-part">
+      <div class="eq-label">נעלמים</div>
+      <div class="eq-box unknown" id="eq-unknown">?</div>
+    </div>
+    <div class="eq-operator">=</div>
+    <div class="eq-part">
+      <div class="eq-label">תוצאה</div>
+      <div class="eq-box result" id="eq-result">?</div>
+    </div>
+  </div>
+
+  <!-- EXAMPLES -->
+  <div>
+    <div style="font-size:12px;color:#475569;margin-bottom:8px;">💡 נסה דוגמה:</div>
+    <div class="examples-bar">
+      <button class="example-chip" onclick="loadExample('health')">🩺 לחץ דם גבוה</button>
+      <button class="example-chip" onclick="loadExample('money')">💸 מינוס בבנק</button>
+      <button class="example-chip" onclick="loadExample('relationship')">❤️ משבר זוגי</button>
+      <button class="example-chip" onclick="loadExample('career')">💼 קיפאון בקריירה</button>
+    </div>
+  </div>
+
+  <!-- STEP 1 — PROBLEM -->
+  <div class="step-card" id="card-problem">
+    <div class="step-header">
+      <div class="step-num problem-num">1</div>
+      <div>
+        <div class="step-title">🎯 הגדרת הבעיה</div>
+        <div class="step-subtitle">מה הבעיה שאתה רוצה לפתור? הגדר אותה בבירור.</div>
+      </div>
+      <span class="step-badge badge-problem">שלב ראשון</span>
+    </div>
+    <textarea class="field-textarea" id="inp-problem" placeholder="לדוגמה: לחץ דם גבוה, מינוס בחשבון הבנק, קונפליקט עם בן/בת זוג..." oninput="updateEq('problem',this.value)"></textarea>
+  </div>
+
+  <!-- STEP 2 — DATA -->
+  <div class="step-card" id="card-data">
+    <div class="step-header">
+      <div class="step-num data-num">2</div>
+      <div>
+        <div class="step-title">📊 נתונים — מה אנחנו יודעים?</div>
+        <div class="step-subtitle">עובדות שאתה יודע על הבעיה</div>
+      </div>
+      <span class="step-badge badge-data">ידוע</span>
+    </div>
+    <div class="tags-input-wrap">
+      <input type="text" id="inp-data-text" placeholder="הוסף נתון ולחץ +" />
+      <button class="add-tag-btn" onclick="addTag('data')">+ הוסף</button>
+    </div>
+    <div class="tags-container" id="tags-data"></div>
+  </div>
+
+  <!-- STEP 3 — LIMITS -->
+  <div class="step-card" id="card-limit">
+    <div class="step-header">
+      <div class="step-num limit-num">3</div>
+      <div>
+        <div class="step-title">🔒 אילוצים — מה קבוע ולא ניתן לשנות?</div>
+        <div class="step-subtitle">גורמים קבועים במשוואה — אי אפשר לגעת בהם</div>
+      </div>
+      <span class="step-badge badge-limit">קבוע</span>
+    </div>
+    <div class="tags-input-wrap">
+      <input type="text" id="inp-limit-text" placeholder="לדוגמה: גנטיקה, פריצת דיסק, גיל..." />
+      <button class="add-tag-btn" onclick="addTag('limit')">+ הוסף</button>
+    </div>
+    <div class="tags-container" id="tags-limit"></div>
+  </div>
+
+  <!-- STEP 4 — UNKNOWNS -->
+  <div class="step-card" id="card-unknown">
+    <div class="step-header">
+      <div class="step-num unknown-num">4</div>
+      <div>
+        <div class="step-title">🔍 נעלמים — מה עוד אנחנו לא יודעים?</div>
+        <div class="step-subtitle">גורמים שמשפיעים על הבעיה — צריך לחקור ולמצוא</div>
+      </div>
+      <span class="step-badge badge-unknown">לחקור</span>
+    </div>
+    <div class="tags-input-wrap">
+      <input type="text" id="inp-unknown-text" placeholder="לדוגמה: גנטיקה, דפוסי חשיבה, טריגרים..." />
+      <button class="add-tag-btn" onclick="addTag('unknown')">+ הוסף</button>
+    </div>
+    <div class="tags-container" id="tags-unknown"></div>
+  </div>
+
+  <!-- STEP 5 — RESULT -->
+  <div class="step-card" id="card-result">
+    <div class="step-header">
+      <div class="step-num result-num">5</div>
+      <div>
+        <div class="step-title">🎯 תוצאה — מה קורה בפועל?</div>
+        <div class="step-subtitle">מה אתה רואה כרגע? זו התוצאה של המשוואה</div>
+      </div>
+      <span class="step-badge badge-result">תוצאה</span>
+    </div>
+    <textarea class="field-textarea" id="inp-result" placeholder="לדוגמה: לחץ דם 160/100, מינוס 50,000 ₪, ריחוק רגשי..." oninput="updateEq('result',this.value)"></textarea>
+    <div style="margin-top:10px;">
+      <div style="font-size:12px;color:#64748b;margin-bottom:6px;">🔑 הפתרון הרצוי שלי:</div>
+      <textarea class="field-textarea" id="inp-solution" placeholder="לאן אני רוצה להגיע? מה התוצאה שאני שואף אליה?"></textarea>
+    </div>
+  </div>
+
+  <!-- GENERATE -->
+  <button class="btn-primary" onclick="generateInsights()">∑ פתח את המשוואה — קבל תובנות</button>
+
+  <!-- FULL EQUATION VIEW -->
+  <div class="eq-full-view" id="eq-full-view">
+    <h4>📐 המשוואה המלאה שלך</h4>
+    <div id="eq-full-content"></div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="insight-generated" id="insights-box">
+    <h4>💡 תובנות מהמשוואה</h4>
+    <div id="insights-content"></div>
+  </div>
+
+  <div id="actions-after" style="display:none;margin-top:14px;">
+    <button class="btn-secondary" onclick="copyEquation()">📋 העתק משוואה לשיתוף</button>
+    <button class="btn-secondary" onclick="saveToHistory()">💾 שמור להיסטוריה</button>
+    <button class="btn-secondary" onclick="resetAll()">🔄 משוואה חדשה</button>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section" id="history-section" style="display:none;margin-top:20px;">
+    <h3>📂 משוואות שמורות</h3>
+    <div id="history-list"></div>
+  </div>
+
+  <div style="height:40px"></div>
+</div>
+
+<script>
+// MATH CANVAS BG
+(function(){
+  const c = document.getElementById('math-canvas');
+  const ctx = c.getContext('2d');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+  window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight;init();});
+  const symbols = ['∑','∫','√','π','∞','=','+','x','y','?','Δ','α','β','λ','σ'];
+  let particles = [];
+  function init(){
+    particles = Array.from({length:25},()=>({
+      x:Math.random()*c.width, y:Math.random()*c.height,
+      sym:symbols[Math.floor(Math.random()*symbols.length)],
+      size:Math.random()*18+10, speed:Math.random()*0.4+0.1,
+      o:Math.random()*0.3+0.05,
+      color:['#14b8a6','#818cf8','#f59e0b','#94a3b8'][Math.floor(Math.random()*4)]
+    }));
+  }
+  init();
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    particles.forEach(p=>{
+      p.y -= p.speed;
+      if(p.y < -30) { p.y = c.height+30; p.x = Math.random()*c.width; }
+      ctx.font = `bold ${p.size}px monospace`;
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.o;
+      ctx.fillText(p.sym, p.x, p.y);
+      ctx.globalAlpha = 1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// STATE
+const state = { problem:'', data:[], limit:[], unknown:[], result:'', solution:'' };
+
+function addTag(type) {
+  const inp = document.getElementById('inp-'+type+'-text');
+  const val = inp.value.trim();
+  if(!val) return;
+  state[type].push(val);
+  inp.value = '';
+  renderTags(type);
+  updateEqTags();
+}
+
+// Enter key support
+['data','limit','unknown'].forEach(t => {
+  setTimeout(()=>{
+    const el = document.getElementById('inp-'+t+'-text');
+    if(el) el.addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault();addTag(t);} });
+  }, 100);
+});
+
+function removeTag(type, idx) {
+  state[type].splice(idx, 1);
+  renderTags(type);
+  updateEqTags();
+}
+
+function renderTags(type) {
+  const container = document.getElementById('tags-'+type);
+  container.innerHTML = state[type].map((tag,i)=>`
+    <span class="tag tag-${type}">
+      ${tag}
+      <span class="tag-remove" onclick="removeTag('${type}',${i})">×</span>
+    </span>
+  `).join('');
+}
+
+function updateEq(field, val) {
+  state[field] = val;
+  const short = val.length > 18 ? val.substring(0,18)+'...' : val;
+  const el = document.getElementById('eq-'+field);
+  if(el) el.textContent = short || '?';
+}
+
+function updateEqTags() {
+  ['data','limit','unknown'].forEach(t => {
+    const el = document.getElementById('eq-'+t);
+    if(!el) return;
+    if(state[t].length===0) { el.textContent='?'; return; }
+    el.textContent = state[t].length + ' פריטים';
+  });
+}
+
+function generateInsights() {
+  const p = document.getElementById('inp-problem').value.trim();
+  const r = document.getElementById('inp-result').value.trim();
+  const s = document.getElementById('inp-solution').value.trim();
+  if(!p) { alert('אנא הגדר את הבעיה תחילה!'); return; }
+
+  // Update state
+  state.problem = p; state.result = r; state.solution = s;
+
+  // Show full equation
+  const fullView = document.getElementById('eq-full-view');
+  fullView.style.display = 'block';
+  document.getElementById('eq-full-content').innerHTML = buildFullEqHtml();
+
+  // Generate insights
+  const insights = buildInsights();
+  document.getElementById('insights-content').innerHTML = insights;
+  document.getElementById('insights-box').style.display = 'block';
+  document.getElementById('actions-after').style.display = 'block';
+  document.getElementById('insights-box').scrollIntoView({behavior:'smooth'});
+}
+
+function buildFullEqHtml() {
+  const lines = [
+    {key:'🎯 בעיה', cls:'k-problem', val: state.problem},
+    {key:'📊 נתונים', cls:'k-data', val: state.data.length ? state.data.join(' | ') : '—'},
+    {key:'🔒 אילוצים', cls:'k-limit', val: state.limit.length ? state.limit.join(' | ') : '—'},
+    {key:'🔍 נעלמים', cls:'k-unknown', val: state.unknown.length ? state.unknown.join(' | ') : '—'},
+    {key:'📌 תוצאה', cls:'k-result', val: state.result || '—'},
+    {key:'🌟 פתרון', cls:'k-problem', val: state.solution || '—'},
+  ];
+  return lines.map(l => `
+    <div class="eq-line">
+      <div class="eq-key ${l.cls}">${l.key}:</div>
+      <div class="eq-val">${l.val}</div>
+    </div>
+  `).join('') + '<div class="eq-divider"></div>';
+}
+
+function buildInsights() {
+  const insights = [];
+
+  // בעיה vs תוצאה
+  if(state.result && state.problem !== state.result) {
+    insights.push({icon:'⚠️', text:`<strong>בעיה ≠ תוצאה!</strong> "${state.result}" היא התוצאה — הבעיה האמיתית היא "${state.problem}". רוב האנשים מטפלים בתוצאה ולא בשורש.`});
+  }
+
+  // נתונים ניתנים לשינוי
+  if(state.data.length > 0) {
+    insights.push({icon:'✅', text:`<strong>מה ניתן לשנות (הנתונים):</strong> ${state.data.join(', ')} — זה המקום שבו יש לך את הכוח לפעול! שנה את הנתונים → שנה את התוצאה.`});
+  }
+
+  // אילוצים
+  if(state.limit.length > 0) {
+    insights.push({icon:'🔒', text:`<strong>מה קבוע ולא ניתן לשנות (אילוצים):</strong> ${state.limit.join(', ')} — אלה נתוני הרקע. אל תבזבז אנרגיה על מה שלא ניתן לשנות.`});
+  }
+
+  // נעלמים
+  if(state.unknown.length > 0) {
+    insights.push({icon:'🔍', text:`<strong>הנעלמים שצריך לחקור:</strong> ${state.unknown.join(', ')} — מציאת הנעלם היא המפתח. כשתדע את ערכיהם, תוכל לפתור את המשוואה.`});
+  } else {
+    insights.push({icon:'💡', text:`<strong>שאלה לחשיבה:</strong> האם ישנם גורמים נוספים שאתה לא יודע עליהם עדיין? חפש את הנעלם — הוא לרוב מסתתר ברגשות, דפוסים לא מודעים, או מידע חסר.`});
+  }
+
+  // E+R=O
+  insights.push({icon:'🌟', text:`<strong>E+R=O:</strong> האירוע (E) = ${state.problem}. התגובה שלך (R) קובעת את התוצאה (O). שנה את ה-R שלך — שנה את המציאות.`});
+
+  // פתרון
+  if(state.solution) {
+    insights.push({icon:'🚀', text:`<strong>הפתרון הרצוי:</strong> "${state.solution}" — כדי להגיע לשם, התמקד בשינוי הנתונים הניתנים לשינוי. זה הצעד הראשון.`});
+  }
+
+  // ציטוט ליאור
+  insights.push({icon:'💬', text:`<em>"כשאתה רואה תוצאה — שאל: מה הבעיה האמיתית? כשאתה יודע את הנתונים — שאל: מה הנעלמים? כשתמצא את הנעלם — תוכל לשנות את התוצאה." — ליאור סופר</em>`});
+
+  return insights.map(ins=>`
+    <div class="insight-item">
+      <span class="insight-icon">${ins.icon}</span>
+      <div>${ins.text}</div>
+    </div>
+  `).join('');
+}
+
+function copyEquation() {
+  let text = `∑ תורת הפתרונות — ליאור סופר\n\n`;
+  text += `🎯 בעיה: ${state.problem}\n`;
+  text += `📊 נתונים: ${state.data.join(', ') || '—'}\n`;
+  text += `🔒 אילוצים: ${state.limit.join(', ') || '—'}\n`;
+  text += `🔍 נעלמים: ${state.unknown.join(', ') || '—'}\n`;
+  text += `📌 תוצאה: ${state.result || '—'}\n`;
+  text += `🌟 פתרון רצוי: ${state.solution || '—'}\n\n`;
+  text += `נוצר ע"י Mentor-IT | AILON Task`;
+  navigator.clipboard.writeText(text).then(()=>alert('✅ המשוואה הועתקה!'));
+}
+
+function saveToHistory() {
+  const history = JSON.parse(localStorage.getItem('equation_history') || '[]');
+  history.unshift({
+    problem: state.problem, data: state.data, limit: state.limit,
+    unknown: state.unknown, result: state.result, solution: state.solution,
+    date: new Date().toLocaleDateString('he-IL')
+  });
+  localStorage.setItem('equation_history', JSON.stringify(history.slice(0,10)));
+  renderHistory();
+  alert('✅ נשמר!');
+}
+
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem('equation_history') || '[]');
+  const section = document.getElementById('history-section');
+  const list = document.getElementById('history-list');
+  if(history.length === 0) { section.style.display='none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = history.map((h,i)=>`
+    <div class="history-item" onclick="loadFromHistory(${i})">
+      <div class="hi-title">🎯 ${h.problem}</div>
+      <div class="hi-date">📅 ${h.date}</div>
+      <div class="hi-tags">
+        ${h.data.slice(0,2).map(d=>`<span class="tag tag-data" style="font-size:10px;padding:3px 8px">${d}</span>`).join('')}
+        ${h.unknown.slice(0,2).map(u=>`<span class="tag tag-unknown" style="font-size:10px;padding:3px 8px">${u}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadFromHistory(idx) {
+  const history = JSON.parse(localStorage.getItem('equation_history') || '[]');
+  const h = history[idx];
+  document.getElementById('inp-problem').value = h.problem; state.problem = h.problem;
+  state.data = h.data; state.limit = h.limit; state.unknown = h.unknown;
+  state.result = h.result; state.solution = h.solution;
+  document.getElementById('inp-result').value = h.result;
+  document.getElementById('inp-solution').value = h.solution;
+  ['data','limit','unknown'].forEach(t => renderTags(t));
+  updateEqTags();
+  updateEq('problem', h.problem); updateEq('result', h.result);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resetAll() {
+  state.problem=''; state.data=[]; state.limit=[]; state.unknown=[]; state.result=''; state.solution='';
+  document.getElementById('inp-problem').value='';
+  document.getElementById('inp-result').value='';
+  document.getElementById('inp-solution').value='';
+  ['data','limit','unknown'].forEach(t=>{
+    document.getElementById('tags-'+t).innerHTML='';
+    document.getElementById('inp-'+t+'-text').value='';
+  });
+  ['eq-data','eq-limit','eq-unknown','eq-result','eq-problem'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent='?';
+  });
+  document.getElementById('eq-full-view').style.display='none';
+  document.getElementById('insights-box').style.display='none';
+  document.getElementById('actions-after').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// EXAMPLES
+const EXAMPLES = {
+  health: {
+    problem:'פעילות גופנית ותזונה לא נכונה', result:'לחץ דם 160/100',
+    solution:'הורדת לחץ דם לנורמה ללא תרופות',
+    data:['אין פעילות גופנית','תזונה עתירת מלח','עודף משקל'],
+    limit:['פריצת דיסק — קשה לרוץ','גנטיקה — גורם משפיע'],
+    unknown:['היסטוריה משפחתית מלאה','רמות סטרס בעבודה','איכות שינה']
+  },
+  money: {
+    problem:'הוצאות לא מבוקרות והתנהלות כלכלית שגויה', result:'מינוס 50,000 ₪ בחשבון',
+    solution:'סגירת המינוס ומעבר לחיסכון חודשי',
+    data:['הוצאות גבוהות מההכנסה','אין תקציב מוגדר','קניות אימפולסיביות'],
+    limit:['הכנסה מוגבלת לרגע','התחייבויות קבועות (משכנתא)'],
+    unknown:['לאן הולך הכסף בדיוק','הרגלים כלכליים נרכשים מהילדות']
+  },
+  relationship: {
+    problem:'תקשורת לקויה ואי הבנה הדדית', result:'ריחוק רגשי ומאבקי כוח',
+    solution:'חיבור מחדש ותקשורת בוגרת',
+    data:['אנחנו לא מדברים מספיק','כל אחד עסוק בעצמו'],
+    limit:['זמן מוגבל (ילדים, עבודה)'],
+    unknown:['מה הצורך הרגשי הלא ממומש של כל אחד','ממה מגיע הריחוק בדיוק']
+  },
+  career: {
+    problem:'חוסר צמיחה מקצועית ותחושת עמידה במקום', result:'תסכול יומיומי וחוסר מוטיבציה',
+    solution:'מעבר לתפקיד משמעותי עם אתגר ועניין',
+    data:['3 שנים באותו תפקיד','אין לי מה ללמוד יותר'],
+    limit:['אחריות כלכלית — לא יכול לעזוב ל"סיכון"'],
+    unknown:['מה באמת ממלא אותי','מה הכישורים שלי שטרם מומשו']
+  }
+};
+
+function loadExample(key) {
+  const ex = EXAMPLES[key];
+  document.getElementById('inp-problem').value = ex.problem;
+  document.getElementById('inp-result').value = ex.result;
+  document.getElementById('inp-solution').value = ex.solution;
+  state.problem=ex.problem; state.data=[...ex.data]; state.limit=[...ex.limit]; state.unknown=[...ex.unknown]; state.result=ex.result; state.solution=ex.solution;
+  ['data','limit','unknown'].forEach(t=>renderTags(t));
+  updateEq('problem',ex.problem); updateEq('result',ex.result);
+  updateEqTags();
+}
+
+// Init
+renderHistory();
+</script>
+</body>
+</html>
