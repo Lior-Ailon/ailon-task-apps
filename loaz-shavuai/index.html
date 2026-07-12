@@ -218,9 +218,79 @@ tfoot td.footer-total { background: #0d9488; color: #f0fdfa; font-size: 14px; }
   .hero-icon { font-size:44px; margin-bottom:8px; }
   .hero-title { font-size:24px; font-weight:900; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.6); margin-bottom:6px; }
   .hero-sub { font-size:14px; color:rgba(255,255,255,0.85); }
+
+/* AURORA ANIMATED BG */
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    linear-gradient(45deg, transparent 40%, rgba(20,184,166,0.04) 50%, transparent 60%),
+    linear-gradient(-45deg, transparent 40%, rgba(99,102,241,0.03) 50%, transparent 60%);
+  background-size: 300% 300%;
+  animation: aurora 20s ease infinite;
+  z-index: 0; pointer-events: none;
+}
+@keyframes aurora {
+  0%,100% { background-position: 0% 0%; }
+  25%      { background-position: 100% 0%; }
+  50%      { background-position: 100% 100%; }
+  75%      { background-position: 0% 100%; }
+}
+
+/* DAILY QUOTE BANNER */
+.loaz-quote-banner {
+  background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(234,179,8,0.06));
+  border: 1px solid rgba(20,184,166,0.2); border-radius: 12px;
+  padding: 12px 16px; margin-bottom: 12px;
+  font-size: 13px; color: #94a3b8; font-style: italic;
+  position: relative; z-index: 1; line-height: 1.5;
+}
+.loaz-quote-banner strong { color: #14b8a6; font-style: normal; display: block; margin-bottom: 4px; }
+
+/* ENERGY METER */
+.energy-meter {
+  background: rgba(30,41,59,0.7); border: 1px solid #334155;
+  border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+.energy-meter .em-title { font-size: 12px; color: #14b8a6; font-weight: 700; margin-bottom: 8px; }
+.energy-levels { display: flex; gap: 6px; }
+.energy-btn {
+  flex: 1; padding: 8px 4px; border-radius: 8px; border: 1px solid #334155;
+  background: rgba(255,255,255,0.04); color: #94a3b8; font-size: 12px;
+  cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit;
+}
+.energy-btn:hover, .energy-btn.active { background: #14b8a6; color: #0f172a; border-color: #14b8a6; font-weight: 700; }
+
+/* WEEKLY FOCUS WIDGET */
+.weekly-focus-bar {
+  background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25);
+  border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
+  font-size: 13px; color: #fbbf24; position: relative; z-index: 1;
+}
+.weekly-focus-bar .wf-title { font-weight: 800; margin-bottom: 6px; font-size: 12px; }
+
 </style>
 </head>
 <body>
+<div class="loaz-quote-banner" id="loaz-daily-quote">
+  <strong>🌟 ציטוט יומי</strong>טוען...
+</div>
+<div class="energy-meter">
+  <div class="em-title">⚡ מה רמת האנרגיה שלך היום?</div>
+  <div class="energy-levels">
+    <button class="energy-btn" data-e="low">😴 נמוכה</button>
+    <button class="energy-btn" data-e="mid">😐 בינונית</button>
+    <button class="energy-btn" data-e="high">🚀 גבוהה</button>
+    <button class="energy-btn" data-e="peak">⚡ שיא!</button>
+  </div>
+</div>
+<div class="weekly-focus-bar">
+  <div class="wf-title">🎯 מיקוד שבועי</div>
+  <div id="weekly-focus-text" style="min-height:20px">לחץ לעריכה</div>
+  <button id="edit-weekly-focus" style="background:none;border:1px solid #fbbf24;color:#fbbf24;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;margin-top:6px;font-family:inherit;">✏️ ערוך מיקוד</button>
+</div>
+
 <div class="container">
   <div class="hero-banner" style="margin-bottom:14px;border-radius:16px;overflow:hidden;">
     <div class="hero-overlay" style="padding:30px 16px 20px;">
@@ -923,5 +993,56 @@ document.addEventListener('DOMContentLoaded', loadDailyFocus);
 })();
 </script>
 
+<script>
+// DAILY QUOTE FOR LOAZ
+(function(){
+  const quotes = [
+    {s:'🌅 בוקר', q:'ניהול זמן הוא ניהול עצמי. מי שלא מנהל את הזמן שלו — מישהו אחר ינהל אותו'},
+    {s:'💡 מוטיבציה', q:'רק השעה הראשונה של היום שייכת לך — השאר שייך לאחרים (Peter Drucker)'},
+    {s:'🎯 מיקוד', q:'המשימה הכי חשובה של היום עשה אותה ראשונה — לפני שהדחיפות גוזלת אותך'},
+    {s:'⚡ אנרגיה', q:'ניהול אנרגיה חשוב יותר מניהול זמן. אנחנו לא ניהלים זמן — אנחנו ניהלים אנרגיה'},
+    {s:'🔑 עדיפות', q:'מה שחשוב לעולם לא יהיה דחוף, ומה שדחוף לעולם לא יהיה חשוב — הגנרל אייזנהאואר'},
+    {s:'🌙 ערב', q:'חשבון נפש של ערב: מה עבד? מה לא? מה אעשה מחר אחרת?'},
+    {s:'🏆 שיא', q:'1% שיפור כל יום = שיפור של 37 פעמים בסוף השנה. זה ש.ק.ו.פ. זה הכוח.'},
+  ];
+  const q = quotes[new Date().getDay() % quotes.length];
+  const el = document.getElementById('loaz-daily-quote');
+  if(el) el.innerHTML = `<strong>${q.s} — ציטוט יומי</strong>"${q.q}"`;
+})();
+
+// ENERGY METER
+(function(){
+  const saved = localStorage.getItem('loaz_energy_today');
+  if(saved) {
+    const btn = document.querySelector(`.energy-btn[data-e="${saved}"]`);
+    if(btn) btn.classList.add('active');
+  }
+  document.querySelectorAll('.energy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.energy-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      localStorage.setItem('loaz_energy_today', btn.dataset.e);
+    });
+  });
+})();
+
+// WEEKLY FOCUS
+(function(){
+  const stored = localStorage.getItem('loaz_weekly_focus');
+  const el = document.getElementById('weekly-focus-text');
+  if(el && stored) el.textContent = stored;
+
+  const editBtn = document.getElementById('edit-weekly-focus');
+  if(editBtn) {
+    editBtn.addEventListener('click', () => {
+      const v = prompt('מה המיקוד שלך לשבוע הזה?', stored || '');
+      if(v !== null) {
+        localStorage.setItem('loaz_weekly_focus', v);
+        if(el) el.textContent = v || 'הגדר מיקוד שבועי';
+      }
+    });
+  }
+})();
+</script>
 </body>
 </html>

@@ -76,15 +76,58 @@ input:focus { outline: none; border-color: #f5a623; }
   }
   .hdr-content { position:relative; z-index:1; }
   .hdr { border-radius:20px; overflow:hidden; margin-bottom:18px; position:relative; }
+
+/* STAR FIELD BACKGROUND */
+#star-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+body { overflow-x: hidden; }
+.wrap { position: relative; z-index: 1; }
+
+/* INSIGHT CARD */
+.insight-bar {
+  background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,166,35,0.08));
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 14px; padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 14px; color: #fbbf24; line-height: 1.6;
+  text-align: center;
+}
+.insight-bar .ins-title { font-weight: 800; font-size: 13px; margin-bottom: 6px; opacity: 0.8; }
+
+/* CAREER DNA BAR */
+.dna-section {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px; padding: 16px; margin-bottom: 16px;
+}
+.dna-title { font-size: 14px; font-weight: 800; color: #fbbf24; margin-bottom: 12px; }
+.dna-trait { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+.dna-label { width: 100px; color: #cbd5e1; }
+.dna-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+.dna-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #f5a623, #f093fb); }
+.dna-pct { width: 35px; text-align: left; color: #fbbf24; font-weight: 700; font-size: 12px; }
+
+/* QUOTE FLOAT */
+.career-quote {
+  border-right: 3px solid #f5a623;
+  padding: 10px 16px; margin-bottom: 16px;
+  font-size: 13px; color: #cbd5e1; font-style: italic;
+}
+
 </style>
 </head>
 <body>
+<canvas id="star-canvas"></canvas>
 <div class="wrap">
   <div class="hdr">
     <div class="hdr-bg">
       <div class="hdr-content">
         <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png" alt="AILON Task" style="width:48px;height:48px;border-radius:13px;box-shadow:0 4px 18px rgba(20,184,166,0.35);margin-bottom:10px;">
         <div style="font-size:48px">🧭</div>
+<div class="insight-bar" id="career-insight">טוען...</div>
+
         <h1 style="text-shadow:0 2px 8px rgba(0,0,0,0.5);">מצפן הקריירה</h1>
         <p style="color:rgba(255,255,255,0.85);">גלה את הקריירה שמתאימה לך</p>
       </div>
@@ -604,5 +647,51 @@ if (urlTok) {
       <div style="padding:6px 0;">💭 <b>האם בעתיד, במבט לאחור</b> — תתחרט שלא ניסית?</div>
     </div>
   </div>
+<script>
+// STAR FIELD
+(function(){
+  const c = document.getElementById('star-canvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+  window.addEventListener('resize',()=>{ c.width=window.innerWidth; c.height=window.innerHeight; });
+  const stars = Array.from({length:120},()=>({
+    x:Math.random()*c.width, y:Math.random()*c.height,
+    r:Math.random()*1.5+0.2,
+    o:Math.random()*0.7+0.1,
+    twinkle:Math.random()*0.02+0.005,
+    dir:Math.random()<0.5?1:-1
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.o += s.twinkle*s.dir;
+      if(s.o>0.9||s.o<0.1) s.dir*=-1;
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle='#ffffff';
+      ctx.globalAlpha=s.o;
+      ctx.fill();
+      ctx.globalAlpha=1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// CAREER INSIGHT QUOTE
+(function(){
+  const insights = [
+    {t:'💡 תובנת קריירה', q:'לא תמצא עבודה שתאהב — תמצא את עצמך, ועבודה שמתאימה לך תבוא'},
+    {t:'🎯 מה שמניע אותך', q:'ה-WHY שלך הוא לא מה שאתה עושה — זו הסיבה שאתה מתעורר בבוקר (Simon Sinek)'},
+    {t:'🔑 השאלה האמיתית', q:'לא "מה אני רוצה מהחיים?" אלא "מה החיים רוצים ממני?" (הרב זקס)'},
+    {t:'🧭 מצפן פנימי', q:'כל אחד נברא בצלם אלוקים — יש לך ייחוד שהעולם צריך. מצא אותו.'},
+    {t:'🌱 גדילה', q:'הקריירה הטובה ביותר היא זו שבה אתה גדל כאדם — לא רק בשכר'},
+  ];
+  const ins = insights[new Date().getDay() % insights.length];
+  const el = document.getElementById('career-insight');
+  if(el) el.innerHTML = `<div class="ins-title">${ins.t}</div>"${ins.q}"`;
+})();
+</script>
 </body>
 </html>

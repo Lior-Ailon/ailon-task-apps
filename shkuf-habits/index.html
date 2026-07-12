@@ -480,6 +480,62 @@
   .hero-icon { font-size:44px; margin-bottom:8px; }
   .hero-title { font-size:24px; font-weight:900; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.6); margin-bottom:6px; }
   .hero-sub { font-size:14px; color:rgba(255,255,255,0.85); }
+
+/* === ANIMATED BACKGROUND === */
+#particles-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+body { position: relative; }
+.app-wrap, .header, .card, .section { position: relative; z-index: 1; }
+
+/* === STREAK FIRE === */
+.streak-fire { font-size: 2rem; animation: fire-pulse 1.2s ease-in-out infinite; display:inline-block; }
+@keyframes fire-pulse {
+  0%,100% { transform: scale(1) rotate(-3deg); }
+  50%      { transform: scale(1.2) rotate(3deg); }
+}
+
+/* === DAILY QUOTE === */
+.daily-quote-bar {
+  background: linear-gradient(135deg, rgba(13,148,136,0.15), rgba(20,184,166,0.1));
+  border: 1px solid rgba(20,184,166,0.3);
+  border-radius: 14px; padding: 14px 18px;
+  margin-bottom: 16px; text-align: center;
+  font-size: 14px; color: #0d9488; font-style: italic; line-height: 1.6;
+  position: relative; z-index: 1;
+}
+.daily-quote-bar .q-author { font-size: 12px; opacity: 0.7; margin-top: 6px; font-style: normal; font-weight: 600; }
+
+/* === PROGRESS RING === */
+.progress-ring-wrap { display: flex; justify-content: center; margin: 16px 0; }
+.progress-ring-svg { transform: rotate(-90deg); }
+.progress-ring-circle { fill: none; stroke: #e2e8f0; stroke-width: 8; }
+.progress-ring-fill { fill: none; stroke: url(#ringGrad); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+.ring-label { position: absolute; text-align: center; }
+.ring-wrap-outer { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.ring-pct { font-size: 22px; font-weight: 900; color: #0d9488; }
+.ring-days { font-size: 11px; color: #64748b; }
+
+/* === KAIZEN TIPS === */
+.kaizen-tip-box {
+  background: linear-gradient(135deg, #fef3c7, #fffbeb);
+  border: 1px solid #fbbf24; border-radius: 14px;
+  padding: 14px 18px; margin-bottom: 16px;
+  font-size: 13px; color: #92400e; position: relative; z-index: 1;
+}
+.kaizen-tip-box .tip-emoji { font-size: 20px; margin-bottom: 6px; display: block; }
+.kaizen-tip-box .tip-title { font-weight: 800; color: #78350f; margin-bottom: 4px; }
+
+/* === WEEK HEATMAP === */
+.week-heatmap { display: flex; gap: 6px; justify-content: center; margin: 12px 0; }
+.heat-day { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-direction: column; }
+.heat-done { background: #0d9488; }
+.heat-miss { background: #e2e8f0; color: #94a3b8; }
+.heat-today { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.3); }
+.heat-label { font-size: 9px; opacity: 0.8; }
+
 </style>
 
 <script>
@@ -542,6 +598,9 @@
     <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON">
     <div>
       <div class="header-title">ש.ק.ו.פ — הרגלים</div>
+<div class="daily-quote-bar" id="daily-quote-shkuf">טוען ציטוט...</div>
+<div class="kaizen-tip-box" id="kaizen-tip-shkuf"><span class="tip-emoji">🌱</span>טוען טיפ...</div>
+
       <div class="header-sub">שיפורים קטנים ובלתי פוסקים</div>
     </div>
   </div>
@@ -1187,5 +1246,88 @@ function resetApp() {
 })();
 </script>
 
+<script>
+// ===== PARTICLES BACKGROUND =====
+(function(){
+  const canvas = document.getElementById('particles-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+
+  const particles = Array.from({length: 40}, () => ({
+    x: Math.random()*W, y: Math.random()*H,
+    r: Math.random()*3+1,
+    dx: (Math.random()-0.5)*0.4,
+    dy: (Math.random()-0.5)*0.4,
+    o: Math.random()*0.5+0.1,
+    color: ['#0d9488','#14b8a6','#5eead4','#a7f3d0'][Math.floor(Math.random()*4)]
+  }));
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p => {
+      p.x += p.dx; p.y += p.dy;
+      if(p.x<0||p.x>W) p.dx*=-1;
+      if(p.y<0||p.y>H) p.dy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.o;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+    // draw connections
+    for(let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const d = Math.hypot(particles[i].x-particles[j].x, particles[i].y-particles[j].y);
+        if(d<120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = '#14b8a6';
+          ctx.globalAlpha = (1-d/120)*0.15;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===== DAILY QUOTE =====
+(function(){
+  const quotes = [
+    {q: 'שיפור קטן של 1% כל יום = שיפור של 37 פעמים לאחר שנה', a: 'ג'יימס קליר — Atomic Habits'},
+    {q: 'לא הדרך הגדולה עושה את ההבדל — ההרגל הקטן שנצבר כל יום', a: 'ליאור סופר'},
+    {q: 'הצלחה היא מה שאתה עושה מדי יום, לא מה שאתה עושה מדי פעם', a: 'ש.ק.ו.פ'},
+    {q: 'אנחנו לא מה שאנחנו חושבים שאנחנו — אנחנו מה שאנחנו עושים', a: 'מאגר AILON Task'},
+    {q: 'רק תרגול מייצר הרגל — השינוי קורה בשנייה. שמירתו לוקחת זמן', a: 'מאגר הידע'},
+    {q: 'כמו פרחי סחלב — הרגלים טובים צריכים השקייה ותשומת לב', a: 'ליאור סופר'},
+    {q: 'לא תגיע לגדולות אלא אם כן תהיה מוכן לעשות כשהמצב קשה', a: 'ש.ק.ו.פ'},
+  ];
+  const q = quotes[new Date().getDay() % quotes.length];
+  const el = document.getElementById('daily-quote-shkuf');
+  if(el) el.innerHTML = `<div>"${q.q}"</div><div class="q-author">— ${q.a}</div>`;
+})();
+
+// ===== KAIZEN TIPS =====
+(function(){
+  const tips = [
+    {emoji:'🌅', title:'שגרת בוקר', text:'התחל כל יום עם 3 דקות לנשימה עמוקה לפני הטלפון — זו המחויבות הקטנה ביותר שמשנה את כל היום'},
+    {emoji:'💧', title:'חוק שתי הדקות', text:'אם ההרגל שלך לוקח פחות מ-2 דקות — עשה אותו עכשיו. אל תדחה לאף יום.'},
+    {emoji:'🔗', title:'קישור הרגלים', text:'חבר את ההרגל החדש להרגל קיים: "לאחר שאני X — אני עושה Y"'},
+    {emoji:'📊', title:'מדוד התקדמות', text:'מה שנמדד — משתפר. מה שלא נמדד — נעלם. סמן כל יום שסיימת!'},
+    {emoji:'🎯', title:'ספציפיות', text:'אל תגיד "אני רוצה להתאמן". תגיד: "בכל יום ב, בשעה 7:00, לרוץ 20 דקות".'},
+  ];
+  const t = tips[new Date().getDate() % tips.length];
+  const el = document.getElementById('kaizen-tip-shkuf');
+  if(el) el.innerHTML = `<span class="tip-emoji">${t.emoji}</span><div class="tip-title">${t.title}</div>${t.text}`;
+})();
+</script>
 </body>
 </html>

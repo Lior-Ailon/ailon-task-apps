@@ -128,9 +128,74 @@
   .hero-icon { font-size:44px; margin-bottom:8px; }
   .hero-title { font-size:24px; font-weight:900; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.6); margin-bottom:6px; }
   .hero-sub { font-size:14px; color:rgba(255,255,255,0.85); }
+
+/* ANIMATED CHESS/FOG BG */
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(20,184,166,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(139,92,246,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(13,148,136,0.05) 0%, transparent 70%);
+  animation: fogMove 15s ease-in-out infinite alternate;
+  z-index: 0; pointer-events: none;
+}
+@keyframes fogMove {
+  0%   { background-position: 0% 0%, 100% 100%, 50% 50%; }
+  100% { background-position: 100% 100%, 0% 0%, 80% 20%; }
+}
+
+/* FLOATING INSIGHT */
+.decision-insight {
+  background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(139,92,246,0.08));
+  border: 1px solid rgba(20,184,166,0.25); border-radius: 14px;
+  padding: 12px 16px; margin-bottom: 14px;
+  font-size: 13px; color: #94a3b8; line-height: 1.5;
+  position: relative; z-index: 1;
+}
+.decision-insight .di-title { color: #14b8a6; font-weight: 800; margin-bottom: 5px; }
+
+/* EISENHOWER MINI */
+.eisenhower-mini {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 14px; position: relative; z-index: 1;
+}
+.eisen-cell {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 10px; text-align: center; font-size: 11px;
+}
+.eisen-cell .ec-label { font-weight: 800; font-size: 10px; margin-bottom: 4px; }
+.eisen-q1 { border-color: rgba(239,68,68,0.4); }
+.eisen-q1 .ec-label { color: #f87171; }
+.eisen-q2 { border-color: rgba(20,184,166,0.4); }
+.eisen-q2 .ec-label { color: #14b8a6; }
+.eisen-q3 { border-color: rgba(245,158,11,0.4); }
+.eisen-q3 .ec-label { color: #fbbf24; }
+.eisen-q4 { border-color: rgba(100,116,139,0.4); }
+.eisen-q4 .ec-label { color: #94a3b8; }
+
+/* PULSE BUTTON */
+.btn-analyze-pulse {
+  animation: btn-pulse 2s ease-in-out infinite;
+}
+@keyframes btn-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(20,184,166,0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(20,184,166,0); }
+}
+
 </style>
 </head>
 <body>
+<div class="decision-insight" id="decision-insight-el">טוען...</div>
+
+<div class="eisenhower-mini" title="מטריצת אייזנהאואר — כלי לעדיפות">
+  <div class="eisen-cell eisen-q1"><div class="ec-label">🔴 דחוף + חשוב</div>עשה עכשיו</div>
+  <div class="eisen-cell eisen-q2"><div class="ec-label">🟢 חשוב + לא דחוף</div>תכנן ועשה</div>
+  <div class="eisen-cell eisen-q3"><div class="ec-label">🟡 דחוף + לא חשוב</div>האצל</div>
+  <div class="eisen-cell eisen-q4"><div class="ec-label">⚪ לא דחוף + לא חשוב</div>בטל</div>
+</div>
+
+
 <div class="container">
   <div class="hero-banner">
     <div class="hero-overlay">
@@ -758,5 +823,22 @@ document.addEventListener('DOMContentLoaded', renderHistory);
 })();
 </script>
 
+<script>
+// DECISION INSIGHT
+(function(){
+  const insights = [
+    {t:'🎯 מודל קבלת החלטות', q:'לשבת על הגדר זו ההחלטה הגרועה ביותר. ההחלטה האמיתית נמדדת בפעולה.'},
+    {t:'⚖️ הטיית ההפסד', q:'אנחנו שונאים להפסיד פי 2 ממה שאנחנו אוהבים להרוויח — זה ממש ב-DNA שלנו'},
+    {t:'🌿 כלל ה-"אם-אז"', q:'לכל מכשול: "אם יקרה X — אני אעשה Y". זה מפעיל את הלא-מודע שלך'},
+    {t:'🔑 פשטות', q:'החלטה טובה לא חייבת להיות מורכבת. לרוב, הפשוטה ביותר היא הנכונה ביותר'},
+    {t:'🧠 E+R=O', q:'לא האירוע קובע את התוצאה — אלא התגובה שלך לאירוע. E+R=O'},
+    {t:'🎲 בחן את האינטואיציה', q:'זרוק מטבע: לאן תרצה שיפול? שם ההחלטה שמוחך כבר קיבל'},
+    {t:'🌟 מנהיגים 5%', q:'מנהיגים מבלים 5% במחשבה על הבעיה ו-95% על הפתרון'},
+  ];
+  const ins = insights[new Date().getDay() % insights.length];
+  const el = document.getElementById('decision-insight-el');
+  if(el) el.innerHTML = `<div class="di-title">${ins.t}</div>"${ins.q}"`;
+})();
+</script>
 </body>
 </html>

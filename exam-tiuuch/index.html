@@ -105,9 +105,55 @@
   .hero-icon { font-size:44px; margin-bottom:8px; }
   .hero-title { font-size:24px; font-weight:900; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.6); margin-bottom:6px; }
   .hero-sub { font-size:14px; color:rgba(255,255,255,0.85); }
+
+/* ANIMATED GRADIENT BG */
+body {
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e) !important;
+  background-size: 400% 400% !important;
+  animation: gradientShift 12s ease infinite !important;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* EXAM TIP OF DAY */
+.exam-tip-bar {
+  background: linear-gradient(135deg, rgba(233,69,96,0.12), rgba(15,52,96,0.15));
+  border: 1px solid rgba(233,69,96,0.3); border-radius: 14px;
+  padding: 12px 16px; margin-bottom: 16px;
+  font-size: 13px; color: #e2e8f0; line-height: 1.5;
+}
+.exam-tip-bar .et-title { color: #e94560; font-weight: 800; font-size: 14px; margin-bottom: 5px; }
+.exam-tip-bar .et-icon { font-size: 18px; margin-left: 6px; }
+
+/* FLOATING SCORE BADGE */
+.live-score-badge {
+  position: fixed; top: 16px; left: 16px;
+  background: linear-gradient(135deg, #0f3460, #e94560);
+  color: white; border-radius: 50px; padding: 8px 16px;
+  font-size: 13px; font-weight: 800; z-index: 100;
+  box-shadow: 0 4px 20px rgba(233,69,96,0.4);
+  display: none;
+}
+
+/* CONFETTI ANIMATION */
+@keyframes confetti-fall {
+  0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.confetti-piece {
+  position: fixed; width: 10px; height: 10px; z-index: 999;
+  animation: confetti-fall 2s ease-in forwards;
+  border-radius: 2px;
+}
+
 </style>
 </head>
 <body>
+<div class="exam-tip-bar" id="exam-daily-tip"><div class="et-title">⏳ טוען טיפ יומי...</div></div>
+
 <div class="container">
   <div class="hero-banner" style="margin-bottom:16px;">
     <div class="hero-overlay">
@@ -593,5 +639,39 @@ document.addEventListener('DOMContentLoaded', initTopicFilter);
 })();
 </script>
 
+<script>
+// EXAM TIPS
+(function(){
+  const tips = [
+    {icon:'⚖️', title:'חוק המתווכים', text:'גיל מינימלי לרישיון: 18. חידוש רישיון: שנתי. בלעדיות: עד 6 חודשים.'},
+    {icon:'💰', title:'מס רכישה', text:'פטור עד ~1.98 מיליון ₪ לדירה ראשונה. מדרגה שנייה: 3.5%.'},
+    {icon:'🏠', title:'דיני דיירות', text:'14 יום ביטול לעסקאות "מדלת לדלת" — לא 3 ימים! שים לב.'},
+    {icon:'📋', title:'בית משותף', text:'שינוי בתקנון בית משותף: 2/3 מבעלי הדירות — לא 60%.'},
+    {icon:'🔑', title:'הסכם שכירות', text:'בלי חתימה על הסכם — אין תוקף. תמיד תיעוד בכתב!'},
+    {icon:'📊', title:'עמלת תיווך', text:'עמלת תיווך סטנדרטית: 2% + מע"מ. צריך הסכם מוקדם בכתב.'},
+    {icon:'🏛️', title:'רישום בטאבו', text:'עסקת נדל"ן: חייבת רישום בפנקס המקרקעין לשכלול.'},
+  ];
+  const t = tips[new Date().getDate() % tips.length];
+  const el = document.getElementById('exam-daily-tip');
+  if(el) el.innerHTML = `<div class="et-title"><span class="et-icon">${t.icon}</span>${t.title}</div>${t.text}`;
+})();
+
+// CONFETTI on perfect score
+function launchConfetti() {
+  const colors = ['#e94560','#0f3460','#fbbf24','#10b981','#ffffff'];
+  for(let i=0;i<40;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random()*100+'vw';
+    el.style.top = '-20px';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDelay = Math.random()*1+'s';
+    el.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2500);
+  }
+}
+window.launchConfettiOnPass = launchConfetti;
+</script>
 </body>
 </html>
