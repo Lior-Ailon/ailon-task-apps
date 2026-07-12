@@ -8,472 +8,403 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  min-height: 100vh; color: #e2e8f0; direction: rtl;
-  padding: 16px;
+  background: #f8fafc;
+  min-height: 100vh; color: #1e293b; direction: rtl; padding: 16px;
 }
-
-/* ANIMATED BG */
-body::before {
-  content: '';
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(13,148,136,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.06) 0%, transparent 50%);
-  animation: bgPulse 8s ease-in-out infinite alternate;
-  z-index: 0; pointer-events: none;
-}
-@keyframes bgPulse {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-.wrap { max-width: 520px; margin: 0 auto; position: relative; z-index: 1; }
+.wrap { max-width: 520px; margin: 0 auto; }
 
 /* HEADER */
 .header {
-  text-align: center; padding: 20px 0 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  margin-bottom: 20px;
+  text-align: center; padding: 18px 0 14px;
+  border-bottom: 1px solid #e2e8f0; margin-bottom: 18px;
 }
-.header .logo-row {
-  display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;
-}
-.header .logo-img { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; }
-.header h1 { font-size: 22px; font-weight: 900; color: #14b8a6; }
-.header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+.logo-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:6px; }
+.logo-img { width:38px; height:38px; border-radius:9px; object-fit:cover; }
+.header h1 { font-size: 20px; font-weight: 900; color: #0d9488; }
+.header p { font-size: 12px; color: #94a3b8; margin-top: 3px; }
 
-/* TRAINEE INFO */
+/* TRAINEE */
 .trainee-box {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px; padding: 14px 16px; margin-bottom: 16px;
+  display:flex; gap:8px; margin-bottom:14px;
 }
 .trainee-box input {
-  width: 100%; background: rgba(255,255,255,0.06); border: 1px solid #334155;
-  color: #e2e8f0; padding: 10px 14px; border-radius: 10px; font-size: 14px;
-  font-family: inherit; direction: rtl; margin-bottom: 10px;
+  flex:1; background:#fff; border:1.5px solid #e2e8f0;
+  color:#1e293b; padding:9px 13px; border-radius:10px; font-size:13px;
+  font-family:inherit; direction:rtl;
 }
-.trainee-box input::placeholder { color: #475569; }
-.trainee-box input:last-child { margin-bottom: 0; }
-
-/* QUESTION CARDS */
-.question-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px; padding: 18px 16px; margin-bottom: 14px;
-  transition: all 0.3s;
-}
-.question-card.answered {
-  border-color: rgba(20,184,166,0.4);
-  background: rgba(13,148,136,0.06);
-}
-.q-number {
-  font-size: 11px; font-weight: 700; color: #14b8a6;
-  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
-}
-.q-text {
-  font-size: 15px; font-weight: 700; color: #e2e8f0; margin-bottom: 16px; line-height: 1.4;
-}
-.q-emoji { font-size: 24px; margin-left: 8px; }
-
-/* SLIDER */
-.slider-wrap { position: relative; }
-.score-display {
-  text-align: center; font-size: 36px; font-weight: 900;
-  margin-bottom: 10px; min-height: 48px;
-  background: linear-gradient(135deg, #14b8a6, #0d9488);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  transition: all 0.2s;
-}
-.score-display.not-set { color: #475569 !important; background: none; -webkit-background-clip: unset; font-size: 20px; font-weight: 400; }
-input[type=range] {
-  width: 100%; -webkit-appearance: none; appearance: none;
-  height: 6px; border-radius: 10px; outline: none; cursor: pointer;
-  background: linear-gradient(to left, #0d9488 var(--val,50%), #334155 var(--val,50%));
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 26px; height: 26px;
-  background: linear-gradient(135deg, #14b8a6, #0d9488);
-  border-radius: 50%; box-shadow: 0 0 0 4px rgba(20,184,166,0.2);
-  cursor: pointer; transition: transform 0.2s;
-}
-input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-.scale-labels {
-  display: flex; justify-content: space-between;
-  font-size: 11px; color: #475569; margin-top: 6px;
-}
+.trainee-box input:focus { outline:none; border-color:#0d9488; }
+.trainee-box input::placeholder { color:#94a3b8; }
 
 /* WHEEL CANVAS */
-.wheel-section {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px; padding: 20px; margin-bottom: 16px;
-  display: none; text-align: center;
+.wheel-wrap {
+  background: #fff; border-radius: 20px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  padding: 16px; margin-bottom: 18px; text-align:center;
 }
-.wheel-section h3 { color: #14b8a6; font-size: 16px; margin-bottom: 14px; }
-canvas#wheel-canvas { max-width: 100%; }
+canvas#wheel { max-width: 100%; }
 
-/* INSIGHTS */
-.insights-section {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px; padding: 20px; margin-bottom: 16px; display: none;
+/* SCORE SLIDERS */
+.scores-grid {
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;
 }
-.insights-section h3 { color: #14b8a6; font-size: 16px; margin-bottom: 14px; }
-.insight-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  background: rgba(255,255,255,0.04); border-radius: 10px;
-  padding: 12px 14px; margin-bottom: 10px; font-size: 13px; line-height: 1.5;
+.score-row {
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  padding: 12px 14px;
 }
-.insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-.insight-text { color: #cbd5e1; }
-.insight-text strong { color: #e2e8f0; }
-.score-bar-row {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+.score-row-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
 }
-.score-bar-label { width: 110px; font-size: 12px; color: #94a3b8; text-align: right; }
-.score-bar-track { flex: 1; height: 8px; background: #1e293b; border-radius: 10px; overflow: hidden; }
-.score-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
-.score-bar-num { width: 24px; font-size: 12px; font-weight: 700; color: #e2e8f0; }
+.score-area-name {
+  font-size: 13px; font-weight: 700; color: #1e293b; display:flex; align-items:center; gap:5px;
+}
+.score-val-badge {
+  min-width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; color: #fff;
+  transition: background 0.3s;
+}
+input[type=range].wheel-slider {
+  width: 100%; -webkit-appearance: none; appearance: none;
+  height: 5px; border-radius: 10px; outline: none; cursor: pointer;
+}
+input[type=range].wheel-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px;
+  background: #0d9488; border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(13,148,136,0.2);
+  cursor: pointer; transition: transform 0.15s;
+}
+input[type=range].wheel-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+/* RESULTS */
+.results-card {
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 16px; margin-bottom: 14px; display:none;
+}
+.results-card h3 { font-size:15px; color:#0d9488; margin-bottom:12px; font-weight:800; }
+.bar-row {
+  display:flex; align-items:center; gap:8px; margin-bottom:7px;
+}
+.bar-label { width:120px; font-size:12px; color:#475569; text-align:right; flex-shrink:0; }
+.bar-track { flex:1; height:9px; background:#f1f5f9; border-radius:10px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:10px; transition: width 0.8s ease; }
+.bar-num { width:22px; font-size:12px; font-weight:800; color:#1e293b; }
+
+.insights-list { margin-top:14px; }
+.insight-pill {
+  display:flex; align-items:flex-start; gap:8px;
+  background:#f8fafc; border-radius:10px; padding:10px 12px;
+  margin-bottom:8px; font-size:13px; color:#475569; line-height:1.5;
+}
+.insight-pill strong { color:#1e293b; }
+
+/* AVG BADGE */
+.avg-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:linear-gradient(135deg,#0d9488,#14b8a6);
+  color:#fff; border-radius:20px; padding:6px 16px;
+  font-size:14px; font-weight:800; margin-bottom:14px;
+}
 
 /* BUTTONS */
 .btn-primary {
-  display: block; width: 100%; padding: 14px;
-  background: linear-gradient(135deg, #0d9488, #14b8a6);
-  color: white; border: none; border-radius: 12px;
-  font-size: 16px; font-weight: 700; cursor: pointer;
-  font-family: inherit; transition: opacity 0.2s; margin-bottom: 10px;
+  display:block; width:100%; padding:13px;
+  background:linear-gradient(135deg,#0d9488,#14b8a6);
+  color:white; border:none; border-radius:12px; font-size:15px; font-weight:700;
+  cursor:pointer; font-family:inherit; transition:opacity 0.2s; margin-bottom:9px;
 }
-.btn-primary:hover { opacity: 0.9; }
+.btn-primary:hover { opacity:0.9; }
 .btn-secondary {
-  display: block; width: 100%; padding: 12px;
-  background: rgba(255,255,255,0.06); color: #94a3b8;
-  border: 1px solid #334155; border-radius: 12px;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  font-family: inherit; transition: all 0.2s; margin-bottom: 10px;
+  display:block; width:100%; padding:11px;
+  background:#f1f5f9; color:#475569;
+  border:1.5px solid #e2e8f0; border-radius:12px; font-size:13px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all 0.2s; margin-bottom:9px;
 }
-.btn-secondary:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
-
-/* BACK LINK */
+.btn-secondary:hover { background:#e2e8f0; }
 .back-link {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: #64748b; font-size: 13px; text-decoration: none;
-  margin-bottom: 16px; transition: color 0.2s;
+  display:inline-flex; align-items:center; gap:5px;
+  color:#94a3b8; font-size:13px; text-decoration:none; margin-bottom:14px;
 }
-.back-link:hover { color: #14b8a6; }
+.back-link:hover { color:#0d9488; }
 
-/* SHARE BOX */
-.share-box {
-  background: rgba(13,148,136,0.08); border: 1px solid rgba(13,148,136,0.2);
-  border-radius: 14px; padding: 16px; margin-bottom: 16px; display: none;
-  text-align: center;
+/* CONTINUE BTN */
+.continue-wrap { text-align:center; margin-top:10px; }
+.btn-continue {
+  display:inline-flex; align-items:center; gap:8px;
+  background:linear-gradient(135deg,#6366f1,#818cf8);
+  color:#fff; border:none; border-radius:12px;
+  padding:12px 24px; font-size:14px; font-weight:700;
+  cursor:pointer; font-family:inherit; text-decoration:none;
 }
-.share-box p { color: #94a3b8; font-size: 13px; margin-bottom: 10px; }
-
-/* PROGRESS BAR */
-.global-progress {
-  background: #1e293b; border-radius: 10px; height: 6px; margin-bottom: 20px; overflow: hidden;
-}
-.global-progress-fill {
-  height: 100%; border-radius: 10px;
-  background: linear-gradient(90deg, #0d9488, #14b8a6);
-  transition: width 0.5s ease;
-}
-.progress-text { font-size: 12px; color: #64748b; text-align: center; margin-bottom: 8px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a href="./index.html" class="back-link">← חזרה ל-Mentor-IT</a>
+  <a href="./index.html" class="back-link">← Mentor-IT</a>
 
   <div class="header">
     <div class="logo-row">
-      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png"
-           class="logo-img" alt="AILON Task">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" class="logo-img" alt="AILON">
       <h1>🔄 מעגל החיים</h1>
     </div>
-    <p>הערכה עצמית מקיפה — 8 תחומי חיים מרכזיים</p>
+    <p>הערכה עצמית ב-10 תחומים — מהיכן מתחילים?</p>
   </div>
 
-  <!-- TRAINEE INFO -->
   <div class="trainee-box">
-    <input type="text" id="trainee-name" placeholder="שם המתאמן" />
-    <input type="text" id="session-date" id="session-date" placeholder="תאריך הפגישה" />
+    <input type="text" id="trainee-name" placeholder="שם המתאמן/ת" />
+    <input type="text" id="session-date" placeholder="תאריך" />
   </div>
-
-  <!-- PROGRESS -->
-  <div class="progress-text" id="progress-text">0 מתוך 10 שאלות נענו</div>
-  <div class="global-progress"><div class="global-progress-fill" id="global-bar" style="width:0%"></div></div>
-
-  <!-- QUESTIONS -->
-  <div id="questions-container"></div>
-
-  <!-- ACTIONS -->
-  <button class="btn-primary" onclick="showResults()" id="btn-results" style="display:none">
-    🔍 הצג תובנות ומעגל החיים
-  </button>
 
   <!-- WHEEL CANVAS -->
-  <div class="wheel-section" id="wheel-section">
-    <h3>🔄 מעגל החיים שלך</h3>
-    <canvas id="wheel-canvas" width="320" height="320"></canvas>
+  <div class="wheel-wrap">
+    <canvas id="wheel" width="320" height="320"></canvas>
   </div>
 
-  <!-- SCORE BARS -->
-  <div class="insights-section" id="insights-section">
-    <h3>📊 סקירת תחומי החיים</h3>
-    <div id="score-bars"></div>
-    <div id="insights-list" style="margin-top:16px"></div>
+  <!-- SCORE ROWS -->
+  <div class="scores-grid" id="scores-grid"></div>
+
+  <button class="btn-primary" onclick="showResults()">📊 הצג תוצאות ותובנות</button>
+
+  <!-- RESULTS -->
+  <div class="results-card" id="results-card">
+    <h3>📊 סיכום מעגל החיים</h3>
+    <div class="avg-badge" id="avg-badge">📈 ממוצע: —</div>
+    <div id="bar-rows"></div>
+    <div class="insights-list" id="insights-list"></div>
+
+    <div class="continue-wrap" style="margin-top:14px;">
+      <a href="./coaching-session.html" class="btn-continue">
+        🤝 המשך לשיחת האימון ←
+      </a>
+    </div>
   </div>
 
-  <!-- SHARE -->
-  <div class="share-box" id="share-box">
-    <p>שתף את התוצאות עם המנטור שלך</p>
-    <button class="btn-secondary" onclick="copyResults()">📋 העתק סיכום</button>
-    <button class="btn-primary" onclick="printResults()">🖨️ הדפס / שמור PDF</button>
+  <div style="display:none" id="actions">
+    <button class="btn-secondary" onclick="copySummary()">📋 העתק סיכום</button>
+    <button class="btn-secondary" onclick="window.print()">🖨️ הדפס</button>
+    <button class="btn-secondary" onclick="resetAll()">🔄 מעגל חדש</button>
   </div>
 
-  <div style="height:40px"></div>
+  <div style="height:30px"></div>
 </div>
 
 <script>
-const QUESTIONS = [
-  { id: 'health',      emoji: '🌿', text: 'מה מצב הבריאות שלך?',                             area: 'בריאות' },
-  { id: 'family',      emoji: '🏡', text: 'איך הקשר שלך עם המשפחה?',                         area: 'משפחה' },
-  { id: 'money',       emoji: '💰', text: 'איך המצב הכלכלי שלך?',                            area: 'כסף' },
-  { id: 'environment', emoji: '🏠', text: 'איך הסביבה הפיזית שלך — בית, מקום עבודה, מרחב?', area: 'סביבה פיזית' },
-  { id: 'leisure',     emoji: '🎭', text: 'כמה פנאי ובילויים יש לך? האם אתה נהנה מהחיים?',  area: 'פנאי / בילויים' },
-  { id: 'other',       emoji: '✨', text: 'איזה תחום נוסף חשוב לך? (רוחניות, תחביב, ועוד)',  area: 'אחר' },
-  { id: 'growth',      emoji: '🌱', text: 'מה רמת הצמיחה האישית שלך?',                      area: 'צמיחה אישית' },
-  { id: 'career',      emoji: '💼', text: 'מה המצב בקריירה שלך?',                            area: 'קריירה' },
-  { id: 'romance',     emoji: '❤️', text: 'מה מצב הזוגיות/הרומנטיקה והמשמעות האחר?',       area: 'משמעות / רומנטיקה' },
-  { id: 'friends',     emoji: '👥', text: 'איך הקשר שלך עם החברים?',                        area: 'חברים' },
+const DOMAINS = [
+  { id:'health',   emoji:'🌿', label:'בריאות',             color:'#10b981' },
+  { id:'family',   emoji:'🏡', label:'משפחה',             color:'#3b82f6' },
+  { id:'money',    emoji:'💰', label:'כסף',               color:'#f59e0b' },
+  { id:'environ',  emoji:'🏠', label:'סביבה פיזית',      color:'#8b5cf6' },
+  { id:'leisure',  emoji:'🎭', label:'פנאי / בילויים',   color:'#ec4899' },
+  { id:'other',    emoji:'✨', label:'אחר',               color:'#64748b' },
+  { id:'growth',   emoji:'🌱', label:'צמיחה אישית',      color:'#06b6d4' },
+  { id:'career',   emoji:'💼', label:'קריירה',            color:'#f97316' },
+  { id:'romance',  emoji:'❤️', label:'משמעות / רומנטיקה',color:'#ef4444' },
+  { id:'friends',  emoji:'👥', label:'חברים',             color:'#a855f7' },
 ];
 
 const scores = {};
+DOMAINS.forEach(d => scores[d.id] = 5);
 
-function getColor(score) {
-  if (score <= 3) return '#ef4444';
-  if (score <= 5) return '#f97316';
-  if (score <= 7) return '#eab308';
+function getScoreColor(s) {
+  if(s <= 3) return '#ef4444';
+  if(s <= 5) return '#f97316';
+  if(s <= 7) return '#eab308';
   return '#10b981';
 }
 
-function buildQuestions() {
-  const container = document.getElementById('questions-container');
-  QUESTIONS.forEach((q, i) => {
-    const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = 'card-' + q.id;
-    card.innerHTML = `
-      <div class="q-number">שאלה ${i+1} מתוך ${QUESTIONS.length}</div>
-      <div class="q-text"><span class="q-emoji">${q.emoji}</span>${q.text}</div>
-      <div class="score-display not-set" id="disp-${q.id}">הזז את הסרגל</div>
-      <div class="slider-wrap">
-        <input type="range" min="1" max="10" value="5" id="slider-${q.id}"
-          oninput="updateScore('${q.id}', this.value)"
-          style="--val:50%"
-        />
-        <div class="scale-labels">
-          <span>1 — נמוך מאוד</span>
-          <span>10 — מעולה</span>
-        </div>
+// ---- BUILD SLIDERS ----
+function buildSliders() {
+  const grid = document.getElementById('scores-grid');
+  grid.innerHTML = DOMAINS.map(d => `
+    <div class="score-row">
+      <div class="score-row-top">
+        <div class="score-area-name">${d.emoji} ${d.label}</div>
+        <div class="score-val-badge" id="badge-${d.id}" style="background:${getScoreColor(5)}">5</div>
       </div>
-    `;
-    container.appendChild(card);
-  });
+      <input type="range" class="wheel-slider" min="1" max="10" value="5" id="slider-${d.id}"
+        style="background:linear-gradient(to left, ${d.color} 44.4%, #e2e8f0 44.4%)"
+        oninput="onScore('${d.id}', this.value, '${d.color}')"
+      />
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:4px;">
+        <span>1 נמוך</span><span>10 מעולה</span>
+      </div>
+    </div>
+  `).join('');
 }
 
-function updateScore(id, val) {
+function onScore(id, val, color) {
   val = parseInt(val);
   scores[id] = val;
-  const disp = document.getElementById('disp-' + id);
-  disp.textContent = val;
-  disp.className = 'score-display';
-  const pct = ((val - 1) / 9 * 100).toFixed(0);
-  document.getElementById('slider-' + id).style.setProperty('--val', pct + '%');
-  document.getElementById('card-' + id).className = 'question-card answered';
-  updateProgress();
-}
-
-function updateProgress() {
-  const answered = Object.keys(scores).length;
-  const total = QUESTIONS.length;
-  document.getElementById('progress-text').textContent = `${answered} מתוך ${total} שאלות נענו`;
-  document.getElementById('global-bar').style.width = (answered / total * 100) + '%';
-  document.getElementById('btn-results').style.display = answered >= total ? 'block' : 'none';
-}
-
-function showResults() {
-  // WHEEL
-  document.getElementById('wheel-section').style.display = 'block';
-  document.getElementById('insights-section').style.display = 'block';
-  document.getElementById('share-box').style.display = 'block';
+  const badge = document.getElementById('badge-'+id);
+  badge.textContent = val;
+  badge.style.background = getScoreColor(val);
+  const pct = ((val-1)/9*100).toFixed(1);
+  document.getElementById('slider-'+id).style.background =
+    `linear-gradient(to left, ${color} ${pct}%, #e2e8f0 ${pct}%)`;
   drawWheel();
-  buildScoreBars();
-  buildInsights();
-  document.getElementById('wheel-section').scrollIntoView({ behavior: 'smooth' });
 }
 
+// ---- DRAW WHEEL ----
 function drawWheel() {
-  const canvas = document.getElementById('wheel-canvas');
+  const canvas = document.getElementById('wheel');
   const ctx = canvas.getContext('2d');
-  const cx = canvas.width / 2, cy = canvas.height / 2;
-  const maxR = 130;
-  const n = QUESTIONS.length;
-  const angleStep = (Math.PI * 2) / n;
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const maxR = 128;
+  const n = DOMAINS.length;
+  const step = (Math.PI*2)/n;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0,0,W,H);
 
-  // Draw grid circles
-  [2,4,6,8,10].forEach(level => {
+  // Background rings
+  for(let r=1; r<=10; r++) {
     ctx.beginPath();
-    ctx.arc(cx, cy, maxR * level / 10, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.arc(cx, cy, maxR*r/10, 0, Math.PI*2);
+    ctx.strokeStyle = r===10 ? '#cbd5e1' : '#e2e8f0';
+    ctx.lineWidth = r===10 ? 1.5 : 0.8;
+    ctx.stroke();
+  }
+
+  // Spokes + labels
+  DOMAINS.forEach((d,i) => {
+    const angle = step*i - Math.PI/2;
+    const ex = cx + Math.cos(angle)*maxR;
+    const ey = cy + Math.sin(angle)*maxR;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(ex,ey);
+    ctx.strokeStyle = '#e2e8f0';
     ctx.lineWidth = 1;
     ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-    ctx.font = '9px Arial';
-    ctx.fillText(level, cx + maxR * level / 10 + 2, cy - 2);
-  });
 
-  // Draw spokes
-  QUESTIONS.forEach((q, i) => {
-    const angle = angleStep * i - Math.PI / 2;
-    const x = cx + Math.cos(angle) * maxR;
-    const y = cy + Math.sin(angle) * maxR;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    // Labels
-    const lx = cx + Math.cos(angle) * (maxR + 20);
-    const ly = cy + Math.sin(angle) * (maxR + 20);
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = 'bold 10px Arial';
+    // Label
+    const lx = cx + Math.cos(angle)*(maxR+22);
+    const ly = cy + Math.sin(angle)*(maxR+22);
+    ctx.font = '10px Segoe UI, Arial';
+    ctx.fillStyle = '#475569';
     ctx.textAlign = 'center';
-    ctx.fillText(q.emoji, lx, ly);
-    ctx.font = '9px Arial';
-    ctx.fillText(q.area, lx, ly + 12);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(d.emoji, lx, ly-6);
+    ctx.font = 'bold 8.5px Segoe UI, Arial';
+    ctx.fillStyle = '#64748b';
+
+    // Wrap label
+    const label = d.label;
+    if(label.length > 6) {
+      const words = label.split(' ');
+      ctx.fillText(words[0], lx, ly+4);
+      if(words[1]) ctx.fillText(words[1], lx, ly+13);
+    } else {
+      ctx.fillText(label, lx, ly+5);
+    }
   });
 
-  // Draw filled polygon
+  // Filled polygon
   ctx.beginPath();
-  QUESTIONS.forEach((q, i) => {
-    const score = scores[q.id] || 5;
-    const r = maxR * score / 10;
-    const angle = angleStep * i - Math.PI / 2;
-    const x = cx + Math.cos(angle) * r;
-    const y = cy + Math.sin(angle) * r;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  DOMAINS.forEach((d,i) => {
+    const r = maxR * scores[d.id] / 10;
+    const angle = step*i - Math.PI/2;
+    const x = cx + Math.cos(angle)*r;
+    const y = cy + Math.sin(angle)*r;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   });
   ctx.closePath();
-  ctx.fillStyle = 'rgba(13,148,136,0.25)';
+  ctx.fillStyle = 'rgba(13,148,136,0.12)';
   ctx.fill();
-  ctx.strokeStyle = '#14b8a6';
+  ctx.strokeStyle = '#0d9488';
   ctx.lineWidth = 2.5;
   ctx.stroke();
 
   // Dots
-  QUESTIONS.forEach((q, i) => {
-    const score = scores[q.id] || 5;
-    const r = maxR * score / 10;
-    const angle = angleStep * i - Math.PI / 2;
-    const x = cx + Math.cos(angle) * r;
-    const y = cy + Math.sin(angle) * r;
+  DOMAINS.forEach((d,i) => {
+    const r = maxR * scores[d.id] / 10;
+    const angle = step*i - Math.PI/2;
+    const x = cx + Math.cos(angle)*r;
+    const y = cy + Math.sin(angle)*r;
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = getColor(score);
+    ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle = d.color;
     ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle='#fff';
+    ctx.lineWidth=2;
     ctx.stroke();
+
+    // Score on dot
+    ctx.font = 'bold 8px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(scores[d.id], x, y);
   });
 
   ctx.textAlign = 'start';
+  ctx.textBaseline = 'alphabetic';
 }
 
-function buildScoreBars() {
-  const container = document.getElementById('score-bars');
-  const sorted = QUESTIONS.map(q => ({ ...q, score: scores[q.id] || 5 }))
-                           .sort((a, b) => b.score - a.score);
-  container.innerHTML = sorted.map(q => `
-    <div class="score-bar-row">
-      <div class="score-bar-label">${q.emoji} ${q.area}</div>
-      <div class="score-bar-track">
-        <div class="score-bar-fill" style="width:${q.score*10}%; background:${getColor(q.score)}"></div>
+// ---- RESULTS ----
+function showResults() {
+  const vals = DOMAINS.map(d => scores[d.id]);
+  const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+  const sorted = [...DOMAINS].sort((a,b)=>scores[b.id]-scores[a.id]);
+  const highest = sorted[0];
+  const lowest = sorted[sorted.length-1];
+  const critical = DOMAINS.filter(d=>scores[d.id]<=4);
+
+  document.getElementById('avg-badge').innerHTML = `📈 ממוצע: ${avg}/10`;
+
+  // Bar rows
+  document.getElementById('bar-rows').innerHTML = sorted.map(d=>`
+    <div class="bar-row">
+      <div class="bar-label">${d.emoji} ${d.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${scores[d.id]*10}%;background:${getScoreColor(scores[d.id])}"></div>
       </div>
-      <div class="score-bar-num">${q.score}</div>
+      <div class="bar-num">${scores[d.id]}</div>
     </div>
   `).join('');
-}
 
-function buildInsights() {
-  const container = document.getElementById('insights-list');
-  const allScores = QUESTIONS.map(q => scores[q.id] || 5);
-  const avg = (allScores.reduce((a,b)=>a+b,0) / allScores.length).toFixed(1);
-  const lowest = QUESTIONS.reduce((a,b) => (scores[a.id]||5) < (scores[b.id]||5) ? a : b);
-  const highest = QUESTIONS.reduce((a,b) => (scores[a.id]||5) > (scores[b.id]||5) ? a : b);
-  const critical = QUESTIONS.filter(q => (scores[q.id]||5) <= 4);
+  // Insights
   const name = document.getElementById('trainee-name').value || 'המתאמן';
+  const insights = [
+    { icon:'💪', html:`<strong>החוזקה של ${name}:</strong> ${highest.emoji} ${highest.label} (${scores[highest.id]}/10) — מכאן בונים!` },
+    { icon:'🎯', html:`<strong>הזדמנות לצמיחה:</strong> ${lowest.emoji} ${lowest.label} (${scores[lowest.id]}/10) — כאן הפוטנציאל הגדול ביותר` },
+    critical.length > 0 && { icon:'🔴', html:`<strong>דורש תשומת לב:</strong> ${critical.map(d=>`${d.emoji} ${d.label}`).join(', ')}` },
+    { icon:'🌟', html:`<strong>E+R=O:</strong> המצב הנוכחי הוא נקודת ההתחלה — לא נקודת הסיום. ביחד נבחר את ה-R הנכון!` },
+  ].filter(Boolean);
 
-  let insights = [];
-
-  insights.push({
-    icon: '📊',
-    text: `<strong>ממוצע כללי: ${avg}/10</strong> — ${avg >= 7 ? 'איזון טוב לחיים מלאים!' : avg >= 5 ? 'יש מקום לשיפור בכמה תחומים' : 'ישנם תחומים שדורשים תשומת לב מיידית'}`
-  });
-
-  insights.push({
-    icon: '💪',
-    text: `<strong>החוזקה הגדולה של ${name}:</strong> ${highest.emoji} ${highest.area} (${scores[highest.id]}/10) — זה המקום שממנו נבנה!`
-  });
-
-  insights.push({
-    icon: '🎯',
-    text: `<strong>התחום לפיתוח:</strong> ${lowest.emoji} ${lowest.area} (${scores[lowest.id]}/10) — כאן יש ההזדמנות הגדולה ביותר לצמיחה`
-  });
-
-  if (critical.length > 0) {
-    insights.push({
-      icon: '🔴',
-      text: `<strong>תחומים דחופים (1-4):</strong> ${critical.map(q=>`${q.emoji} ${q.area}`).join(', ')} — ממליץ להתחיל כאן בפגישות הקרובות`
-    });
-  }
-
-  // E+R=O insight
-  insights.push({
-    icon: '🌟',
-    text: `<strong>E+R=O — תובנת מפתח:</strong> המצב הנוכחי (E) לא קובע את העתיד — התגובה שלך (R) קובעת את התוצאה (O). בואו נבחר את ה-R הנכון יחד!`
-  });
-
-  container.innerHTML = insights.map(ins => `
-    <div class="insight-item">
-      <span class="insight-icon">${ins.icon}</span>
-      <div class="insight-text">${ins.text}</div>
-    </div>
+  document.getElementById('insights-list').innerHTML = insights.map(ins=>`
+    <div class="insight-pill"><span>${ins.icon}</span><div>${ins.html}</div></div>
   `).join('');
+
+  document.getElementById('results-card').style.display = 'block';
+  document.getElementById('actions').style.display = 'block';
+  document.getElementById('results-card').scrollIntoView({behavior:'smooth'});
 }
 
-function copyResults() {
-  const name = document.getElementById('trainee-name').value || 'לא הוזן';
+function copySummary() {
+  const name = document.getElementById('trainee-name').value || 'המתאמן';
   const date = document.getElementById('session-date').value || new Date().toLocaleDateString('he-IL');
-  const allScores = QUESTIONS.map(q => scores[q.id] || 5);
-  const avg = (allScores.reduce((a,b)=>a+b,0) / allScores.length).toFixed(1);
-  let text = `🔄 מעגל החיים — ${name}\n📅 ${date}\n\n`;
-  QUESTIONS.forEach(q => { text += `${q.emoji} ${q.area}: ${scores[q.id]||5}/10\n`; });
-  text += `\n📊 ממוצע כללי: ${avg}/10\n\nנוצר ע"י Mentor-IT | AILON Task`;
-  navigator.clipboard.writeText(text).then(() => alert('✅ הסיכום הועתק!'));
+  const vals = DOMAINS.map(d => scores[d.id]);
+  const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+  let text = `🔄 מעגל החיים — ${name} | ${date}\n\n`;
+  DOMAINS.forEach(d => { text += `${d.emoji} ${d.label}: ${scores[d.id]}/10\n`; });
+  text += `\n📈 ממוצע: ${avg}/10\nנוצר ע"י Mentor-IT | AILON Task`;
+  navigator.clipboard.writeText(text).then(()=>alert('✅ הועתק!'));
 }
 
-function printResults() {
-  window.print();
+function resetAll() {
+  DOMAINS.forEach(d=>{ scores[d.id]=5; });
+  buildSliders(); drawWheel();
+  document.getElementById('results-card').style.display='none';
+  document.getElementById('actions').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-buildQuestions();
-// Auto-fill date
+// Init
+buildSliders();
+drawWheel();
 document.getElementById('session-date').value = new Date().toLocaleDateString('he-IL');
 </script>
 </body>
