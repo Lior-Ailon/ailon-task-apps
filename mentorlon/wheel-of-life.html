@@ -201,7 +201,7 @@ canvas#wheel-canvas { max-width: 100%; }
   </div>
 
   <!-- PROGRESS -->
-  <div class="progress-text" id="progress-text">0 מתוך 8 שאלות נענו</div>
+  <div class="progress-text" id="progress-text">0 מתוך 10 שאלות נענו</div>
   <div class="global-progress"><div class="global-progress-fill" id="global-bar" style="width:0%"></div></div>
 
   <!-- QUESTIONS -->
@@ -237,14 +237,16 @@ canvas#wheel-canvas { max-width: 100%; }
 
 <script>
 const QUESTIONS = [
-  { id: 'confidence',  emoji: '💪', text: 'מה רמת הביטחון העצמי שלך?',                area: 'ביטחון עצמי' },
-  { id: 'relationship',emoji: '❤️', text: 'מה מצב הזוגיות שלך?',                       area: 'זוגיות' },
-  { id: 'friends',     emoji: '👥', text: 'איך הקשר שלך עם החברים שלך?',               area: 'חברות' },
-  { id: 'family',      emoji: '🏡', text: 'איך הקשר שלך עם המשפחה הקרובה שלך?',       area: 'משפחה' },
-  { id: 'health',      emoji: '🌿', text: 'מה מצב הבריאות שלך?',                       area: 'בריאות' },
-  { id: 'studies',     emoji: '📚', text: 'מה המצב שלך בלימודים? (אם רלוונטי)',        area: 'לימודים' },
-  { id: 'career',      emoji: '💼', text: 'מה המצב בקריירה שלך?',                      area: 'קריירה' },
-  { id: 'growth',      emoji: '🌱', text: 'איזה ציון אתה נותן להתפתחות האישית שלך?',  area: 'התפתחות אישית' },
+  { id: 'health',      emoji: '🌿', text: 'מה מצב הבריאות שלך?',                             area: 'בריאות' },
+  { id: 'family',      emoji: '🏡', text: 'איך הקשר שלך עם המשפחה?',                         area: 'משפחה' },
+  { id: 'money',       emoji: '💰', text: 'איך המצב הכלכלי שלך?',                            area: 'כסף' },
+  { id: 'environment', emoji: '🏠', text: 'איך הסביבה הפיזית שלך — בית, מקום עבודה, מרחב?', area: 'סביבה פיזית' },
+  { id: 'leisure',     emoji: '🎭', text: 'כמה פנאי ובילויים יש לך? האם אתה נהנה מהחיים?',  area: 'פנאי / בילויים' },
+  { id: 'other',       emoji: '✨', text: 'איזה תחום נוסף חשוב לך? (רוחניות, תחביב, ועוד)',  area: 'אחר' },
+  { id: 'growth',      emoji: '🌱', text: 'מה רמת הצמיחה האישית שלך?',                      area: 'צמיחה אישית' },
+  { id: 'career',      emoji: '💼', text: 'מה המצב בקריירה שלך?',                            area: 'קריירה' },
+  { id: 'romance',     emoji: '❤️', text: 'מה מצב הזוגיות/הרומנטיקה והמשמעות האחר?',       area: 'משמעות / רומנטיקה' },
+  { id: 'friends',     emoji: '👥', text: 'איך הקשר שלך עם החברים?',                        area: 'חברים' },
 ];
 
 const scores = {};
