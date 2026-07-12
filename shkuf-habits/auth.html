@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ש.ק.ו.פ — כניסה והרשמה | AILON Task</title>
+<style>
+  :root { --teal:#0d9488; --teal-light:#14b8a6; --teal-dark:#0f766e; --mint:#f0fdfa; --navy:#0f172a; --white:#ffffff; --gray:#64748b; --radius:16px; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:linear-gradient(135deg,#e0f7f4 0%,#f0fdfa 50%,#e8f5f0 100%); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; direction:rtl; }
+
+  .card { background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(13,148,136,0.15); padding:36px 28px; width:100%; max-width:380px; text-align:center; }
+
+  .logo-area { margin-bottom:20px; }
+  .logo-area img { width:60px; height:60px; border-radius:12px; }
+  .logo-area h1 { font-size:22px; font-weight:800; color:var(--teal-dark); margin-top:8px; }
+  .logo-area p { font-size:13px; color:var(--gray); margin-top:4px; }
+
+  .tabs-auth { display:flex; gap:0; border-radius:10px; overflow:hidden; border:1.5px solid #e2e8f0; margin-bottom:24px; }
+  .tab-auth { flex:1; padding:10px; font-size:14px; font-weight:600; cursor:pointer; background:#f8fafc; color:#64748b; border:none; transition:all .2s; }
+  .tab-auth.active { background:var(--teal); color:#fff; }
+
+  .form-group { margin-bottom:16px; text-align:right; }
+  .form-group label { font-size:13px; font-weight:600; color:#374151; display:block; margin-bottom:6px; }
+  .form-group input { width:100%; padding:11px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px; font-family:inherit; direction:ltr; text-align:left; transition:border .2s; background:#f8fafc; color:#1f2937; }
+  .form-group input:focus { outline:none; border-color:var(--teal); background:#fff; }
+
+  .btn-main { width:100%; padding:13px; background:linear-gradient(135deg,var(--teal),var(--teal-light)); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; margin-top:6px; transition:all .2s; }
+  .btn-main:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(13,148,136,0.3); }
+  .btn-main:active { transform:translateY(0); }
+
+  .msg { margin-top:14px; font-size:13px; border-radius:8px; padding:10px 12px; display:none; }
+  .msg.error { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; display:block; }
+  .msg.success { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; display:block; }
+
+  .quote-box { background:linear-gradient(135deg,#f0fdf4,#ecfdf5); border:1px solid #a7f3d0; border-radius:12px; padding:14px 16px; margin-top:20px; font-size:12px; color:#065f46; line-height:1.7; font-style:italic; }
+
+  .powered { font-size:11px; color:#94a3b8; margin-top:16px; }
+  .powered img { height:18px; vertical-align:middle; margin-left:4px; }
+
+  .spinner { display:none; width:20px; height:20px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; margin:auto; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+  .loading .btn-text { display:none; }
+  .loading .spinner { display:block; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo-area">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" alt="AILON Task">
+    <h1>ש.ק.ו.פ</h1>
+    <p>שיפורים קטנים ובלתי פוסקים</p>
+  </div>
+
+  <div class="tabs-auth">
+    <button class="tab-auth active" onclick="switchTab('login')" id="tab-login">כניסה</button>
+    <button class="tab-auth" onclick="switchTab('register')" id="tab-register">הרשמה</button>
+  </div>
+
+  <!-- טופס כניסה -->
+  <div id="form-login">
+    <div class="form-group">
+      <label>שם משתמש</label>
+      <input type="text" id="login-username" placeholder="your_username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>סיסמה</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-main" onclick="doLogin(this)">
+      <span class="btn-text">🔐 כניסה</span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+
+  <!-- טופס הרשמה -->
+  <div id="form-register" style="display:none;">
+    <div class="form-group">
+      <label>שם תצוגה</label>
+      <input type="text" id="reg-display" placeholder="השם שלך">
+    </div>
+    <div class="form-group">
+      <label>שם משתמש</label>
+      <input type="text" id="reg-username" placeholder="your_username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>סיסמה (לפחות 6 תווים)</label>
+      <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
+    </div>
+    <div class="form-group">
+      <label>אימות סיסמה</label>
+      <input type="password" id="reg-confirm" placeholder="••••••••" autocomplete="new-password">
+    </div>
+    <button class="btn-main" onclick="doRegister(this)">
+      <span class="btn-text">✨ צור חשבון</span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+
+  <div id="msg" class="msg"></div>
+
+  <div class="quote-box" id="auth-quote"></div>
+
+  <div class="powered">מופעל על ידי <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" alt="AILON Task"> AILON Task</div>
+</div>
+
+<script>
+const API = 'https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/functions/shkufApi';
+const APP_KEY = '69f63b4536d7a2c6688403df';
+
+var quotes = [
+  "בשביל שדברים ישתנו — אתה צריך להשתנות.",
+  "הרגלים טובים הם כמו פרחי סחלב — צריך לטפח אותם.",
+  "כמה זמן לוקח לעשות שינוי? שנייה. שימור השינוי לוקח 21 יום.",
+  "תעשה לפחות פעם אחת ביום משהו שאתה לא רוצה לעשות.",
+  "לפני שקובעים מטרה — בדוק אם ההרגלים הקיימים שלך מהווים בסיס להגשמתה."
+];
+document.getElementById('auth-quote').textContent = '"' + quotes[new Date().getDay() % quotes.length] + '"';
+
+function switchTab(tab) {
+  document.getElementById('form-login').style.display = tab==='login' ? '' : 'none';
+  document.getElementById('form-register').style.display = tab==='register' ? '' : 'none';
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  showMsg('');
+}
+
+function showMsg(text, isError) {
+  var el = document.getElementById('msg');
+  el.textContent = text;
+  el.className = 'msg ' + (text ? (isError ? 'error' : 'success') : '');
+}
+
+function setLoading(btn, on) {
+  btn.classList.toggle('loading', on);
+  btn.disabled = on;
+}
+
+async function callApi(action, body) {
+  var r = await fetch(API, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-API-Key': APP_KEY},
+    body: JSON.stringify({action, ...body})
+  });
+  return r.json();
+}
+
+async function doLogin(btn) {
+  var username = document.getElementById('login-username').value.trim().toLowerCase();
+  var password = document.getElementById('login-password').value;
+  if (!username || !password) { showMsg('נא למלא שם משתמש וסיסמה', true); return; }
+  setLoading(btn, true);
+  try {
+    var res = await callApi('login', {username, password});
+    if (res.success) {
+      localStorage.setItem('shkuf_token', res.token);
+      localStorage.setItem('shkuf_username', res.username);
+      localStorage.setItem('shkuf_display', res.display_name);
+      window.location.href = 'index.html';
+    } else {
+      showMsg(res.error || 'שגיאה בכניסה', true);
+    }
+  } catch(e) { showMsg('שגיאת חיבור, נסה שוב', true); }
+  setLoading(btn, false);
+}
+
+async function doRegister(btn) {
+  var display = document.getElementById('reg-display').value.trim();
+  var username = document.getElementById('reg-username').value.trim().toLowerCase();
+  var password = document.getElementById('reg-password').value;
+  var confirm = document.getElementById('reg-confirm').value;
+  if (!display || !username || !password) { showMsg('נא למלא את כל השדות', true); return; }
+  if (password.length < 6) { showMsg('הסיסמה חייבת להכיל לפחות 6 תווים', true); return; }
+  if (password !== confirm) { showMsg('הסיסמאות אינן תואמות', true); return; }
+  if (!/^[a-z0-9_]{3,20}$/.test(username)) { showMsg('שם משתמש: אותיות אנגלית קטנות, מספרים וקו תחתון בלבד (3-20 תווים)', true); return; }
+  setLoading(btn, true);
+  try {
+    var res = await callApi('register', {username, password, display_name: display});
+    if (res.success) {
+      showMsg('החשבון נוצר בהצלחה! מעביר לכניסה...', false);
+      setTimeout(() => switchTab('login'), 1800);
+    } else {
+      showMsg(res.error || 'שגיאה בהרשמה', true);
+    }
+  } catch(e) { showMsg('שגיאת חיבור, נסה שוב', true); }
+  setLoading(btn, false);
+}
+
+// אם כבר מחובר — קפוץ לאפליקציה
+if (localStorage.getItem('shkuf_token')) {
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
