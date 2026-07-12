@@ -281,6 +281,7 @@ function draw() {
   else if (ST.screen === 'share') drawShare();
   else if (ST.screen === 'results') drawResults();
   else if (ST.screen === 'admin') drawAdmin();
+  else if (ST.screen === 'strengths') drawStrengths();
   else if (ST.screen === 'f_intro') drawFriendIntro();
   else if (ST.screen === 'f_swipe') drawFriendSwipe();
   else if (ST.screen === 'f_done') drawFriendDone();
@@ -356,7 +357,7 @@ function doRegister() {
 
 /* ===== SWIPE ===== */
 function drawSwipe() {
-  if (ST.idx >= JOBS.length) { go('share'); return; }
+  if (ST.idx >= JOBS.length) { go('strengths'); return; }
   var job = JOBS[ST.idx];
   var pct = Math.round(ST.idx / JOBS.length * 100);
   show(
@@ -692,6 +693,64 @@ if (urlTok) {
   const el = document.getElementById('career-insight');
   if(el) el.innerHTML = `<div class="ins-title">${ins.t}</div>"${ins.q}"`;
 })();
+
+function drawStrengths() {
+  show(
+    '<div class="card">' +
+    '<div class="stitle">💪 שאלות חוזקות</div>' +
+    '<div class="ssub">לפני שנגלה את התוצאות — 5 שאלות שיעזרו לך לזהות את החוזקות האמיתיות שלך (מרקוס בקינגהם / מכון גאלופ)</div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px;">1️⃣ ההישג הגדול שלך</div>' +
+    '<div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">בשנה האחרונה — ההישג בעבודה שאתה הכי גאה בו:</div>' +
+    '<textarea id="sq1" rows="2" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;padding:8px 10px;border-radius:9px;font-size:13px;font-family:Arial;direction:rtl;resize:none" placeholder="מה עשית? מה קרה? מה הרגשת?"></textarea>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px;">2️⃣ מה אחרים אומרים</div>' +
+    '<div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">אם חברים/עמיתים היו שואלים — הם היו אומרים שאתה הכי טוב ב:</div>' +
+    '<textarea id="sq2" rows="2" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;padding:8px 10px;border-radius:9px;font-size:13px;font-family:Arial;direction:rtl;resize:none" placeholder="בדיוק בלשונם..."></textarea>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px;">3️⃣ מצב ה-Flow שלך</div>' +
+    '<div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">אני לא מרגיש שהזמן עובר כאשר אני עסוק ב:</div>' +
+    '<textarea id="sq3" rows="2" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;padding:8px 10px;border-radius:9px;font-size:13px;font-family:Arial;direction:rtl;resize:none" placeholder="פעילויות שגורמות לך להיכנס לזרם..."></textarea>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px;">4️⃣ אחרי מה אתה מרגיש אנרגיה</div>' +
+    '<div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">אחרי אילו פעילויות אתה מרגיש טעון — ולא עייף?</div>' +
+    '<textarea id="sq4" rows="2" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;padding:8px 10px;border-radius:9px;font-size:13px;font-family:Arial;direction:rtl;resize:none" placeholder="מה טוען אותך?"></textarea>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px;">5️⃣ הדבר שהכי מגדיר אותך</div>' +
+    '<div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">אם היית יכול לעשות רק דבר אחד כל היום — מה זה היה?</div>' +
+    '<textarea id="sq5" rows="2" style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;padding:8px 10px;border-radius:9px;font-size:13px;font-family:Arial;direction:rtl;resize:none" placeholder="דבר אחד בלבד..."></textarea>' +
+    '</div>' +
+
+    '<div style="text-align:center;font-size:12px;color:#64748b;margin:8px 0 12px;font-style:italic;">' +
+    'חוזקה = ביצוע ברמה גבוהה לאורך זמן שאתה שמח לבצע (מרקוס בקינגהם)' +
+    '</div>' +
+
+    '<button class="btn btn-gold" onclick="saveStrengthsAndContinue()">הצג תוצאות ←</button>' +
+    '<button class="btn btn-clear" onclick="go('share')" style="margin-top:6px">דלג על שאלות</button>'
+  );
+}
+
+function saveStrengthsAndContinue() {
+  ST.strengths = {
+    achievement: document.getElementById("sq1") ? document.getElementById("sq1").value : "",
+    others_say:  document.getElementById("sq2") ? document.getElementById("sq2").value : "",
+    flow:        document.getElementById("sq3") ? document.getElementById("sq3").value : "",
+    energizing:  document.getElementById("sq4") ? document.getElementById("sq4").value : "",
+    one_thing:   document.getElementById("sq5") ? document.getElementById("sq5").value : ""
+  };
+  go("share");
+}
+
 </script>
 </body>
 </html>
