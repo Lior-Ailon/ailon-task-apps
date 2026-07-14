@@ -199,6 +199,27 @@ body {
 .history-item .hi-title { font-weight:700; color:#e2e8f0; margin-bottom:4px; }
 .history-item .hi-date { font-size:11px; color:#475569; }
 .history-item .hi-tags { display:flex; gap:4px; margin-top:6px; flex-wrap:wrap; }
+
+/* RISK SECTION */
+.risk-sliders { display:flex; flex-direction:column; gap:16px; margin-top:8px; }
+.risk-row { display:flex; flex-direction:column; gap:6px; }
+.risk-label { font-size:13px; font-weight:700; color:#e2e8f0; display:flex; justify-content:space-between; align-items:center; }
+.risk-value { font-size:18px; font-weight:900; color:#14b8a6; min-width:30px; text-align:center; }
+.risk-slider { -webkit-appearance:none; appearance:none; width:100%; height:8px; border-radius:10px; outline:none; cursor:pointer; }
+#slider-severity { background: linear-gradient(to right, #22c55e, #ef4444); }
+#slider-prob { background: linear-gradient(to right, #22c55e, #f59e0b, #ef4444); }
+.risk-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%; background:#14b8a6; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.3); cursor:pointer; }
+.risk-scale { display:flex; justify-content:space-between; font-size:10px; color:#64748b; margin-top:2px; }
+.risk-score-box { margin-top:14px; padding:14px; border-radius:14px; text-align:center; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); }
+.risk-score-num { font-size:36px; font-weight:900; }
+.risk-score-label { font-size:12px; color:#94a3b8; margin-top:4px; }
+.risk-badge { display:inline-block; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; margin-top:8px; }
+.risk-low { color:#22c55e; background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.25); }
+.risk-medium { color:#f59e0b; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25); }
+.risk-high { color:#ef4444; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); }
+.risk-critical { color:#dc2626; background:rgba(220,38,38,0.18); border:1px solid rgba(220,38,38,0.4); }
+.step-num.risk-num { background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; }
+
 </style>
 </head>
 <body>
@@ -334,6 +355,44 @@ body {
     </div>
   </div>
 
+
+  <!-- STEP 6 — RISK MANAGEMENT -->
+  <div class="step-card" id="card-risk">
+    <div class="step-header">
+      <div class="step-num risk-num">6</div>
+      <div>
+        <div class="step-title">⚠️ ניהול סיכון</div>
+        <div class="step-subtitle">הערך את רמת הסיכון והסבירות שהבעיה תתממש</div>
+      </div>
+      <span class="step-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border-color:rgba(239,68,68,0.25);">סיכון</span>
+    </div>
+    <div class="risk-sliders">
+      <div class="risk-row">
+        <div class="risk-label">
+          <span>🔴 רמת חומרת הסיכון</span>
+          <span class="risk-value" id="val-severity">5</span>
+        </div>
+        <input type="range" class="risk-slider" id="slider-severity" min="1" max="10" value="5"
+          oninput="updateRisk()" />
+        <div class="risk-scale"><span>1 — מינימלי</span><span>5 — בינוני</span><span>10 — קריטי</span></div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-label">
+          <span>🎲 סבירות ההתרחשות</span>
+          <span class="risk-value" id="val-prob">5</span>
+        </div>
+        <input type="range" class="risk-slider" id="slider-prob" min="1" max="10" value="5"
+          oninput="updateRisk()" />
+        <div class="risk-scale"><span>1 — קלושה מאוד</span><span>5 — אפשרי</span><span>10 — כמעט בטוח</span></div>
+      </div>
+      <div class="risk-score-box" id="risk-score-box">
+        <div class="risk-score-num" id="risk-score-num">25</div>
+        <div class="risk-score-label">ציון סיכון כולל (חומרה × סבירות)</div>
+        <div class="risk-badge risk-medium" id="risk-badge">⚠️ סיכון בינוני</div>
+      </div>
+    </div>
+  </div>
+
   <!-- GENERATE -->
   <button class="btn-primary" onclick="generateInsights()">∑ פתח את המשוואה — קבל תובנות</button>
 
@@ -400,7 +459,7 @@ body {
 })();
 
 // STATE
-const state = { problem:'', data:[], limit:[], unknown:[], result:'', solution:'' };
+const state = { problem:'', data:[], limit:[], unknown:[], result:'', solution:'', riskSeverity:5, riskProb:5 };
 
 function addTag(type) {
   const inp = document.getElementById('inp-'+type+'-text');
@@ -452,6 +511,32 @@ function updateEqTags() {
   });
 }
 
+
+function updateRisk() {
+  const s = parseInt(document.getElementById('slider-severity').value);
+  const p = parseInt(document.getElementById('slider-prob').value);
+  state.riskSeverity = s;
+  state.riskProb = p;
+  document.getElementById('val-severity').textContent = s;
+  document.getElementById('val-prob').textContent = p;
+  const score = s * p;
+  document.getElementById('risk-score-num').textContent = score;
+  const badge = document.getElementById('risk-badge');
+  if(score <= 15) {
+    badge.className = 'risk-badge risk-low';
+    badge.textContent = '✅ סיכון נמוך';
+  } else if(score <= 35) {
+    badge.className = 'risk-badge risk-medium';
+    badge.textContent = '⚠️ סיכון בינוני';
+  } else if(score <= 60) {
+    badge.className = 'risk-badge risk-high';
+    badge.textContent = '🔴 סיכון גבוה';
+  } else {
+    badge.className = 'risk-badge risk-critical';
+    badge.textContent = '🚨 סיכון קריטי — פעל עכשיו!';
+  }
+}
+
 function generateInsights() {
   const p = document.getElementById('inp-problem').value.trim();
   const r = document.getElementById('inp-result').value.trim();
@@ -482,6 +567,9 @@ function buildFullEqHtml() {
     {key:'🔍 נעלמים', cls:'k-unknown', val: state.unknown.length ? state.unknown.join(' | ') : '—'},
     {key:'📌 תוצאה', cls:'k-result', val: state.result || '—'},
     {key:'🌟 פתרון', cls:'k-problem', val: state.solution || '—'},
+    {key:'⚠️ חומרת סיכון', cls:'k-result', val: state.riskSeverity + '/10'},
+    {key:'🎲 סבירות', cls:'k-result', val: state.riskProb + '/10'},
+    {key:'📊 ציון סיכון', cls:'k-result', val: (state.riskSeverity * state.riskProb) + '/100'},
   ];
   return lines.map(l => `
     <div class="eq-line">
@@ -516,6 +604,20 @@ function buildInsights() {
     insights.push({icon:'💡', text:`<strong>שאלה לחשיבה:</strong> האם ישנם גורמים נוספים שאתה לא יודע עליהם עדיין? חפש את הנעלם — הוא לרוב מסתתר ברגשות, דפוסים לא מודעים, או מידע חסר.`});
   }
 
+
+  // Risk analysis
+  const riskScore = state.riskSeverity * state.riskProb;
+  let riskLevel = riskScore <= 15 ? 'נמוך' : riskScore <= 35 ? 'בינוני' : riskScore <= 60 ? 'גבוה' : 'קריטי';
+  let riskEmoji = riskScore <= 15 ? '✅' : riskScore <= 35 ? '⚠️' : riskScore <= 60 ? '🔴' : '🚨';
+  let riskMsg = riskScore <= 15
+    ? 'ניתן לנהל בקלות — המשך לפעול אך שמור עין על ההתפתחויות.'
+    : riskScore <= 35
+    ? 'נדרשת תשומת לב — הכן תוכנית מגירה ועקוב אחרי ההתקדמות.'
+    : riskScore <= 60
+    ? 'פעל עכשיו! רמת הסיכון גבוהה — גבש אסטרטגיית תגובה מיידית.'
+    : 'עצור הכל! סיכון קריטי — נדרשת פעולה מיידית לפני שהבעיה מתממשת.';
+  insights.push({icon: riskEmoji, text: `<strong>ניהול סיכון (${riskEmoji} ${riskLevel} — ${riskScore}/100):</strong> חומרה ${state.riskSeverity}/10 × סבירות ${state.riskProb}/10 = ציון ${riskScore}. ${riskMsg}`});
+
   // E+R=O
   insights.push({icon:'🌟', text:`<strong>E+R=O:</strong> האירוע (E) = ${state.problem}. התגובה שלך (R) קובעת את התוצאה (O). שנה את ה-R שלך — שנה את המציאות.`});
 
@@ -542,7 +644,8 @@ function copyEquation() {
   text += `🔒 אילוצים: ${state.limit.join(', ') || '—'}\n`;
   text += `🔍 נעלמים: ${state.unknown.join(', ') || '—'}\n`;
   text += `📌 תוצאה: ${state.result || '—'}\n`;
-  text += `🌟 פתרון רצוי: ${state.solution || '—'}\n\n`;
+  text += `🌟 פתרון רצוי: ${state.solution || '—'}\n`;
+  text += `⚠️ ניהול סיכון: חומרה ${state.riskSeverity}/10 × סבירות ${state.riskProb}/10 = ציון ${state.riskSeverity*state.riskProb}/100\n\n`;
   text += `נוצר ע"י Mentor-IT | AILON Task`;
   navigator.clipboard.writeText(text).then(()=>alert('✅ המשוואה הועתקה!'));
 }
