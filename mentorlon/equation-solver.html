@@ -220,6 +220,30 @@ body {
 .risk-critical { color:#dc2626; background:rgba(220,38,38,0.18); border:1px solid rgba(220,38,38,0.4); }
 .step-num.risk-num { background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; }
 
+
+/* EMOTION SECTION */
+.emotion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.emotion-btn {
+  padding:8px 4px; border-radius:12px; border:2px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04); color:#94a3b8; font-size:12px; font-weight:700;
+  cursor:pointer; text-align:center; transition:all 0.2s; line-height:1.3;
+}
+.emotion-btn:hover { border-color:rgba(20,184,166,0.4); color:#e2e8f0; transform:scale(1.03); }
+.emotion-btn.selected { border-color:#14b8a6; background:rgba(20,184,166,0.15); color:#14b8a6; transform:scale(1.05); }
+.emotion-btn.neg { border-color:rgba(239,68,68,0.2); }
+.emotion-btn.neg.selected { border-color:#ef4444; background:rgba(239,68,68,0.12); color:#ef4444; }
+.emotion-btn.pos { border-color:rgba(34,197,94,0.2); }
+.emotion-btn.pos.selected { border-color:#22c55e; background:rgba(34,197,94,0.12); color:#22c55e; }
+.emotion-intensity-wrap { margin-top:4px; }
+.emotion-intensity-label { font-size:13px; font-weight:700; color:#e2e8f0; display:flex; justify-content:space-between; margin-bottom:6px; }
+.emotion-intensity-val { font-size:18px; font-weight:900; color:#818cf8; }
+#slider-emotion { -webkit-appearance:none; appearance:none; width:100%; height:8px; border-radius:10px; background:linear-gradient(to right,#818cf8,#a855f7); outline:none; cursor:pointer; }
+#slider-emotion::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%; background:#818cf8; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.3); cursor:pointer; }
+.emotion-scale { display:flex; justify-content:space-between; font-size:10px; color:#64748b; margin-top:2px; }
+.emotion-result-box { margin-top:12px; padding:12px; border-radius:12px; background:rgba(129,140,248,0.08); border:1px solid rgba(129,140,248,0.2); display:none; }
+.emotion-result-text { font-size:13px; color:#c4b5fd; line-height:1.6; }
+.step-num.emotion-num { background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:#fff; }
+
 </style>
 </head>
 <body>
@@ -356,10 +380,56 @@ body {
   </div>
 
 
-  <!-- STEP 6 — RISK MANAGEMENT -->
+  <!-- STEP 6 — EMOTION ANALYSIS -->
+  <div class="step-card" id="card-emotion">
+    <div class="step-header">
+      <div class="step-num emotion-num">6</div>
+      <div>
+        <div class="step-title">💜 ניתוח רגשי — איזה רגש משפיע?</div>
+        <div class="step-subtitle">הרגש הוא נעלם מרכזי במשוואה — בחר את הרגש הדומיננטי</div>
+      </div>
+      <span class="step-badge" style="background:rgba(139,92,246,0.15);color:#a78bfa;border-color:rgba(139,92,246,0.25);">רגש</span>
+    </div>
+
+    <div class="emotion-grid">
+      <!-- שליליים -->
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'פחד 😨')">😨<br>פחד</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'חרדה 😰')">😰<br>חרדה</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'כעס 😠')">😠<br>כעס</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'קנאה 😤')">😤<br>קנאה</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'תסכול 😤')">😫<br>תסכול</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'עצב 😢')">😢<br>עצב</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'בושה 😳')">😳<br>בושה</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'אשמה 😞')">😞<br>אשמה</button>
+      <button class="emotion-btn neg" onclick="selectEmotion(this,'דאגה 😟')">😟<br>דאגה</button>
+      <!-- חיוביים -->
+      <button class="emotion-btn pos" onclick="selectEmotion(this,'תקווה 🌟')">🌟<br>תקווה</button>
+      <button class="emotion-btn pos" onclick="selectEmotion(this,'התלהבות 🔥')">🔥<br>התלהבות</button>
+      <button class="emotion-btn pos" onclick="selectEmotion(this,'אהבה ❤️')">❤️<br>אהבה</button>
+      <button class="emotion-btn pos" onclick="selectEmotion(this,'גאווה 💪')">💪<br>גאווה</button>
+      <button class="emotion-btn pos" onclick="selectEmotion(this,'סקרנות 🤔')">🤔<br>סקרנות</button>
+      <button class="emotion-btn pos" onclick="selectEmotion(this,'ביטחון 😎')">😎<br>ביטחון</button>
+    </div>
+
+    <div class="emotion-intensity-wrap" id="emotion-intensity-wrap" style="display:none">
+      <div class="emotion-intensity-label">
+        <span>עד כמה הרגש הזה משפיע על ההחלטה?</span>
+        <span class="emotion-intensity-val" id="val-emotion">5</span>
+      </div>
+      <input type="range" id="slider-emotion" min="1" max="10" value="5"
+        oninput="updateEmotionIntensity()" />
+      <div class="emotion-scale"><span>1 — כמעט לא</span><span>5 — בינוני</span><span>10 — שולט לחלוטין</span></div>
+    </div>
+
+    <div class="emotion-result-box" id="emotion-result-box">
+      <div class="emotion-result-text" id="emotion-result-text"></div>
+    </div>
+  </div>
+
+  <!-- STEP 7 — RISK MANAGEMENT -->
   <div class="step-card" id="card-risk">
     <div class="step-header">
-      <div class="step-num risk-num">6</div>
+      <div class="step-num risk-num">7</div>
       <div>
         <div class="step-title">⚠️ ניהול סיכון</div>
         <div class="step-subtitle">הערך את רמת הסיכון והסבירות שהבעיה תתממש</div>
@@ -459,7 +529,7 @@ body {
 })();
 
 // STATE
-const state = { problem:'', data:[], limit:[], unknown:[], result:'', solution:'', riskSeverity:5, riskProb:5 };
+const state = { problem:'', data:[], limit:[], unknown:[], result:'', solution:'', emotion:'', emotionIntensity:5, riskSeverity:5, riskProb:5 };
 
 function addTag(type) {
   const inp = document.getElementById('inp-'+type+'-text');
@@ -511,6 +581,33 @@ function updateEqTags() {
   });
 }
 
+
+
+function selectEmotion(btn, emotionName) {
+  document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.emotion = emotionName;
+  document.getElementById('emotion-intensity-wrap').style.display = 'block';
+  updateEmotionIntensity();
+}
+
+function updateEmotionIntensity() {
+  const val = parseInt(document.getElementById('slider-emotion').value);
+  state.emotionIntensity = val;
+  document.getElementById('val-emotion').textContent = val;
+  const box = document.getElementById('emotion-result-box');
+  const txt = document.getElementById('emotion-result-text');
+  box.style.display = 'block';
+  let level = val <= 3 ? 'נמוכה' : val <= 6 ? 'בינונית' : val <= 8 ? 'גבוהה' : 'דומיננטית לחלוטין';
+  let advice = val <= 3
+    ? 'הרגש נוכח אבל אינו שולט — ההחלטה שלך נשלטת בעיקר על ידי שכל ישר.'
+    : val <= 6
+    ? 'הרגש משפיע על ההחלטה — נסה לנתח גם מהראש, לא רק מהלב.'
+    : val <= 8
+    ? 'הרגש גבוה — שים לב שלא תפסיד את ההחלטה הנכונה בגלל הרגש הזה. עצור, נשום, שאל: מה השכל אומר?'
+    : 'זהירות! הרגש שולט לחלוטין — במצב כזה אסור לקבל החלטות גדולות. המתן עד שתרגע.';
+  txt.innerHTML = `💜 <strong>${state.emotion}</strong> משפיע ברמה <strong>${level}</strong> (${val}/10)<br><br>${advice}`;
+}
 
 function updateRisk() {
   const s = parseInt(document.getElementById('slider-severity').value);
@@ -567,6 +664,7 @@ function buildFullEqHtml() {
     {key:'🔍 נעלמים', cls:'k-unknown', val: state.unknown.length ? state.unknown.join(' | ') : '—'},
     {key:'📌 תוצאה', cls:'k-result', val: state.result || '—'},
     {key:'🌟 פתרון', cls:'k-problem', val: state.solution || '—'},
+    {key:'💜 רגש משפיע', cls:'k-unknown', val: state.emotion ? state.emotion + ' (עוצמה: ' + state.emotionIntensity + '/10)' : '—'},
     {key:'⚠️ חומרת סיכון', cls:'k-result', val: state.riskSeverity + '/10'},
     {key:'🎲 סבירות', cls:'k-result', val: state.riskProb + '/10'},
     {key:'📊 ציון סיכון', cls:'k-result', val: (state.riskSeverity * state.riskProb) + '/100'},
@@ -604,6 +702,24 @@ function buildInsights() {
     insights.push({icon:'💡', text:`<strong>שאלה לחשיבה:</strong> האם ישנם גורמים נוספים שאתה לא יודע עליהם עדיין? חפש את הנעלם — הוא לרוב מסתתר ברגשות, דפוסים לא מודעים, או מידע חסר.`});
   }
 
+
+
+  // Emotion analysis
+  if(state.emotion) {
+    const negEmotions = ['פחד','חרדה','כעס','קנאה','תסכול','עצב','בושה','אשמה','דאגה'];
+    const isNeg = negEmotions.some(e => state.emotion.includes(e));
+    let emotionAdvice = '';
+    if(state.emotionIntensity >= 7) {
+      emotionAdvice = isNeg
+        ? `⚠️ הרגש <strong>${state.emotion}</strong> בעוצמה ${state.emotionIntensity}/10 — זהירות! רגש שלילי חזק עלול לעוות את ההחלטה. המתן עד שתרגע לפני שתפעל.`
+        : `✅ הרגש <strong>${state.emotion}</strong> בעוצמה ${state.emotionIntensity}/10 — רגש חיובי חזק! נצל את האנרגיה הזו לפעולה, אבל ודא שהשכל עדיין מוביל.`;
+    } else if(state.emotionIntensity >= 4) {
+      emotionAdvice = `💜 הרגש <strong>${state.emotion}</strong> נוכח ברמה בינונית (${state.emotionIntensity}/10) — שים לב להשפעתו על ההחלטה ונסה לאזן בין רגש לשכל.`;
+    } else {
+      emotionAdvice = `💙 הרגש <strong>${state.emotion}</strong> נוכח אך אינו שולט (${state.emotionIntensity}/10) — ההחלטה שלך מובלת בעיקר מהשכל. זה טוב!`;
+    }
+    insights.push({icon:'💜', text: emotionAdvice});
+  }
 
   // Risk analysis
   const riskScore = state.riskSeverity * state.riskProb;
@@ -645,6 +761,7 @@ function copyEquation() {
   text += `🔍 נעלמים: ${state.unknown.join(', ') || '—'}\n`;
   text += `📌 תוצאה: ${state.result || '—'}\n`;
   text += `🌟 פתרון רצוי: ${state.solution || '—'}\n`;
+  if(state.emotion) text += `💜 רגש משפיע: ${state.emotion} (עוצמה: ${state.emotionIntensity}/10)\n`;
   text += `⚠️ ניהול סיכון: חומרה ${state.riskSeverity}/10 × סבירות ${state.riskProb}/10 = ציון ${state.riskSeverity*state.riskProb}/100\n\n`;
   text += `נוצר ע"י Mentor-IT | AILON Task`;
   navigator.clipboard.writeText(text).then(()=>alert('✅ המשוואה הועתקה!'));
