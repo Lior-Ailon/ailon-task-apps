@@ -396,7 +396,7 @@ body::after {
 </head>
 <body>
 
-<div id="debugStatus" style="position:fixed;top:0;left:0;background:red;color:white;padding:10px;z-index:99999;font-size:14px;">Loading...</div>
+<div id="debugStatus" style="position:fixed;top:0;left:0;background:red;color:white;padding:10px;z-index:99999;font-size:14px;">Starting...</div>
 
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-card">
@@ -1184,6 +1184,8 @@ function loadDailyFocus() {
 document.addEventListener('DOMContentLoaded', loadDailyFocus);
 
 
+try { document.getElementById('debugStatus').textContent = 'After IIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after IIFEs: ' + e.message; }
+
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
 let zoomEditDay = -1;
@@ -1438,6 +1440,8 @@ function renderDailyFocusBanner() {
   var el = document.getElementById('energy-tip-text');
   if(el) el.textContent = et[idx];
 })();
+
+try { document.getElementById('debugStatus').textContent = 'After IIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after IIFEs: ' + e.message; }
 
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
@@ -1725,6 +1729,8 @@ function renderDailyFocusBanner() {
   }
 })();
 
+try { document.getElementById('debugStatus').textContent = 'After IIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after IIFEs: ' + e.message; }
+
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
 let zoomEditDay = -1;
@@ -1985,6 +1991,8 @@ function openMiniTaskModal() {
 }
 function closeMiniTaskModal() { document.getElementById('miniTaskOverlay').classList.remove('active'); }
 
+try { document.getElementById('debugStatus').textContent = 'After focus zoom'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after focus zoom: ' + e.message; }
+
 // Safe event binding
 function safeBind(id, event, handler) {
   try {
@@ -2110,6 +2118,8 @@ try {
 
 
 
+try { document.getElementById('debugStatus').textContent = 'After mini tasks'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after mini tasks: ' + e.message; }
+
 // ===== AUTH SYSTEM (PBKDF2) =====
 let authMode = 'login';
 
@@ -2153,7 +2163,6 @@ function clearAuthError() { document.getElementById('authError').classList.remov
 
 function switchAuthMode(mode) {
   authMode = mode;
-  try { document.getElementById('debugStatus').textContent = 'switchAuthMode called: ' + mode; } catch(e) {}
   const confirmField = document.getElementById('authPasswordConfirm');
   const submitBtn = document.getElementById('authSubmit');
   const switchEl = document.getElementById('authSwitch');
@@ -2182,7 +2191,6 @@ function switchAuthMode(mode) {
 }
 
 async function handleAuthSubmit() {
-  try { document.getElementById('debugStatus').textContent = 'handleAuthSubmit called'; } catch(e) {}
   clearAuthError();
   const username = document.getElementById('authUsername').value.trim();
   const password = document.getElementById('authPassword').value;
@@ -2293,6 +2301,8 @@ function checkSession() {
   return false;
 }
 
+try { document.getElementById('debugStatus').textContent = 'After auth defs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after auth defs: ' + e.message; }
+
 // Make auth functions globally accessible
 window.switchAuthMode = switchAuthMode;
 window.handleAuthSubmit = handleAuthSubmit;
@@ -2307,8 +2317,8 @@ safeBind('authUsername', 'keydown', function(e) { if (e.key === 'Enter') documen
 safeBind('logoutBtn', 'click', logoutUser);
 
 // Check session on load
-try { checkSession(); } catch(e) { console.error('checkSession failed', e); }
-try { document.getElementById('debugStatus').textContent = 'Script loaded. switchAuthMode type: ' + typeof window.switchAuthMode; } catch(e) {}
+try { checkSession(); } catch(e) { document.getElementById('debugStatus').textContent = 'checkSession error: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'ALL DONE'; } catch(e) {}
 
 
 </script>
