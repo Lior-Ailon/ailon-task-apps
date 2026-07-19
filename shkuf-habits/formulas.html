@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דף נוסחאות — Atomic Habits | ש.ק.ו.פ</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #1e293b;
+    background: white;
+    direction: rtl;
+    padding: 20px;
+    max-width: 210mm;
+    margin: 0 auto;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #0d9488;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    color: #0d9488;
+    margin-bottom: 4px;
+  }
+  .header .sub {
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+  .header .brand {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .law-card {
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 12px 14px;
+    page-break-inside: avoid;
+  }
+  .law-1 { border-color: #3b82f6; background: #eff6ff; }
+  .law-2 { border-color: #f59e0b; background: #fffbeb; }
+  .law-3 { border-color: #10b981; background: #f0fdf4; }
+  .law-4 { border-color: #8b5cf6; background: #faf5ff; }
+
+  .law-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: white;
+    margin-left: 8px;
+  }
+  .law-1 .law-num { background: #3b82f6; }
+  .law-2 .law-num { background: #f59e0b; }
+  .law-3 .law-num { background: #10b981; }
+  .law-4 .law-num { background: #8b5cf6; }
+
+  .law-title {
+    font-weight: 800;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .law-formula {
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    margin: 6px 0;
+    text-align: center;
+  }
+  .law-desc {
+    font-size: 0.8rem;
+    color: #475569;
+    line-height: 1.4;
+  }
+  .law-example {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  .loop-section {
+    background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+    border: 2px solid #14b8a6;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .loop-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0d9488;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .loop-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 4px;
+  }
+  .loop-step {
+    text-align: center;
+    flex: 1;
+  }
+  .loop-icon { font-size: 1.5rem; margin-bottom: 2px; }
+  .loop-label { font-size: 0.8rem; font-weight: 700; color: #0d9488; }
+  .loop-detail { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+  .loop-arrow { font-size: 1.1rem; color: #94a3b8; }
+
+  .formula-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .formula-box {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    page-break-inside: avoid;
+  }
+  .formula-box.highlight {
+    border-color: #0d9488;
+    background: #f0fdfa;
+  }
+  .formula-box h3 {
+    font-size: 0.9rem;
+    color: #0d9488;
+    margin-bottom: 6px;
+  }
+  .formula-box .formula-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    padding: 6px 10px;
+    background: rgba(13,148,136,0.08);
+    border-radius: 8px;
+    text-align: center;
+    margin: 4px 0;
+  }
+  .formula-box .formula-desc {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  .identity-box {
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+    color: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .identity-box h3 { font-size: 1rem; margin-bottom: 6px; }
+  .identity-box p { font-size: 0.85rem; opacity: 0.95; line-height: 1.5; }
+
+  .compound-box {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: center;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .compound-box h3 { font-size: 0.95rem; color: #92400e; margin-bottom: 4px; }
+  .compound-box .compound-formula {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #78350f;
+    margin: 6px 0;
+  }
+  .compound-box p { font-size: 0.78rem; color: #92400e; }
+
+  .tips-list {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+  }
+  .tips-list h3 {
+    font-size: 0.95rem;
+    color: #0d9488;
+    margin-bottom: 8px;
+  }
+  .tips-list ol {
+    padding-right: 18px;
+    font-size: 0.8rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+  .tips-list li { margin-bottom: 4px; }
+  .tips-list li strong { color: #0d9488; }
+
+  .footer {
+    text-align: center;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
+
+  .break-section { page-break-before: always; }
+
+  @media print {
+    body { padding: 0; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🧬 דף נוסחאות — Atomic Habits</h1>
+  <div class="sub">ג'יימס קליר | 4 חוקי ההרגל | ש.ק.ו.פ</div>
+  <div class="brand">AILON Task — שיפורים קטנים ובלתי פוסקים</div>
+</div>
+
+<!-- IDENTITY -->
+<div class="identity-box">
+  <h3>🎭 חוק הזהות — Identity-Based Habits</h3>
+  <p>"אתה לא עולה לרמת המטרות שלך — אתה יורד לרמת המערכות שלך"</p>
+  <p style="margin-top:6px">כל פעם שאתה פועל לפי הרגל חדש — אתה מצביע לעצמך על מי אתה רוצה להיות</p>
+</div>
+
+<!-- COMPOUND EFFECT -->
+<div class="compound-box">
+  <h3>📈 אפקט הריבית דריבית — 1% כל יום</h3>
+  <div class="compound-formula">1% טוב יותר × 365 ימים = ×37</div>
+  <p>1% גרוע יותר × 365 ימים = כמעט אפס. הכוח הגדול ביותר בחיים הוא ריבית דריבית על הרגלים.</p>
+</div>
+
+<!-- HABIT LOOP -->
+<div class="loop-section">
+  <div class="loop-title">🔄 מעגל ההרגל — The Habit Loop</div>
+  <div class="loop-flow">
+    <div class="loop-step">
+      <div class="loop-icon">🔔</div>
+      <div class="loop-label">רמז (Cue)</div>
+      <div class="loop-detail">זמן + מקום<br>או הרגל קיים</div>
+    </div>
+    <div class="loop-arrow">←</div>
+    <div class="loop-step">
+      <div class="loop-icon">🔥</div>
+      <div class="loop-label">דחף (Craving)</div>
+      <div class="loop-detail">הרצון<br>להרגיש טוב יותר</div>
+    </div>
+    <div class="loop-arrow">←</div>
+    <div class="loop-step">
+      <div class="loop-icon">⚡</div>
+      <div class="loop-label">תגובה (Response)</div>
+      <div class="loop-detail">2 דקות<br>התחלה קטנה</div>
+    </div>
+    <div class="loop-arrow">←</div>
+    <div class="loop-step">
+      <div class="loop-icon">🎉</div>
+      <div class="loop-label">תגמול (Reward)</div>
+      <div class="loop-detail">סימון וי<br>תחושת הישג</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 LAWS GRID -->
+<div class="grid">
+  <div class="law-card law-1">
+    <div class="law-title"><span class="law-num">1</span> עשה אותו *ברור*</div>
+    <div class="law-formula">אעשה [הרגל] ב[שעה] ב[מקום]</div>
+    <div class="law-desc">קבע זמן ומקום ספציפיים. חבר להרגל קיים: "אחרי שאני X — אני Y".</div>
+    <div class="law-example">דוגמה: אחרי שאני שותה קפה — אני מדטר 5 דקות</div>
+  </div>
+
+  <div class="law-card law-2">
+    <div class="law-title"><span class="law-num">2</span> עשה אותו *אטרקטיבי*</div>
+    <div class="law-formula">חבר [צריך] עם [רוצה]</div>
+    <div class="law-desc">חיבור פיתוי — שלב משהו שאתה חייב עם משהו שאתה רוצה. שנה את הזהות.</div>
+    <div class="law-example">דוגמה: רק בזמן אימון — מותר לשמוע את הפודקאסט האהוב</div>
+  </div>
+
+  <div class="law-card law-3">
+    <div class="law-title"><span class="law-num">3</span> עשה אותו *קל*</div>
+    <div class="law-formula">התחל ב-2 דקות בלבד</div>
+    <div class="law-desc">צמצם חיכוך. הכן את הסביבה מראש. ככל שההתחלה קלה — סיכוי ההצלחה גדל.</div>
+    <div class="law-example">דוגמה: רק לשים נעלי ריצה ליד המיטה מראש</div>
+  </div>
+
+  <div class="law-card law-4">
+    <div class="law-title"><span class="law-num">4</span> עשה אותו *מספק*</div>
+    <div class="law-formula">תגמל מיד + עקוב אחרי התקדמות</div>
+    <div class="law-desc">תגמול מיידי מחזק את ההרגל. אל תפספס פעמיים ברצף.</div>
+    <div class="law-example">דוגמה: סימון וי באפליקציה + כוס קפה טובה</div>
+  </div>
+</div>
+
+<!-- IMPLEMENTATION INTENTIONS -->
+<div class="formula-row">
+  <div class="formula-box highlight">
+    <h3>📍 נוסחת הכוונה (Implementation Intention)</h3>
+    <div class="formula-text">"אני אעשה [התנהגות] ב[שעה] ב[מקום]"</div>
+    <div class="formula-desc">ספציפיות = הצלחה. לא "אני רוצה להתאמן" אלא "בכל יום ב׳ בשעה 7:00, אני רץ 20 דקות בפארק"</div>
+  </div>
+
+  <div class="formula-box highlight">
+    <h3>🔗 נוסחת קישור הרגלים (Habit Stacking)</h3>
+    <div class="formula-text">"אחרי [הרגל קיים] — אני עושה [הרגל חדש]"</div>
+    <div class="formula-desc">מנצל הרגל שכבר קיים כעוגן להרגל החדש. המוח מכיר את הטריגר ומחבר אליו.</div>
+  </div>
+</div>
+
+<div class="formula-row">
+  <div class="formula-box">
+    <h3>⏱️ חוק 2 הדקות (2-Minute Rule)</h3>
+    <div class="formula-text">"גרסת 2 דקות: [פעולה מינימלית]"</div>
+    <div class="formula-desc">כשקשה — רק תתחיל. 2 דקות. "רק שם נעלי ספורט" → "רק רד למטה" → "רק 5 דקות ריצה".</div>
+  </div>
+
+  <div class="formula-box">
+    <h3>🛠️ עיצוב סביבה (Environment Design)</h3>
+    <div class="formula-text">הסר חיכוך מהרגל הטוב + הוסף חיכוך להרגל הרע</div>
+    <div class="formula-desc">הסביבה היא הארכיטקטורה של החיים. הכן ציוד מראש, הוצא דברים מהעין להרגלים רעים.</div>
+  </div>
+</div>
+
+<!-- REVERSE LAWS -->
+<div class="formula-row">
+  <div class="formula-box" style="border-color:#ef4444; background:#fef2f2;">
+    <h3 style="color:#991b1b;">🚫 לשבור הרגל רע — 4 החוקים ההפוכים</h3>
+    <div class="formula-text" style="background:rgba(239,68,68,0.08);font-size:0.82rem;">
+      1. הפוך ל*בלתי נראה* — הסר את הרמז<br>
+      2. הפוך ל*מגעיל* — חבר לתחושה שלילית<br>
+      3. הפוך ל*קשה* — הוסף חיכוך<br>
+      4. הפוך ל*בלתי מספק* — ענוש/מעקב
+    </div>
+  </div>
+
+  <div class="formula-box" style="border-color:#0d9488; background:#f0fdfa;">
+    <h3>📊 חוק "אל תפספס פעמיים"</h3>
+    <div class="formula-text">פספסת יום? למחרת — חזור *מיד*</div>
+    <div class="formula-desc">היום השני אחרי נפילה הוא הקריטי. נפילה אחת = תקלה. שתי נפילות = תחילת הרגל חדש (רע).</div>
+  </div>
+</div>
+
+<!-- KEY PRINCIPLES -->
+<div class="tips-list">
+  <h3>🧠 עקרונות מפתח מתוך הספר</h3>
+  <ol>
+    <li><strong>מערכות > מטרות:</strong> "אתה לא עולה לרמת המטרות — אתה יורד לרמת המערכות שלך"</li>
+    <li><strong>זהות > התנהגות:</strong> אל תגיד "אני רוצה להפסיק לעשן". תגיד "אני לא מעשן — זה לא מי שאני"</li>
+    <li><strong>כדי לבנות הרגל טוב:</strong> הפוך אותו לברור, אטרקטיבי, קל ומספק</li>
+    <li><strong>כדי לשבור הרגל רע:</strong> הפוך אותו לבלתי נראה, מגעיל, קשה ובלתי מספק</li>
+    <li><strong>רמז ← דחף ← תגובה ← תגמול:</strong> כל הרגל עובר דרך 4 שלבים אלה</li>
+    <li><strong>1% כל יום:</strong> שיפור קטן שנצבר = כוח עצום לאורך זמן</li>
+    <li><strong>סביבה קובעת:</strong> עיצוב הסביבה חשוב יותר מכוח רצון</li>
+    <li><strong>מעקב = מוטיבציה:</strong> מה שנמדד — משתפר. סמן כל יום!</li>
+  </ol>
+</div>
+
+<!-- DAILY CHECKLIST -->
+<div class="tips-list">
+  <h3>✅ צ'קליסט יומי — Atomic Habits</h3>
+  <ol>
+    <li>הגדרת זמן ומקום להרגל שלך היום? ☐</li>
+    <li>חיברת את ההרגל להרגל קיים? ☐</li>
+    <li>הכנת את הסביבה מראש (ציוד, מקום)? ☐</li>
+    <li>התחלת בגרסת 2 הדקות? ☐</li>
+    <li>תגמלת את עצמך מיד אחרי? ☐</li>
+    <li>סימנת וי באפליקציה? ☐</li>
+    <li>אם פספסת אתמול — חזרת היום? ☐</li>
+  </ol>
+</div>
+
+<div class="footer">
+  ש.ק.ו.פ — שיפורים קטנים ובלתי פוסקים | AILON Task<br>
+  מבוסס על "Atomic Habits" מאת ג'יימס קליר | להדפסה כפולה (A4)
+</div>
+
+<div class="no-print" style="text-align:center;margin-top:20px;">
+  <button onclick="window.print()" style="background:#0d9488;color:white;border:none;padding:12px 30px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;">🖨️ הדפס / שמור כ-PDF</button>
+  <a href="index.html" style="margin-right:10px;color:#0d9488;font-size:0.9rem;">חזרה לאפליקציה</a>
+</div>
+
+</body>
+</html>
