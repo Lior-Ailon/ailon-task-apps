@@ -520,7 +520,7 @@ body::after {
   <div class="mini-task-modal">
     <div class="mini-task-header">
       <h2>⚡ משימה מהירה</h2>
-      <p>משימה קטנה שלא נכנסת ללו"ז הקבוע</p>
+      <p>משימה קצרה (5 דק׳ עד שעה) — עם תזכורת ורישום בלו"ז</p>
     </div>
     <div class="mini-task-body">
       <label>📝 מה המשימה?</label>
@@ -536,6 +536,16 @@ body::after {
         <div class="mini-task-dur-btn" data-dur="90">שעה וחצי</div>
         <div class="mini-task-dur-btn" data-dur="120">שעתיים</div>
       </div>
+      <label>📅 באיזה יום?</label>
+      <select id="miniTaskDay" style="width:100%;box-sizing:border-box;background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b;padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit;margin-top:4px;">
+        <option value="-1">היום</option>
+        <option value="0">ראשון</option>
+        <option value="1">שני</option>
+        <option value="2">שלישי</option>
+        <option value="3">רביעי</option>
+        <option value="4">חמישי</option>
+        <option value="5">שישי</option>
+      </select>
       <label>⏰ מתי להזכיר?</label>
       <div class="mini-task-time-row">
         <select id="miniTaskHour"></select>
@@ -1501,9 +1511,17 @@ function renderDailyFocusBanner() {
 // ===== MINI TASK =====
 let miniTaskDuration = 15;
 
-function getMiniTaskKey() { return 'loazminitasks_' + new Date().toISOString().slice(0,10) + '_' + getUserKey(); }
-function getMiniTasks() { const r = localStorage.getItem(getMiniTaskKey()); if(!r) return []; try { return JSON.parse(r); } catch(e) { return []; } }
-function setMiniTasks(list) { localStorage.setItem(getMiniTaskKey(), JSON.stringify(list)); }
+function getMiniTaskKey(dayOffset) {
+  var d = new Date();
+  if (dayOffset !== undefined && dayOffset >= 0) {
+    var weekDay = new Date(currentWeekStart);
+    weekDay.setDate(weekDay.getDate() + dayOffset);
+    d = weekDay;
+  }
+  return 'loazminitasks_' + d.toISOString().slice(0,10) + '_' + getUserKey();
+}
+function getMiniTasks(dayOffset) { const r = localStorage.getItem(getMiniTaskKey(dayOffset)); if(!r) return []; try { return JSON.parse(r); } catch(e) { return []; } }
+function setMiniTasks(list, dayOffset) { localStorage.setItem(getMiniTaskKey(dayOffset), JSON.stringify(list)); }
 
 function populateMiniTaskTimes() {
   const hourSel = document.getElementById('miniTaskHour');
@@ -1517,6 +1535,7 @@ function populateMiniTaskTimes() {
 function openMiniTaskModal() {
   populateMiniTaskTimes();
   document.getElementById('miniTaskName').value = '';
+  document.getElementById('miniTaskDay').value = '-1';
   miniTaskDuration = 15;
   document.querySelectorAll('.mini-task-dur-btn').forEach(function(b) { b.classList.toggle('active', parseInt(b.dataset.dur) === 15); });
   document.getElementById('miniTaskOverlay').classList.add('active');
@@ -1538,17 +1557,69 @@ safeBind('miniTaskSave', 'click', function() {
   if (!name) { alert('אנא הכנס שם משימה'); return; }
   const hour = parseInt(document.getElementById('miniTaskHour').value);
   const minute = parseInt(document.getElementById('miniTaskMinute').value);
-  const tasks = getMiniTasks();
-  tasks.push({ id: Date.now(), name: name, duration: miniTaskDuration, hour: hour, minute: minute, done: false });
-  setMiniTasks(tasks);
+  var dayVal = parseInt(document.getElementById('miniTaskDay').value);
+  
+  // Determine the actual day offset
+  var dayOffset;
+  var actualDate = new Date();
+  if (dayVal === -1) {
+    // Today — figure out which day index in the current week
+    var todayIdx = Math.floor((new Date() - currentWeekStart) / (1000*60*60*24));
+    dayOffset = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : -1;
+    actualDate = new Date();
+  } else {
+    dayOffset = dayVal;
+    actualDate = new Date(currentWeekStart);
+    actualDate.setDate(actualDate.getDate() + dayVal);
+  }
+  
+  // Save to mini-tasks list for that day
+  var storageDayOffset = (dayOffset >= 0) ? dayOffset : undefined;
+  const tasks = getMiniTasks(storageDayOffset);
+  tasks.push({ id: Date.now(), name: name, duration: miniTaskDuration, hour: hour, minute: minute, done: false, dayOffset: dayOffset });
+  setMiniTasks(tasks, storageDayOffset);
+  
+  // ALSO save to the regular weekly schedule
+  if (dayOffset >= 0 && dayOffset < 6) {
+    // Find the best matching hour slot in the schedule
+    var hourIdx = -1;
+    var bestDiff = 999;
+    for (var i = 0; i < HOURS.length; i++) {
+      var parts = HOURS[i].split(':');
+      var slotH = parseInt(parts[0]);
+      var slotM = parseInt(parts[1]);
+      var diff = Math.abs((slotH * 60 + slotM) - (hour * 60 + minute));
+      if (diff < bestDiff) { bestDiff = diff; hourIdx = i; }
+    }
+    if (hourIdx >= 0) {
+      // Check if there's already a task in that slot — if so, append to it
+      var existing = getCellData(dayOffset, hourIdx);
+      if (existing) {
+        // Append mini task info to the existing task
+        existing.task = existing.task + ' + ⚡' + name + ' (' + formatDuration(miniTaskDuration) + ')';
+      } else {
+        setCellData(dayOffset, hourIdx, {
+          task: '⚡ ' + name + ' (' + formatDuration(miniTaskDuration) + ')',
+          motivation: 5,
+          status: 'pending',
+          isMiniTask: true,
+          miniTaskId: Date.now()
+        });
+      }
+    }
+  }
+  
   closeMiniTaskModal();
   renderMiniTaskList();
+  renderTable();
+  
   if ('Notification' in window && Notification.permission === 'default') { Notification.requestPermission(); }
   const el = document.createElement('div');
   el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(245,158,11,0.3);';
-  el.textContent = '⚡ משימה נוספה! תזכיר לך ב-' + String(hour).padStart(2,'0') + ':' + String(minute).padStart(2,'0');
+  var dayLabel = (dayVal === -1) ? 'היום' : ['ראשון','שני','שלישי','רביעי','חמישי','שישי'][dayVal];
+  el.textContent = '⚡ משימה נוספה! ' + dayLabel + ' ' + String(hour).padStart(2,'0') + ':' + String(minute).padStart(2,'0');
   document.body.appendChild(el);
-  setTimeout(function() { el.remove(); }, 2000);
+  setTimeout(function() { el.remove(); }, 2500);
 });
 
 safeBind('miniTaskCancel', 'click', closeMiniTaskModal);
@@ -1572,7 +1643,10 @@ function formatDuration(mins) {
 }
 
 function renderMiniTaskList() {
-  const tasks = getMiniTasks();
+  // Get today's mini tasks
+  var todayIdx = Math.floor((new Date() - currentWeekStart) / (1000*60*60*24));
+  var dayOffset = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : undefined;
+  const tasks = getMiniTasks(dayOffset);
   const container = document.getElementById('miniTaskListContainer');
   if (!tasks.length) { container.innerHTML = ''; return; }
   let html = '<div class="mini-task-section">';
@@ -1595,24 +1669,32 @@ function renderMiniTaskList() {
 }
 
 function toggleMiniTaskDone(id) {
-  const tasks = getMiniTasks();
+  var todayIdx = Math.floor((new Date() - currentWeekStart) / (1000*60*60*24));
+  var dayOffset = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : undefined;
+  const tasks = getMiniTasks(dayOffset);
   tasks.forEach(function(t) { if (t.id === id) t.done = !t.done; });
-  setMiniTasks(tasks);
+  setMiniTasks(tasks, dayOffset);
   renderMiniTaskList();
+  renderTable();
   if ('Notification' in window && Notification.permission === 'granted') {
     new Notification('✅ משימה הושלמה!', { body: 'כל הכבוד! עוד משימה קטנה שבוצעה 🎉' });
   }
 }
 function deleteMiniTask(id) {
-  const tasks = getMiniTasks().filter(function(t) { return t.id !== id; });
-  setMiniTasks(tasks);
+  var todayIdx = Math.floor((new Date() - currentWeekStart) / (1000*60*60*24));
+  var dayOffset = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : undefined;
+  const tasks = getMiniTasks(dayOffset).filter(function(t) { return t.id !== id; });
+  setMiniTasks(tasks, dayOffset);
   renderMiniTaskList();
+  renderTable();
 }
 
 // Notification checker — runs every 30 seconds
 function checkMiniTaskReminders() {
   const now = new Date();
-  const tasks = getMiniTasks();
+  var todayIdx = Math.floor((new Date() - currentWeekStart) / (1000*60*60*24));
+  var dayOffset = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : undefined;
+  const tasks = getMiniTasks(dayOffset);
   tasks.forEach(function(t) {
     if (t.done) return;
     if (t.notified) return;
@@ -1621,7 +1703,7 @@ function checkMiniTaskReminders() {
     const diff = (now - taskTime) / 60000; // minutes
     if (diff >= 0 && diff < 1) {
       t.notified = true;
-      setMiniTasks(tasks);
+      setMiniTasks(tasks, dayOffset);
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('⚡ משימה מהירה: ' + t.name, {
           body: 'זמן לבצע! ⏱️ ' + formatDuration(t.duration),
@@ -1850,6 +1932,8 @@ window.handleAuthSubmit = handleAuthSubmit;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
 window.checkSession = checkSession;
+window.toggleMiniTaskDone = toggleMiniTaskDone;
+window.deleteMiniTask = deleteMiniTask;
 
 safeBind('authSubmit', 'click', handleAuthSubmit);
 safeBind('authPassword', 'keydown', function(e) { if (e.key === 'Enter') handleAuthSubmit(); });
