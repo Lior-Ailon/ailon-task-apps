@@ -602,6 +602,7 @@ body::after {
   </div>
 </div>
 <script>
+window.onerror = function(msg, url, line, col, err) { var d=document.getElementById('debugStatus'); if(d) d.textContent = 'GLOBAL_ERR: ' + msg + ' L:' + line + ' C:' + col; return true; };
 const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי'];
 const HOURS = [];
 for (let h = 8; h <= 23; h++) { HOURS.push(h+':00'); HOURS.push(h+':30'); }
