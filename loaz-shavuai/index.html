@@ -1184,7 +1184,7 @@ function loadDailyFocus() {
 document.addEventListener('DOMContentLoaded', loadDailyFocus);
 
 
-try { document.getElementById('debugStatus').textContent = 'After IIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after IIFEs: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'CP1-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR1: ' + e.message; }
 
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
@@ -1441,7 +1441,7 @@ function renderDailyFocusBanner() {
   if(el) el.textContent = et[idx];
 })();
 
-try { document.getElementById('debugStatus').textContent = 'After IIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after IIFEs: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'CP3-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR3: ' + e.message; }
 
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
@@ -1729,7 +1729,7 @@ function renderDailyFocusBanner() {
   }
 })();
 
-try { document.getElementById('debugStatus').textContent = 'After IIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after IIFEs: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'CP5-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR5: ' + e.message; }
 
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
@@ -1991,7 +1991,7 @@ function openMiniTaskModal() {
 }
 function closeMiniTaskModal() { document.getElementById('miniTaskOverlay').classList.remove('active'); }
 
-try { document.getElementById('debugStatus').textContent = 'After focus zoom'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after focus zoom: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'CP6-AfterFocusZoom'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR6: ' + e.message; }
 
 // Safe event binding
 function safeBind(id, event, handler) {
@@ -2118,7 +2118,7 @@ try {
 
 
 
-try { document.getElementById('debugStatus').textContent = 'After mini tasks'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after mini tasks: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'CP7-AfterMiniTasks'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR7: ' + e.message; }
 
 // ===== AUTH SYSTEM (PBKDF2) =====
 let authMode = 'login';
@@ -2301,7 +2301,7 @@ function checkSession() {
   return false;
 }
 
-try { document.getElementById('debugStatus').textContent = 'After auth defs'; } catch(e) { document.getElementById('debugStatus').textContent = 'Error after auth defs: ' + e.message; }
+try { document.getElementById('debugStatus').textContent = 'CP8-AfterAuthDefs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR8: ' + e.message; }
 
 // Make auth functions globally accessible
 window.switchAuthMode = switchAuthMode;
