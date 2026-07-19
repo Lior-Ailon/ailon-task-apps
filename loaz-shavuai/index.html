@@ -2155,6 +2155,12 @@ function switchAuthMode(mode) {
     titleEl.textContent = 'משתמש חדש';
     subEl.textContent = 'צור חשבון עם מאגר נתונים פרטי משלך';
     switchEl.innerHTML = 'כבר יש חשבון? <a onclick="switchAuthMode(\'login\')">התחבר</a>';
+  } else if (mode === 'claim') {
+    confirmField.style.display = 'block';
+    submitBtn.textContent = 'אמץ וקבע סיסמה';
+    titleEl.textContent = 'אימוץ משתמש קיים';
+    subEl.textContent = 'קבע סיסמה למשתמש הקיים כדי להמשיך עם הנתונים שלך';
+    switchEl.innerHTML = 'כבר יש חשבון? <a onclick="switchAuthMode(\'login\')">התחבר</a>';
   } else {
     confirmField.style.display = 'none';
     submitBtn.textContent = 'התחבר';
@@ -2183,13 +2189,56 @@ async function handleAuthSubmit() {
     users[safeUsername] = { salt: salt, hash: hash, displayName: username, createdAt: new Date().toISOString() };
     saveUsersList(users);
     loginUser(safeUsername, username);
+  } else if (authMode === 'claim') {
+    // Claim existing data with a new password
+    const confirmPwd = document.getElementById('authPasswordConfirm').value;
+    if (password !== confirmPwd) { showAuthError('הסיסמאות אינן תואמות'); return; }
+    if (users[safeUsername]) { showAuthError('משתמש זה כבר רשום. נסה להתחבר.'); return; }
+    const salt = genSalt();
+    const hash = await pbkdf2Hash(password, salt);
+    users[safeUsername] = { salt: salt, hash: hash, displayName: username, createdAt: new Date().toISOString(), migrated: true };
+    saveUsersList(users);
+    loginUser(safeUsername, username);
   } else {
     const user = users[safeUsername];
-    if (!user) { showAuthError('משתמש לא נמצא. בדוק את השם או צור משתמש חדש.'); return; }
+    if (!user) {
+      // Check if there's existing data under this name (migration scenario)
+      const hasOldData = checkExistingData(safeUsername);
+      if (hasOldData) {
+        showAuthError('נמצאו נתונים קיימים תחת השם הזה. לחץ על \'אמץ משתמש קיים\' כדי לקבוע סיסמה ולהמשיך עם הנתונים שלך.');
+        showClaimOption(safeUsername);
+      } else {
+        showAuthError('משתמש לא נמצא. בדוק את השם או צור משתמש חדש.');
+      }
+      return;
+    }
     const hash = await pbkdf2Hash(password, user.salt);
     if (hash !== user.hash) { showAuthError('סיסמה שגויה'); return; }
     loginUser(safeUsername, user.displayName);
   }
+}
+
+function checkExistingData(safeUsername) {
+  // Check if there's any localStorage data with this username as suffix
+  const suffix = '_' + safeUsername;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('loaz_') && key.endsWith(suffix)) return true;
+  }
+  // Also check the old name-based data (loaz_user_name, loazfocus_, etc.)
+  const oldName = localStorage.getItem('loaz_user_name');
+  if (oldName && oldName.trim() === safeUsername) return true;
+  // Check for any loazfocus or loazminitasks keys with this username
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && (key.startsWith('loazfocus_') || key.startsWith('loazminitasks_') || key.startsWith('loazrecurring_') || key.startsWith('loazweeklyfocus_')) && key.endsWith(suffix)) return true;
+  }
+  return false;
+}
+
+function showClaimOption(safeUsername) {
+  const switchEl = document.getElementById('authSwitch');
+  switchEl.innerHTML = 'נתונים קיימים נמצאו תחת \' + safeUsername + '\'. <a onclick="switchAuthMode(\'claim\')">🔑 אמץ משתמש קיים וקבע סיסמה</a>';
 }
 
 function loginUser(safeUsername, displayName) {
