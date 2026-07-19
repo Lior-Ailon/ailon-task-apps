@@ -536,6 +536,141 @@ body { position: relative; }
 .heat-today { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.3); }
 .heat-label { font-size: 9px; opacity: 0.8; }
 
+
+/* === ATOMIC HABITS TOOLKIT === */
+.law-card {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-right: 4px solid var(--teal);
+  box-shadow: 0 2px 10px rgba(13,148,136,0.08);
+  transition: all 0.2s;
+}
+.law-card:hover { transform: translateX(-2px); box-shadow: 0 4px 16px rgba(13,148,136,0.15); }
+.law-card.law-1 { border-right-color: #3b82f6; }
+.law-card.law-2 { border-right-color: #f59e0b; }
+.law-card.law-3 { border-right-color: #10b981; }
+.law-card.law-4 { border-right-color: #8b5cf6; }
+.law-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: white;
+  margin-left: 8px;
+}
+.law-1 .law-num { background: #3b82f6; }
+.law-2 .law-num { background: #f59e0b; }
+.law-3 .law-num { background: #10b981; }
+.law-4 .law-num { background: #8b5cf6; }
+.law-title { font-weight: 700; font-size: 0.95rem; color: var(--navy2); display: flex; align-items: center; margin-bottom: 6px; }
+.law-desc { font-size: 0.85rem; color: var(--gray); line-height: 1.5; }
+.law-action {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--navy2);
+  border: 1px dashed #cbd5e1;
+}
+.law-action strong { color: var(--teal-dark); }
+
+/* Identity banner */
+.identity-banner {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: white;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.identity-banner .id-label { font-size: 0.75rem; opacity: 0.8; margin-bottom: 4px; }
+.identity-banner .id-text { font-size: 1.1rem; font-weight: 700; }
+.identity-banner .id-sub { font-size: 0.78rem; opacity: 0.85; margin-top: 6px; }
+
+/* Habit loop visual */
+.habit-loop {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 4px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+.loop-step {
+  text-align: center;
+  flex: 1;
+  min-width: 70px;
+}
+.loop-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.loop-label { font-size: 0.72rem; font-weight: 700; color: var(--teal-dark); }
+.loop-detail { font-size: 0.68rem; color: var(--gray); margin-top: 2px; }
+.loop-arrow { font-size: 1.2rem; color: #cbd5e1; }
+
+/* Never miss twice warning */
+.miss-warning {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  text-align: center;
+  animation: pulse-warn 2s ease-in-out infinite;
+}
+@keyframes pulse-warn {
+  0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(245,158,11,0); }
+}
+.miss-warning .warn-emoji { font-size: 1.5rem; }
+.miss-warning .warn-text { font-size: 0.85rem; font-weight: 600; color: #92400e; margin-top: 4px; }
+
+/* 2-minute fallback */
+.two-min-badge {
+  display: inline-block;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* Habit scorecard */
+.scorecard-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  border: 1px solid #e2e8f0;
+}
+.scorecard-row .sc-time { font-size: 0.75rem; color: var(--gray); width: 50px; flex-shrink: 0; }
+.scorecard-row .sc-action { flex: 1; font-size: 0.85rem; color: var(--navy2); }
+.scorecard-row .sc-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
+.sc-good { background: #d1fae5; color: #065f46; }
+.sc-bad { background: #fee2e2; color: #991b1b; }
+.sc-neutral { background: #e2e8f0; color: #475569; }
+
+/* Compound effect visual */
+.compound-visual {
+  background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.compound-visual .compound-title { font-size: 0.85rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 8px; }
+.compound-bar { height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; margin: 4px 0; }
+.compound-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #14b8a6, #0d9488); transition: width 0.5s; }
+.compound-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--gray); }
 </style>
 
 <script>
@@ -691,6 +826,55 @@ body { position: relative; }
         <option value="other">✨ אחר</option>
       </select>
     </div>
+
+    <div style="height:8px;border-top:1px dashed #e2e8f0;margin:16px 0"></div>
+    <div style="font-size:0.9rem;font-weight:700;color:var(--teal-dark);margin-bottom:12px">🧬 מערכת ההרגל — Atomic Habits</div>
+    <div style="font-size:0.78rem;color:var(--gray);margin-bottom:14px">4 חוקים שיהפכו את ההרגל שלך לבלתי ניתן להתעלמות</div>
+
+    <div class="form-group">
+      <label class="form-label">🎭 זהות חדשה — "אני רוצה להיות מי ש..."</label>
+      <input type="text" id="habit-identity" class="form-input" placeholder="לדוגמה: אני רוצה להיות מי שקם מוקדם ומנצל את הבוקר" />
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">השינוי האמיתי מתחיל בזהות, לא בהתנהגות. כל פעם שאתה פועל — אתה מצביע לעצמך על מי אתה.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">📍 חוק 1 — ברור: מתי ואיפה? (Implementation Intention)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="text" id="habit-time" class="form-input" style="flex:1;min-width:100px" placeholder="בשעה 7:00" />
+        <input type="text" id="habit-place" class="form-input" style="flex:1;min-width:100px" placeholder="בסלון / במטבח" />
+      </div>
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">"אני אעשה [הרגל] ב[שעה] ב[מקום]"</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">🔗 חוק 1 — קישור הרגלים (Habit Stacking)</label>
+      <input type="text" id="habit-stack" class="form-input" placeholder="לדוגמה: אחרי שאני שותה קפה בבוקר — אני מדטר חמש דקות" />
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">"אחרי [הרגל קיים] — אני עושה [הרגל חדש]"</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">⏱️ חוק 3 — קל: גרסת ה-2 דקות</label>
+      <input type="text" id="habit-twomin" class="form-input" placeholder="לדוגמה: לשבת על השטיח עם נעלי ספורט — רק לשים אותן" />
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">אם קשה — רק תתחיל. 2 דקות. אחרי זה כבר קל להמשיך.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">🎨 חוק 2 — אטרקטיבי: חיבור פיתוי (Temptation Bundling)</label>
+      <input type="text" id="habit-bundle" class="form-input" placeholder="לדוגמה: רק בזמן מדיטציה אני מקשיב לפודקאסט האהוב" />
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">חבר משהו שאתה חייב לעשות עם משהו שאתה רוצה לעשות</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">🛠️ חוק 3 — סביבה: מה להכין מראש?</label>
+      <textarea id="habit-env" class="form-textarea" placeholder="לדוגמה: להכין בגדי ספורט מחוץ למיטה, להוציא ספר על השולחן..."></textarea>
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">צמצם חיכוך. ככל שההרגל קל יותר להתחיל — כך סיכוי ההצלחה גדול יותר.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">🎉 חוק 4 — מספק: מה התגמול המיידי?</label>
+      <input type="text" id="habit-reward" class="form-input" placeholder="לדוגמה: כוס קפה טובה + סימון וי באפליקציה" />
+      <div style="font-size:0.75rem;color:var(--gray);margin-top:4px">תגמול מיידי מחזק את ההרגל. המוח זקוק לאישור שווידאת את הפעולה.</div>
+    </div>
   </div>
 
   <button class="btn btn-primary" onclick="generatePlan()">✨ צור לי את התוכנית שלי!</button>
@@ -743,9 +927,92 @@ body { position: relative; }
 
   <div id="plan-days-list"></div>
 
-  <button class="btn btn-primary" onclick="startJourney()">🎯 מתחילים עכשיו!</button>
+  <button class="btn btn-primary" onclick="goTo('screen-toolkit'); renderToolkit()">🧬 המשך לערכת ההרגלים →</button>
   <div style="height:8px"></div>
   <button class="btn btn-secondary" onclick="goTo('screen-setup')">⬅️ ערוך פרטים</button>
+</div>
+
+<!-- ===== SCREEN 3.5: ATOMIC HABITS TOOLKIT ===== -->
+<div id="screen-toolkit" class="screen">
+  <div class="plan-header">
+    <div style="font-size:0.8rem;opacity:0.8;margin-bottom:4px">🧬 ערכת ההרגלים האטומיים</div>
+    <h2>4 החוקים של ג'יימס קליר</h2>
+    <p>מותאמים להרגל שלך</p>
+  </div>
+
+  <div class="identity-banner" id="toolkit-identity">
+    <div class="id-label">🎭 הזהות החדשה שלך</div>
+    <div class="id-text" id="toolkit-id-text">אני רוצה להיות מי ש...</div>
+    <div class="id-sub">כל יום שאתה פועל — אתה מצביע על מי אתה רוצה להיות</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 מעגל ההרגל</div>
+    <div class="habit-loop">
+      <div class="loop-step">
+        <div class="loop-icon">🔔</div>
+        <div class="loop-label">רמז</div>
+        <div class="loop-detail" id="loop-cue">זמן + מקום</div>
+      </div>
+      <div class="loop-arrow">←</div>
+      <div class="loop-step">
+        <div class="loop-icon">🔥</div>
+        <div class="loop-label">דחף</div>
+        <div class="loop-detail" id="loop-craving">פיתוי</div>
+      </div>
+      <div class="loop-arrow">←</div>
+      <div class="loop-step">
+        <div class="loop-icon">⚡</div>
+        <div class="loop-label">תגובה</div>
+        <div class="loop-detail" id="loop-response">2 דקות</div>
+      </div>
+      <div class="loop-arrow">←</div>
+      <div class="loop-step">
+        <div class="loop-icon">🎉</div>
+        <div class="loop-label">תגמול</div>
+        <div class="loop-detail" id="loop-reward">סימון וי</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 4 החוקים</div>
+
+    <div class="law-card law-1">
+      <div class="law-title"><span class="law-num">1</span> עשה אותו *ברור*</div>
+      <div class="law-desc">קבע זמן ומקום ספציפיים. חבר להרגל קיים.</div>
+      <div class="law-action" id="law1-action"><strong>הטמעה:</strong> יישום</div>
+    </div>
+
+    <div class="law-card law-2">
+      <div class="law-title"><span class="law-num">2</span> עשה אותו *אטרקטיבי*</div>
+      <div class="law-desc">חבר משהו שאתה רוצה עם משהו שאתה חייב. שנה את הזהות.</div>
+      <div class="law-action" id="law2-action"><strong>חיבור פיתוי:</strong> יישום</div>
+    </div>
+
+    <div class="law-card law-3">
+      <div class="law-title"><span class="law-num">3</span> עשה אותו *קל*</div>
+      <div class="law-desc">צמצם חיכוך. התחל ב-2 דקות. הכן את הסביבה מראש.</div>
+      <div class="law-action" id="law3-action"><strong>גרסת 2 דקות:</strong> יישום</div>
+    </div>
+
+    <div class="law-card law-4">
+      <div class="law-title"><span class="law-num">4</span> עשה אותו *מספק*</div>
+      <div class="law-desc">תגמל מיד. עקוב אחרי ההתקדמות. אל תפספס פעמיים.</div>
+      <div class="law-action" id="law4-action"><strong>תגמול:</strong> יישום</div>
+    </div>
+  </div>
+
+  <div class="compound-visual">
+    <div class="compound-title">📈 אפקט הריבית דריבית — 1% כל יום</div>
+    <div class="compound-bar"><div class="compound-fill" style="width:3%"></div></div>
+    <div class="compound-labels"><span>יום 1</span><span>יום 21</span><span>יום 365</span></div>
+    <div style="font-size:0.8rem;color:var(--teal-dark);margin-top:8px;font-weight:600">1% טוב יותר כל יום = ×37 בסוף שנה. 1% גרוע יותר = כמעט אפס.</div>
+  </div>
+
+  <button class="btn btn-primary" onclick="startJourney()">🚀 מתחילים את המסע!</button>
+  <div style="height:8px"></div>
+  <button class="btn btn-secondary" onclick="goTo('screen-plan')">⬅️ חזרה לתוכנית</button>
 </div>
 
 <!-- ===== SCREEN 4: DAILY TRACKER ===== -->
@@ -776,6 +1043,10 @@ body { position: relative; }
     <div class="nav-icon">📅</div>
     <div>היום</div>
   </div>
+  <div class="nav-item" id="nav-toolkit" onclick="navTo('toolkit')">
+    <div class="nav-icon">🧬</div>
+    <div>חוקים</div>
+  </div>
   <div class="nav-item" id="nav-journey" onclick="navTo('journey')">
     <div class="nav-icon">🗺️</div>
     <div>מסע</div>
@@ -791,8 +1062,13 @@ body { position: relative; }
 let state = {
   habitName: '', habitType: 'new', habitCurrent: '', habitGoal: '',
   habitWhy: '', habitCategory: 'wake',
+  // Atomic Habits fields
+  habitIdentity: '', habitTime: '', habitPlace: '',
+  habitStack: '', habitTwoMin: '', habitBundle: '',
+  habitEnv: '', habitReward: '',
   startDate: null, currentDay: 1, days: [],
-  selectedType: 'new'
+  selectedType: 'new',
+  consecutiveMisses: 0
 };
 
 // Load from localStorage
@@ -823,6 +1099,7 @@ function navTo(tab) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('nav-'+tab).classList.add('active');
   if (tab === 'tracker') { goTo('screen-tracker'); renderTracker(); }
+  else if (tab === 'toolkit') { goTo('screen-toolkit'); renderToolkit(); }
   else if (tab === 'journey') { goTo('screen-journey'); renderJourney(); }
   else if (tab === 'profile') { goTo('screen-profile'); renderProfile(); }
 }
@@ -896,6 +1173,16 @@ function generatePlan() {
   state.habitWhy = document.getElementById('habit-why').value.trim();
   state.habitCategory = document.getElementById('habit-category').value;
 
+  // Capture Atomic Habits fields
+  state.habitIdentity = (document.getElementById('habit-identity')?.value || '').trim();
+  state.habitTime = (document.getElementById('habit-time')?.value || '').trim();
+  state.habitPlace = (document.getElementById('habit-place')?.value || '').trim();
+  state.habitStack = (document.getElementById('habit-stack')?.value || '').trim();
+  state.habitTwoMin = (document.getElementById('habit-twomin')?.value || '').trim();
+  state.habitBundle = (document.getElementById('habit-bundle')?.value || '').trim();
+  state.habitEnv = (document.getElementById('habit-env')?.value || '').trim();
+  state.habitReward = (document.getElementById('habit-reward')?.value || '').trim();
+
   const isWake = state.habitCategory === 'wake';
   const rawPlan = isWake ? WAKE_PLAN : GENERIC_PLAN(name, state.selectedType);
   
@@ -949,6 +1236,25 @@ function generatePlan() {
   `).join('') + `<div style="text-align:center;color:var(--gray);font-size:0.85rem;padding:8px 0">+ עוד 14 ימים בתוכנית</div>`;
 
   goTo('screen-plan');
+}
+
+function renderToolkit() {
+  // Identity
+  var idEl = document.getElementById('toolkit-id-text');
+  if (idEl) idEl.textContent = state.habitIdentity || 'אני רוצה להיות מי ש' + state.habitName;
+
+  // Habit loop
+  var cue = (state.habitTime || state.habitPlace) ? (state.habitTime + ' ' + (state.habitPlace || '')).trim() : (state.habitStack || 'זמן + מקום קבועים');
+  document.getElementById('loop-cue').textContent = cue;
+  document.getElementById('loop-craving').textContent = state.habitBundle || 'הרצון להיות אדם טוב יותר';
+  document.getElementById('loop-response').textContent = state.habitTwoMin ? '2 דקות: ' + state.habitTwoMin.substring(0,30) : 'התחלה קטנה';
+  document.getElementById('loop-reward').textContent = state.habitReward || 'סימון וי + תחושת הישג';
+
+  // 4 Laws
+  document.getElementById('law1-action').innerHTML = '<strong>זמן ומקום:</strong> ' + (cue || 'לא הוגדר') + (state.habitStack ? '<br><strong>קישור:</strong> ' + state.habitStack : '');
+  document.getElementById('law2-action').innerHTML = '<strong>חיבור פיתוי:</strong> ' + (state.habitBundle || 'לא הוגדר') + '<br><strong>זהות:</strong> ' + (state.habitIdentity || state.habitName);
+  document.getElementById('law3-action').innerHTML = '<strong>גרסת 2 דקות:</strong> ' + (state.habitTwoMin || 'התחל קטן') + '<br><strong>סביבה:</strong> ' + (state.habitEnv || 'לא הוגדר');
+  document.getElementById('law4-action').innerHTML = '<strong>תגמול מיידי:</strong> ' + (state.habitReward || 'סימון וי באפליקציה') + '<br><strong>מעקב:</strong> רצף ימים במסך היומי';
 }
 
 function startJourney() {
@@ -1054,6 +1360,12 @@ function markDay(status) {
   const day = getCurrentDay();
   if (day > 21) return;
   state.days[day - 1].status = status;
+  // Track consecutive misses (Never Miss Twice)
+  if (status === 'failed') {
+    state.consecutiveMisses = (state.consecutiveMisses || 0) + 1;
+  } else if (status === 'done') {
+    state.consecutiveMisses = 0;
+  }
   save();
   
   if (status === 'done') {
@@ -1302,11 +1614,18 @@ function resetApp() {
 // ===== DAILY QUOTE =====
 (function(){
   const quotes = [
-    {q: 'שיפור קטן של 1% כל יום = שיפור של 37 פעמים לאחר שנה', a: 'ג'יימס קליר — Atomic Habits'},
+    {q: 'שיפור קטן של 1% כל יום = שיפור של 37 פעמים לאחר שנה', a: "ג'יימס קליר — Atomic Habits"},
+    {q: 'אתה לא עולה לרמת המטרות שלך — אתה יורד לרמת המערכות שלך', a: "ג'יימס קליר — Atomic Habits"},
+    {q: 'כל פעם שאתה פועל לפי הרגל חדש — אתה מצביע לעצמך על מי אתה רוצה להיות', a: "ג'יימס קליר — Atomic Habits"},
+    {q: 'אל תפספס פעמיים. אם פספסת יום אחד — למחרת חזור מיד', a: "ג'יימס קליר — Atomic Habits"},
+    {q: 'הסביבה שלך היא הארכיטקטורה של החיים שלך. עצב אותה נכון', a: "ג'יימס קליר — Atomic Habits"},
     {q: 'לא הדרך הגדולה עושה את ההבדל — ההרגל הקטן שנצבר כל יום', a: 'ליאור סופר'},
     {q: 'הצלחה היא מה שאתה עושה מדי יום, לא מה שאתה עושה מדי פעם', a: 'ש.ק.ו.פ'},
     {q: 'אנחנו לא מה שאנחנו חושבים שאנחנו — אנחנו מה שאנחנו עושים', a: 'מאגר AILON Task'},
     {q: 'רק תרגול מייצר הרגל — השינוי קורה בשנייה. שמירתו לוקחת זמן', a: 'מאגר הידע'},
+    {q: 'כדי לבנות הרגל טוב: הפוך אותו לברור, אטרקטיבי, קל ומספק', a: '4 חוקי ההרגל — Atomic Habits'},
+    {q: 'כדי לשבור הרגל רע: הפוך אותו לבלתי נראה, מגעיל, קשה ובלתי מספק', a: '4 חוקי ההרגל — Atomic Habits'},
+    {q: 'התחל ב-2 דקות. כשאתה מתחיל — קל יותר להמשיך מאשר לעצור', a: "ג'יימס קליר — Atomic Habits"},
     {q: 'כמו פרחי סחלב — הרגלים טובים צריכים השקייה ותשומת לב', a: 'ליאור סופר'},
     {q: 'לא תגיע לגדולות אלא אם כן תהיה מוכן לעשות כשהמצב קשה', a: 'ש.ק.ו.פ'},
   ];
@@ -1319,10 +1638,14 @@ function resetApp() {
 (function(){
   const tips = [
     {emoji:'🌅', title:'שגרת בוקר', text:'התחל כל יום עם 3 דקות לנשימה עמוקה לפני הטלפון — זו המחויבות הקטנה ביותר שמשנה את כל היום'},
-    {emoji:'💧', title:'חוק שתי הדקות', text:'אם ההרגל שלך לוקח פחות מ-2 דקות — עשה אותו עכשיו. אל תדחה לאף יום.'},
-    {emoji:'🔗', title:'קישור הרגלים', text:'חבר את ההרגל החדש להרגל קיים: "לאחר שאני X — אני עושה Y"'},
-    {emoji:'📊', title:'מדוד התקדמות', text:'מה שנמדד — משתפר. מה שלא נמדד — נעלם. סמן כל יום שסיימת!'},
-    {emoji:'🎯', title:'ספציפיות', text:'אל תגיד "אני רוצה להתאמן". תגיד: "בכל יום ב, בשעה 7:00, לרוץ 20 דקות".'},
+    {emoji:'⏱️', title:'חוק 2 הדקות', text:'כשקשה להתחיל — תתחיל ב-2 דקות בלבד. "אני רק שם את נעלי הריצה" — ואז ההמשכה קלה.'},
+    {emoji:'🔗', title:'קישור הרגלים', text:'חבר את ההרגל החדש להרגל קיים: "לאחר שאני שותה קפה — אני מדטר 5 דקות"'},
+    {emoji:'📊', title:'מערכות > מטרות', text:'"אתה לא עולה לרמת המטרות — אתה יורד לרמת המערכות." בנה מערכת, לא רק מטרה.'},
+    {emoji:'🎭', title:'זהות > התנהגות', text:'אל תגיד "אני רוצה לקרוא יותר". תגיד "אני קורא" — וכל יום שאתה קורא מאשר את הזהות הזו.'},
+    {emoji:'🚫', title:'אל תפספס פעמיים', text:'פספסת יום? זה קורה. אבל לא פעמיים ברצף. היום השני הוא הקריטי — חזור מיד!'},
+    {emoji:'🎨', title:'חיבור פיתוי', text:'חבר משהו שאתה צריך עם משהו שאתה רוצה: רק בזמן אימון — מותר לך לשמוע את הפודקאסט האהוב.'},
+    {emoji:'🛠️', title:'עיצוב סביבה', text:'הסביבה שלך היא הארכיטקטורה של ההרגלים. הכן את הציוד מראש, הסר חיכוך.'},
+    {emoji:'📈', title:'אפקט 1%', text:'1% טוב יותר כל יום = 37 פעמים טוב יותר בשנה. ריבית דריבית — הכוח הגדול ביותר בחיים.'},
   ];
   const t = tips[new Date().getDate() % tips.length];
   const el = document.getElementById('kaizen-tip-shkuf');
