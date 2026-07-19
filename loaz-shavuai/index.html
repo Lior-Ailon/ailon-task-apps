@@ -1983,7 +1983,15 @@ function openMiniTaskModal() {
 }
 function closeMiniTaskModal() { document.getElementById('miniTaskOverlay').classList.remove('active'); }
 
-document.getElementById('miniTaskSave').addEventListener('click', function() {
+// Safe event binding
+function safeBind(id, event, handler) {
+  try {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener(event, handler);
+  } catch(e) { console.warn('Bind failed for ' + id, e); }
+}
+
+safeBind('miniTaskSave', 'click', function() {
   const name = document.getElementById('miniTaskName').value.trim();
   if (!name) { alert('אנא הכנס שם משימה'); return; }
   const hour = parseInt(document.getElementById('miniTaskHour').value);
@@ -1993,9 +2001,7 @@ document.getElementById('miniTaskSave').addEventListener('click', function() {
   setMiniTasks(tasks);
   closeMiniTaskModal();
   renderMiniTaskList();
-  // Request notification permission
   if ('Notification' in window && Notification.permission === 'default') { Notification.requestPermission(); }
-  // Show toast
   const el = document.createElement('div');
   el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(245,158,11,0.3);';
   el.textContent = '⚡ משימה נוספה! תזכיר לך ב-' + String(hour).padStart(2,'0') + ':' + String(minute).padStart(2,'0');
@@ -2003,8 +2009,8 @@ document.getElementById('miniTaskSave').addEventListener('click', function() {
   setTimeout(function() { el.remove(); }, 2000);
 });
 
-document.getElementById('miniTaskCancel').addEventListener('click', closeMiniTaskModal);
-document.getElementById('miniTaskOverlay').addEventListener('click', function(e) { if (e.target === this) closeMiniTaskModal(); });
+safeBind('miniTaskCancel', 'click', closeMiniTaskModal);
+safeBind('miniTaskOverlay', 'click', function(e) { if (e.target === this) closeMiniTaskModal(); });
 
 document.querySelectorAll('.mini-task-dur-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
@@ -2014,7 +2020,7 @@ document.querySelectorAll('.mini-task-dur-btn').forEach(function(btn) {
   });
 });
 
-document.getElementById('miniTaskBtn').addEventListener('click', openMiniTaskModal);
+safeBind('miniTaskBtn', 'click', openMiniTaskModal);
 
 function formatDuration(mins) {
   if (mins < 60) return mins + ' דק\'';
@@ -2093,10 +2099,12 @@ function checkMiniTaskReminders() {
 setInterval(checkMiniTaskReminders, 30000);
 
 // Init mini tasks on load
-renderMiniTaskList();
-if ('Notification' in window && Notification.permission === 'default') {
-  setTimeout(function() { Notification.requestPermission(); }, 3000);
-}
+try { renderMiniTaskList(); } catch(e) { console.error('renderMiniTaskList failed', e); }
+try {
+  if ('Notification' in window && Notification.permission === 'default') {
+    setTimeout(function() { Notification.requestPermission(); }, 3000);
+  }
+} catch(e) {}
 
 
 
@@ -2281,14 +2289,21 @@ function checkSession() {
   return false;
 }
 
-document.getElementById('authSubmit').addEventListener('click', handleAuthSubmit);
-document.getElementById('authPassword').addEventListener('keydown', function(e) { if (e.key === 'Enter') handleAuthSubmit(); });
-document.getElementById('authPasswordConfirm').addEventListener('keydown', function(e) { if (e.key === 'Enter') handleAuthSubmit(); });
-document.getElementById('authUsername').addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('authPassword').focus(); });
-document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+// Make auth functions globally accessible
+window.switchAuthMode = switchAuthMode;
+window.handleAuthSubmit = handleAuthSubmit;
+window.loginUser = loginUser;
+window.logoutUser = logoutUser;
+window.checkSession = checkSession;
 
-// Check session on load — if no session, show auth overlay
-checkSession();
+safeBind('authSubmit', 'click', handleAuthSubmit);
+safeBind('authPassword', 'keydown', function(e) { if (e.key === 'Enter') handleAuthSubmit(); });
+safeBind('authPasswordConfirm', 'keydown', function(e) { if (e.key === 'Enter') handleAuthSubmit(); });
+safeBind('authUsername', 'keydown', function(e) { if (e.key === 'Enter') document.getElementById('authPassword').focus(); });
+safeBind('logoutBtn', 'click', logoutUser);
+
+// Check session on load
+try { checkSession(); } catch(e) { console.error('checkSession failed', e); }
 
 
 </script>
