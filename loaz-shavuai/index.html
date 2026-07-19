@@ -396,7 +396,6 @@ body::after {
 </head>
 <body>
 
-<div id="debugStatus" style="position:fixed;top:0;left:0;background:red;color:white;padding:10px;z-index:99999;font-size:14px;">Starting...</div>
 
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-card">
@@ -602,7 +601,6 @@ body::after {
   </div>
 </div>
 <script>
-window.onerror = function(msg, url, line, col, err) { var d=document.getElementById('debugStatus'); if(d) d.textContent = 'GLOBAL_ERR: ' + msg + ' L:' + line + ' C:' + col; return true; };
 const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי'];
 const HOURS = [];
 for (let h = 8; h <= 23; h++) { HOURS.push(h+':00'); HOURS.push(h+':30'); }
@@ -1185,7 +1183,6 @@ function loadDailyFocus() {
 document.addEventListener('DOMContentLoaded', loadDailyFocus);
 
 
-try { document.getElementById('debugStatus').textContent = 'CP1-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR1: ' + e.message; }
 
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
 let zoomTab = 'day';
@@ -1391,20 +1388,18 @@ function renderZoomMonth() {
   document.getElementById('zoomBody').innerHTML = html;
 }
 
-try { document.getElementById('debugStatus').textContent = 'CP2-BeforeFocusBtn'; } catch(e) {}
 
 // Override focusBtn to open zoom instead
-try { document.getElementById('focusBtn').addEventListener('click', function(e) {
+document.getElementById('focusBtn').addEventListener('click', function(e) {
   // Keep the old section toggle too, but also open zoom
   openFocusZoom();
-}); } catch(e) { document.getElementById('debugStatus').textContent = 'ERR2-focusBtn: ' + e.message; throw e; }
+});
 
 // Close on overlay click
-try { document.getElementById('focusZoomOverlay').addEventListener('click', function(e) {
+document.getElementById('focusZoomOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeFocusZoom();
-}); } catch(e) { document.getElementById('debugStatus').textContent = 'ERR2-overlay: ' + e.message; throw e; }
+});
 
-try { document.getElementById('debugStatus').textContent = 'CP2b-AfterFocusBtn'; } catch(e) {}
 
 function renderDailyFocusBanner() {
   const today = new Date();
@@ -1432,8 +1427,6 @@ function renderDailyFocusBanner() {
     <div id="energy-tip-text" style="font-size:12px;color:#374151;margin-top:4px;line-height:1.6;"></div>
   </div>
 <script>
-document.getElementById('debugStatus').textContent = 'CP2c-Script2Start';
-try {
 (function(){
   var et = [
     "הסיפור על שני חוטבי העצים — הנוצח לא היה החזק יותר, אלא זה שהשחיז את הגרזן. הקצה זמן לחופש ולהתחדשות.",
@@ -1447,242 +1440,6 @@ try {
   var el = document.getElementById('energy-tip-text');
   if(el) el.textContent = et[idx];
 })();
-} catch(e) { document.getElementById('debugStatus').textContent = 'ERR-script2: ' + e.message; }
-try { document.getElementById('debugStatus').textContent = 'CP3-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR3: ' + e.message; }
-
-// --- FOCUS ZOOM: יומי / שבועי / חודשי ---
-let zoomTab = 'day';
-let zoomEditDay = -1;
-
-function openFocusZoom() {
-  // Find today's index
-  const today = new Date();
-  const todayIdx = Math.floor((today - currentWeekStart) / (1000*60*60*24));
-  zoomEditDay = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : 0;
-  document.getElementById('focusZoomOverlay').classList.add('active');
-  switchZoomTab('day');
-}
-
-function closeFocusZoom() {
-  document.getElementById('focusZoomOverlay').classList.remove('active');
-}
-
-function switchZoomTab(tab) {
-  zoomTab = tab;
-  document.querySelectorAll('.focus-zoom-tab').forEach(function(t) {
-    t.classList.toggle('active', t.getAttribute('data-tab') === tab);
-  });
-  if (tab === 'day') renderZoomDay();
-  else if (tab === 'week') renderZoomWeek();
-  else if (tab === 'month') renderZoomMonth();
-}
-
-function renderZoomDay() {
-  const d = zoomEditDay;
-  const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-  const data = getFocusData(d) || { oneTask:'', whatWorked:'', whatDidntAndWhy:'', plannedTomorrow:false };
-  const isToday = (Math.floor((new Date() - currentWeekStart)/(1000*60*60*24)) === d);
-  const dayLabel = DAYS[d] + (isToday ? ' (היום)' : '');
-  
-  let html = '<div class="zoom-day-hero">';
-  html += '<div class="zoom-day-label">' + dayLabel + '</div>';
-  html += '<div class="zoom-day-date">' + formatDate(date) + '</div>';
-  if (data.oneTask) {
-    html += '<div class="zoom-day-task">' + escapeHtml(data.oneTask) + '</div>';
-  } else {
-    html += '<div class="zoom-day-task zoom-day-empty">עדיין לא הוגדר מיקוד ליום זה<br>גלול מטה להוספה</div>';
-  }
-  html += '</div>';
-  
-  html += '<div class="zoom-day-reflection">';
-  html += '<label>✅ מה הצליח היום?</label>';
-  html += '<textarea id="zoomWhatWorked" placeholder="מה עבד היום...">' + escapeHtml(data.whatWorked||'') + '</textarea>';
-  html += '<label>❌ מה פחות הצליח, ולמה?</label>';
-  html += '<textarea id="zoomWhatDidnt" placeholder="מה לא עבד, ומה הסיבה...">' + escapeHtml(data.whatDidntAndWhy||'') + '</textarea>';
-  html += '</div>';
-  
-  html += '<div class="zoom-day-check">';
-  html += '<input type="checkbox" id="zoomPlanned" ' + (data.plannedTomorrow?'checked':'') + '>';
-  html += '<label for="zoomPlanned">☑️ תכננתי הערב את הלו"ז למחר</label>';
-  html += '</div>';
-  
-  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
-  
-  html += '<button class="zoom-edit-btn" onclick="saveZoomDay()">💾 שמור מיקוד יומי</button>';
-  
-  // Day navigator
-  html += '<div style="display:flex;justify-content:space-between;margin-top:16px;">';
-  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
-  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
-  html += '</div>';
-  
-  document.getElementById('zoomBody').innerHTML = html;
-  
-  // Auto-save on blur
-  ['zoomWhatWorked','zoomWhatDidnt','zoomOneTask'].forEach(function(id) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('blur', function() { saveZoomDaySilent(); });
-  });
-  const checkEl = document.getElementById('zoomPlanned');
-  if (checkEl) checkEl.addEventListener('change', function() { saveZoomDaySilent(); });
-}
-
-function saveZoomDaySilent() {
-  const d = zoomEditDay;
-  const data = getFocusData(d) || { oneTask:'', whatWorked:'', whatDidntAndWhy:'', plannedTomorrow:false };
-  const ot = document.getElementById('zoomOneTask');
-  const ww = document.getElementById('zoomWhatWorked');
-  const wd = document.getElementById('zoomWhatDidnt');
-  const pt = document.getElementById('zoomPlanned');
-  if (ot) data.oneTask = ot.value;
-  if (ww) data.whatWorked = ww.value;
-  if (wd) data.whatDidntAndWhy = wd.value;
-  if (pt) data.plannedTomorrow = pt.checked;
-  setFocusData(d, data);
-}
-
-function saveZoomDay() {
-  saveZoomDaySilent();
-  // Update the main focus section if open
-  if (document.getElementById('focusSection').classList.contains('active')) renderFocusSection();
-  // Update daily focus banner
-  renderDailyFocusBanner();
-  const el = document.createElement('div');
-  el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#14b8a6;color:#0f172a;padding:12px 24px;border-radius:10px;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(20,184,166,0.4);';
-  el.textContent = '✅ המיקוד היומי נשמר!';
-  document.body.appendChild(el);
-  setTimeout(function() { el.remove(); }, 1800);
-}
-
-function renderZoomWeek() {
-  const todayIdx = Math.floor((new Date() - currentWeekStart)/(1000*60*60*24));
-  let html = '<div class="zoom-week-grid">';
-  let hasAny = false;
-  for (let d = 0; d < 6; d++) {
-    const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-    const data = getFocusData(d);
-    const isToday = (d === todayIdx);
-    const taskText = data && data.oneTask ? data.oneTask : '';
-    const hasContent = !!taskText;
-    if (hasContent) hasAny = true;
-    
-    // Check if task is done in the schedule
-    let doneStatus = '';
-    if (taskText) {
-      doneStatus = '⏳';
-    }
-    
-    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab(\'day\');" style="cursor:pointer">';
-    html += '<div class="zwd-name">' + DAYS[d] + (isToday?' •':'') + '</div>';
-    if (taskText) {
-      html += '<div class="zwd-task">' + escapeHtml(taskText) + '</div>';
-    } else {
-      html += '<div class="zwd-empty">— לא הוגדר —</div>';
-    }
-    html += '<div class="zwd-status">' + doneStatus + '</div>';
-    html += '</div>';
-  }
-  html += '</div>';
-  
-  // Weekly focus
-  const wfKey = 'loazweeklyfocus_' + currentWeekStart.toISOString().slice(0,10) + '_' + getUserKey();
-  const wfText = localStorage.getItem(wfKey) || '';
-  html += '<div class="zoom-week-summary">';
-  html += '<div class="zws-title">🎯 מיקוד שבועי כללי</div>';
-  html += '<div class="zws-text">' + (wfText ? escapeHtml(wfText) : '<span style="color:#64748b">עדיין לא הוגדר — לחץ על ✏️ ערוך מיקוד בכרטיס למעלה</span>') + '</div>';
-  html += '</div>';
-  
-  if (!hasAny) {
-    html += '<div style="text-align:center;padding:20px;color:#64748b;font-size:14px;">עדיין אין מיקוד יומי לאף יום השבוע. לחץ על יום כדי להתחיל 🎯</div>';
-  }
-  
-  document.getElementById('zoomBody').innerHTML = html;
-}
-
-function renderZoomMonth() {
-  // Collect last 5 weeks of focus data
-  const weeks = [];
-  for (let w = -4; w <= 0; w++) {
-    const ws = new Date(currentWeekStart);
-    ws.setDate(ws.getDate() + w*7);
-    let filled = 0, reflected = 0, planned = 0;
-    for (let d = 0; d < 6; d++) {
-      const key = 'loazfocus_' + ws.toISOString().slice(0,10) + '_' + d + '_' + getUserKey();
-      const r = localStorage.getItem(key);
-      if (r) {
-        try {
-          const data = JSON.parse(r);
-          if (data.oneTask && data.oneTask.trim()) filled++;
-          if (data.whatWorked && data.whatWorked.trim()) reflected++;
-          if (data.plannedTomorrow) planned++;
-        } catch(e) {}
-      }
-    }
-    const we = new Date(ws); we.setDate(we.getDate()+5);
-    weeks.push({ start: ws, end: we, filled, reflected, planned, total: 6 });
-  }
-  
-  // Stats
-  let totalFilled = 0, totalReflected = 0, totalPlanned = 0;
-  weeks.forEach(function(w) { totalFilled += w.filled; totalReflected += w.reflected; totalPlanned += w.planned; });
-  
-  let html = '<div class="zoom-month-hero">';
-  html += '<div class="zmh-stat"><div class="zmh-num">' + totalFilled + '/30</div><div class="zmh-label">ימים עם מיקוד</div></div>';
-  html += '<div class="zmh-stat"><div class="zmh-num">' + totalReflected + '</div><div class="zmh-label">חשבונות נפש</div></div>';
-  html += '<div class="zmh-stat"><div class="zmh-num">' + totalPlanned + '</div><div class="zmh-label">תכנוני מחר</div></div>';
-  html += '</div>';
-  
-  html += '<div class="zoom-month-grid">';
-  weeks.forEach(function(w) {
-    const pct = Math.round(w.filled / w.total * 100);
-    const fillPct = w.filled / w.total * 100;
-    let color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#eab308' : pct > 0 ? '#f97316' : '#475569';
-    const label = formatDate(w.start).split('/').slice(0,2).join('/');
-    html += '<div class="zoom-month-week">';
-    html += '<div class="zmw-label">' + label + '</div>';
-    html += '<div class="zmw-bar"><div class="zmw-fill" style="width:' + fillPct + '%;background:' + color + '"></div></div>';
-    html += '<div class="zmw-pct" style="color:' + color + '">' + pct + '%</div>';
-    html += '<div class="zmw-tasks">' + w.filled + '/' + w.total + ' ימים</div>';
-    html += '</div>';
-  });
-  html += '</div>';
-  
-  html += '<div style="margin-top:16px;padding:14px;background:rgba(20,184,166,0.05);border:1px solid rgba(20,184,166,0.15);border-radius:10px;font-size:13px;color:#94a3b8;text-align:center;">';
-  html += '📊 תצוגה זו מציגה את 5 השבועות האחרונים. ככל שתמלא מיקוד יומי באופן קבוע, תראה כאן את התקדמותך.';
-  html += '</div>';
-  
-  document.getElementById('zoomBody').innerHTML = html;
-}
-
-// Override focusBtn to open zoom instead
-document.getElementById('focusBtn').addEventListener('click', function(e) {
-  // Keep the old section toggle too, but also open zoom
-  openFocusZoom();
-});
-
-// Close on overlay click
-document.getElementById('focusZoomOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeFocusZoom();
-});
-
-function renderDailyFocusBanner() {
-  const today = new Date();
-  const todayIdx = Math.floor((today - currentWeekStart) / (1000*60*60*24));
-  if (todayIdx >= 0 && todayIdx < 6) {
-    const data = getFocusData(todayIdx);
-    const task = data && data.oneTask ? data.oneTask : '';
-    const banner = document.getElementById('dailyFocusBanner');
-    if (banner) {
-      if (task) {
-        banner.querySelector('.focus-task').textContent = task;
-      } else {
-        banner.querySelector('.focus-task').textContent = 'לחץ על 🎯 מיקוד יומי להגדיר';
-      }
-    }
-  }
-}
-
-
 </script>
 
 <script>
@@ -1736,239 +1493,7 @@ function renderDailyFocusBanner() {
   }
 })();
 
-try { document.getElementById('debugStatus').textContent = 'CP5-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR5: ' + e.message; }
 
-// --- FOCUS ZOOM: יומי / שבועי / חודשי ---
-let zoomTab = 'day';
-let zoomEditDay = -1;
-
-function openFocusZoom() {
-  // Find today's index
-  const today = new Date();
-  const todayIdx = Math.floor((today - currentWeekStart) / (1000*60*60*24));
-  zoomEditDay = (todayIdx >= 0 && todayIdx < 6) ? todayIdx : 0;
-  document.getElementById('focusZoomOverlay').classList.add('active');
-  switchZoomTab('day');
-}
-
-function closeFocusZoom() {
-  document.getElementById('focusZoomOverlay').classList.remove('active');
-}
-
-function switchZoomTab(tab) {
-  zoomTab = tab;
-  document.querySelectorAll('.focus-zoom-tab').forEach(function(t) {
-    t.classList.toggle('active', t.getAttribute('data-tab') === tab);
-  });
-  if (tab === 'day') renderZoomDay();
-  else if (tab === 'week') renderZoomWeek();
-  else if (tab === 'month') renderZoomMonth();
-}
-
-function renderZoomDay() {
-  const d = zoomEditDay;
-  const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-  const data = getFocusData(d) || { oneTask:'', whatWorked:'', whatDidntAndWhy:'', plannedTomorrow:false };
-  const isToday = (Math.floor((new Date() - currentWeekStart)/(1000*60*60*24)) === d);
-  const dayLabel = DAYS[d] + (isToday ? ' (היום)' : '');
-  
-  let html = '<div class="zoom-day-hero">';
-  html += '<div class="zoom-day-label">' + dayLabel + '</div>';
-  html += '<div class="zoom-day-date">' + formatDate(date) + '</div>';
-  if (data.oneTask) {
-    html += '<div class="zoom-day-task">' + escapeHtml(data.oneTask) + '</div>';
-  } else {
-    html += '<div class="zoom-day-task zoom-day-empty">עדיין לא הוגדר מיקוד ליום זה<br>גלול מטה להוספה</div>';
-  }
-  html += '</div>';
-  
-  html += '<div class="zoom-day-reflection">';
-  html += '<label>✅ מה הצליח היום?</label>';
-  html += '<textarea id="zoomWhatWorked" placeholder="מה עבד היום...">' + escapeHtml(data.whatWorked||'') + '</textarea>';
-  html += '<label>❌ מה פחות הצליח, ולמה?</label>';
-  html += '<textarea id="zoomWhatDidnt" placeholder="מה לא עבד, ומה הסיבה...">' + escapeHtml(data.whatDidntAndWhy||'') + '</textarea>';
-  html += '</div>';
-  
-  html += '<div class="zoom-day-check">';
-  html += '<input type="checkbox" id="zoomPlanned" ' + (data.plannedTomorrow?'checked':'') + '>';
-  html += '<label for="zoomPlanned">☑️ תכננתי הערב את הלו"ז למחר</label>';
-  html += '</div>';
-  
-  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
-  
-  html += '<button class="zoom-edit-btn" onclick="saveZoomDay()">💾 שמור מיקוד יומי</button>';
-  
-  // Day navigator
-  html += '<div style="display:flex;justify-content:space-between;margin-top:16px;">';
-  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
-  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
-  html += '</div>';
-  
-  document.getElementById('zoomBody').innerHTML = html;
-  
-  // Auto-save on blur
-  ['zoomWhatWorked','zoomWhatDidnt','zoomOneTask'].forEach(function(id) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('blur', function() { saveZoomDaySilent(); });
-  });
-  const checkEl = document.getElementById('zoomPlanned');
-  if (checkEl) checkEl.addEventListener('change', function() { saveZoomDaySilent(); });
-}
-
-function saveZoomDaySilent() {
-  const d = zoomEditDay;
-  const data = getFocusData(d) || { oneTask:'', whatWorked:'', whatDidntAndWhy:'', plannedTomorrow:false };
-  const ot = document.getElementById('zoomOneTask');
-  const ww = document.getElementById('zoomWhatWorked');
-  const wd = document.getElementById('zoomWhatDidnt');
-  const pt = document.getElementById('zoomPlanned');
-  if (ot) data.oneTask = ot.value;
-  if (ww) data.whatWorked = ww.value;
-  if (wd) data.whatDidntAndWhy = wd.value;
-  if (pt) data.plannedTomorrow = pt.checked;
-  setFocusData(d, data);
-}
-
-function saveZoomDay() {
-  saveZoomDaySilent();
-  // Update the main focus section if open
-  if (document.getElementById('focusSection').classList.contains('active')) renderFocusSection();
-  // Update daily focus banner
-  renderDailyFocusBanner();
-  const el = document.createElement('div');
-  el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#14b8a6;color:#0f172a;padding:12px 24px;border-radius:10px;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(20,184,166,0.4);';
-  el.textContent = '✅ המיקוד היומי נשמר!';
-  document.body.appendChild(el);
-  setTimeout(function() { el.remove(); }, 1800);
-}
-
-function renderZoomWeek() {
-  const todayIdx = Math.floor((new Date() - currentWeekStart)/(1000*60*60*24));
-  let html = '<div class="zoom-week-grid">';
-  let hasAny = false;
-  for (let d = 0; d < 6; d++) {
-    const date = new Date(currentWeekStart); date.setDate(date.getDate()+d);
-    const data = getFocusData(d);
-    const isToday = (d === todayIdx);
-    const taskText = data && data.oneTask ? data.oneTask : '';
-    const hasContent = !!taskText;
-    if (hasContent) hasAny = true;
-    
-    // Check if task is done in the schedule
-    let doneStatus = '';
-    if (taskText) {
-      doneStatus = '⏳';
-    }
-    
-    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab(\'day\');" style="cursor:pointer">';
-    html += '<div class="zwd-name">' + DAYS[d] + (isToday?' •':'') + '</div>';
-    if (taskText) {
-      html += '<div class="zwd-task">' + escapeHtml(taskText) + '</div>';
-    } else {
-      html += '<div class="zwd-empty">— לא הוגדר —</div>';
-    }
-    html += '<div class="zwd-status">' + doneStatus + '</div>';
-    html += '</div>';
-  }
-  html += '</div>';
-  
-  // Weekly focus
-  const wfKey = 'loazweeklyfocus_' + currentWeekStart.toISOString().slice(0,10) + '_' + getUserKey();
-  const wfText = localStorage.getItem(wfKey) || '';
-  html += '<div class="zoom-week-summary">';
-  html += '<div class="zws-title">🎯 מיקוד שבועי כללי</div>';
-  html += '<div class="zws-text">' + (wfText ? escapeHtml(wfText) : '<span style="color:#64748b">עדיין לא הוגדר — לחץ על ✏️ ערוך מיקוד בכרטיס למעלה</span>') + '</div>';
-  html += '</div>';
-  
-  if (!hasAny) {
-    html += '<div style="text-align:center;padding:20px;color:#64748b;font-size:14px;">עדיין אין מיקוד יומי לאף יום השבוע. לחץ על יום כדי להתחיל 🎯</div>';
-  }
-  
-  document.getElementById('zoomBody').innerHTML = html;
-}
-
-function renderZoomMonth() {
-  // Collect last 5 weeks of focus data
-  const weeks = [];
-  for (let w = -4; w <= 0; w++) {
-    const ws = new Date(currentWeekStart);
-    ws.setDate(ws.getDate() + w*7);
-    let filled = 0, reflected = 0, planned = 0;
-    for (let d = 0; d < 6; d++) {
-      const key = 'loazfocus_' + ws.toISOString().slice(0,10) + '_' + d + '_' + getUserKey();
-      const r = localStorage.getItem(key);
-      if (r) {
-        try {
-          const data = JSON.parse(r);
-          if (data.oneTask && data.oneTask.trim()) filled++;
-          if (data.whatWorked && data.whatWorked.trim()) reflected++;
-          if (data.plannedTomorrow) planned++;
-        } catch(e) {}
-      }
-    }
-    const we = new Date(ws); we.setDate(we.getDate()+5);
-    weeks.push({ start: ws, end: we, filled, reflected, planned, total: 6 });
-  }
-  
-  // Stats
-  let totalFilled = 0, totalReflected = 0, totalPlanned = 0;
-  weeks.forEach(function(w) { totalFilled += w.filled; totalReflected += w.reflected; totalPlanned += w.planned; });
-  
-  let html = '<div class="zoom-month-hero">';
-  html += '<div class="zmh-stat"><div class="zmh-num">' + totalFilled + '/30</div><div class="zmh-label">ימים עם מיקוד</div></div>';
-  html += '<div class="zmh-stat"><div class="zmh-num">' + totalReflected + '</div><div class="zmh-label">חשבונות נפש</div></div>';
-  html += '<div class="zmh-stat"><div class="zmh-num">' + totalPlanned + '</div><div class="zmh-label">תכנוני מחר</div></div>';
-  html += '</div>';
-  
-  html += '<div class="zoom-month-grid">';
-  weeks.forEach(function(w) {
-    const pct = Math.round(w.filled / w.total * 100);
-    const fillPct = w.filled / w.total * 100;
-    let color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#eab308' : pct > 0 ? '#f97316' : '#475569';
-    const label = formatDate(w.start).split('/').slice(0,2).join('/');
-    html += '<div class="zoom-month-week">';
-    html += '<div class="zmw-label">' + label + '</div>';
-    html += '<div class="zmw-bar"><div class="zmw-fill" style="width:' + fillPct + '%;background:' + color + '"></div></div>';
-    html += '<div class="zmw-pct" style="color:' + color + '">' + pct + '%</div>';
-    html += '<div class="zmw-tasks">' + w.filled + '/' + w.total + ' ימים</div>';
-    html += '</div>';
-  });
-  html += '</div>';
-  
-  html += '<div style="margin-top:16px;padding:14px;background:rgba(20,184,166,0.05);border:1px solid rgba(20,184,166,0.15);border-radius:10px;font-size:13px;color:#94a3b8;text-align:center;">';
-  html += '📊 תצוגה זו מציגה את 5 השבועות האחרונים. ככל שתמלא מיקוד יומי באופן קבוע, תראה כאן את התקדמותך.';
-  html += '</div>';
-  
-  document.getElementById('zoomBody').innerHTML = html;
-}
-
-// Override focusBtn to open zoom instead
-document.getElementById('focusBtn').addEventListener('click', function(e) {
-  // Keep the old section toggle too, but also open zoom
-  openFocusZoom();
-});
-
-// Close on overlay click
-document.getElementById('focusZoomOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeFocusZoom();
-});
-
-function renderDailyFocusBanner() {
-  const today = new Date();
-  const todayIdx = Math.floor((today - currentWeekStart) / (1000*60*60*24));
-  if (todayIdx >= 0 && todayIdx < 6) {
-    const data = getFocusData(todayIdx);
-    const task = data && data.oneTask ? data.oneTask : '';
-    const banner = document.getElementById('dailyFocusBanner');
-    if (banner) {
-      if (task) {
-        banner.querySelector('.focus-task').textContent = task;
-      } else {
-        banner.querySelector('.focus-task').textContent = 'לחץ על 🎯 מיקוד יומי להגדיר';
-      }
-    }
-  }
-}
 
 
 
@@ -1998,7 +1523,6 @@ function openMiniTaskModal() {
 }
 function closeMiniTaskModal() { document.getElementById('miniTaskOverlay').classList.remove('active'); }
 
-try { document.getElementById('debugStatus').textContent = 'CP6-AfterFocusZoom'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR6: ' + e.message; }
 
 // Safe event binding
 function safeBind(id, event, handler) {
@@ -2116,7 +1640,7 @@ function checkMiniTaskReminders() {
 setInterval(checkMiniTaskReminders, 30000);
 
 // Init mini tasks on load
-try { renderMiniTaskList(); } catch(e) { console.error('renderMiniTaskList failed', e); }
+renderMiniTaskList();
 try {
   if ('Notification' in window && Notification.permission === 'default') {
     setTimeout(function() { Notification.requestPermission(); }, 3000);
@@ -2125,7 +1649,6 @@ try {
 
 
 
-try { document.getElementById('debugStatus').textContent = 'CP7-AfterMiniTasks'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR7: ' + e.message; }
 
 // ===== AUTH SYSTEM (PBKDF2) =====
 let authMode = 'login';
@@ -2308,7 +1831,6 @@ function checkSession() {
   return false;
 }
 
-try { document.getElementById('debugStatus').textContent = 'CP8-AfterAuthDefs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR8: ' + e.message; }
 
 // Make auth functions globally accessible
 window.switchAuthMode = switchAuthMode;
@@ -2324,8 +1846,6 @@ safeBind('authUsername', 'keydown', function(e) { if (e.key === 'Enter') documen
 safeBind('logoutBtn', 'click', logoutUser);
 
 // Check session on load
-try { checkSession(); } catch(e) { document.getElementById('debugStatus').textContent = 'checkSession error: ' + e.message; }
-try { document.getElementById('debugStatus').textContent = 'ALL DONE'; } catch(e) {}
 
 
 </script>
