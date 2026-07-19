@@ -2,6 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="version" content="2026-07-19-v2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>לוז שבועי — ניהול מוטיבציה</title>
 <style>
@@ -1654,7 +1655,7 @@ try {
 let authMode = 'login';
 
 function pbkdf2Hash(password, salt) {
-  return new Promise(function(resolve) {
+  return new Promise(function(resolve, reject) {
     const encoder = new TextEncoder();
     window.crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits'])
     .then(function(key) {
@@ -1666,8 +1667,8 @@ function pbkdf2Hash(password, salt) {
         let hex = '';
         for (let i = 0; i < arr.length; i++) hex += arr[i].toString(16).padStart(2,'0');
         resolve(hex);
-      });
-    });
+      }).catch(function(err) { reject(err); });
+    }).catch(function(err) { reject(err); });
   });
 }
 
@@ -1722,49 +1723,60 @@ function switchAuthMode(mode) {
 
 async function handleAuthSubmit() {
   clearAuthError();
-  const username = document.getElementById('authUsername').value.trim();
-  const password = document.getElementById('authPassword').value;
-  if (!username || !password) { showAuthError('אנא מלא שם משתמש וסיסמה'); return; }
-  if (username.length < 2) { showAuthError('שם משתמש חייב להיות לפחות 2 תווים'); return; }
-  if (password.length < 4) { showAuthError('סיסמה חייבת להיות לפחות 4 תווים'); return; }
-  const safeUsername = username.replace(/[^a-zA-Z0-9א-ת._-]/g, '_');
-  const users = getUsersList();
+  const submitBtn = document.getElementById('authSubmit');
+  const originalText = submitBtn.textContent;
+  function resetBtn() { submitBtn.disabled = false; submitBtn.textContent = originalText; }
+  function fail(msg) { showAuthError(msg); resetBtn(); }
+  
+  try {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'מעבד...';
+    const username = document.getElementById('authUsername').value.trim();
+    const password = document.getElementById('authPassword').value;
+    if (!username || !password) { fail('אנא מלא שם משתמש וסיסמה'); return; }
+    if (username.length < 2) { fail('שם משתמש חייב להיות לפחות 2 תווים'); return; }
+    if (password.length < 4) { fail('סיסמה חייבת להיות לפחות 4 תווים'); return; }
+    const safeUsername = username.replace(/[^a-zA-Z0-9א-ת._-]/g, '_');
+    const users = getUsersList();
 
-  if (authMode === 'signup') {
-    const confirmPwd = document.getElementById('authPasswordConfirm').value;
-    if (password !== confirmPwd) { showAuthError('הסיסמאות אינן תואמות'); return; }
-    if (users[safeUsername]) { showAuthError('שם משתמש זה כבר קיים. בחר שם אחר או התחבר.'); return; }
-    const salt = genSalt();
-    const hash = await pbkdf2Hash(password, salt);
-    users[safeUsername] = { salt: salt, hash: hash, displayName: username, createdAt: new Date().toISOString() };
-    saveUsersList(users);
-    loginUser(safeUsername, username);
-  } else if (authMode === 'claim') {
-    // Claim existing data with a new password
-    const confirmPwd = document.getElementById('authPasswordConfirm').value;
-    if (password !== confirmPwd) { showAuthError('הסיסמאות אינן תואמות'); return; }
-    if (users[safeUsername]) { showAuthError('משתמש זה כבר רשום. נסה להתחבר.'); return; }
-    const salt = genSalt();
-    const hash = await pbkdf2Hash(password, salt);
-    users[safeUsername] = { salt: salt, hash: hash, displayName: username, createdAt: new Date().toISOString(), migrated: true };
-    saveUsersList(users);
-    loginUser(safeUsername, username);
-  } else {
-    const user = users[safeUsername];
-    if (!user) {
-      // Check if there's existing data under this name (migration scenario)
-      const hasOldData = checkExistingData(safeUsername);
-      if (hasOldData) {
-        showAuthError('נמצאו נתונים קיימים תחת השם הזה. לחץ על \'אמץ משתמש קיים\' כדי לקבוע סיסמה ולהמשיך עם הנתונים שלך.');
-        showClaimOption(safeUsername);
-      } else {
-        showAuthError('משתמש לא נמצא. בדוק את השם או צור משתמש חדש.');
+    if (authMode === 'signup') {
+      const confirmPwd = document.getElementById('authPasswordConfirm').value;
+      if (password !== confirmPwd) { fail('הסיסמאות אינן תואמות'); return; }
+      if (users[safeUsername]) { fail('שם משתמש זה כבר קיים. בחר שם אחר או התחבר.'); return; }
+      const salt = genSalt();
+      const hash = await pbkdf2Hash(password, salt);
+      users[safeUsername] = { salt: salt, hash: hash, displayName: username, createdAt: new Date().toISOString() };
+      saveUsersList(users);
+      loginUser(safeUsername, username);
+    } else if (authMode === 'claim') {
+      const confirmPwd = document.getElementById('authPasswordConfirm').value;
+      if (password !== confirmPwd) { fail('הסיסמאות אינן תואמות'); return; }
+      if (users[safeUsername]) { fail('משתמש זה כבר רשום. נסה להתחבר.'); return; }
+      const salt = genSalt();
+      const hash = await pbkdf2Hash(password, salt);
+      users[safeUsername] = { salt: salt, hash: hash, displayName: username, createdAt: new Date().toISOString(), migrated: true };
+      saveUsersList(users);
+      loginUser(safeUsername, username);
+    } else {
+      const user = users[safeUsername];
+      if (!user) {
+        const hasOldData = checkExistingData(safeUsername);
+        if (hasOldData) {
+          fail('נמצאו נתונים קיימים תחת השם הזה. לחץ על \'אמץ משתמש קיים\' כדי לקבוע סיסמה ולהמשיך עם הנתונים שלך.');
+          showClaimOption(safeUsername);
+        } else {
+          fail('משתמש לא נמצא. בדוק את השם או צור משתמש חדש.');
+        }
+        return;
       }
-      return;
+      const hash = await pbkdf2Hash(password, user.salt);
+      if (hash !== user.hash) { fail('סיסמה שגויה'); return; }
+      loginUser(safeUsername, user.displayName);
     }
-    const hash = await pbkdf2Hash(password, user.salt);
-    if (hash !== user.hash) { showAuthError('סיסמה שגויה'); return; }
-    loginUser(safeUsername, user.displayName);
+    resetBtn();
+  } catch(err) {
+    console.error('Auth error:', err);
+    fail('שגיאה בעיבוד ההתחברות: ' + (err.message || err));
   }
 }
 
@@ -1846,8 +1858,7 @@ safeBind('authUsername', 'keydown', function(e) { if (e.key === 'Enter') documen
 safeBind('logoutBtn', 'click', logoutUser);
 
 // Check session on load
-
-
+checkSession();
 </script>
 </body>
 </html>
