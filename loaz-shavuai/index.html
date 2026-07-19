@@ -1431,6 +1431,7 @@ function renderDailyFocusBanner() {
     <div id="energy-tip-text" style="font-size:12px;color:#374151;margin-top:4px;line-height:1.6;"></div>
   </div>
 <script>
+try {
 (function(){
   var et = [
     "הסיפור על שני חוטבי העצים — הנוצח לא היה החזק יותר, אלא זה שהשחיז את הגרזן. הקצה זמן לחופש ולהתחדשות.",
@@ -1444,7 +1445,7 @@ function renderDailyFocusBanner() {
   var el = document.getElementById('energy-tip-text');
   if(el) el.textContent = et[idx];
 })();
-
+} catch(e) { document.getElementById('debugStatus').textContent = 'ERR-script2: ' + e.message; }
 try { document.getElementById('debugStatus').textContent = 'CP3-AfterIIFEs'; } catch(e) { document.getElementById('debugStatus').textContent = 'ERR3: ' + e.message; }
 
 // --- FOCUS ZOOM: יומי / שבועי / חודשי ---
