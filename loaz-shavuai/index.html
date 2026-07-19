@@ -46,10 +46,10 @@ body { font-family: 'Segoe UI','Helvetica Neue',Arial,sans-serif; background: li
 .goals-list { list-style: none; counter-reset: gc; }
 .goals-list li { padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 14px; color: #1e293b; display: flex; align-items: flex-start; gap: 8px; }
 .goals-list li:last-child { border-bottom: none; }
-.goals-list li::before { counter-increment: gc; content: counter(gc); background: #eab308; color: #0f172a; font-weight: 700; font-size: 11px; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.goals-list li::before { counter-increment: gc; content: counter(gc); background: #fde047; color: #78350f; font-weight: 700; font-size: 11px; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
 th { position: sticky; top: 0; background: #ffffff; color: #0d9488; padding: 10px 4px; font-weight: 600; text-align: center; border: 1px solid #e2e8f0; z-index: 10; }
-th:first-child { width: 60px; color: #64748b; background: #f8fafc; }
+th:first-child { width: 60px; color: #94a3b8; background: #f0fdfa; }
 td { border: 1px solid #e2e8f0; padding: 0; vertical-align: top; height: 52px; transition: background 0.15s; }
 td:hover { background: #f8fafc; }
 td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weight: 600; background: #f8fafc; vertical-align: middle; }
@@ -71,7 +71,7 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .status-notdone { background: #dc2626; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
 .cell-done { background: rgba(22,163,74,0.12); }
 .cell-notdone { background: rgba(220,38,38,0.08); }
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(30,41,59,0.4); z-index: 100; justify-content: center; align-items: center; padding: 16px; }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.25); z-index: 100; justify-content: center; align-items: center; padding:16px; }
 .modal-overlay.active { display: flex; }
 .modal { background: #ffffff; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; }
 .modal-title { font-size: 18px; color: #0d9488; margin-bottom: 4px; }
@@ -90,15 +90,15 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .status-btn.notdone { border-color: #dc2626; color: #dc2626; background: transparent; }
 .status-btn.notdone.active { background: #dc2626; color: #fff; }
 .status-btn.pending { border-color: #64748b; color: #94a3b8; background: transparent; }
-.status-btn.pending.active { background: #334155; color: #e2e8f0; }
+.status-btn.pending.active { background: #e2e8f0; color: #475569; }
 .modal-buttons { display: flex; gap: 10px; margin-top: 24px; }
 .btn { flex: 1; padding: 10px 16px; border-radius: 8px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; }
 .btn-save { background: #14b8a6; color: #ffffff; font-weight: 600; }
 .btn-save:hover { background: #0d9488; }
 .btn-cancel { background: #f1f5f9; color: #475569; }
 .btn-cancel:hover { background: #e2e8f0; }
-.btn-delete { background: #7f1d1d; color: #fca5a5; }
-.btn-delete:hover { background: #991b1b; }
+.btn-delete { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.btn-delete:hover { background: #fecaca; }
 .stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .stat-card { background: #ffffff; padding: 12px 16px; border-radius: 10px; flex: 1; min-width: 120px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; }
 .stat-label { font-size: 11px; color: #64748b; }
@@ -121,10 +121,10 @@ tfoot td { background: #f8fafc; text-align: center; font-size: 11px; font-weight
 tfoot td.day-done { color: #22c55e; }
 tfoot td.day-notdone { color: #ef4444; }
 tfoot td.day-total { color: #14b8a6; font-size: 13px; }
-tfoot td.footer-total { background: #0d9488; color: #ffffff; font-size: 14px; }
+tfoot td.footer-total { background: linear-gradient(135deg,#0d9488,#14b8a6); color: #ffffff; font-size: 14px; }
 
 
-.congrats-toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); background: linear-gradient(135deg,#16a34a,#22c55e); color: #fff; padding: 14px 28px; border-radius: 14px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 200; opacity: 0; transition: all 0.35s ease; pointer-events: none; text-align: center; }
+.congrats-toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); background: linear-gradient(135deg,#16a34a,#22c55e); color: #fff; padding: 14px 28px; border-radius: 14px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 30px rgba(20,184,166,0.3); z-index: 200; opacity: 0; transition: all 0.35s ease; pointer-events: none; text-align: center; }
 .congrats-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .stat-value.blue { color: #38bdf8; }
 
@@ -171,17 +171,17 @@ tfoot td.footer-total { background: #0d9488; color: #ffffff; font-size: 14px; }
 .recurring-section .recurring-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
 .recurring-form { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
 .recurring-form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-.recurring-form-row input[type="text"], .recurring-form-row select { background: #1e293b; border: 1px solid #334155; color: #e2e8f0; padding: 8px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; }
+.recurring-form-row input[type="text"], .recurring-form-row select { background: #f8fafc; border: 1px solid #cbd5e1; color: #1e293b; padding: 8px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; }
 .recurring-form-row input[type="text"] { flex: 1; min-width: 160px; }
 .recurring-days { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .recurring-day-chip { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; user-select: none; }
 .recurring-day-chip.selected { background: #0891b2; border-color: #0891b2; color: #fff; }
-.recurring-add-btn { background: #0891b2; color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.recurring-add-btn { background: linear-gradient(135deg,#0891b2,#06b6d4); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(8,145,178,0.2); }
 .recurring-list-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
 .recurring-list-item .ri-name { font-weight: 600; color: #1e293b; font-size: 14px; }
 .recurring-list-item .ri-detail { font-size: 11px; color: #64748b; margin-top: 2px; }
-.recurring-list-item .ri-del { background: #7f1d1d; color: #fecaca; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-.recurring-apply-btn { background: #16a34a; color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 6px; }
+.recurring-list-item .ri-del { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+.recurring-apply-btn { background: linear-gradient(135deg,#16a34a,#22c55e); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 6px; box-shadow: 0 2px 8px rgba(22,163,74,0.2); }
 
 
 .sleep-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -190,9 +190,9 @@ tfoot td.footer-total { background: #0d9488; color: #ffffff; font-size: 14px; }
 .sleep-inputs input[type="time"] { background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 5px 8px; border-radius: 6px; font-size: 12px; }
 .sleep-inputs input[type="time"]:focus { outline: none; border-color: #a78bfa; }
 .sleep-bar-track { flex: 1; min-width: 180px; height: 22px; background: #f1f5f9; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #e2e8f0; }
-.sleep-bar-awake { position: absolute; top: 0; bottom: 0; background: linear-gradient(90deg,#a78bfa,#818cf8); }
+.sleep-bar-awake { position: absolute; top: 0; bottom: 0; background: linear-gradient(90deg,#c4b5fd,#a78bfa); }
 .sleep-bar-hourmark { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.06); }
-.sleep-hours-total { font-size: 11px; color: #a78bfa; min-width: 60px; text-align: left; font-weight: 600; }
+.sleep-hours-total { font-size: 11px; color: #7c3aed; min-width: 60px; text-align: left; font-weight: 600; }
 .time-select-group { display: flex; align-items: center; gap: 2px; }
 .time-select-group select { background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 5px 4px; border-radius: 6px; font-size: 12px; font-family: inherit; cursor: pointer; }
 .time-select-group select:focus { outline: none; border-color: #a78bfa; }
@@ -209,7 +209,7 @@ tfoot td.footer-total { background: #0d9488; color: #ffffff; font-size: 14px; }
     position: relative;
   }
   .hero-overlay {
-    background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(240,253,250,0.92) 100%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(240,253,250,0.95) 100%);
     padding: 38px 16px 26px;
     text-align: center;
     position: relative;
@@ -224,8 +224,8 @@ body::after {
   content: '';
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background:
-    linear-gradient(45deg, transparent 40%, rgba(20,184,166,0.04) 50%, transparent 60%),
-    linear-gradient(-45deg, transparent 40%, rgba(99,102,241,0.03) 50%, transparent 60%);
+    linear-gradient(45deg, transparent 40%, rgba(20,184,166,0.06) 50%, transparent 60%),
+    linear-gradient(-45deg, transparent 40%, rgba(99,102,241,0.04) 50%, transparent 60%);
   background-size: 300% 300%;
   animation: aurora 20s ease infinite;
   z-index: 0; pointer-events: none;
@@ -242,7 +242,7 @@ body::after {
   background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(234,179,8,0.06));
   border: 1px solid rgba(20,184,166,0.2); border-radius: 12px;
   padding: 12px 16px; margin-bottom: 12px;
-  font-size: 13px; color: #94a3b8; font-style: italic;
+  font-size: 13px; color: #475569; font-style: italic;
   position: relative; z-index: 1; line-height: 1.5;
 }
 .loaz-quote-banner strong { color: #14b8a6; font-style: normal; display: block; margin-bottom: 4px; }
@@ -256,8 +256,8 @@ body::after {
 .energy-meter .em-title { font-size: 12px; color: #14b8a6; font-weight: 700; margin-bottom: 8px; }
 .energy-levels { display: flex; gap: 6px; }
 .energy-btn {
-  flex: 1; padding: 8px 4px; border-radius: 8px; border: 1px solid #334155;
-  background: rgba(255,255,255,0.04); color: #94a3b8; font-size: 12px;
+  flex: 1; padding: 8px 4px; border-radius: 8px; border: 1px solid #e2e8f0;
+  background: #f8fafc; color: #475569; font-size: 12px;
   cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit;
 }
 .energy-btn:hover, .energy-btn.active { background: #14b8a6; color: #ffffff; border-color: #14b8a6; font-weight: 700; }
@@ -272,7 +272,7 @@ body::after {
 
 
 /* FOCUS ZOOM MODAL */
-.focus-zoom-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:200; justify-content:center; align-items:flex-start; padding:16px; overflow-y:auto; }
+.focus-zoom-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.3); z-index:200; justify-content:center; align-items:flex-start; padding:16px; overflow-y:auto; }
 .focus-zoom-overlay.active { display:flex; }
 .focus-zoom-modal { background:#ffffff; border-radius:20px; max-width:580px; width:100%; margin:auto; box-shadow:0 25px 60px rgba(0,0,0,0.15); border:1px solid #14b8a6; overflow:hidden; }
 .focus-zoom-header { background:linear-gradient(135deg,#0d9488,#14b8a6); padding:18px 20px; text-align:center; }
@@ -283,8 +283,8 @@ body::after {
 .focus-zoom-tab.active { color:#14b8a6; border-bottom-color:#14b8a6; background:rgba(20,184,166,0.05); }
 .focus-zoom-tab:hover:not(.active) { color:#94a3b8; }
 .focus-zoom-body { padding:20px; min-height:300px; background:#ffffff; }
-.focus-zoom-close { position:absolute; top:12px; left:12px; background:rgba(0,0,0,0.3); border:none; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; }
-.focus-zoom-close:hover { background:rgba(0,0,0,0.5); }
+.focus-zoom-close { position:absolute; top:12px; right:12px; background:rgba(13,148,136,0.2); border:none; color:#0d9488; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; z-index:10; }
+.focus-zoom-close:hover { background:rgba(13,148,136,0.3); }
 
 /* Daily zoom */
 .zoom-day-hero { text-align:center; padding:20px 0; }
@@ -299,7 +299,7 @@ body::after {
 .zoom-day-check { display:flex; align-items:center; gap:8px; margin-top:8px; padding:10px; background:rgba(20,184,166,0.05); border-radius:10px; }
 .zoom-day-check input { width:20px; height:20px; accent-color:#14b8a6; }
 .zoom-day-check label { font-size:14px; color:#e2e8f0; cursor:pointer; }
-.zoom-edit-btn { display:block; margin:16px auto 0; background:#14b8a6; color:#0f172a; border:none; padding:10px 24px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.zoom-edit-btn { display:block; margin:16px auto 0; background:#14b8a6; color:#fff; border:none; padding:10px 24px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; }
 .zoom-edit-btn:hover { background:#0d9488; }
 
 /* Weekly zoom */
@@ -332,7 +332,7 @@ body::after {
 /* MINI TASK */
 .btn-mini-task { background: linear-gradient(135deg, #f59e0b, #f97316); border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.2s; white-space: nowrap; box-shadow: 0 2px 8px rgba(245,158,11,0.3); }
 .btn-mini-task:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
-.mini-task-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(30,41,59,0.4); z-index:100; justify-content:center; align-items:center; padding:16px; }
+.mini-task-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.25); z-index:100; justify-content:center; align-items:center; padding:16px; }
 .mini-task-overlay.active { display:flex; }
 .mini-task-modal { background:#fff; border-radius:20px; max-width:440px; width:100%; padding:0; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.15); border:1px solid #fed7aa; }
 .mini-task-header { background:linear-gradient(135deg,#f59e0b,#f97316); padding:18px 20px; text-align:center; }
@@ -1238,14 +1238,14 @@ function renderZoomDay() {
   html += '<label for="zoomPlanned">☑️ תכננתי הערב את הלו"ז למחר</label>';
   html += '</div>';
   
-  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
+  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
   
   html += '<button class="zoom-edit-btn" onclick="saveZoomDay()">💾 שמור מיקוד יומי</button>';
   
   // Day navigator
   html += '<div style="display:flex;justify-content:space-between;margin-top:16px;">';
-  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#334155;color:#e2e8f0;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
-  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#334155;color:#e2e8f0;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
+  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
+  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
   html += '</div>';
   
   document.getElementById('zoomBody').innerHTML = html;
@@ -1493,14 +1493,14 @@ function renderZoomDay() {
   html += '<label for="zoomPlanned">☑️ תכננתי הערב את הלו"ז למחר</label>';
   html += '</div>';
   
-  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
+  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
   
   html += '<button class="zoom-edit-btn" onclick="saveZoomDay()">💾 שמור מיקוד יומי</button>';
   
   // Day navigator
   html += '<div style="display:flex;justify-content:space-between;margin-top:16px;">';
-  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#334155;color:#e2e8f0;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
-  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#334155;color:#e2e8f0;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
+  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
+  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
   html += '</div>';
   
   document.getElementById('zoomBody').innerHTML = html;
@@ -1779,14 +1779,14 @@ function renderZoomDay() {
   html += '<label for="zoomPlanned">☑️ תכננתי הערב את הלו"ז למחר</label>';
   html += '</div>';
   
-  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
+  html += '<input type="text" id="zoomOneTask" style="width:100%;background:#f8fafc;border:1px solid #cbd5e1;color:#1e293b;padding:12px 14px;border-radius:10px;font-size:15px;font-family:inherit;margin-top:12px;" placeholder="🎯 ערוך את המשימה האחת של היום..." value="' + escapeHtml(data.oneTask||'') + '">';
   
   html += '<button class="zoom-edit-btn" onclick="saveZoomDay()">💾 שמור מיקוד יומי</button>';
   
   // Day navigator
   html += '<div style="display:flex;justify-content:space-between;margin-top:16px;">';
-  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#334155;color:#e2e8f0;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
-  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#334155;color:#e2e8f0;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
+  html += '<button onclick="zoomEditDay=' + ((d+5)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">‹ יום קודם</button>';
+  html += '<button onclick="zoomEditDay=' + ((d+1)%6) + ';renderZoomDay();" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">יום הבא ›</button>';
   html += '</div>';
   
   document.getElementById('zoomBody').innerHTML = html;
