@@ -1390,16 +1390,20 @@ function renderZoomMonth() {
   document.getElementById('zoomBody').innerHTML = html;
 }
 
+try { document.getElementById('debugStatus').textContent = 'CP2-BeforeFocusBtn'; } catch(e) {}
+
 // Override focusBtn to open zoom instead
-document.getElementById('focusBtn').addEventListener('click', function(e) {
+try { document.getElementById('focusBtn').addEventListener('click', function(e) {
   // Keep the old section toggle too, but also open zoom
   openFocusZoom();
-});
+}); } catch(e) { document.getElementById('debugStatus').textContent = 'ERR2-focusBtn: ' + e.message; throw e; }
 
 // Close on overlay click
-document.getElementById('focusZoomOverlay').addEventListener('click', function(e) {
+try { document.getElementById('focusZoomOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeFocusZoom();
-});
+}); } catch(e) { document.getElementById('debugStatus').textContent = 'ERR2-overlay: ' + e.message; throw e; }
+
+try { document.getElementById('debugStatus').textContent = 'CP2b-AfterFocusBtn'; } catch(e) {}
 
 function renderDailyFocusBanner() {
   const today = new Date();
