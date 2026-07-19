@@ -1595,8 +1595,8 @@ safeBind('miniTaskSave', 'click', function() {
       // Check if there's already a task in that slot — if so, append to it
       var existing = getCellData(dayOffset, hourIdx);
       if (existing) {
-        // Append mini task info to the existing task
         existing.task = existing.task + ' + ⚡' + name + ' (' + formatDuration(miniTaskDuration) + ')';
+        setCellData(dayOffset, hourIdx, existing);
       } else {
         setCellData(dayOffset, hourIdx, {
           task: '⚡ ' + name + ' (' + formatDuration(miniTaskDuration) + ')',
