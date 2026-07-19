@@ -2150,6 +2150,9 @@ function showAuthError(msg) {
 function clearAuthError() { document.getElementById('authError').classList.remove('show'); }
 
 function switchAuthMode(mode) {
+  try {
+    alert('DEBUG: switchAuthMode called with: ' + mode);
+  } catch(e) {}
   authMode = mode;
   const confirmField = document.getElementById('authPasswordConfirm');
   const submitBtn = document.getElementById('authSubmit');
@@ -2179,6 +2182,7 @@ function switchAuthMode(mode) {
 }
 
 async function handleAuthSubmit() {
+  try { alert('DEBUG: handleAuthSubmit called'); } catch(e) {}
   clearAuthError();
   const username = document.getElementById('authUsername').value.trim();
   const password = document.getElementById('authPassword').value;
@@ -2304,6 +2308,7 @@ safeBind('logoutBtn', 'click', logoutUser);
 
 // Check session on load
 try { checkSession(); } catch(e) { console.error('checkSession failed', e); }
+try { alert('DEBUG: Script fully loaded. switchAuthMode type: ' + typeof window.switchAuthMode); } catch(e) {}
 
 
 </script>
