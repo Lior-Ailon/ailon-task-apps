@@ -411,7 +411,7 @@ body::after {
       <button class="auth-btn" id="authSubmit">התחבר</button>
     </div>
     <div class="auth-switch" id="authSwitch">
-      אין לך חשבון? <a onclick="switchAuthMode('signup')">צור משתמש חדש</a>
+      אין לך חשבון? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="padding:8px 16px;display:inline-block;font-size:14px;">צור משתמש חדש</a>
     </div>
     <div class="auth-note">הנתונים שלך נשמרים פרטית במכשיר שלך</div>
   </div>
@@ -1304,7 +1304,7 @@ function renderZoomWeek() {
       doneStatus = '⏳';
     }
     
-    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab('day');" style="cursor:pointer">';
+    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab(\'day\');" style="cursor:pointer">';
     html += '<div class="zwd-name">' + DAYS[d] + (isToday?' •':'') + '</div>';
     if (taskText) {
       html += '<div class="zwd-task">' + escapeHtml(taskText) + '</div>';
@@ -1559,7 +1559,7 @@ function renderZoomWeek() {
       doneStatus = '⏳';
     }
     
-    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab('day');" style="cursor:pointer">';
+    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab(\'day\');" style="cursor:pointer">';
     html += '<div class="zwd-name">' + DAYS[d] + (isToday?' •':'') + '</div>';
     if (taskText) {
       html += '<div class="zwd-task">' + escapeHtml(taskText) + '</div>';
@@ -1845,7 +1845,7 @@ function renderZoomWeek() {
       doneStatus = '⏳';
     }
     
-    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab('day');" style="cursor:pointer">';
+    html += '<div class="zoom-week-day' + (isToday?' today':'') + '" onclick="zoomEditDay='+d+';switchZoomTab(\'day\');" style="cursor:pointer">';
     html += '<div class="zwd-name">' + DAYS[d] + (isToday?' •':'') + '</div>';
     if (taskText) {
       html += '<div class="zwd-task">' + escapeHtml(taskText) + '</div>';
@@ -2154,19 +2154,19 @@ function switchAuthMode(mode) {
     submitBtn.textContent = 'צור משתמש';
     titleEl.textContent = 'משתמש חדש';
     subEl.textContent = 'צור חשבון עם מאגר נתונים פרטי משלך';
-    switchEl.innerHTML = 'כבר יש חשבון? <a onclick="switchAuthMode(\'login\')">התחבר</a>';
+    switchEl.innerHTML = "כבר יש חשבון? <a href=\"javascript:void(0)\" onclick=\"switchAuthMode('login')\" style=\"padding:8px 16px;display:inline-block;\">התחבר</a>";
   } else if (mode === 'claim') {
     confirmField.style.display = 'block';
     submitBtn.textContent = 'אמץ וקבע סיסמה';
     titleEl.textContent = 'אימוץ משתמש קיים';
     subEl.textContent = 'קבע סיסמה למשתמש הקיים כדי להמשיך עם הנתונים שלך';
-    switchEl.innerHTML = 'כבר יש חשבון? <a onclick="switchAuthMode(\'login\')">התחבר</a>';
+    switchEl.innerHTML = "כבר יש חשבון? <a href=\"javascript:void(0)\" onclick=\"switchAuthMode('login')\" style=\"padding:8px 16px;display:inline-block;\">התחבר</a>";
   } else {
     confirmField.style.display = 'none';
     submitBtn.textContent = 'התחבר';
     titleEl.textContent = 'לוז שבועי';
     subEl.textContent = 'התחבר כדי להמשיך לתכנן את השבוע שלך';
-    switchEl.innerHTML = 'אין לך חשבון? <a onclick="switchAuthMode(\'signup\')">צור משתמש חדש</a>';
+    switchEl.innerHTML = "אין לך חשבון? <a href=\"javascript:void(0)\" onclick=\"switchAuthMode('signup')\" style=\"padding:8px 16px;display:inline-block;\">צור משתמש חדש</a>";
   }
 }
 
@@ -2238,7 +2238,7 @@ function checkExistingData(safeUsername) {
 
 function showClaimOption(safeUsername) {
   const switchEl = document.getElementById('authSwitch');
-  switchEl.innerHTML = 'נתונים קיימים נמצאו תחת \' + safeUsername + '\'. <a onclick="switchAuthMode(\'claim\')">🔑 אמץ משתמש קיים וקבע סיסמה</a>';
+  switchEl.innerHTML = "<div style='margin-bottom:8px;'>נתונים קיימים נמצאו תחת <strong>" + safeUsername + "</strong></div><a href='javascript:void(0)' onclick='switchAuthMode(&#39;claim&#39;)' style='padding:10px 20px;display:inline-block;background:#f0fdfa;border:1px solid #14b8a6;border-radius:8px;color:#0d9488;font-weight:600;font-size:14px;'>🔑 אמץ משתמש קיים וקבע סיסמה</a>";
 }
 
 function loginUser(safeUsername, displayName) {
