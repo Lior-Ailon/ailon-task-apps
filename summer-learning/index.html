@@ -448,10 +448,7 @@ function enterApp(){
   state.childName = name;
   state.avatar = selectedAvatar;
   saveState();
-  showScreen('screen-home');
-  updateHomeStats();
-  updateDcUI();
-  updateSubjectProgress();
+  goHome();
 }
 
 // Init
