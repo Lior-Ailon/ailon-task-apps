@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קיץ חכם - חשבון</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--c1:#FF6B6B;--c2:#4ECDC4;--c3:#FFE66D;--c5:#C7A6FF;--c7:#6BCB77;--c8:#FFA45B;--bg:#FFF5F5;--text:#2D3047;--success:#6BCB77;--error:#FF6B6B}
+body{font-family:'Heebo','Fredoka',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+.screen{display:none;min-height:100vh;padding:20px 16px}
+.screen.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.hdr{text-align:center;padding:16px 0}
+.hdr h1{font-family:'Fredoka',sans-serif;font-size:2rem;color:var(--c1)}
+.score-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px auto;padding:8px 20px;border-radius:50px;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.08);width:fit-content}
+.score-bar .badge{font-weight:700;font-size:1rem;display:flex;gap:4px;align-items:center}
+.dc-mini{max-width:450px;margin:12px auto;padding:12px 16px;border-radius:16px;text-align:center;background:linear-gradient(135deg,#FF6B6B,#FFA45B);color:#fff;box-shadow:0 4px 15px rgba(255,107,107,.2);cursor:pointer}
+.dc-mini.done{background:linear-gradient(135deg,#6BCB77,#4ECDC4)}
+.dc-mini .dc-bar{width:100%;height:6px;border-radius:10px;background:rgba(255,255,255,.3);margin-top:8px;overflow:hidden}
+.dc-mini .dc-fill{height:100%;border-radius:10px;background:#fff}
+.back-btn{position:fixed;top:16px;right:16px;z-index:100;width:44px;height:44px;border-radius:50%;border:none;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.1);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:500px;margin:16px auto}
+.game-card{background:#fff;border-radius:20px;padding:20px 12px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.08);cursor:pointer;transition:all .3s;border:3px solid transparent}
+.game-card:active{transform:scale(.95)}
+.game-card .icon{font-size:2.8rem;display:block;margin-bottom:8px}
+.game-card .name{font-weight:700;font-size:1rem}
+.game-card .desc{font-size:.78rem;color:#999;margin-top:4px}
+.g-area{max-width:500px;margin:0 auto;text-align:center}
+.g-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;max-width:500px;margin:0 auto 16px}
+.g-hdr .prog{font-size:.9rem;color:#888}
+.g-hdr .scr{font-weight:700;color:var(--c1)}
+.q-card{background:#fff;border-radius:20px;padding:30px 20px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin:16px 0;text-align:center}
+.q-big{font-family:'Fredoka',sans-serif;font-size:3rem;font-weight:700;margin:12px 0}
+.q-prompt{font-size:1.2rem;color:#888;margin-bottom:12px}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:400px;margin:16px auto}
+.ans-btn{padding:16px;border-radius:16px;border:2px solid transparent;font-size:1.3rem;font-weight:700;background:#fff;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.ans-btn:active{transform:scale(.95)}
+.ans-btn.correct{background:var(--success);color:#fff}
+.ans-btn.wrong{background:var(--error);color:#fff;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.type-input{width:100%;max-width:300px;padding:16px;border-radius:16px;border:3px solid var(--c2);font-size:1.5rem;font-family:'Fredoka',sans-serif;text-align:center;outline:none;letter-spacing:2px}
+.type-input:focus{border-color:var(--c1)}
+.btn{margin-top:16px;padding:14px 40px;border-radius:30px;border:none;background:var(--c2);color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(78,205,196,.3)}
+.btn:active{transform:scale(.95)}
+.next-btn{margin-top:20px;padding:14px 36px;border-radius:30px;border:none;background:var(--c1);color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,107,107,.3);display:none}
+.next-btn.show{display:inline-block}
+.encourage{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#fff;padding:30px 40px;border-radius:24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);z-index:200;transition:transform .3s}
+.encourage.show{transform:translate(-50%,-50%) scale(1)}
+.encourage .emoji{font-size:4rem}
+.encourage .text{font-size:1.4rem;font-weight:700;margin-top:8px;color:var(--c1)}
+.encourage .coins{font-size:1.2rem;color:#E8A317;margin-top:8px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:#fff;padding:14px 24px;border-radius:30px;font-weight:700;z-index:300;transition:transform .3s;font-size:.95rem}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:400px;margin:16px auto}
+.tf-btn{padding:20px;border-radius:16px;border:none;font-size:1.5rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.tf-btn.true{background:#95E1D3;color:#fff}
+.tf-btn.false{background:#FFB7B2;color:#fff}
+.tf-btn.correct{background:var(--success);color:#fff}
+.tf-btn.wrong{background:var(--error);color:#fff;animation:shake .4s}
+</style>
+</head>
+<body>
+
+<!-- Game Selection -->
+<div class="screen active" id="screen-home">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="hdr"><h1>🔢 חשבון</h1><p style="color:#888">כיתה ה'-ו'</p></div>
+  <div class="dc-mini" id="dc-mini" onclick="toggleDc()">
+    <div id="dc-mini-text">🎯 אתגר יומי — 30 דקות</div>
+    <div class="dc-bar"><div class="dc-fill" id="dc-mini-fill" style="width:0%"></div></div>
+  </div>
+  <div class="game-grid">
+    <div class="game-card" style="border-color:rgba(255,107,107,.3)" onclick="startGame('speed')"><span class="icon">⚡</span><div class="name">חשבון מהיר</div><div class="desc">חיבור וחיסור מהיר</div></div>
+    <div class="game-card" style="border-color:rgba(78,205,196,.3)" onclick="startGame('multiply')"><span class="icon">✖️</span><div class="name">לוח הכפל</div><div class="desc">תרגול כפל</div></div>
+    <div class="game-card" style="border-color:rgba(255,230,109,.4)" onclick="startGame('divide')"><span class="icon">➗</span><div class="name">חילוק</div><div class="desc">תרגול חילוק</div></div>
+    <div class="game-card" style="border-color:rgba(199,166,255,.4)" onclick="startGame('fractions')"><span class="icon">🍕</span><div class="name">שברים</div><div class="desc">השוואת שברים</div></div>
+    <div class="game-card" style="border-color:rgba(107,203,119,.4)" onclick="startGame('wordprob')"><span class="icon">📝</span><div class="name">בעיות מילוליות</div><div class="desc">סיפורים עם חשבון</div></div>
+    <div class="game-card" style="border-color:rgba(255,164,91,.4)" onclick="startGame('truefalse')"><span class="icon">✓✗</span><div class="name">נכון או לא?</div><div class="desc">בדוק את התשובה</div></div>
+    <div class="game-card" style="border-color:rgba(255,183,178,.5)" onclick="startGame('numberline')"><span class="icon">📊</span><div class="name">סדר מספרים</div><div class="desc">סדר מהקטן לגדול</div></div>
+    <div class="game-card" style="border-color:rgba(149,225,211,.4)" onclick="startGame('missing')"><span class="icon">🔍</span><div class="name">מספר חסר</div><div class="desc">מצא את החסר</div></div>
+  </div>
+</div>
+
+<!-- Game Play -->
+<div class="screen" id="screen-game">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="g-hdr">
+    <span class="prog" id="g-prog"></span>
+    <span class="scr">⭐ <span id="g-score">0</span></span>
+  </div>
+  <div class="g-area" id="g-content"></div>
+  <button class="next-btn" id="next-btn" onclick="nextRound()">הבא ➡</button>
+</div>
+
+<div class="encourage" id="encourage">
+  <div class="emoji" id="enc-emoji"></div>
+  <div class="text" id="enc-text"></div>
+  <div class="coins" id="enc-coins"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY="summer_learning_data";
+const DAILY_GOAL_MIN=30;
+const DAILY_REWARD=10;
+const API_URL="https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/reportSummerChallenge";
+
+let state={coins:0,stars:0,dailyChallenge:{lastCompletedDate:null,todayTimeMs:0,todayDate:null,totalEarned:0,completedDays:[],active:false},subjectStats:{english:{gamesPlayed:0,score:0},math:{gamesPlayed:0,score:0},hebrew:{gamesPlayed:0,score:0}},childName:"ילד"};
+function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);if(s){Object.assign(state,JSON.parse(s))}}catch(e){}}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+function getTodayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function checkDailyReset(){const t=getTodayStr();if(state.dailyChallenge.todayDate!==t){state.dailyChallenge.todayDate=t;state.dailyChallenge.todayTimeMs=0;state.dailyChallenge.active=false;saveState()}}
+
+let currentGame=null,questions=[],qIndex=0,gameScore=0,roundData=null;
+const ENCOURAGEMENTS=[{emoji:"🌟",text:"מדהים!"},{emoji:"🎉",text:"כל הכבוד!"},{emoji:"👏",text:"מעולה!"},{emoji:"🚀",text:"איזה כוכב!"},{emoji:"🏆",text:"אלוף!"},{emoji:"💪",text:"חזק!"},{emoji:"✨",text:"פנטסטי!"},{emoji:"🥳",text:"נהדר!"},{emoji:"🔥",text:"אש!"},{emoji:"⭐",text:"עבודה מצוינת!"}];
+
+function showEncourage(correct){
+  const p=document.getElementById('encourage');
+  if(correct){
+    const e=ENCOURAGEMENTS[Math.floor(Math.random()*ENCOURAGEMENTS.length)];
+    state.coins+=5+Math.floor(Math.random()*10);
+    document.getElementById('enc-emoji').textContent=e.emoji;
+    document.getElementById('enc-text').textContent=e.text;
+    document.getElementById('enc-coins').textContent='+'+(5+Math.floor(Math.random()*10))+' 🪙';
+  }else{
+    document.getElementById('enc-emoji').textContent="💪";
+    document.getElementById('enc-text').textContent="נסה שוב!";
+    document.getElementById('enc-coins').textContent="אתה יכול!";
+  }
+  p.classList.add('show');setTimeout(()=>p.classList.remove('show'),1500);saveState();
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+function goBack(){
+  stopDcTimer();
+  // Return to main hub
+  window.location.href="index.html";
+}
+
+function toggleDc(){
+  checkDailyReset();
+  if(state.dailyChallenge.lastCompletedDate===getTodayStr()){showToast('סיימת היום את האתגר! 🎉');return}
+  if(state.dailyChallenge.active){showToast('האתגר כבר פעיל! המשך 🎮');return}
+  state.dailyChallenge.active=true;saveState();updateDcMini();
+  showToast('האתגר התחיל! שחק 30 דקות 🎯');
+}
+
+let dcTimer=null;
+function startDcTimer(){
+  stopDcTimer();
+  dcTimer=setInterval(()=>{
+    if(state.dailyChallenge.active){
+      state.dailyChallenge.todayTimeMs+=5000;saveState();updateDcMini();
+      if(state.dailyChallenge.todayTimeMs/60000>=DAILY_GOAL_MIN)completeDailyChallenge();
+    }
+  },5000);
+}
+function stopDcTimer(){if(dcTimer){clearInterval(dcTimer);dcTimer=null}}
+
+function updateDcMini(){
+  checkDailyReset();
+  const done=state.dailyChallenge.lastCompletedDate===getTodayStr();
+  const mini=document.getElementById('dc-mini');
+  if(!mini)return;
+  if(done){
+    mini.classList.add('done');
+    document.getElementById('dc-mini-text').textContent='✅ אתגר יומי הושלם!';
+    document.getElementById('dc-mini-fill').style.width='100%';
+  }else{
+    const min=Math.floor(state.dailyChallenge.todayTimeMs/60000);
+    document.getElementById('dc-mini-text').textContent=state.dailyChallenge.active?`🎯 ${min}/${DAILY_GOAL_MIN} דקות`:'🎯 אתגר יומי — 30 דקות';
+    document.getElementById('dc-mini-fill').style.width=Math.min(100,(min/DAILY_GOAL_MIN)*100)+'%';
+  }
+}
+
+function completeDailyChallenge(){
+  stopDcTimer();
+  const today=getTodayStr();
+  if(state.dailyChallenge.lastCompletedDate===today)return;
+  state.dailyChallenge.lastCompletedDate=today;
+  state.dailyChallenge.totalEarned+=DAILY_REWARD;
+  if(!state.dailyChallenge.completedDays.includes(today))state.dailyChallenge.completedDays.push(today);
+  state.dailyChallenge.active=false;saveState();
+  showToast('🎉 סיימת את האתגר היומי! +10 ₪ לקופסה! 🎉');
+  try{fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({child_name:state.childName,subject:"חשבון",date:today,time_spent_minutes:Math.round(state.dailyChallenge.todayTimeMs/60000),reward_amount:DAILY_REWARD,total_earned:state.dailyChallenge.totalEarned})}).catch(e=>console.log('Notification pending'))}catch(e){}
+  updateDcMini();
+}
+
+// Math Question Generators
+function genSpeed(){
+  const ops=['+','-'];
+  const op=ops[Math.floor(Math.random()*ops.length)];
+  let a,b,ans;
+  if(op==='+'){a=Math.floor(Math.random()*900)+100;b=Math.floor(Math.random()*900)+100;ans=a+b}
+  else{a=Math.floor(Math.random()*900)+100;b=Math.floor(Math.random()*a);ans=a-b}
+  return{q:a+' '+op+' '+b+' = ?',answer:ans,type:'input',hint:''};
+}
+
+function genMultiply(){
+  const a=Math.floor(Math.random()*9)+2;
+  const b=Math.floor(Math.random()*9)+2;
+  return{q:a+' × '+b+' = ?',answer:a*b,type:'input',hint:''};
+}
+
+function genDivide(){
+  const b=Math.floor(Math.random()*9)+2;
+  const ans=Math.floor(Math.random()*9)+2;
+  const a=b*ans;
+  return{q:a+' ÷ '+b+' = ?',answer:ans,type:'input',hint:''};
+}
+
+function genFractions(){
+  const denoms=[2,3,4,5,6,8,10];
+  const d1=denoms[Math.floor(Math.random()*denoms.length)];
+  const d2=denoms[Math.floor(Math.random()*denoms.length)];
+  const n1=Math.floor(Math.random()*(d1-1))+1;
+  const n2=Math.floor(Math.random()*(d2-1))+1;
+  const v1=n1/d1, v2=n2/d2;
+  const correct=v1>v2?'>'+v1<v2?'<':'=';
+  const opts=['>','<','='];
+  return{q:`איזה גדול יותר? ${n1}/${d1} או ${n2}/${d2}`,answer:correct,type:'choice',options:opts,emoji:'🍕'};
+}
+
+function genWordProb(){
+  const types=[
+    ()=>{const a=Math.floor(Math.random()*50)+10;const b=Math.floor(Math.random()*50)+10;return{q:`בחנות היו ${a} ממתקים. מכרו ${b}. כמה נשארו?`,answer:a-b,type:'choice',options:[a-b,a+b,a*b,a+b-5]}},
+    ()=>{const a=Math.floor(Math.random()*8)+3;const b=Math.floor(Math.random()*8)+3;return{q:`בכיתה יש ${a} שולחנות. על כל שולחן יושבים ${b} תלמידים. כמה תלמידים?`,answer:a*b,type:'choice',options:[a*b,a+b,a*b+2,a-b]}},
+    ()=>{const total=Math.floor(Math.random()*80)+20;const per=Math.floor(Math.random()*8)+3;return{q:`${total} ילדים רצו לנסוע. בכל אוטובוס יש ${per} מקומות. כמה אוטובוסים צריך?`,answer:Math.ceil(total/per),type:'choice',options:[Math.ceil(total/per),Math.floor(total/per),total*per,total+per]}},
+    ()=>{const a=Math.floor(Math.random()*60)+20;const b=Math.floor(Math.random()*60)+20;const c=Math.floor(Math.random()*60)+20;return{q:`שלושה חברים אספו כסף. הראשון ${a}₪, השני ${b}₪, השלישי ${c}₪. כמה בסה"כ?`,answer:a+b+c,type:'choice',options:[a+b+c,a+b,a*b+c,a+b-c]}},
+    ()=>{const a=Math.floor(Math.random()*40)+10;return{q:`במחסן היו ${a} קופסאות. הכניסו עוד 3 פעמים כמות. כמה עכשיו?`,answer:a*4,type:'choice',options:[a*4,a+3,a*3,a+12]}}
+  ];
+  return types[Math.floor(Math.random()*types.length)]();
+}
+
+function genTrueFalse(){
+  const a=Math.floor(Math.random()*20)+5;
+  const b=Math.floor(Math.random()*20)+5;
+  const ops=['+','-','×','÷'];
+  const op=ops[Math.floor(Math.random()*ops.length)];
+  let realAns;
+  if(op==='+')realAns=a+b;
+  if(op==='-')realAns=a-b;
+  if(op==='×')realAns=a*b;
+  if(op==='÷'){const ans=Math.floor(Math.random()*9)+2;realAns=ans;const aa=b*ans;return{q:`${aa} ÷ ${b} = ${ans+(Math.random()<0.5?0:1)} נכון?`,answer:Math.random()<0.5,type:'tf'}}
+  const shown=realAns+(Math.random()<0.5?0:Math.floor(Math.random()*5)+1);
+  return{q:`${a} ${op} ${b} = ${shown} נכון?`,answer:shown===realAns,type:'tf'};
+}
+
+function genNumberLine(){
+  const nums=[];
+  while(nums.length<5){nums.push(Math.floor(Math.random()*900)+100)}
+  nums.sort((a,b)=>a-b);
+  const correctOrder=[...nums].sort((a,b)=>a-b);
+  const scrambled=[...nums].sort(()=>Math.random()-0.5);
+  return{q:'סדר מהקטן לגדול:',answer:correctOrder.join(','),type:'order',items:scrambled};
+}
+
+function genMissing(){
+  const a=Math.floor(Math.random()*50)+10;
+  const b=Math.floor(Math.random()*50)+10;
+  const c=a+b;
+  return{q:`${a} + ? = ${c}`,answer:b,type:'input',hint:''};
+}
+
+const GENERATORS={speed:genSpeed,multiply:genMultiply,divide:genDivide,fractions:genFractions,wordprob:genWordProb,truefalse:genTrueFalse,numberline:genNumberLine,missing:genMissing};
+const GAME_NAMES={speed:'חשבון מהיר',multiply:'לוח הכפל',divide:'חילוק',fractions:'שברים',wordprob:'בעיות מילוליות',truefalse:'נכון או לא?',numberline:'סדר מספרים',missing:'מספר חסר'};
+
+function startGame(type){
+  currentGame=type;
+  questions=[];
+  for(let i=0;i<10;i++)questions.push(GENERATORS[type]());
+  qIndex=0;gameScore=0;
+  showScreen('screen-game');
+  document.getElementById('next-btn').classList.remove('show');
+  if(state.dailyChallenge.active)startDcTimer();
+  renderQuestion();
+}
+
+function updateGameHeader(){
+  document.getElementById('g-prog').textContent=`שאלה ${qIndex+1} / ${questions.length}`;
+  document.getElementById('g-score').textContent=gameScore;
+}
+
+function nextRound(){
+  qIndex++;
+  if(qIndex>=questions.length){endGame();return}
+  document.getElementById('next-btn').classList.remove('show');
+  renderQuestion();
+}
+
+function endGame(){
+  // Update stats
+  if(!state.subjectStats.math)state.subjectStats.math={gamesPlayed:0,score:0};
+  state.subjectStats.math.gamesPlayed++;
+  state.subjectStats.math.score+=gameScore;
+  state.stars+=gameScore;
+  saveState();
+  const passed=gameScore>=6;
+  document.getElementById('g-content').innerHTML=`
+    <div style="padding:40px 20px;text-align:center;">
+      <div style="font-size:5rem;">${passed?'🏆':'💪'}</div>
+      <h2 style="font-size:1.6rem;margin:16px 0;color:${passed?'#6BCB77':'#FF6B6B'};">${passed?'סיימת בהצלחה!':'כמעט! נסה שוב'}</h2>
+      <div style="font-size:1.2rem;margin:12px 0;">ענית נכון על <b>${gameScore}</b> מתוך <b>${questions.length}</b></div>
+      <div style="font-size:3rem;margin:16px 0;">${'⭐'.repeat(Math.max(1,Math.ceil(gameScore/3.3)))}</div>
+      <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="startGame('${currentGame}')" style="padding:14px 30px;border-radius:30px;border:none;background:#4ECDC4;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;">🔄 שחק שוב</button>
+        <button onclick="goBack()" style="padding:14px 30px;border-radius:30px;border:none;background:#FF6B6B;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;">🏠 תפריט</button>
+      </div>
+    </div>`;
+  document.getElementById('g-prog').textContent='סיום!';
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5)}
+
+function renderQuestion(){
+  updateGameHeader();
+  const c=document.getElementById('g-content');
+  const q=questions[qIndex];
+  if(q.type==='input'){
+    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div><div class="q-big">${q.q}</div><input type="number" class="type-input" id="num-input" onkeyup="if(event.key==='Enter')checkInput(${q.answer})"><button class="btn" onclick="checkInput(${q.answer})">בדוק ✓</button></div>`;
+    document.getElementById('num-input').focus();
+  }else if(q.type==='choice'){
+    const opts=shuffle(q.options.map(String));
+    // Remove duplicates
+    const unique=[...new Set(opts)];
+    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div>${q.emoji?'<div style="font-size:3rem;margin:8px;">'+q.emoji+'</div>':''}<div style="font-size:1.4rem;margin:12px 0;">${q.q}</div><div class="ans-grid">${unique.map(o=>`<button class="ans-btn" onclick="checkChoice('${o}','${q.answer}')">${o}</button>`).join('')}</div></div>`;
+  }else if(q.type==='tf'){
+    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div><div style="font-size:1.6rem;margin:16px 0;">${q.q}</div><div class="tf-grid"><button class="tf-btn true" onclick="checkTF(true,${q.answer})">✓ נכון</button><button class="tf-btn false" onclick="checkTF(false,${q.answer})">✗ לא נכון</button></div></div>`;
+  }else if(q.type==='order'){
+    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div><div style="font-size:1.2rem;margin:8px;">${q.q}</div><div id="order-items" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;">${shuffle(q.items).map((n,i)=>`<button class="ans-btn" style="min-width:80px" data-val="${n}" onclick="orderPick(${i})">${n}</button>`).join('')}</div><div id="order-answer" style="display:flex;gap:6px;justify-content:center;min-height:50px;align-items:center;margin:12px 0;"></div></div>`;
+    roundData={orderAnswer:[],correctOrder:q.answer.split(',').map(Number)};
+  }
+}
+
+function checkInput(ans){
+  const input=document.getElementById('num-input');
+  const val=parseInt(input.value);
+  if(val===ans){input.style.borderColor='#6BCB77';input.style.color='#6BCB77';gameScore++;showEncourage(true)}
+  else{input.style.borderColor='#FF6B6B';input.style.color='#FF6B6B';showToast('התשובה: '+ans);showEncourage(false)}
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function checkChoice(picked,correct){
+  if(String(picked)===String(correct)){gameScore++;showEncourage(true);event.target.classList.add('correct')}
+  else{event.target.classList.add('wrong');showEncourage(false);document.querySelectorAll('.ans-btn').forEach(b=>{if(b.textContent===String(correct))b.classList.add('correct')})}
+  document.querySelectorAll('.ans-btn').forEach(b=>b.style.pointerEvents='none');
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function checkTF(picked,correct){
+  if(picked===correct){gameScore++;showEncourage(true);event.target.classList.add('correct')}
+  else{event.target.classList.add('wrong');showEncourage(false)}
+  document.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function orderPick(i){
+  const btn=document.querySelector(`#order-items button:nth-child(${i+1})`);
+  if(btn.style.visibility==='hidden')return;
+  roundData.orderAnswer.push(parseInt(btn.dataset.val));
+  btn.style.visibility='hidden';
+  const ans=document.getElementById('order-answer');
+  ans.innerHTML=roundData.orderAnswer.map(n=>`<span style="background:#4ECDC4;color:#fff;padding:8px 16px;border-radius:12px;font-weight:700;">${n}</span>`).join(' ');
+  if(roundData.orderAnswer.length===roundData.correctOrder.length){
+    const correct=roundData.orderAnswer.join(',')===roundData.correctOrder.join(',');
+    if(correct){gameScore++;showEncourage(true)}
+    else{showEncourage(false);showToast('הסדר: '+roundData.correctOrder.join(', '))}
+    updateGameHeader();
+    document.getElementById('next-btn').classList.add('show');
+  }
+}
+
+// Init
+loadState();
+checkDailyReset();
+updateDcMini();
+</script>
+</body>
+</html>

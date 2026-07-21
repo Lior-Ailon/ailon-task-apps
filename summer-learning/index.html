@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קיץ חכם - משחקי לימוד לחופש</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--c1:#FF6B6B;--c2:#4ECDC4;--c3:#FFE66D;--c4:#95E1D3;--c5:#C7A6FF;--c6:#FFB7B2;--c7:#6BCB77;--c8:#FFA45B;--bg:#F0F4FF;--text:#2D3047}
+body{font-family:'Heebo','Fredoka',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+.bg-bubbles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden}
+.bg-bubbles span{position:absolute;bottom:-100px;border-radius:50%;animation:rise linear infinite}
+@keyframes rise{0%{bottom:-100px;opacity:0}10%{opacity:.5}90%{opacity:.3}100%{bottom:120%;opacity:0}}
+.screen{display:none;min-height:100vh;padding:20px 16px}
+.screen.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.app-header{text-align:center;padding:20px 0 16px}
+.app-title{font-family:'Fredoka',sans-serif;font-size:2.4rem;font-weight:700;color:var(--c1);text-shadow:2px 2px 0 rgba(0,0,0,.05)}
+.app-title span{color:var(--c2)}
+.app-subtitle{font-size:1rem;color:#888;margin-top:4px}
+.score-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px auto;padding:10px 20px;border-radius:50px;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.08);width:fit-content;flex-wrap:wrap}
+.score-bar .badge{display:flex;align-items:center;gap:4px;font-weight:700;font-size:1rem}
+.badge.coins{color:#E8A317}.badge.stars{color:#FFD700}.badge.streak{color:var(--c1)}.badge.shekels{color:#2D3047}
+.dc-banner{max-width:500px;margin:16px auto;padding:20px;border-radius:20px;text-align:center;cursor:pointer;background:linear-gradient(135deg,#FF6B6B,#FFA45B);color:#fff;box-shadow:0 8px 25px rgba(255,107,107,.3);transition:all .3s;position:relative;overflow:hidden}
+.dc-banner:active{transform:scale(.97)}
+.dc-banner.completed{background:linear-gradient(135deg,#6BCB77,#4ECDC4);box-shadow:0 8px 25px rgba(107,203,119,.3)}
+.dc-banner .dc-icon{font-size:2.5rem;display:block;margin-bottom:6px}
+.dc-banner .dc-title{font-size:1.3rem;font-weight:700}
+.dc-banner .dc-sub{font-size:.9rem;opacity:.9;margin-top:4px}
+.dc-bar{width:100%;height:8px;border-radius:10px;background:rgba(255,255,255,.3);margin-top:12px;overflow:hidden}
+.dc-fill{height:100%;border-radius:10px;background:#fff;transition:width .5s}
+.dc-reward{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 16px;border-radius:20px;background:rgba(255,255,255,.25);font-weight:700;font-size:.95rem}
+.subject-grid{display:grid;grid-template-columns:1fr;gap:16px;max-width:400px;margin:20px auto}
+.subject-card{background:#fff;border-radius:24px;padding:30px 20px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.08);cursor:pointer;transition:all .3s;border:3px solid transparent}
+.subject-card:active{transform:scale(.95)}
+.subject-card:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(0,0,0,.12)}
+.subject-card .s-icon{font-size:4rem;display:block;margin-bottom:12px}
+.subject-card .s-name{font-family:'Fredoka',sans-serif;font-size:1.5rem;font-weight:700}
+.subject-card .s-desc{font-size:.85rem;color:#999;margin-top:6px}
+.subject-card .s-progress{margin-top:12px;font-size:.8rem;color:#aaa}
+.subject-card.english{border-color:rgba(78,205,196,.4)}.subject-card.english .s-icon{color:var(--c2)}
+.subject-card.math{border-color:rgba(255,107,107,.4)}.subject-card.math .s-icon{color:var(--c1)}
+.subject-card.hebrew{border-color:rgba(199,166,255,.4)}.subject-card.hebrew .s-icon{color:#9B7AE0}
+.footer-link{text-align:center;padding:16px;margin-top:20px}
+.footer-link a{color:#aaa;font-size:.85rem;text-decoration:none;padding:8px 20px;border-radius:20px;background:rgba(255,255,255,.5)}
+.back-btn{position:fixed;top:16px;right:16px;z-index:100;width:44px;height:44px;border-radius:50%;border:none;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.1);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.parent-lock{max-width:350px;margin:60px auto;text-align:center}
+.parent-lock input{width:100%;padding:16px;border-radius:16px;border:3px solid var(--c5);font-size:1.2rem;text-align:center;outline:none;margin-top:16px}
+.parent-lock button{margin-top:16px;padding:14px 40px;border-radius:30px;border:none;background:var(--c5);color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:#fff;padding:14px 24px;border-radius:30px;font-weight:700;z-index:300;transition:transform .3s;font-size:.95rem}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.dc-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#fff;border-radius:24px;padding:40px 30px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:999;transition:transform .4s;max-width:340px}
+.dc-popup.show{transform:translate(-50%,-50%) scale(1)}
+.dc-popup .dc-emoji{font-size:4rem}
+.dc-popup .dc-msg{font-size:1.4rem;font-weight:700;margin:16px 0;color:#2D3047}
+.dc-popup .dc-amount{font-size:2.5rem;font-weight:900;color:#6BCB77;margin:12px 0}
+.dc-popup .dc-total{font-size:1rem;color:#888;margin-top:8px}
+.dc-popup button{margin-top:20px;padding:14px 40px;border-radius:30px;border:none;background:#4ECDC4;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer}
+.parent-dashboard{max-width:600px;margin:0 auto}
+.stat-card{background:#fff;border-radius:20px;padding:20px;margin-bottom:12px;box-shadow:0 4px 15px rgba(0,0,0,.08)}
+.stat-card .label{font-size:.85rem;color:#999}
+.stat-card .value{font-size:1.8rem;font-weight:900;margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat-grid .stat-card{text-align:center}
+.cat-progress-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:.9rem}
+.cat-progress-item .cat-name{font-weight:700}
+.cat-progress-item .cat-val{color:#888}
+</style>
+</head>
+<body>
+<div class="bg-bubbles" id="bubbles"></div>
+
+<!-- Home -->
+<div class="screen active" id="screen-home">
+  <div class="app-header">
+    <div class="app-title">קיץ <span>חכם</span> ☀️</div>
+    <div class="app-subtitle">משחקי לימוד לחופש הגדול</div>
+  </div>
+  <div class="score-bar">
+    <div class="badge coins">🪙 <span id="home-coins">0</span></div>
+    <div class="badge stars">⭐ <span id="home-stars">0</span></div>
+    <div class="badge shekels">💰 <span id="home-shekels">0</span> ₪</div>
+  </div>
+  <div class="dc-banner" id="dc-banner" onclick="startDailyChallenge()">
+    <span class="dc-icon" id="dc-icon">🎯</span>
+    <div class="dc-title" id="dc-title">אתגר יומי</div>
+    <div class="dc-sub" id="dc-sub">30 דקות לימוד היום</div>
+    <div class="dc-bar"><div class="dc-fill" id="dc-fill" style="width:0%"></div></div>
+    <div class="dc-reward" id="dc-reward">🎁 10 ₪ לקופסה!</div>
+  </div>
+  <div class="subject-grid">
+    <div class="subject-card english" onclick="openSubject('english')">
+      <span class="s-icon">🔤</span>
+      <div class="s-name">אנגלית</div>
+      <div class="s-desc">משחקי מילים, הקלדה, הקראה והתאמה</div>
+      <div class="s-progress" id="prog-english">0 משחקים</div>
+    </div>
+    <div class="subject-card math" onclick="openSubject('math')">
+      <span class="s-icon">🔢</span>
+      <div class="s-name">חשבון</div>
+      <div class="s-desc">תרגול כפל, חיבור, שברים, בעיות מילוליות</div>
+      <div class="s-progress" id="prog-math">0 משחקים</div>
+    </div>
+    <div class="subject-card hebrew" onclick="openSubject('hebrew')">
+      <span class="s-icon">📖</span>
+      <div class="s-name">עברית</div>
+      <div class="s-desc">איות, דקדוק, פתגמים, השלמת מילים</div>
+      <div class="s-progress" id="prog-hebrew">0 משחקים</div>
+    </div>
+  </div>
+  <div class="footer-link">
+    <a href="javascript:void(0)" onclick="showParentLock()">👨‍👩‍👧 אזור הורים</a>
+  </div>
+</div>
+
+<!-- Parent Lock -->
+<div class="screen" id="screen-parent-lock">
+  <button class="back-btn" onclick="goHome()">←</button>
+  <div class="parent-lock">
+    <h2 style="font-size:1.4rem;">🔒 אזור הורים</h2>
+    <p>הזן סיסמה לצפייה בהתקדמות</p>
+    <input type="password" id="parent-pass" placeholder="סיסמה" onkeyup="if(event.key==='Enter')checkParentPass()">
+    <button onclick="checkParentPass()">כניסה</button>
+    <div style="font-size:.85rem;color:#aaa;margin-top:12px">רמז: הסיסמה היא 1234</div>
+  </div>
+</div>
+
+<!-- Parent Dashboard -->
+<div class="screen" id="screen-parent">
+  <button class="back-btn" onclick="goHome()">←</button>
+  <div class="app-header"><div class="app-title" style="font-size:1.6rem;">📊 דוח התקדמות</div></div>
+  <div class="parent-dashboard" id="parent-dashboard"></div>
+</div>
+
+<!-- DC Popup -->
+<div class="dc-popup" id="dc-popup">
+  <div class="dc-emoji">🎉🏆🎉</div>
+  <div class="dc-msg">סיימת את האתגר היומי!</div>
+  <div class="dc-amount">+10 ₪</div>
+  <div class="dc-total" id="dc-total-text">סה"כ בקופסה: 0 ₪</div>
+  <button onclick="closeDcPopup()">כל הכבוד! 🌟</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = "summer_learning_data";
+const PARENT_PASS = "1234";
+const DAILY_GOAL_MIN = 30;
+const DAILY_REWARD = 10;
+const API_URL = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/reportSummerChallenge";
+
+let state = {
+  coins:0, stars:0, streak:0,
+  dailyChallenge:{lastCompletedDate:null,todayTimeMs:0,todayDate:null,totalEarned:0,completedDays:[],active:false},
+  subjectStats:{english:{gamesPlayed:0,score:0},math:{gamesPlayed:0,score:0},hebrew:{gamesPlayed:0,score:0}},
+  childName:"ילד"
+};
+
+function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);if(s){Object.assign(state,JSON.parse(s))}}catch(e){}}
+function saveState(){const s={...state};localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}
+
+function getTodayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+function checkDailyReset(){
+  const today=getTodayStr();
+  if(state.dailyChallenge.todayDate!==today){
+    state.dailyChallenge.todayDate=today;
+    state.dailyChallenge.todayTimeMs=0;
+    state.dailyChallenge.active=false;
+    saveState();
+  }
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+function goHome(){
+  showScreen('screen-home');
+  updateHomeStats();
+  updateDcUI();
+  updateSubjectProgress();
+}
+
+function updateHomeStats(){
+  document.getElementById('home-coins').textContent=state.coins;
+  document.getElementById('home-stars').textContent=state.stars;
+  document.getElementById('home-shekels').textContent=state.dailyChallenge.totalEarned||0;
+}
+
+function updateSubjectProgress(){
+  ['english','math','hebrew'].forEach(sub=>{
+    const el=document.getElementById('prog-'+sub);
+    if(el&&state.subjectStats[sub]){
+      el.textContent=state.subjectStats[sub].gamesPlayed+' משחקים | '+state.subjectStats[sub].score+' כוכבים';
+    }
+  });
+}
+
+function openSubject(subject){
+  saveState();
+  // Store which subject in sessionStorage for the subject page to pick up
+  sessionStorage.setItem('summer_subject',subject);
+  const url = subject==='english'?'english.html':subject==='math'?'math.html':'hebrew.html';
+  window.location.href=url;
+}
+
+// Daily Challenge
+function startDailyChallenge(){
+  checkDailyReset();
+  const today=getTodayStr();
+  if(state.dailyChallenge.lastCompletedDate===today){showToast('סיימת היום את האתגר! כל הכבוד! 🎉');return}
+  if(state.dailyChallenge.active){showToast('האתגר כבר פעיל! המשך לשחק 🎮');return}
+  state.dailyChallenge.active=true;
+  saveState();
+  updateDcUI();
+  showToast('האתגר התחיל! שחק 30 דקות 🎯');
+}
+
+function updateDcUI(){
+  checkDailyReset();
+  const today=getTodayStr();
+  const completed=state.dailyChallenge.lastCompletedDate===today;
+  const dc=document.getElementById('dc-banner');
+  if(!dc)return;
+  if(completed){
+    dc.classList.add('completed');
+    document.getElementById('dc-icon').textContent='✅';
+    document.getElementById('dc-title').textContent='אתגר יומי הושלם!';
+    document.getElementById('dc-sub').textContent='כל הכבוד! מחר נזכה שוב 🌟';
+    document.getElementById('dc-fill').style.width='100%';
+    document.getElementById('dc-reward').textContent='💰 '+state.dailyChallenge.totalEarned+' ₪ בקופסה';
+  }else{
+    dc.classList.remove('completed');
+    document.getElementById('dc-icon').textContent='🎯';
+    document.getElementById('dc-title').textContent='אתגר יומי';
+    const min=Math.floor(state.dailyChallenge.todayTimeMs/60000);
+    if(state.dailyChallenge.active){
+      document.getElementById('dc-sub').textContent=min+' / '+DAILY_GOAL_MIN+' דקות';
+      document.getElementById('dc-fill').style.width=Math.min(100,(min/DAILY_GOAL_MIN)*100)+'%';
+    }else{
+      document.getElementById('dc-sub').textContent=DAILY_GOAL_MIN+' דקות לימוד היום';
+      document.getElementById('dc-fill').style.width='0%';
+    }
+    document.getElementById('dc-reward').textContent='🎁 10 ₪ לקופסה!';
+  }
+}
+
+function completeDailyChallenge(subject){
+  stopDcTimer();
+  const today=getTodayStr();
+  if(state.dailyChallenge.lastCompletedDate===today)return;
+  state.dailyChallenge.lastCompletedDate=today;
+  state.dailyChallenge.totalEarned+=DAILY_REWARD;
+  if(!state.dailyChallenge.completedDays.includes(today))state.dailyChallenge.completedDays.push(today);
+  state.dailyChallenge.active=false;
+  saveState();
+  
+  // Show popup
+  document.getElementById('dc-total-text').textContent='סה"כ בקופסה: '+state.dailyChallenge.totalEarned+' ₪';
+  document.getElementById('dc-popup').classList.add('show');
+  
+  // Send notification to parent via backend
+  notifyParent(subject);
+  
+  updateDcUI();
+}
+
+function closeDcPopup(){document.getElementById('dc-popup').classList.remove('show')}
+
+function notifyParent(subject){
+  try{
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        child_name:state.childName||"ילד",
+        subject:subject||"כללי",
+        date:getTodayStr(),
+        time_spent_minutes:Math.round(state.dailyChallenge.todayTimeMs/60000),
+        reward_amount:DAILY_REWARD,
+        total_earned:state.dailyChallenge.totalEarned
+      })
+    }).catch(e=>console.log('Notification pending'));
+  }catch(e){console.log('Notification pending')}
+}
+
+// Timer that runs in background on subject pages too
+let dcTimer=null;
+function startDcTimer(){
+  stopDcTimer();
+  dcTimer=setInterval(()=>{
+    if(state.dailyChallenge.active){
+      state.dailyChallenge.todayTimeMs+=5000;
+      saveState();
+      const min=state.dailyChallenge.todayTimeMs/60000;
+      if(min>=DAILY_GOAL_MIN){
+        const subj=sessionStorage.getItem('summer_subject')||'כללי';
+        completeDailyChallenge(subj);
+      }
+    }
+  },5000);
+}
+function stopDcTimer(){if(dcTimer){clearInterval(dcTimer);dcTimer=null}}
+
+// Parent Dashboard
+function showParentLock(){showScreen('screen-parent-lock');document.getElementById('parent-pass').value=''}
+function checkParentPass(){
+  if(document.getElementById('parent-pass').value===PARENT_PASS){renderParentDashboard();showScreen('screen-parent')}
+  else{showToast('סיסמה שגויה');document.getElementById('parent-pass').value=''}
+}
+
+function renderParentDashboard(){
+  const gamesTotal=Object.values(state.subjectStats).reduce((s,v)=>s+v.gamesPlayed,0);
+  const starsTotal=Object.values(state.subjectStats).reduce((s,v)=>s+v.score,0);
+  let html=`
+    <div class="stat-grid">
+      <div class="stat-card"><div class="label">💰 כסף בקופסה</div><div class="value" style="color:#6BCB77;">${state.dailyChallenge.totalEarned||0} ₪</div></div>
+      <div class="stat-card"><div class="label">📅 ימים הושלמו</div><div class="value" style="color:#FFA45B;">${(state.dailyChallenge.completedDays||[]).length}</div></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="label">🎮 משחקים</div><div class="value" style="color:#C7A6FF;">${gamesTotal}</div></div>
+      <div class="stat-card"><div class="label">⭐ כוכבים</div><div class="value" style="color:#FFD700;">${starsTotal}</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">🎯 אתגר יומי</div>
+      <div style="margin-top:8px;">
+        <b>היום:</b> ${(state.dailyChallenge.lastCompletedDate===getTodayStr())?'✅ הושלם!':'טרם הושלם'}
+      </div>
+      <div style="margin-top:4px;font-size:.85rem;color:#888;">ימים: ${(state.dailyChallenge.completedDays||[]).join(', ')||'אין עדיין'}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">📊 התקדמות לפי נושא</div>`;
+  [{id:'english',name:'אנגלית',icon:'🔤'},{id:'math',name:'חשבון',icon:'🔢'},{id:'hebrew',name:'עברית',icon:'📖'}].forEach(s=>{
+    const st=state.subjectStats[s.id]||{gamesPlayed:0,score:0};
+    html+=`<div class="cat-progress-item"><span class="cat-name">${s.icon} ${s.name}</span><span class="cat-val">${st.gamesPlayed} משחקים | ${st.score} ⭐</span></div>`;
+  });
+  html+=`</div>
+    <div style="text-align:center;margin-top:20px;">
+      <button onclick="resetProgress()" style="padding:10px 24px;border-radius:20px;border:2px solid #FF6B6B;background:#fff;color:#FF6B6B;font-weight:700;cursor:pointer;">🗑️ אפס התקדמות</button>
+    </div>`;
+  document.getElementById('parent-dashboard').innerHTML=html;
+}
+
+function resetProgress(){
+  if(confirm('אפס את כל ההתקדמות?')){
+    localStorage.removeItem(STORAGE_KEY);
+    state={coins:0,stars:0,streak:0,dailyChallenge:{lastCompletedDate:null,todayTimeMs:0,todayDate:null,totalEarned:0,completedDays:[],active:false},subjectStats:{english:{gamesPlayed:0,score:0},math:{gamesPlayed:0,score:0},hebrew:{gamesPlayed:0,score:0}},childName:"ילד"};
+    renderParentDashboard();showToast('ההתקדמות אופסה');
+  }
+}
+
+// Bubbles
+function createBubbles(){
+  const c=document.getElementById('bubbles');
+  const colors=['#FF6B6B','#4ECDC4','#FFE66D','#C7A6FF','#6BCB77','#FFA45B','#95E1D3','#FFB7B2'];
+  for(let i=0;i<15;i++){
+    const s=document.createElement('span');
+    const size=20+Math.random()*60;
+    s.style.width=size+'px';s.style.height=size+'px';
+    s.style.left=Math.random()*100+'%';
+    s.style.background=colors[Math.floor(Math.random()*colors.length)];
+    s.style.opacity='0.15';
+    s.style.animationDuration=(15+Math.random()*20)+'s';
+    s.style.animationDelay=(Math.random()*20)+'s';
+    c.appendChild(s);
+  }
+}
+
+// Init
+loadState();
+checkDailyReset();
+createBubbles();
+goHome();
+</script>
+</body>
+</html>

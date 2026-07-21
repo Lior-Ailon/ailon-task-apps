@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Quest - לומד אנגלית</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --c1: #FF6B6B; --c2: #4ECDC4; --c3: #FFE66D; --c4: #95E1D3;
+  --c5: #C7A6FF; --c6: #FFB7B2; --c7: #6BCB77; --c8: #FFA45B;
+  --bg: #F0F4FF;
+  --text: #2D3047;
+  --success: #6BCB77;
+  --error: #FF6B6B;
+}
+
+body {
+  font-family: 'Heebo', 'Fredoka', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Animated background */
+.bg-bubbles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+.bg-bubbles span {
+  position: absolute; bottom: -100px; border-radius: 50%;
+  animation: rise linear infinite;
+}
+@keyframes rise {
+  0% { bottom: -100px; opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.3; }
+  100% { bottom: 120%; opacity: 0; }
+}
+
+/* Screens */
+.screen { display: none; min-height: 100vh; padding: 20px 16px; }
+.screen.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Header */
+.app-header {
+  text-align: center; padding: 20px 0 16px;
+}
+.app-title {
+  font-family: 'Fredoka', sans-serif; font-size: 2.2rem; font-weight: 700;
+  color: var(--c1); text-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+}
+.app-title span { color: var(--c2); }
+.app-subtitle { font-size: 1rem; color: #888; margin-top: 4px; }
+
+/* Score badge */
+.score-bar {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin: 12px auto; padding: 10px 24px; border-radius: 50px;
+  background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  width: fit-content;
+}
+.score-bar .badge {
+  display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 1.1rem;
+}
+.score-bar .star { font-size: 1.4rem; }
+.score-bar .badge.coins { color: #E8A317; }
+.score-bar .badge.stars { color: #FFD700; }
+.score-bar .badge.streak { color: var(--c1); }
+
+/* Home grid */
+.home-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+  max-width: 500px; margin: 20px auto;
+}
+.game-card {
+  background: white; border-radius: 20px; padding: 20px 12px; text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08); cursor: pointer;
+  transition: all 0.3s; border: 3px solid transparent;
+}
+.game-card:active { transform: scale(0.95); }
+.game-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+.game-card .icon { font-size: 2.8rem; display: block; margin-bottom: 8px; }
+.game-card .name { font-weight: 700; font-size: 1rem; }
+.game-card .desc { font-size: 0.78rem; color: #999; margin-top: 4px; }
+.game-card[data-color="1"] { border-color: rgba(255,107,107,0.3); } .game-card[data-color="1"] .icon { color: var(--c1); }
+.game-card[data-color="2"] { border-color: rgba(78,205,196,0.3); } .game-card[data-color="2"] .icon { color: var(--c2); }
+.game-card[data-color="3"] { border-color: rgba(255,230,109,0.4); } .game-card[data-color="3"] .icon { color: #D4AC0D; }
+.game-card[data-color="4"] { border-color: rgba(149,225,211,0.4); } .game-card[data-color="4"] .icon { color: #5BAA9D; }
+.game-card[data-color="5"] { border-color: rgba(199,166,255,0.4); } .game-card[data-color="5"] .icon { color: #9B7AE0; }
+.game-card[data-color="6"] { border-color: rgba(107,203,119,0.4); } .game-card[data-color="6"] .icon { color: var(--c7); }
+.game-card[data-color="7"] { border-color: rgba(255,164,91,0.4); } .game-card[data-color="7"] .icon { color: var(--c8); }
+.game-card[data-color="8"] { border-color: rgba(255,183,178,0.5); } .game-card[data-color="8"] .icon { color: #E8847F; }
+
+/* Category selector */
+.cat-bar {
+  display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; margin-bottom: 12px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.cat-bar::-webkit-scrollbar { display: none; }
+.cat-pill {
+  padding: 8px 18px; border-radius: 30px; white-space: nowrap; cursor: pointer;
+  font-weight: 700; font-size: 0.9rem; background: white; color: #888;
+  border: 2px solid transparent; transition: all 0.2s; flex-shrink: 0;
+}
+.cat-pill.active { background: var(--c2); color: white; border-color: var(--c2); }
+.cat-pill:active { transform: scale(0.95); }
+
+/* Game area */
+.game-area {
+  max-width: 600px; margin: 0 auto; text-align: center;
+}
+.game-area h2 { font-size: 1.3rem; margin-bottom: 16px; }
+
+/* Back button */
+.back-btn {
+  position: fixed; top: 16px; right: 16px; z-index: 100;
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.back-btn:active { transform: scale(0.9); }
+
+/* Flashcards */
+.flashcard {
+  width: 280px; height: 360px; margin: 20px auto; perspective: 1000px; cursor: pointer;
+}
+.flashcard-inner {
+  width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative;
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-face {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+.flashcard-front {
+  background: linear-gradient(135deg, #FFE66D, #FFB7B2); color: var(--text);
+}
+.flashcard-back {
+  background: linear-gradient(135deg, #4ECDC4, #95E1D3); color: white; transform: rotateY(180deg);
+}
+.flashcard-emoji { font-size: 5rem; }
+.flashcard-word { font-family: 'Fredoka', sans-serif; font-size: 2rem; font-weight: 700; margin-top: 12px; }
+.flashcard-heb { font-size: 1.2rem; margin-top: 6px; opacity: 0.9; }
+.flashcard-hint { margin-top: 16px; font-size: 0.85rem; opacity: 0.7; }
+
+/* Match game */
+.match-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px auto; max-width: 500px;
+}
+.match-item {
+  padding: 16px 12px; border-radius: 16px; text-align: center; cursor: pointer;
+  font-weight: 700; font-size: 1.1rem; transition: all 0.2s; min-height: 70px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); user-select: none;
+}
+.match-item:active { transform: scale(0.95); }
+.match-item.emoji { background: #FFE66D; font-size: 2.2rem; }
+.match-item.word { background: #C7A6FF; color: white; }
+.match-item.selected { outline: 4px solid var(--c1); outline-offset: 2px; }
+.match-item.matched { opacity: 0.3; pointer-events: none; }
+.match-item.wrong { animation: shake 0.4s; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+/* Scramble */
+.scramble-letters {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 20px auto;
+}
+.scramble-tile {
+  width: 52px; height: 52px; border-radius: 12px; border: none; font-size: 1.5rem;
+  font-weight: 700; background: white; color: var(--text); cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.2s;
+}
+.scramble-tile:active { transform: scale(0.9); }
+.scramble-tile.used { opacity: 0.2; pointer-events: none; }
+.scramble-answer {
+  display: flex; gap: 6px; justify-content: center; min-height: 60px; align-items: center;
+  margin: 16px auto; padding: 12px; border-radius: 16px; background: rgba(255,255,255,0.5);
+}
+.scramble-slot {
+  width: 48px; height: 48px; border-radius: 12px; border: 2px dashed #ccc;
+  display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700;
+}
+.scramble-slot.filled { background: var(--c2); color: white; border-color: var(--c2); }
+.scramble-hint { font-size: 3rem; margin: 12px 0; }
+.scramble-heb { font-size: 1.1rem; color: #888; margin-bottom: 8px; }
+
+/* Memory game */
+.memory-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px auto; max-width: 400px;
+}
+.memory-card {
+  aspect-ratio: 1; border-radius: 14px; cursor: pointer; position: relative;
+  transition: all 0.3s; transform-style: preserve-3d;
+}
+.memory-card-inner {
+  width: 100%; height: 100%; border-radius: 14px; transition: transform 0.4s; transform-style: preserve-3d; position: relative;
+}
+.memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+.memory-card-face {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  border-radius: 14px; display: flex; align-items: center; justify-content: center;
+}
+.memory-back { background: linear-gradient(135deg, #6B5B95, #C7A6FF); font-size: 1.6rem; color: white; }
+.memory-front { background: white; font-size: 2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.memory-front.word-card { background: #4ECDC4; color: white; font-family: 'Fredoka', sans-serif; font-size: 1.1rem; font-weight: 700; padding: 4px; text-align: center; }
+.memory-card.matched .memory-card-inner { opacity: 0.3; }
+
+/* Listen & Choose */
+.listen-emoji { font-size: 4rem; margin: 16px 0; }
+.listen-btn {
+  width: 80px; height: 80px; border-radius: 50%; border: none; font-size: 2.5rem;
+  background: var(--c2); color: white; cursor: pointer; box-shadow: 0 6px 20px rgba(78,205,196,0.4);
+  margin: 12px 0; transition: all 0.2s;
+}
+.listen-btn:active { transform: scale(0.9); }
+.choose-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 400px; margin: 16px auto;
+}
+.choose-btn {
+  padding: 16px; border-radius: 16px; border: 2px solid transparent; font-size: 1.2rem;
+  font-weight: 700; background: white; cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.choose-btn:active { transform: scale(0.95); }
+.choose-btn.correct { background: var(--success); color: white; }
+.choose-btn.wrong { background: var(--error); color: white; animation: shake 0.4s; }
+
+/* Fill blank */
+.fill-blank-area {
+  max-width: 500px; margin: 16px auto; text-align: center;
+}
+.fill-sentence {
+  font-size: 1.3rem; margin: 20px 0; line-height: 1.8;
+}
+.fill-blank {
+  display: inline-block; min-width: 100px; padding: 4px 12px; border-bottom: 3px solid var(--c2);
+  font-weight: 700; color: var(--c2);
+}
+.fill-options {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px;
+}
+.fill-opt {
+  padding: 12px 24px; border-radius: 30px; border: 2px solid transparent; font-weight: 700;
+  background: white; cursor: pointer; font-size: 1rem; transition: all 0.2s;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+.fill-opt:active { transform: scale(0.95); }
+.fill-opt.correct { background: var(--success); color: white; }
+.fill-opt.wrong { background: var(--error); color: white; }
+
+/* Typing */
+.type-area { max-width: 500px; margin: 16px auto; text-align: center; }
+.type-emoji { font-size: 4rem; margin: 16px 0; }
+.type-hint { font-size: 1.1rem; color: #888; margin-bottom: 8px; }
+.type-input {
+  width: 100%; max-width: 300px; padding: 16px; border-radius: 16px; border: 3px solid var(--c2);
+  font-size: 1.5rem; font-family: 'Fredoka', sans-serif; text-align: center; outline: none;
+  letter-spacing: 2px; direction: ltr;
+}
+.type-input:focus { border-color: var(--c1); }
+.type-submit {
+  margin-top: 16px; padding: 14px 40px; border-radius: 30px; border: none;
+  background: var(--c2); color: white; font-size: 1.2rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(78,205,196,0.3);
+}
+.type-submit:active { transform: scale(0.95); }
+
+/* Progress / encouragement */
+.encourage {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+  background: white; padding: 30px 40px; border-radius: 24px; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2); z-index: 200; transition: transform 0.3s;
+}
+.encourage.show { transform: translate(-50%, -50%) scale(1); }
+.encourage .emoji { font-size: 4rem; }
+.encourage .text { font-size: 1.4rem; font-weight: 700; margin-top: 8px; color: var(--c1); }
+.encourage .coins { font-size: 1.2rem; color: #E8A317; margin-top: 8px; }
+
+/* Game header */
+.game-hdr {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+  max-width: 600px; margin: 0 auto 16px;
+}
+.game-hdr .progress { font-size: 0.9rem; color: #888; }
+.game-hdr .score { font-weight: 700; color: var(--c1); font-size: 1.1rem; }
+
+/* Next button */
+.next-btn {
+  margin-top: 20px; padding: 14px 36px; border-radius: 30px; border: none;
+  background: var(--c1); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255,107,107,0.3); display: none;
+}
+.next-btn.show { display: inline-block; }
+.next-btn:active { transform: scale(0.95); }
+
+/* Parent Dashboard */
+.parent-dashboard { max-width: 600px; margin: 0 auto; }
+.stat-card {
+  background: white; border-radius: 20px; padding: 20px; margin-bottom: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.stat-card .label { font-size: 0.85rem; color: #999; }
+.stat-card .value { font-size: 1.8rem; font-weight: 900; margin-top: 4px; }
+.stat-card .bar { height: 8px; border-radius: 4px; background: #eee; margin-top: 8px; overflow: hidden; }
+.stat-card .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-grid .stat-card { text-align: center; }
+.cat-progress { margin-top: 8px; }
+.cat-progress-item {
+  display: flex; align-items: center; justify-content: space-between; padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0; font-size: 0.9rem;
+}
+.cat-progress-item .cat-name { font-weight: 700; }
+.cat-progress-item .cat-val { color: #888; }
+
+/* Password lock */
+.parent-lock {
+  max-width: 350px; margin: 60px auto; text-align: center;
+}
+.parent-lock input {
+  width: 100%; padding: 16px; border-radius: 16px; border: 3px solid var(--c5);
+  font-size: 1.2rem; text-align: center; outline: none; margin-top: 16px;
+}
+.parent-lock button {
+  margin-top: 16px; padding: 14px 40px; border-radius: 30px; border: none;
+  background: var(--c5); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+}
+.parent-lock .hint { font-size: 0.85rem; color: #aaa; margin-top: 12px; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--text); color: white; padding: 14px 24px; border-radius: 30px;
+  font-weight: 700; z-index: 300; transition: transform 0.3s; font-size: 0.95rem;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Footer */
+.footer-link {
+  text-align: center; padding: 16px; margin-top: 20px;
+}
+.footer-link a {
+  color: #aaa; font-size: 0.85rem; text-decoration: none; padding: 8px 20px;
+  border-radius: 20px; background: rgba(255,255,255,0.5);
+}
+
+/* Daily Challenge */
+.daily-challenge {
+  max-width: 500px; margin: 16px auto; padding: 20px;
+  border-radius: 20px; text-align: center; cursor: pointer;
+  background: linear-gradient(135deg, #FF6B6B, #FFA45B);
+  color: white; box-shadow: 0 8px 25px rgba(255,107,107,0.3);
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.daily-challenge:active { transform: scale(0.97); }
+.daily-challenge.completed {
+  background: linear-gradient(135deg, #6BCB77, #4ECDC4);
+  box-shadow: 0 8px 25px rgba(107,203,119,0.3);
+}
+.daily-challenge .dc-icon { font-size: 2.5rem; display: block; margin-bottom: 6px; }
+.daily-challenge .dc-title { font-size: 1.2rem; font-weight: 700; }
+.daily-challenge .dc-sub { font-size: 0.9rem; opacity: 0.9; margin-top: 4px; }
+.daily-challenge .dc-progress-bar {
+  width: 100%; height: 8px; border-radius: 10px; background: rgba(255,255,255,0.3);
+  margin-top: 12px; overflow: hidden;
+}
+.daily-challenge .dc-progress-fill {
+  height: 100%; border-radius: 10px; background: white; transition: width 0.5s;
+}
+.daily-challenge .dc-reward {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  padding: 6px 16px; border-radius: 20px; background: rgba(255,255,255,0.25);
+  font-weight: 700; font-size: 0.95rem;
+}
+.daily-challenge .dc-stamp {
+  position: absolute; top: 50%; right: 20px; transform: translateY(-50%) rotate(-15deg);
+  font-size: 1.5rem; font-weight: 900; color: rgba(255,255,255,0.4);
+  border: 3px solid rgba(255,255,255,0.4); border-radius: 12px; padding: 4px 12px;
+}
+/* Earnings badge in score bar */
+.badge.shekels { color: #2D3047; }
+/* Daily challenge completion popup */
+.dc-complete-popup {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+  background: white; border-radius: 24px; padding: 40px 30px; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); z-index: 999; transition: transform 0.4s;
+  max-width: 340px;
+}
+.dc-complete-popup.show { transform: translate(-50%,-50%) scale(1); }
+.dc-complete-popup .dc-emoji { font-size: 4rem; }
+.dc-complete-popup .dc-msg { font-size: 1.4rem; font-weight: 700; margin: 16px 0; color: #2D3047; }
+.dc-complete-popup .dc-amount {
+  font-size: 2.5rem; font-weight: 900; color: #6BCB77; margin: 12px 0;
+}
+.dc-complete-popup .dc-total { font-size: 1rem; color: #888; margin-top: 8px; }
+.dc-complete-popup button {
+  margin-top: 20px; padding: 14px 40px; border-radius: 30px; border: none;
+  background: #4ECDC4; color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- Background bubbles -->
+<div class="bg-bubbles" id="bubbles"></div>
+
+<!-- Home Screen -->
+<div class="screen active" id="screen-home">
+  <div class="app-header">
+    <div class="app-title">English <span>Quest</span> 🚀</div>
+    <div class="app-subtitle">לומדים אנגלית בכיף!</div>
+  </div>
+  <div class="score-bar">
+    <div class="badge coins">🪙 <span id="home-coins">0</span></div>
+    <div class="badge stars">⭐ <span id="home-stars">0</span></div>
+    <div class="badge streak">🔥 <span id="home-streak">0</span></div>
+    <div class="badge shekels">🪙 <span id="home-shekels">0</span> ₪</div>
+  </div>
+  <div class="daily-challenge" id="daily-challenge" onclick="startDailyChallenge()">
+    <span class="dc-stamp" id="dc-stamp" style="display:none;">✓ הושלם</span>
+    <span class="dc-icon" id="dc-icon">🎯</span>
+    <div class="dc-title" id="dc-title">אתגר יומי</div>
+    <div class="dc-sub" id="dc-sub">20 דקות אנגלית היום</div>
+    <div class="dc-progress-bar">
+      <div class="dc-progress-fill" id="dc-fill" style="width:0%"></div>
+    </div>
+    <div class="dc-reward" id="dc-reward">🎁 10 ש"ח לקופסה!</div>
+  </div>
+  <div class="cat-bar" id="cat-bar"></div>
+  <div class="home-grid" id="game-grid"></div>
+  <div class="footer-link">
+    <a href="javascript:void(0)" onclick="showParentLock()">👨‍👩‍👧 אזור הורים</a>
+  </div>
+</div>
+
+<!-- Game Screen -->
+<div class="screen" id="screen-game">
+  <button class="back-btn" onclick="goHome()">←</button>
+  <div class="game-hdr">
+    <span class="progress" id="game-progress"></span>
+    <span class="score">⭐ <span id="game-score">0</span></span>
+  </div>
+  <div class="game-area" id="game-content"></div>
+  <button class="next-btn" id="next-btn" onclick="nextRound()">הבא ➡</button>
+</div>
+
+<!-- Parent Lock -->
+<div class="screen" id="screen-parent-lock">
+  <button class="back-btn" onclick="goHome()">←</button>
+  <div class="parent-lock">
+    <h2 style="font-size:1.4rem;">🔒 אזור הורים</h2>
+    <p>הזן סיסמה לצפייה בהתקדמות</p>
+    <input type="password" id="parent-pass" placeholder="סיסמה" onkeyup="if(event.key==='Enter')checkParentPass()">
+    <button onclick="checkParentPass()">כניסה</button>
+    <div class="hint" id="parent-hint">רמז: הסיסמה היא 1234</div>
+  </div>
+</div>
+
+<!-- Parent Dashboard -->
+<div class="screen" id="screen-parent">
+  <button class="back-btn" onclick="goHome()">←</button>
+  <div class="app-header">
+    <div class="app-title" style="font-size:1.6rem;">📊 דוח התקדמות</div>
+  </div>
+  <div class="parent-dashboard" id="parent-dashboard"></div>
+</div>
+
+<!-- Encouragement popup -->
+<div class="encourage" id="encourage">
+  <div class="emoji" id="enc-emoji"></div>
+  <div class="text" id="enc-text"></div>
+  <div class="coins" id="enc-coins"></div>
+</div>
+
+<!-- Daily Challenge Complete Popup -->
+<div class="dc-complete-popup" id="dc-complete-popup">
+  <div class="dc-emoji">🎉🏆🎉</div>
+  <div class="dc-msg">סיימת את האתגר היומי!</div>
+  <div class="dc-amount">+10 ₪</div>
+  <div class="dc-total" id="dc-total-text">סה"כ בקופסה: 0 ₪</div>
+  <button onclick="closeDcPopup()">כל הכבוד! 🌟</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ WORD DATABASE (500 words) ============
+const WORDS = [
+  // Animals (50)
+  {en:"cat",he:"חתול",emoji:"🐱",cat:"animals"},
+  {en:"dog",he:"כלב",emoji:"🐶",cat:"animals"},
+  {en:"bird",he:"ציפור",emoji:"🐦",cat:"animals"},
+  {en:"fish",he:"דג",emoji:"🐟",cat:"animals"},
+  {en:"horse",he:"סוס",emoji:"🐴",cat:"animals"},
+  {en:"cow",he:"פרה",emoji:"🐮",cat:"animals"},
+  {en:"lion",he:"אריה",emoji:"🦁",cat:"animals"},
+  {en:"tiger",he:"נמר",emoji:"🐯",cat:"animals"},
+  {en:"bear",he:"דוב",emoji:"🐻",cat:"animals"},
+  {en:"monkey",he:"קוף",emoji:"🐵",cat:"animals"},
+  {en:"rabbit",he:"ארנב",emoji:"🐰",cat:"animals"},
+  {en:"mouse",he:"עכבר",emoji:"🐭",cat:"animals"},
+  {en:"elephant",he:"פיל",emoji:"🐘",cat:"animals"},
+  {en:"giraffe",he:"ג'ירפה",emoji:"🦒",cat:"animals"},
+  {en:"zebra",he:"זברה",emoji:"🦓",cat:"animals"},
+  {en:"penguin",he:"פינגווין",emoji:"🐧",cat:"animals"},
+  {en:"frog",he:"צפרדע",emoji:"🐸",cat:"animals"},
+  {en:"snake",he:"נחש",emoji:"🐍",cat:"animals"},
+  {en:"duck",he:"ברווז",emoji:"🦆",cat:"animals"},
+  {en:"sheep",he:"כבשה",emoji:"🐑",cat:"animals"},
+  {en:"pig",he:"חזיר",emoji:"🐷",cat:"animals"},
+  {en:"chicken",he:"תרנגולת",emoji:"🐔",cat:"animals"},
+  {en:"rooster",he:"תרנגול",emoji:"🐓",cat:"animals"},
+  {en:"turkey",he:"הודו",emoji:"🦃",cat:"animals"},
+  {en:"goat",he:"עז",emoji:"🐐",cat:"animals"},
+  {en:"camel",he:"גמל",emoji:"🐫",cat:"animals"},
+  {en:"dolphin",he:"דולפין",emoji:"🐬",cat:"animals"},
+  {en:"whale",he:"לוויתן",emoji:"🐳",cat:"animals"},
+  {en:"shark",he:"כריש",emoji:"🦈",cat:"animals"},
+  {en:"octopus",he:"תמנון",emoji:"🐙",cat:"animals"},
+  {en:"butterfly",he:"פרפר",emoji:"🦋",cat:"animals"},
+  {en:"bee",he:"דבורה",emoji:"🐝",cat:"animals"},
+  {en:"ant",he:"נמלה",emoji:"🐜",cat:"animals"},
+  {en:"spider",he:"עכביש",emoji:"🕷️",cat:"animals"},
+  {en:"turtle",he:"צב",emoji:"🐢",cat:"animals"},
+  {en:"crab",he:"סרטן",emoji:"🦀",cat:"animals"},
+  {en:"flamingo",he:"פלמינגו",emoji:"🦩",cat:"animals"},
+  {en:"peacock",he:"טווס",emoji:"🦚",cat:"animals"},
+  {en:"owl",he:"ינשוף",emoji:"🦉",cat:"animals"},
+  {en:"eagle",he:"נשר",emoji:"🦅",cat:"animals"},
+  {en:"parrot",he:"תוכי",emoji:"🦜",cat:"animals"},
+  {en:"kangaroo",he:"קנגורו",emoji:"🦘",cat:"animals"},
+  {en:"hippo",he:"היפופוטם",emoji:"🦛",cat:"animals"},
+  {en:"rhino",he:"קרנף",emoji:"🦏",cat:"animals"},
+  {en:"crocodile",he:"תנין",emoji:"🐊",cat:"animals"},
+  {en:"fox",he:"שועל",emoji:"🦊",cat:"animals"},
+  {en:"deer",he:"צבי",emoji:"🦌",cat:"animals"},
+  {en:"wolf",he:"זאב",emoji:"🐺",cat:"animals"},
+  {en:"bat",he:"עטלף",emoji:"🦇",cat:"animals"},
+  {en:"hamster",he:"אוגר",emoji:"🐹",cat:"animals"},
+
+  // Food & Drink (50)
+  {en:"bread",he:"לחם",emoji:"🍞",cat:"food"},
+  {en:"milk",he:"חלב",emoji:"🥛",cat:"food"},
+  {en:"water",he:"מים",emoji:"💧",cat:"food"},
+  {en:"apple",he:"תפוח",emoji:"🍎",cat:"food"},
+  {en:"banana",he:"בננה",emoji:"🍌",cat:"food"},
+  {en:"orange",he:"תפוז",emoji:"🍊",cat:"food"},
+  {en:"grapes",he:"ענבים",emoji:"🍇",cat:"food"},
+  {en:"strawberry",he:"תות",emoji:"🍓",cat:"food"},
+  {en:"watermelon",he:"אבטיח",emoji:"🍉",cat:"food"},
+  {en:"lemon",he:"לימון",emoji:"🍋",cat:"food"},
+  {en:"peach",he:"אפרסק",emoji:"🍑",cat:"food"},
+  {en:"pear",he:"אגס",emoji:"🍐",cat:"food"},
+  {en:"cherry",he:"דובדבן",emoji:"🍒",cat:"food"},
+  {en:"pineapple",he:"אננס",emoji:"🍍",cat:"food"},
+  {en:"mango",he:"מנגו",emoji:"🥭",cat:"food"},
+  {en:"carrot",he:"גזר",emoji:"🥕",cat:"food"},
+  {en:"tomato",he:"עגבניה",emoji:"🍅",cat:"food"},
+  {en:"corn",he:"תירס",emoji:"🌽",cat:"food"},
+  {en:"potato",he:"תפוח אדמה",emoji:"🥔",cat:"food"},
+  {en:"onion",he:"בצל",emoji:"🧅",cat:"food"},
+  {en:"garlic",he:"שום",emoji:"🧄",cat:"food"},
+  {en:"pepper",he:"פלפל",emoji:"🫑",cat:"food"},
+  {en:"broccoli",he:"ברוקולי",emoji:"🥦",cat:"food"},
+  {en:"cucumber",he:"מלפפון",emoji:"🥒",cat:"food"},
+  {en:"salad",he:"סלט",emoji:"🥗",cat:"food"},
+  {en:"pizza",he:"פיצה",emoji:"🍕",cat:"food"},
+  {en:"burger",he:"המבורגר",emoji:"🍔",cat:"food"},
+  {en:"hotdog",he:"נקניק",emoji:"🌭",cat:"food"},
+  {en:"sandwich",he:"כריך",emoji:"🥪",cat:"food"},
+  {en:"taco",he:"טאקו",emoji:"🌮",cat:"food"},
+  {en:"egg",he:"ביצה",emoji:"🥚",cat:"food"},
+  {en:"cheese",he:"גבינה",emoji:"🧀",cat:"food"},
+  {en:"butter",he:"חמאה",emoji:"🧈",cat:"food"},
+  {en:"soup",he:"מרק",emoji:"🍲",cat:"food"},
+  {en:"rice",he:"אורז",emoji:"🍚",cat:"food"},
+  {en:"noodles",he:"אטריות",emoji:"🍜",cat:"food"},
+  {en:"fish_food",he:"דג",emoji:"🐟",cat:"food"},
+  {en:"meat",he:"בשר",emoji:"🥩",cat:"food"},
+  {en:"chicken_food",he:"עוף",emoji:"🍗",cat:"food"},
+  {en:"cake",he:"עוגה",emoji:"🍰",cat:"food"},
+  {en:"cookie",he:"עוגייה",emoji:"🍪",cat:"food"},
+  {en:"chocolate",he:"שוקולד",emoji:"🍫",cat:"food"},
+  {en:"candy",he:"ממתק",emoji:"🍬",cat:"food"},
+  {en:"ice cream",he:"גליד",emoji:"🍦",cat:"food"},
+  {en:"coffee",he:"קפה",emoji:"☕",cat:"food"},
+  {en:"tea",he:"תה",emoji:"🍵",cat:"food"},
+  {en:"juice",he:"מיץ",emoji:"🧃",cat:"food"},
+  {en:"honey",he:"דבש",emoji:"🍯",cat:"food"},
+  {en:"popcorn",he:"פופקורן",emoji:"🍿",cat:"food"},
+  {en:"pretzel",he:"פרצל",emoji:"🥨",cat:"food"},
+
+  // Colors (20)
+  {en:"red",he:"אדום",emoji:"🟥",cat:"colors"},
+  {en:"blue",he:"כחול",emoji:"🟦",cat:"colors"},
+  {en:"yellow",he:"צהוב",emoji:"🟨",cat:"colors"},
+  {en:"green",he:"ירוק",emoji:"🟩",cat:"colors"},
+  {en:"purple",he:"סגול",emoji:"🟪",cat:"colors"},
+  {en:"orange_color",he:"כתום",emoji:"🟧",cat:"colors"},
+  {en:"black",he:"שחור",emoji:"⬛",cat:"colors"},
+  {en:"white",he:"לבן",emoji:"⬜",cat:"colors"},
+  {en:"brown",he:"חום",emoji:"🟫",cat:"colors"},
+  {en:"pink",he:"ורוד",emoji:"🌸",cat:"colors"},
+  {en:"gray",he:"אפור",emoji:"🔘",cat:"colors"},
+  {en:"gold",he:"זהב",emoji:"🥇",cat:"colors"},
+  {en:"silver",he:"כסף",emoji:"🥈",cat:"colors"},
+  {en:"dark blue",he:"כחול כהה",emoji:"🔵",cat:"colors"},
+  {en:"light blue",he:"כחול בהיר",emoji:"🔷",cat:"colors"},
+  {en:"rainbow",he:"קשת",emoji:"🌈",cat:"colors"},
+  {en:"turquoise",he:"טורקיז",emoji:"💎",cat:"colors"},
+  {en:"navy",he:"כחול ים",emoji:"🟦",cat:"colors"},
+  {en:"lavender",he:"לבנדר",emoji:"💜",cat:"colors"},
+  {en:"coral",he:"אלמוג",emoji:"🧡",cat:"colors"},
+
+  // Numbers (30)
+  {en:"one",he:"אחת",emoji:"1️⃣",cat:"numbers"},
+  {en:"two",he:"שתיים",emoji:"2️⃣",cat:"numbers"},
+  {en:"three",he:"שלוש",emoji:"3️⃣",cat:"numbers"},
+  {en:"four",he:"ארבע",emoji:"4️⃣",cat:"numbers"},
+  {en:"five",he:"חמש",emoji:"5️⃣",cat:"numbers"},
+  {en:"six",he:"שש",emoji:"6️⃣",cat:"numbers"},
+  {en:"seven",he:"שבע",emoji:"7️⃣",cat:"numbers"},
+  {en:"eight",he:"שמונה",emoji:"8️⃣",cat:"numbers"},
+  {en:"nine",he:"תשע",emoji:"9️⃣",cat:"numbers"},
+  {en:"ten",he:"עשר",emoji:"🔟",cat:"numbers"},
+  {en:"eleven",he:"אחת עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"twelve",he:"שתים עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"thirteen",he:"שלוש עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"fourteen",he:"ארבע עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"fifteen",he:"חמש עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"sixteen",he:"שש עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"seventeen",he:"שבע עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"eighteen",he:"שמונה עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"nineteen",he:"תשע עשרה",emoji:"🔢",cat:"numbers"},
+  {en:"twenty",he:"עשרים",emoji:"🔢",cat:"numbers"},
+  {en:"thirty",he:"שלושים",emoji:"🔢",cat:"numbers"},
+  {en:"forty",he:"ארבעים",emoji:"🔢",cat:"numbers"},
+  {en:"fifty",he:"חמישים",emoji:"🔢",cat:"numbers"},
+  {en:"hundred",he:"מאה",emoji:"💯",cat:"numbers"},
+  {en:"first",he:"ראשון",emoji:"🥇",cat:"numbers"},
+  {en:"second",he:"שני",emoji:"🥈",cat:"numbers"},
+  {en:"third",he:"שלישי",emoji:"🥉",cat:"numbers"},
+  {en:"half",he:"חצי",emoji:"½",cat:"numbers"},
+  {en:"double",he:"כפול",emoji:"×2",cat:"numbers"},
+  {en:"zero",he:"אפס",emoji:"0️⃣",cat:"numbers"},
+
+  // Family (20)
+  {en:"mother",he:"אמא",emoji:"👩",cat:"family"},
+  {en:"father",he:"אבא",emoji:"👨",cat:"family"},
+  {en:"sister",he:"אחות",emoji:"👧",cat:"family"},
+  {en:"brother",he:"אח",emoji:"👦",cat:"family"},
+  {en:"baby",he:"תינוק",emoji:"👶",cat:"family"},
+  {en:"grandma",he:"סבתא",emoji:"👵",cat:"family"},
+  {en:"grandpa",he:"סבא",emoji:"👴",cat:"family"},
+  {en:"aunt",he:"דודה",emoji:"👩‍🦰",cat:"family"},
+  {en:"uncle",he:"דוד",emoji:"👨‍🦰",cat:"family"},
+  {en:"cousin",he:"בן דוד",emoji:"🧒",cat:"family"},
+  {en:"family",he:"משפחה",emoji:"👨‍👩‍👧‍👦",cat:"family"},
+  {en:"twins",he:"תאומים",emoji:"👯",cat:"family"},
+  {en:"daughter",he:"בת",emoji:"👧",cat:"family"},
+  {en:"son",he:"בן",emoji:"👦",cat:"family"},
+  {en:"parents",he:"הורים",emoji:"👨‍👩‍👦",cat:"family"},
+  {en:"wife",he:"אישה",emoji:"👰",cat:"family"},
+  {en:"husband",he:"בעל",emoji:"🤵",cat:"family"},
+  {en:"friend",he:"חבר",emoji:"🧑‍🤝‍🧑",cat:"family"},
+  {en:"teacher_fam",he:"מורה",emoji:"👩‍🏫",cat:"family"},
+  {en:"baby boy",he:"תינוק",emoji:"👶",cat:"family"},
+
+  // Body Parts (30)
+  {en:"head",he:"ראש",emoji:"🧠",cat:"body"},
+  {en:"eye",he:"עין",emoji:"👁️",cat:"body"},
+  {en:"ear",he:"אוזן",emoji:"👂",cat:"body"},
+  {en:"nose",he:"אף",emoji:"👃",cat:"body"},
+  {en:"mouth",he:"פה",emoji:"👄",cat:"body"},
+  {en:"tooth",he:"שן",emoji:"🦷",cat:"body"},
+  {en:"hand",he:"יד",emoji:"✋",cat:"body"},
+  {en:"finger",he:"אצבע",emoji:"👆",cat:"body"},
+  {en:"arm",he:"זרוע",emoji:"💪",cat:"body"},
+  {en:"leg",he:"רגל",emoji:"🦵",cat:"body"},
+  {en:"foot",he:"כף רגל",emoji:"🦶",cat:"body"},
+  {en:"heart",he:"לב",emoji:"❤️",cat:"body"},
+  {en:"hair",he:"שיער",emoji:"💇",cat:"body"},
+  {en:"face",he:"פנים",emoji:"😀",cat:"body"},
+  {en:"neck",he:"צוואר",emoji:"🦴",cat:"body"},
+  {en:"shoulder",he:"כתף",emoji:"🤷",cat:"body"},
+  {en:"back",he:"גב",emoji:"🔙",cat:"body"},
+  {en:"stomach",he:"בטן",emoji:"🤰",cat:"body"},
+  {en:"knee",he:"ברך",emoji:"🦵",cat:"body"},
+  {en:"skin",he:"עור",emoji:"🧑",cat:"body"},
+  {en:"tongue",he:"לשון",emoji:"👅",cat:"body"},
+  {en:"brain",he:"מוח",emoji:"🧠",cat:"body"},
+  {en:"bone",he:"עצם",emoji:"🦴",cat:"body"},
+  {en:"blood",he:"דם",emoji:"🩸",cat:"body"},
+  {en:"thumb",he:"אגודל",emoji:"👍",cat:"body"},
+  {en:"elbow",he:"מרפק",emoji:"💪",cat:"body"},
+  {en:"chin",he:"סנטר",emoji:"🧔",cat:"body"},
+  {en:"cheek",he:"לחי",emoji:"😊",cat:"body"},
+  {en:"eyebrow",he:"גבה",emoji:"🤨",cat:"body"},
+  {en:"eyelash",he:"ריס",emoji:"👁️",cat:"body"},
+
+  // Clothes (30)
+  {en:"shirt",he:"חולצה",emoji:"👕",cat:"clothes"},
+  {en:"pants",he:"מכנסיים",emoji:"👖",cat:"clothes"},
+  {en:"dress",he:"שמלה",emoji:"👗",cat:"clothes"},
+  {en:"skirt",he:"חצאית",emoji:"👗",cat:"clothes"},
+  {en:"shoes",he:"נעליים",emoji:"👟",cat:"clothes"},
+  {en:"socks",he:"גרביים",emoji:"🧦",cat:"clothes"},
+  {en:"hat",he:"כובע",emoji:"🎩",cat:"clothes"},
+  {en:"cap",he:"כובע מצחיה",emoji:"🧢",cat:"clothes"},
+  {en:"gloves",he:"כפפות",emoji:"🧤",cat:"clothes"},
+  {en:"scarf",he:"צעיף",emoji:"🧣",cat:"clothes"},
+  {en:"coat",he:"מעיל",emoji:"🧥",cat:"clothes"},
+  {en:"jacket",he:"ג'קט",emoji:"🧥",cat:"clothes"},
+  {en:"belt",he:"חגורה",emoji:"👔",cat:"clothes"},
+  {en:"tie",he:"עניבה",emoji:"👔",cat:"clothes"},
+  {en:"boots",he:"מגפיים",emoji:"🥾",cat:"clothes"},
+  {en:"sandals",he:"סנדלים",emoji:"👡",cat:"clothes"},
+  {en:"slippers",he:"נעלי בית",emoji:"拖鞋",cat:"clothes"},
+  {en:"pajamas",he:"פיג'מה",emoji:"🩲",cat:"clothes"},
+  {en:"shorts",he:"מכנסיים קצרים",emoji:"🩳",cat:"clothes"},
+  {en:"sweater",he:"סוודר",emoji:"🧶",cat:"clothes"},
+  {en:"raincoat",he:"מעיל גשם",emoji:"🧥",cat:"clothes"},
+  {en:"uniform",he:"מדים",emoji:"👔",cat:"clothes"},
+  {en:"backpack",he:"תיק גב",emoji:"🎒",cat:"clothes"},
+  {en:"purse",he:"ארנק",emoji:"👛",cat:"clothes"},
+  {en:"watch",he:"שעון",emoji:"⌚",cat:"clothes"},
+  {en:"glasses",he:"משקפיים",emoji:"👓",cat:"clothes"},
+  {en:"sunglasses",he:"משקפי שמש",emoji:"🕶️",cat:"clothes"},
+  {en:"bow tie",he:"פפיון",emoji:"🎀",cat:"clothes"},
+  {en:"mittens",he:"כפפות",emoji:"🧤",cat:"clothes"},
+  {en:"helmet",he:"קסדה",emoji:"⛑️",cat:"clothes"},
+
+  // House & Home (40)
+  {en:"house",he:"בית",emoji:"🏠",cat:"house"},
+  {en:"door",he:"דלת",emoji:"🚪",cat:"house"},
+  {en:"window",he:"חלון",emoji:"🪟",cat:"house"},
+  {en:"roof",he:"גג",emoji:"🏠",cat:"house"},
+  {en:"room",he:"חדר",emoji:"🚪",cat:"house"},
+  {en:"bed",he:"מיטה",emoji:"🛏️",cat:"house"},
+  {en:"chair",he:"כיסא",emoji:"🪑",cat:"house"},
+  {en:"table",he:"שולחן",emoji:"🍽️",cat:"house"},
+  {en:"desk",he:"שולחן עבודה",emoji:"🖥️",cat:"house"},
+  {en:"sofa",he:"ספה",emoji:"🛋️",cat:"house"},
+  {en:"kitchen",he:"מטבח",emoji:"🍳",cat:"house"},
+  {en:"bathroom",he:"חדר אמבטיה",emoji:"🛁",cat:"house"},
+  {en:"bedroom",he:"חדר שינה",emoji:"😴",cat:"house"},
+  {en:"living room",he:"סלון",emoji:"🛋️",cat:"house"},
+  {en:"garden",he:"גינה",emoji:"🌷",cat:"house"},
+  {en:"garage",he:"מוסך",emoji:"🚗",cat:"house"},
+  {en:"stairs",he:"מדרגות",emoji:"🪜",cat:"house"},
+  {en:"mirror",he:"מראה",emoji:"🪞",cat:"house"},
+  {en:"clock",he:"שעון",emoji:"🕐",cat:"house"},
+  {en:"lamp",he:"מנורה",emoji:"💡",cat:"house"},
+  {en:"fridge",he:"מקרר",emoji:"🧊",cat:"house"},
+  {en:"oven",he:"תנור",emoji:"🔥",cat:"house"},
+  {en:"microwave",he:"מיקרוגל",emoji:"🍽️",cat:"house"},
+  {en:"washing machine",he:"מכונת כביסה",emoji:"🧺",cat:"house"},
+  {en:"tv",he:"טלוויזיה",emoji:"📺",cat:"house"},
+  {en:"computer",he:"מחשב",emoji:"💻",cat:"house"},
+  {en:"phone",he:"טלפון",emoji:"📱",cat:"house"},
+  {en:"bookshelf",he:"מדף ספרים",emoji:"📚",cat:"house"},
+  {en:"drawer",he:"מגירה",emoji:"🗄️",cat:"house"},
+  {en:"carpet",he:"שטיח",emoji:"🟫",cat:"house"},
+  {en:"curtain",he:"וילון",emoji:"🪟",cat:"house"},
+  {en:"blanket",he:"שמיכה",emoji:"🛌",cat:"house"},
+  {en:"pillow",he:"כרית",emoji:"🛏️",cat:"house"},
+  {en:"towel",he:"מגבת",emoji:"🧖",cat:"house"},
+  {en:"soap",he:"סבון",emoji:"🧼",cat:"house"},
+  {en:"key",he:"מפתח",emoji:"🔑",cat:"house"},
+  {en:"lock",he:"מנעול",emoji:"🔒",cat:"house"},
+  {en:"bell",he:"פעמון",emoji:"🔔",cat:"house"},
+  {en:"vase",he:"אגרטל",emoji:"🏺",cat:"house"},
+  {en:"plant",he:"צמח",emoji:"🪴",cat:"house"},
+
+  // School (40)
+  {en:"school",he:"בית ספר",emoji:"🏫",cat:"school"},
+  {en:"book",he:"ספר",emoji:"📖",cat:"school"},
+  {en:"pen",he:"עט",emoji:"🖊️",cat:"school"},
+  {en:"pencil",he:"עיפרון",emoji:"✏️",cat:"school"},
+  {en:"eraser",he:"מחק",emoji:"🧽",cat:"school"},
+  {en:"ruler",he:"סרגל",emoji:"📏",cat:"school"},
+  {en:"notebook",he:"מחברת",emoji:"📓",cat:"school"},
+  {en:"bag",he:"תיק",emoji:"🎒",cat:"school"},
+  {en:"scissors",he:"מספריים",emoji:"✂️",cat:"school"},
+  {en:"glue",he:"דבק",emoji:"🧴",cat:"school"},
+  {en:"crayons",he:"צבעי שעווה",emoji:"🖍️",cat:"school"},
+  {en:"colors_art",he:"צבעים",emoji:"🎨",cat:"school"},
+  {en:"paint",he:"צבע",emoji:"🖌️",cat:"school"},
+  {en:"paper",he:"נייר",emoji:"📄",cat:"school"},
+  {en:"map",he:"מפה",emoji:"🗺️",cat:"school"},
+  {en:"globe",he:"גלובוס",emoji:"🌍",cat:"school"},
+  {en:"board",he:"לוח",emoji:"📋",cat:"school"},
+  {en:"chalk",he:"גיר",emoji:"🖍️",cat:"school"},
+  {en:"marker",he:"מרקר",emoji:"📝",cat:"school"},
+  {en:"desk_school",he:"שולחן",emoji:"🪑",cat:"school"},
+  {en:"chair_school",he:"כיסא",emoji:"🪑",cat:"school"},
+  {en:"classroom",he:"כיתה",emoji:"🏫",cat:"school"},
+  {en:"playground",he:"מגרש שעשועים",emoji:"🛝",cat:"school"},
+  {en:"library",he:"ספרייה",emoji:"🏛️",cat:"school"},
+  {en:"teacher",he:"מורה",emoji:"👩‍🏫",cat:"school"},
+  {en:"student",he:"תלמיד",emoji:"🧑‍🎓",cat:"school"},
+  {en:"principal",he:"מנהל",emoji:"👨‍💼",cat:"school"},
+  {en:"exam",he:"מבחן",emoji:"📝",cat:"school"},
+  {en:"grade",he:"ציון",emoji:"💯",cat:"school"},
+  {en:"homework",he:"שיעורים",emoji:"📚",cat:"school"},
+  {en:"lesson",he:"שיעור",emoji:"📖",cat:"school"},
+  {en:"dictionary",he:"מילון",emoji:"📔",cat:"school"},
+  {en:"calculator",he:"מחשבון",emoji:"🧮",cat:"school"},
+  {en:"project",he:"פרויקט",emoji:"📋",cat:"school"},
+  {en:"art",he:"אומנות",emoji:"🎨",cat:"school"},
+  {en:"music_class",he:"מוזיקה",emoji:"🎵",cat:"school"},
+  {en:"science",he:"מדע",emoji:"🔬",cat:"school"},
+  {en:"math",he:"מתמטיקה",emoji:"➕",cat:"school"},
+  {en:"english",he:"אנגלית",emoji:"🔤",cat:"school"},
+  {en:"history",he:"היסטוריה",emoji:"📜",cat:"school"},
+
+  // Weather & Nature (40)
+  {en:"sun",he:"שמש",emoji:"☀️",cat:"nature"},
+  {en:"moon",he:"ירח",emoji:"🌙",cat:"nature"},
+  {en:"star",he:"כוכב",emoji:"⭐",cat:"nature"},
+  {en:"cloud",he:"ענן",emoji:"☁️",cat:"nature"},
+  {en:"rain",he:"גשם",emoji:"🌧️",cat:"nature"},
+  {en:"snow",he:"שלג",emoji:"❄️",cat:"nature"},
+  {en:"wind",he:"רוח",emoji:"💨",cat:"nature"},
+  {en:"storm",he:"סופה",emoji:"⛈️",cat:"nature"},
+  {en:"thunder",he:"רעם",emoji:"🌩️",cat:"nature"},
+  {en:"lightning",he:"ברק",emoji:"⚡",cat:"nature"},
+  {en:"rainbow_nat",he:"קשת בענן",emoji:"🌈",cat:"nature"},
+  {en:"tree",he:"עץ",emoji:"🌳",cat:"nature"},
+  {en:"flower",he:"פרח",emoji:"🌸",cat:"nature"},
+  {en:"grass",he:"דשא",emoji:"🌱",cat:"nature"},
+  {en:"leaf",he:"עלה",emoji:"🍃",cat:"nature"},
+  {en:"forest",he:"יער",emoji:"🌲",cat:"nature"},
+  {en:"mountain",he:"הר",emoji:"⛰️",cat:"nature"},
+  {en:"sea",he:"ים",emoji:"🌊",cat:"nature"},
+  {en:"beach",he:"חוף",emoji:"🏖️",cat:"nature"},
+  {en:"river",he:"נהר",emoji:"🏞️",cat:"nature"},
+  {en:"lake",he:"אגם",emoji:"🌊",cat:"nature"},
+  {en:"island",he:"אי",emoji:"🏝️",cat:"nature"},
+  {en:"desert",he:"מדבר",emoji:"🏜️",cat:"nature"},
+  {en:"volcano",he:"הר געש",emoji:"🌋",cat:"nature"},
+  {en:"earth",he:"כדור הארץ",emoji:"🌍",cat:"nature"},
+  {en:"sky",he:"שמיים",emoji:"🌌",cat:"nature"},
+  {en:"fire",he:"אש",emoji:"🔥",cat:"nature"},
+  {en:"ice",he:"קרח",emoji:"🧊",cat:"nature"},
+  {en:"rock",he:"סלע",emoji:"🪨",cat:"nature"},
+  {en:"sand",he:"חול",emoji:"🏖️",cat:"nature"},
+  {en:"waterfall",he:"מפל",emoji:"💧",cat:"nature"},
+  {en:"cave",he:"מערה",emoji:"🕳️",cat:"nature"},
+  {en:"bush",he:"שיח",emoji:"🌿",cat:"nature"},
+  {en:"seed",he:"זרע",emoji:"🌱",cat:"nature"},
+  {en:"fruit",he:"פרי",emoji:"🍎",cat:"nature"},
+  {en:"branch",he:"ענף",emoji:"🌿",cat:"nature"},
+  {en:"root",he:"שורש",emoji:"🌱",cat:"nature"},
+  {en:"mushroom",he:"פטריה",emoji:"🍄",cat:"nature"},
+  {en:"cactus",he:"קקטוס",emoji:"🌵",cat:"nature"},
+  {en:"palm tree",he:"דקל",emoji:"🌴",cat:"nature"},
+
+  // Verbs / Actions (50)
+  {en:"run",he:"רץ",emoji:"🏃",cat:"verbs"},
+  {en:"walk",he:"הולך",emoji:"🚶",cat:"verbs"},
+  {en:"jump",he:"קופץ",emoji:"🤸",cat:"verbs"},
+  {en:"swim",he:"שוחה",emoji:"🏊",cat:"verbs"},
+  {en:"fly",he:"עף",emoji:"🕊️",cat:"verbs"},
+  {en:"climb",he:"מטפס",emoji:"🧗",cat:"verbs"},
+  {en:"dance",he:"רוקד",emoji:"💃",cat:"verbs"},
+  {en:"sing",he:"שר",emoji:"🎤",cat:"verbs"},
+  {en:"read",he:"קורא",emoji:"📖",cat:"verbs"},
+  {en:"write",he:"כותב",emoji:"✍️",cat:"verbs"},
+  {en:"draw",he:"מצייר",emoji:"🎨",cat:"verbs"},
+  {en:"eat",he:"אוכל",emoji:"🍽️",cat:"verbs"},
+  {en:"drink",he:"שותה",emoji:"🥤",cat:"verbs"},
+  {en:"sleep",he:"ישן",emoji:"😴",cat:"verbs"},
+  {en:"wake up",he:"מתעורר",emoji:"⏰",cat:"verbs"},
+  {en:"wash",he:"שוטף",emoji:"🧼",cat:"verbs"},
+  {en:"brush",he:"מצחצח",emoji:"🪥",cat:"verbs"},
+  {en:"cook",he:"מבשל",emoji:"👨‍🍳",cat:"verbs"},
+  {en:"clean",he:"מנקה",emoji:"🧹",cat:"verbs"},
+  {en:"play",he:"משחק",emoji:"🎮",cat:"verbs"},
+  {en:"think",he:"חושב",emoji:"🤔",cat:"verbs"},
+  {en:"listen",he:"מקשיב",emoji:"👂",cat:"verbs"},
+  {en:"talk",he:"מדבר",emoji:"💬",cat:"verbs"},
+  {en:"smile",he:"מחייך",emoji:"😊",cat:"verbs"},
+  {en:"laugh",he:"צוחק",emoji:"😄",cat:"verbs"},
+  {en:"cry",he:"בוכה",emoji:"😢",cat:"verbs"},
+  {en:"cut",he:"חותך",emoji:"✂️",cat:"verbs"},
+  {en:"build",he:"בונה",emoji:"🏗️",cat:"verbs"},
+  {en:"fix",he:"מתקן",emoji:"🔧",cat:"verbs"},
+  {en:"drive",he:"נוהג",emoji:"🚗",cat:"verbs"},
+  {en:"ride",he:"רוכב",emoji:"🚴",cat:"verbs"},
+  {en:"stand",he:"עומד",emoji:"🧍",cat:"verbs"},
+  {en:"sit",he:"יושב",emoji:"🪑",cat:"verbs"},
+  {en:"fall",he:"נופל",emoji:"🤸",cat:"verbs"},
+  {en:"throw",he:"זורק",emoji:"🤾",cat:"verbs"},
+  {en:"catch",he:"תופס",emoji:"🧤",cat:"verbs"},
+  {en:"kick",he:"בועט",emoji:"⚽",cat:"verbs"},
+  {en:"open",he:"פותח",emoji:"🔓",cat:"verbs"},
+  {en:"close",he:"סוגר",emoji:"🔒",cat:"verbs"},
+  {en:"push",he:"דוחף",emoji:"👈",cat:"verbs"},
+  {en:"pull",he:"מושך",emoji:"👉",cat:"verbs"},
+  {en:"give",he:"נותן",emoji:"🎁",cat:"verbs"},
+  {en:"take",he:"לוקח",emoji:"✋",cat:"verbs"},
+  {en:"hold",he:"מחזיק",emoji:"🤝",cat:"verbs"},
+  {en:"hug",he:"מחבק",emoji:"🤗",cat:"verbs"},
+  {en:"wave",he:"מנופף",emoji:"👋",cat:"verbs"},
+  {en:"clap",he:"מוחא כפיים",emoji:"👏",cat:"verbs"},
+  {en:"see",he:"רואה",emoji:"👀",cat:"verbs"},
+  {en:"help",he:"עוזר",emoji:"🤝",cat:"verbs"},
+  {en:"learn",he:"לומד",emoji:"📚",cat:"verbs"},
+
+  // Emotions (20)
+  {en:"happy",he:"שמח",emoji:"😄",cat:"emotions"},
+  {en:"sad",he:"עצוב",emoji:"😢",cat:"emotions"},
+  {en:"angry",he:"כועס",emoji:"😠",cat:"emotions"},
+  {en:"scared",he:"מפחד",emoji:"😨",cat:"emotions"},
+  {en:"excited",he:"נרגש",emoji:"🤩",cat:"emotions"},
+  {en:"tired",he:"עייף",emoji:"😴",cat:"emotions"},
+  {en:"surprised",he:"מופתע",emoji:"😲",cat:"emotions"},
+  {en:"bored",he:"משועמם",emoji:"🥱",cat:"emotions"},
+  {en:"confused",he:"מבולבל",emoji:"🤔",cat:"emotions"},
+  {en:"proud",he:"גאה",emoji:"🥹",cat:"emotions"},
+  {en:"sick",he:"חולה",emoji:"🤒",cat:"emotions"},
+  {en:"love",he:"אוהב",emoji:"❤️",cat:"emotions"},
+  {en:"brave",he:"אמיץ",emoji:"🦁",cat:"emotions"},
+  {en:"shy",he:"ביישן",emoji:"🙈",cat:"emotions"},
+  {en:"funny",he:"מצחיק",emoji:"😂",cat:"emotions"},
+  {en:"worried",he:"מודאג",emoji:"😟",cat:"emotions"},
+  {en:"calm",he:"רגוע",emoji:"😌",cat:"emotions"},
+  {en:"jealous",he:"מקנא",emoji:"😤",cat:"emotions"},
+  {en:"grateful",he:"אסיר תודה",emoji:"🙏",cat:"emotions"},
+  {en:"lonely",he:"בודד",emoji:"🥺",cat:"emotions"},
+
+  // Transportation (30)
+  {en:"car",he:"מכונית",emoji:"🚗",cat:"transport"},
+  {en:"bus",he:"אוטובוס",emoji:"🚌",cat:"transport"},
+  {en:"train",he:"רכבת",emoji:"🚂",cat:"transport"},
+  {en:"plane",he:"מטוס",emoji:"✈️",cat:"transport"},
+  {en:"boat",he:"סירה",emoji:"⛵",cat:"transport"},
+  {en:"ship",he:"ספינה",emoji:"🚢",cat:"transport"},
+  {en:"bicycle",he:"אופניים",emoji:"🚲",cat:"transport"},
+  {en:"motorcycle",he:"אופנוע",emoji:"🏍️",cat:"transport"},
+  {en:"scooter",he:"קורקינט",emoji:"🛴",cat:"transport"},
+  {en:"truck",he:"משאית",emoji:"🚚",cat:"transport"},
+  {en:"taxi",he:"מונית",emoji:"🚕",cat:"transport"},
+  {en:"ambulance",he:"אמבולנס",emoji:"🚑",cat:"transport"},
+  {en:"fire truck",he:"מכבי אש",emoji:"🚒",cat:"transport"},
+  {en:"police car",he:"ניידת משטרה",emoji:"🚓",cat:"transport"},
+  {en:"tractor",he:"טרקטור",emoji:"🚜",cat:"transport"},
+  {en:"subway",he:"רכבת תחתית",emoji:"🚇",cat:"transport"},
+  {en:"helicopter",he:"מסוק",emoji:"🚁",cat:"transport"},
+  {en:"rocket",he:"טיל",emoji:"🚀",cat:"transport"},
+  {en:"balloon",he:"בלון",emoji:"🎈",cat:"transport"},
+  {en:"wheel",he:"גלגל",emoji:"🛞",cat:"transport"},
+  {en:"road",he:"כביש",emoji:"🛣️",cat:"transport"},
+  {en:"bridge",he:"גשר",emoji:"🌉",cat:"transport"},
+  {en:"tunnel",he:"מנהרה",emoji:"🕳️",cat:"transport"},
+  {en:"airport",he:"שדה תעופה",emoji:"🛫",cat:"transport"},
+  {en:"station",he:"תחנה",emoji:"🚉",cat:"transport"},
+  {en:"ticket",he:"כרטיס",emoji:"🎫",cat:"transport"},
+  {en:"map_transport",he:"מפה",emoji:"🗺️",cat:"transport"},
+  {en:"fuel",he:"דלק",emoji:"⛽",cat:"transport"},
+  {en:"traffic light",he:"רמזור",emoji:"🚦",cat:"transport"},
+  {en:"stop sign",he:"תמרור עצור",emoji:"🛑",cat:"transport"},
+
+  // Time & Days (30)
+  {en:"day",he:"יום",emoji:"📅",cat:"time"},
+  {en:"night",he:"לילה",emoji:"🌃",cat:"time"},
+  {en:"morning",he:"בוקר",emoji:"🌅",cat:"time"},
+  {en:"afternoon",he:"צהריים",emoji:"☀️",cat:"time"},
+  {en:"evening",he:"ערב",emoji:"🌆",cat:"time"},
+  {en:"today",he:"היום",emoji:"📍",cat:"time"},
+  {en:"tomorrow",he:"מחר",emoji:"➡️",cat:"time"},
+  {en:"yesterday",he:"אתמול",emoji:"⬅️",cat:"time"},
+  {en:"week",he:"שבוע",emoji:"📆",cat:"time"},
+  {en:"month",he:"חודש",emoji:"🗓️",cat:"time"},
+  {en:"year",he:"שנה",emoji:"📅",cat:"time"},
+  {en:"Sunday",he:"יום ראשון",emoji:"1️⃣",cat:"time"},
+  {en:"Monday",he:"יום שני",emoji:"2️⃣",cat:"time"},
+  {en:"Tuesday",he:"יום שלישי",emoji:"3️⃣",cat:"time"},
+  {en:"Wednesday",he:"יום רביעי",emoji:"4️⃣",cat:"time"},
+  {en:"Thursday",he:"יום חמישי",emoji:"5️⃣",cat:"time"},
+  {en:"Friday",he:"יום שישי",emoji:"6️⃣",cat:"time"},
+  {en:"Saturday",he:"שבת",emoji:"7️⃣",cat:"time"},
+  {en:"spring",he:"אביב",emoji:"🌸",cat:"time"},
+  {en:"summer",he:"קיץ",emoji:"☀️",cat:"time"},
+  {en:"autumn",he:"סתיו",emoji:"🍂",cat:"time"},
+  {en:"winter",he:"חורף",emoji:"❄️",cat:"time"},
+  {en:"now",he:"עכשיו",emoji:"⏰",cat:"time"},
+  {en:"later",he:"מאוחר יותר",emoji:"🕐",cat:"time"},
+  {en:"early",he:"מוקדם",emoji:"🌅",cat:"time"},
+  {en:"late",he:"מאחר",emoji:"🌙",cat:"time"},
+  {en:"hour",he:"שעה",emoji:"🕐",cat:"time"},
+  {en:"minute",he:"דקה",emoji:"⏱️",cat:"time"},
+  {en:"birthday",he:"יום הולדת",emoji:"🎂",cat:"time"},
+  {en:"holiday",he:"חג",emoji:"🎉",cat:"time"},
+
+  // Sports & Hobbies (20)
+  {en:"soccer",he:"כדורגל",emoji:"⚽",cat:"sports"},
+  {en:"basketball",he:"כדורסל",emoji:"🏀",cat:"sports"},
+  {en:"tennis",he:"טניס",emoji:"🎾",cat:"sports"},
+  {en:"swimming sport",he:"שחייה",emoji:"🏊",cat:"sports"},
+  {en:"running",he:"ריצה",emoji:"🏃",cat:"sports"},
+  {en:"cycling",he:"רכיבה על אופניים",emoji:"🚴",cat:"sports"},
+  {en:"dancing sport",he:"ריקוד",emoji:"💃",cat:"sports"},
+  {en:"guitar",he:"גיטרה",emoji:"🎸",cat:"sports"},
+  {en:"piano",he:"פסנתר",emoji:"🎹",cat:"sports"},
+  {en:"drums",he:"תופים",emoji:"🥁",cat:"sports"},
+  {en:"painting",he:"ציור",emoji:"🎨",cat:"sports"},
+  {en:"reading hobby",he:"קריאה",emoji:"📚",cat:"sports"},
+  {en:"games",he:"משחקים",emoji:"🎮",cat:"sports"},
+  {en:"puzzle",he:"פאזל",emoji:"🧩",cat:"sports"},
+  {en:"chess",he:"שחמט",emoji:"♟️",cat:"sports"},
+  {en:"fishing",he:"דיג",emoji:"🎣",cat:"sports"},
+  {en:"cooking hobby",he:"בישול",emoji:"🍳",cat:"sports"},
+  {en:"gardening",he:"גינון",emoji:"🪴",cat:"sports"},
+  {en:"photography",he:"צילום",emoji:"📷",cat:"sports"},
+  {en:"yoga",he:"יוגה",emoji:"🧘",cat:"sports"}
+];
+
+// ============ CATEGORIES ============
+const CATEGORIES = [
+  {id:"all",name:"הכל",emoji:"✨"},
+  {id:"animals",name:"חיות",emoji:"🐶"},
+  {id:"food",name:"אוכל",emoji:"🍎"},
+  {id:"colors",name:"צבעים",emoji:"🌈"},
+  {id:"numbers",name:"מספרים",emoji:"🔢"},
+  {id:"family",name:"משפחה",emoji:"👨‍👩‍👧‍👦"},
+  {id:"body",name:"גוף",emoji:"🧠"},
+  {id:"clothes",name:"ביגוד",emoji:"👕"},
+  {id:"house",name:"בית",emoji:"🏠"},
+  {id:"school",name:"בית ספר",emoji:"🏫"},
+  {id:"nature",name:"טבע",emoji:"🌳"},
+  {id:"verbs",name:"פעולות",emoji:"🏃"},
+  {id:"emotions",name:"רגשות",emoji:"😄"},
+  {id:"transport",name:"תחבורה",emoji:"🚗"},
+  {id:"time",name:"זמן",emoji:"📅"},
+  {id:"sports",name:"ספורט",emoji:"⚽"}
+];
+
+// ============ GAME TYPES ============
+const GAMES = [
+  {id:"flashcards",name:"כרטיסיות",desc:"הפוך וגלה",icon:"🃏",color:1},
+  {id:"matching",name:"התאמה",desc:"חבר תמונה למילה",icon:"🔗",color:2},
+  {id:"scramble",name:"סדר אותיות",desc:"סדר את המילה",icon:"🔤",color:3},
+  {id:"memory",name:"משחק זיכרון",desc:"מצא זוגות",icon:"🧠",color:4},
+  {id:"listening",name:"שמע ובחר",desc:"הקשב ובחר נכון",icon:"🔊",color:5},
+  {id:"fillblank",name:"השלם משפט",desc:"מצא את המילה",icon:"📝",color:6},
+  {id:"typing",name:"הקלד מילה",desc:"כתוב באנגלית",icon:"⌨️",color:7},
+  {id:"quiz",name:"חידון",desc:"בחר את התרגום",icon:"❓",color:8}
+];
+
+// ============ STATE ============
+let state = {
+  coins: 0, stars: 0, streak: 0,
+  wordsLearned: {}, // {wordId: {correct: n, wrong: n, lastSeen: date}}
+  categoryStats: {}, // {cat: {seen: n, correct: n}}
+  gameStats: {}, // {gameType: {played: n, score: n}}
+  sessionStart: null,
+  selectedCat: "all",
+  currentGame: null,
+  gameWords: [],
+  gameIndex: 0,
+  gameScore: 0,
+  roundData: null,
+  dailyChallenge: {
+    lastCompletedDate: null,  // "YYYY-MM-DD"
+    todayTimeMs: 0,          // time spent today in ms
+    todayDate: null,         // "YYYY-MM-DD" - tracks which day we're counting
+    totalEarned: 0,          // total shekels earned
+    completedDays: [],       // array of "YYYY-MM-DD" strings
+    active: false            // is challenge currently active
+  },
+  dailyGoalMinutes: 30
+};
+
+const PARENT_PASS = "1234";
+const STORAGE_KEY = "summer_learning_data";
+const DAILY_GOAL_MIN = 30;
+const API_URL = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/reportSummerChallenge";
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      Object.assign(state, data);
+    }
+  } catch(e) {}
+  state.sessionStart = Date.now();
+}
+
+function saveState() {
+  const toSave = {...state};
+  delete toSave.currentGame;
+  delete toSave.gameWords;
+  delete toSave.gameIndex;
+  delete toSave.gameScore;
+  delete toSave.roundData;
+  delete toSave.selectedCat;
+  delete toSave.sessionStart;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+}
+
+// ============ DAILY CHALLENGE ============
+const DAILY_GOAL_MIN = 20;
+const DAILY_REWARD = 10;
+
+function getTodayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function checkDailyReset() {
+  const today = getTodayStr();
+  if (state.dailyChallenge.todayDate !== today) {
+    state.dailyChallenge.todayDate = today;
+    state.dailyChallenge.todayTimeMs = 0;
+    state.dailyChallenge.active = false;
+    saveState();
+  }
+}
+
+// Track time: call every 5 seconds while in a game
+let dcTimer = null;
+function startDcTimer() {
+  stopDcTimer();
+  dcTimer = setInterval(() => {
+    if (state.currentGame && state.dailyChallenge.active) {
+      state.dailyChallenge.todayTimeMs += 5000;
+      updateDcProgress();
+      saveState();
+      // Check if goal reached
+      const minElapsed = state.dailyChallenge.todayTimeMs / 60000;
+      if (minElapsed >= DAILY_GOAL_MIN) {
+        completeDailyChallenge();
+      }
+    }
+  }, 5000);
+}
+
+function stopDcTimer() {
+  if (dcTimer) { clearInterval(dcTimer); dcTimer = null; }
+}
+
+function startDailyChallenge() {
+  checkDailyReset();
+  const today = getTodayStr();
+  if (state.dailyChallenge.lastCompletedDate === today) {
+    showToast('סיימת היום את האתגר! כל הכבוד! 🎉');
+    return;
+  }
+  if (state.dailyChallenge.active) {
+    showToast('האתגר כבר פעיל! המשך לשחק 🎮');
+    return;
+  }
+  state.dailyChallenge.active = true;
+  saveState();
+  updateDcUI();
+  showToast('האתגר התחיל! שחק 20 דקות 🎯');
+  startDcTimer();
+}
+
+function updateDcProgress() {
+  const minElapsed = state.dailyChallenge.todayTimeMs / 60000;
+  const pct = Math.min(100, (minElapsed / DAILY_GOAL_MIN) * 100);
+  const fill = document.getElementById('dc-fill');
+  if (fill) fill.style.width = pct + '%';
+  const sub = document.getElementById('dc-sub');
+  if (sub) {
+    if (minElapsed < DAILY_GOAL_MIN) {
+      sub.textContent = Math.floor(minElapsed) + ' / ' + DAILY_GOAL_MIN + ' דקות';
+    } else {
+      sub.textContent = 'הושלם! כל הכבוד! 🎉';
+    }
+  }
+}
+
+function completeDailyChallenge() {
+  stopDcTimer();
+  const today = getTodayStr();
+  if (state.dailyChallenge.lastCompletedDate === today) return; // already done today
+  
+  state.dailyChallenge.lastCompletedDate = today;
+  state.dailyChallenge.totalEarned += DAILY_REWARD;
+  if (!state.dailyChallenge.completedDays.includes(today)) {
+    state.dailyChallenge.completedDays.push(today);
+  }
+  state.dailyChallenge.active = false;
+  saveState();
+  
+  // Send notification to parent
+  try {
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        child_name: state.childName || "ילד",
+        subject: "אנגלית",
+        date: today,
+        time_spent_minutes: Math.round(state.dailyChallenge.todayTimeMs / 60000),
+        reward_amount: DAILY_REWARD,
+        total_earned: state.dailyChallenge.totalEarned
+      })
+    }).catch(e => console.log('Notification pending'));
+  } catch(e) {}
+  
+  // Show popup
+  const popup = document.getElementById('dc-complete-popup');
+  document.getElementById('dc-total-text').textContent = 'סה"כ בקופסה: ' + state.dailyChallenge.totalEarned + ' ₪';
+  popup.classList.add('show');
+  
+  updateDcUI();
+}
+
+function closeDcPopup() {
+  document.getElementById('dc-complete-popup').classList.remove('show');
+}
+
+function updateDcUI() {
+  checkDailyReset();
+  const today = getTodayStr();
+  const completedToday = state.dailyChallenge.lastCompletedDate === today;
+  const dc = document.getElementById('daily-challenge');
+  if (!dc) return;
+  
+  if (completedToday) {
+    dc.classList.add('completed');
+    document.getElementById('dc-icon').textContent = '✅';
+    document.getElementById('dc-title').textContent = 'אתגר יומי הושלם!';
+    document.getElementById('dc-sub').textContent = 'כל הכבוד! מחר נזכה שוב 🌟';
+    document.getElementById('dc-fill').style.width = '100%';
+    document.getElementById('dc-reward').textContent = '💰 ' + state.dailyChallenge.totalEarned + ' ₪ בקופסה';
+    document.getElementById('dc-stamp').style.display = 'block';
+  } else {
+    dc.classList.remove('completed');
+    document.getElementById('dc-icon').textContent = '🎯';
+    document.getElementById('dc-title').textContent = 'אתגר יומי';
+    const minElapsed = state.dailyChallenge.todayTimeMs / 60000;
+    if (state.dailyChallenge.active) {
+      document.getElementById('dc-sub').textContent = Math.floor(minElapsed) + ' / ' + DAILY_GOAL_MIN + ' דקות';
+      document.getElementById('dc-fill').style.width = Math.min(100, (minElapsed/DAILY_GOAL_MIN)*100) + '%';
+    } else {
+      document.getElementById('dc-sub').textContent = DAILY_GOAL_MIN + ' דקות אנגלית היום';
+      document.getElementById('dc-fill').style.width = '0%';
+    }
+    document.getElementById('dc-reward').textContent = '🎁 10 ₪ לקופסה!';
+    document.getElementById('dc-stamp').style.display = 'none';
+  }
+  
+  // Update shekels display
+  const shekelsEl = document.getElementById('home-shekels');
+  if (shekelsEl) shekelsEl.textContent = state.dailyChallenge.totalEarned;
+}
+
+function getWordsByCategory(cat) {
+  if (cat === "all") return WORDS;
+  return WORDS.filter(w => w.cat === cat);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function wordId(w) { return w.en + "_" + w.cat; }
+
+// ============ UI ============
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  state.currentGame = null;
+  stopDcTimer();
+  saveState();
+  window.location.href = "index.html";
+}
+
+function updateHomeStats() {
+  document.getElementById('home-coins').textContent = state.coins;
+  document.getElementById('home-stars').textContent = state.stars;
+  document.getElementById('home-streak').textContent = state.streak;
+  const shekelsEl = document.getElementById('home-shekels');
+  if (shekelsEl) shekelsEl.textContent = state.dailyChallenge.totalEarned || 0;
+}
+
+function renderCategories() {
+  const bar = document.getElementById('cat-bar');
+  bar.innerHTML = CATEGORIES.map(c =>
+    `<div class="cat-pill ${c.id===state.selectedCat?'active':''}" onclick="selectCat('${c.id}')">${c.emoji} ${c.name}</div>`
+  ).join('');
+}
+
+function selectCat(id) {
+  state.selectedCat = id;
+  renderCategories();
+  renderGames();
+}
+
+function renderGames() {
+  const grid = document.getElementById('game-grid');
+  grid.innerHTML = GAMES.map(g =>
+    `<div class="game-card" data-color="${g.color}" onclick="startGame('${g.id}')">
+      <span class="icon">${g.icon}</span>
+      <div class="name">${g.name}</div>
+      <div class="desc">${g.desc}</div>
+    </div>`
+  ).join('');
+}
+
+// ============ ENCOURAGEMENT ============
+const ENCOURAGEMENTS = [
+  {emoji:"🌟",text:"מדהים!"},
+  {emoji:"🎉",text:"כל הכבוד!"},
+  {emoji:"👏",text:"מעולה!"},
+  {emoji:"🚀",text:"איזה כוכב!"},
+  {emoji:"🏆",text:"אלוף!"},
+  {emoji:"💪",text:"חזק!"},
+  {emoji:"✨",text:"פנטסטי!"},
+  {emoji:"🥳",text:"נהדר!"},
+  {emoji:"🔥",text:"אש!"},
+  {emoji:"⭐",text:"עבודה מצוינת!"}
+];
+
+function showEncourage(correct = true) {
+  const popup = document.getElementById('encourage');
+  if (correct) {
+    const e = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+    const coins = 5 + Math.floor(Math.random() * 10);
+    state.coins += coins;
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+    document.getElementById('enc-emoji').textContent = e.emoji;
+    document.getElementById('enc-text').textContent = e.text;
+    document.getElementById('enc-coins').textContent = `+${coins} 🪙`;
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 1500);
+  } else {
+    state.streak = 0;
+    document.getElementById('enc-emoji').textContent = "💪";
+    document.getElementById('enc-text').textContent = "נסה שוב!";
+    document.getElementById('enc-coins').textContent = "אתה יכול!";
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 1200);
+  }
+  saveState();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ============ GAMES ============
+function startGame(gameType) {
+  state.currentGame = gameType;
+  // If daily challenge is active, keep tracking time
+  if (state.dailyChallenge.active) startDcTimer();
+  state.gameWords = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 10);
+  state.gameIndex = 0;
+  state.gameScore = 0;
+  showScreen('screen-game');
+  document.getElementById('next-btn').classList.remove('show');
+  renderGame();
+}
+
+function updateGameHeader() {
+  document.getElementById('game-progress').textContent = `שאלה ${state.gameIndex + 1} / ${state.gameWords.length}`;
+  document.getElementById('game-score').textContent = state.gameScore;
+}
+
+function nextRound() {
+  state.gameIndex++;
+  if (state.gameIndex >= state.gameWords.length) {
+    endGame();
+    return;
+  }
+  document.getElementById('next-btn').classList.remove('show');
+  renderGame();
+}
+
+function endGame() {
+  const total = state.gameWords.length;
+  const pct = Math.round((state.gameScore / total) * 100);
+  const passed = state.gameScore >= total * 0.6;
+
+  // Update stats
+  const gName = GAMES.find(g => g.id === state.currentGame)?.name || state.currentGame;
+  if (!state.gameStats[state.currentGame]) state.gameStats[state.currentGame] = {played:0, score:0};
+  state.gameStats[state.currentGame].played++;
+  state.gameStats[state.currentGame].score += state.gameScore;
+
+  state.stars += state.gameScore;
+  if (!state.subjectStats) state.subjectStats = {english:{gamesPlayed:0,score:0},math:{gamesPlayed:0,score:0},hebrew:{gamesPlayed:0,score:0}};
+  if (!state.subjectStats.english) state.subjectStats.english = {gamesPlayed:0,score:0};
+  state.subjectStats.english.gamesPlayed++;
+  state.subjectStats.english.score += state.gameScore;
+  saveState();
+
+  const content = document.getElementById('game-content');
+  content.innerHTML = `
+    <div style="padding:40px 20px;text-align:center;">
+      <div style="font-size:5rem;">${passed?'🏆':'💪'}</div>
+      <h2 style="font-size:1.6rem;margin:16px 0;color:${passed?'#6BCB77':'#FF6B6B'};">
+        ${passed?'סיימת בהצלחה!':'כמעט! נסה שוב'}
+      </h2>
+      <div style="font-size:1.2rem;margin:12px 0;">
+        ענית נכון על <b>${state.gameScore}</b> מתוך <b>${total}</b>
+      </div>
+      <div style="font-size:3rem;margin:16px 0;">${'⭐'.repeat(Math.max(1,Math.ceil(pct/33)))}</div>
+      <div style="font-size:1rem;color:#888;margin:8px 0;">צברת ${state.gameScore} כוכבים ⭐</div>
+      <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="startGame('${state.currentGame}')" style="padding:14px 30px;border-radius:30px;border:none;background:#4ECDC4;color:white;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(78,205,196,0.3);">🔄 שחק שוב</button>
+        <button onclick="goHome()" style="padding:14px 30px;border-radius:30px;border:none;background:#FF6B6B;color:white;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,107,107,0.3);">🏠 חזור לתפריט</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('game-progress').textContent = "סיום!";
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function recordWord(word, correct) {
+  const id = wordId(word);
+  if (!state.wordsLearned[id]) state.wordsLearned[id] = {correct:0, wrong:0, lastSeen:0};
+  if (correct) state.wordsLearned[id].correct++;
+  else state.wordsLearned[id].wrong++;
+  state.wordsLearned[id].lastSeen = Date.now();
+
+  if (!state.categoryStats[word.cat]) state.categoryStats[word.cat] = {seen:0, correct:0};
+  state.categoryStats[word.cat].seen++;
+  if (correct) state.categoryStats[word.cat].correct++;
+  saveState();
+}
+
+function renderGame() {
+  updateGameHeader();
+  const content = document.getElementById('game-content');
+  const word = state.gameWords[state.gameIndex];
+
+  switch(state.currentGame) {
+    case 'flashcards': renderFlashcards(content); break;
+    case 'matching': renderMatching(content); break;
+    case 'scramble': renderScramble(content); break;
+    case 'memory': renderMemory(content); break;
+    case 'listening': renderListening(content); break;
+    case 'fillblank': renderFillBlank(content); break;
+    case 'typing': renderTyping(content); break;
+    case 'quiz': renderQuiz(content); break;
+  }
+}
+
+// --- Flashcards ---
+function renderFlashcards(c) {
+  const word = state.gameWords[state.gameIndex];
+  c.innerHTML = `
+    <h2>הקש על הכרטיס להפוך</h2>
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">
+          <div class="flashcard-emoji">${word.emoji}</div>
+          <div class="flashcard-hint">הקש לראות</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="flashcard-word">${word.en}</div>
+          <div class="flashcard-heb">${word.he}</div>
+          <div class="flashcard-hint" style="margin-top:20px;">הקש להמשיך</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <button onclick="markFlashcard(true)" style="padding:12px 30px;border-radius:30px;border:none;background:#6BCB77;color:white;font-size:1rem;font-weight:700;cursor:pointer;margin:4px;">✓ ידעתי</button>
+      <button onclick="markFlashcard(false)" style="padding:12px 30px;border-radius:30px;border:none;background:#FFB7B2;color:white;font-size:1rem;font-weight:700;cursor:pointer;margin:4px;">עוד פעם</button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  const card = document.getElementById('flashcard');
+  if (card.classList.contains('flipped')) {
+    card.classList.remove('flipped');
+  } else {
+    card.classList.add('flipped');
+    if ('speechSynthesis' in window) {
+      const word = state.gameWords[state.gameIndex];
+      const u = new SpeechSynthesisUtterance(word.en);
+      u.lang = 'en-US';
+      u.rate = 0.8;
+      speechSynthesis.speak(u);
+    }
+  }
+}
+
+function markFlashcard(correct) {
+  if (correct) { state.gameScore++; showEncourage(true); }
+  else showEncourage(false);
+  recordWord(state.gameWords[state.gameIndex], correct);
+  document.getElementById('next-btn').classList.add('show');
+  updateGameHeader();
+}
+
+// --- Matching ---
+function renderMatching(c) {
+  const pool = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 6);
+  const words = shuffle(pool);
+  const emojis = shuffle(pool);
+  state.roundData = {words, emojis, selected: null, matched: 0, pairs: pool.length};
+  c.innerHTML = `
+    <h2>חבר כל תמונה למילה</h2>
+    <div class="match-grid" id="match-emojis">
+      ${emojis.map((w,i)=>`<div class="match-item emoji" data-i="${i}" data-en="${w.en}" onclick="selectMatch('emoji',${i})">${w.emoji}</div>`).join('')}
+    </div>
+    <div class="match-grid" id="match-words">
+      ${words.map((w,i)=>`<div class="match-item word" data-i="${i}" data-en="${w.en}" onclick="selectMatch('word',${i})">${w.en}</div>`).join('')}
+    </div>
+  `;
+}
+
+function selectMatch(type, i) {
+  const grid = type === 'emoji' ? document.getElementById('match-emojis') : document.getElementById('match-words');
+  const item = grid.children[i];
+  if (item.classList.contains('matched')) return;
+
+  if (state.roundData.selected === null) {
+    // First selection
+    state.roundData.selected = {type, i, en: item.dataset.en};
+    document.querySelectorAll('.match-item').forEach(el => el.classList.remove('selected'));
+    item.classList.add('selected');
+  } else {
+    // Second selection
+    const first = state.roundData.selected;
+    if (first.type === type) return; // must be different type
+
+    if (first.en === item.dataset.en) {
+      // Match!
+      document.querySelector(`#${type==='emoji'?'match-words':'match-emojis'} [data-i="${first.i}"]`).classList.add('matched');
+      document.querySelector(`#${type==='emoji'?'match-emojis':'match-words'} [data-i="${first.i}"]`)?.classList.add('matched');
+      item.classList.add('matched');
+      // Find and mark first selection
+      const firstGrid = first.type === 'emoji' ? document.getElementById('match-emojis') : document.getElementById('match-words');
+      firstGrid.children[first.i].classList.add('matched');
+      document.querySelectorAll('.match-item').forEach(el => el.classList.remove('selected'));
+      state.roundData.matched++;
+      state.roundData.selected = null;
+      state.gameScore++;
+      showEncourage(true);
+      const word = state.gameWords[state.gameIndex];
+      recordWord({en:first.en, he:'', cat:state.selectedCat}, true);
+      updateGameHeader();
+
+      if (state.roundData.matched >= state.roundData.pairs) {
+        document.getElementById('next-btn').classList.add('show');
+      }
+    } else {
+      // No match
+      item.classList.add('wrong');
+      const firstGrid = first.type === 'emoji' ? document.getElementById('match-emojis') : document.getElementById('match-words');
+      firstGrid.children[first.i].classList.add('wrong');
+      showEncourage(false);
+      setTimeout(() => {
+        item.classList.remove('wrong');
+        firstGrid.children[first.i].classList.remove('wrong');
+        document.querySelectorAll('.match-item').forEach(el => el.classList.remove('selected'));
+        state.roundData.selected = null;
+      }, 600);
+    }
+  }
+}
+
+// --- Scramble ---
+function renderScramble(c) {
+  const word = state.gameWords[state.gameIndex];
+  const letters = word.en.split('');
+  // For multi-word entries, use just first word
+  const singleWord = word.en.split(' ')[0];
+  const letters2 = singleWord.split('');
+  const shuffled = shuffle(letters2);
+  state.roundData = {answer: singleWord, placed: [], shuffled, done: false};
+  c.innerHTML = `
+    <h2>סדר את האותיות</h2>
+    <div class="scramble-hint">${word.emoji}</div>
+    <div class="scramble-heb">${word.he}</div>
+    <div class="scramble-answer" id="scramble-answer"></div>
+    <div class="scramble-letters" id="scramble-letters">
+      ${shuffled.map((l,i)=>`<button class="scramble-tile" data-i="${i}" onclick="placeLetter(${i})">${l}</button>`).join('')}
+    </div>
+    <button onclick="clearScramble()" style="margin-top:12px;padding:10px 24px;border-radius:20px;border:none;background:#ddd;color:#666;font-weight:700;cursor:pointer;">🔄 נקה</button>
+  `;
+  renderScrambleAnswer();
+}
+
+function renderScrambleAnswer() {
+  const container = document.getElementById('scramble-answer');
+  const ans = state.roundData.answer;
+  container.innerHTML = ans.split('').map((_,i) => {
+    if (state.roundData.placed[i]) {
+      return `<div class="scramble-slot filled">${state.roundData.placed[i].letter}</div>`;
+    }
+    return `<div class="scramble-slot"></div>`;
+  }).join('');
+}
+
+function placeLetter(i) {
+  if (state.roundData.done) return;
+  const tile = document.querySelector(`#scramble-letters [data-i="${i}"]`);
+  if (tile.classList.contains('used')) return;
+
+  const pos = state.roundData.placed.filter(p => p).length;
+  state.roundData.placed[pos] = {letter: tile.textContent, tileIdx: i};
+  tile.classList.add('used');
+  renderScrambleAnswer();
+
+  if (pos + 1 >= state.roundData.answer.length) {
+    checkScramble();
+  }
+}
+
+function clearScramble() {
+  if (state.roundData.done) return;
+  state.roundData.placed = [];
+  document.querySelectorAll('#scramble-letters .scramble-tile').forEach(t => t.classList.remove('used'));
+  renderScrambleAnswer();
+}
+
+function checkScramble() {
+  const answer = state.roundData.placed.map(p => p.letter).join('');
+  if (answer === state.roundData.answer) {
+    state.roundData.done = true;
+    state.gameScore++;
+    showEncourage(true);
+    recordWord(state.gameWords[state.gameIndex], true);
+    updateGameHeader();
+    document.getElementById('next-btn').classList.add('show');
+  } else {
+    showEncourage(false);
+    recordWord(state.gameWords[state.gameIndex], false);
+    setTimeout(() => {
+      clearScramble();
+    }, 1000);
+  }
+}
+
+// --- Memory ---
+function renderMemory(c) {
+  const pool = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 6);
+  const cards = [];
+  pool.forEach((w,i) => {
+    cards.push({type:'emoji', val:w.emoji, pair:i, en:w.en});
+    cards.push({type:'word', val:w.en, pair:i, en:w.en});
+  });
+  state.roundData = {cards: shuffle(cards), flipped: [], matched: 0, total: pool.length, locked: false};
+  c.innerHTML = `
+    <h2>מצא את הזוגות</h2>
+    <div class="memory-grid" id="memory-grid">
+      ${state.roundData.cards.map((card,i)=>
+        `<div class="memory-card" data-i="${i}" onclick="flipMemory(${i})">
+          <div class="memory-card-inner">
+            <div class="memory-card-face memory-back">❓</div>
+            <div class="memory-card-face memory-front ${card.type==='word'?'word-card':''}">${card.val}</div>
+          </div>
+        </div>`
+      ).join('')}
+    </div>
+  `;
+}
+
+function flipMemory(i) {
+  if (state.roundData.locked) return;
+  const card = document.querySelector(`#memory-grid [data-i="${i}"]`);
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+  card.classList.add('flipped');
+  state.roundData.flipped.push(i);
+
+  if (state.roundData.flipped.length === 2) {
+    state.roundData.locked = true;
+    const [a,b] = state.roundData.flipped;
+    const cardA = state.roundData.cards[a];
+    const cardB = state.roundData.cards[b];
+
+    if (cardA.en === cardB.en && a !== b) {
+      // Match
+      setTimeout(() => {
+        document.querySelector(`#memory-grid [data-i="${a}"]`).classList.add('matched');
+        document.querySelector(`#memory-grid [data-i="${b}"]`).classList.add('matched');
+        state.roundData.matched++;
+        state.roundData.flipped = [];
+        state.roundData.locked = false;
+        state.gameScore++;
+        showEncourage(true);
+        recordWord({en:cardA.en, he:'', cat:state.selectedCat}, true);
+        updateGameHeader();
+        if (state.roundData.matched >= state.roundData.total) {
+          document.getElementById('next-btn').classList.add('show');
+        }
+      }, 500);
+    } else {
+      // No match
+      setTimeout(() => {
+        document.querySelector(`#memory-grid [data-i="${a}"]`).classList.remove('flipped');
+        document.querySelector(`#memory-grid [data-i="${b}"]`).classList.remove('flipped');
+        state.roundData.flipped = [];
+        state.roundData.locked = false;
+      }, 800);
+    }
+  }
+}
+
+// --- Listening ---
+function renderListening(c) {
+  const word = state.gameWords[state.gameIndex];
+  const pool = shuffle(getWordsByCategory(state.selectedCat));
+  const options = pool.filter(w => w.en !== word.en).slice(0, 3);
+  options.push(word);
+  const shuffledOpts = shuffle(options);
+  state.roundData = {answer: word.en, done: false};
+  c.innerHTML = `
+    <h2>הקשב ובחר את המילה</h2>
+    <button class="listen-btn" onclick="speakWord('${word.en}')">🔊</button>
+    <div class="choose-grid">
+      ${shuffledOpts.map((o,i)=>
+        `<button class="choose-btn" data-i="${i}" data-en="${o.en}" onclick="chooseListen(${i})">${o.en}</button>`
+      ).join('')}
+    </div>
+  `;
+  // Auto-speak on load
+  setTimeout(() => speakWord(word.en), 500);
+}
+
+function speakWord(word) {
+  if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'en-US';
+    u.rate = 0.7;
+    speechSynthesis.speak(u);
+  }
+}
+
+function chooseListen(i) {
+  if (state.roundData.done) return;
+  state.roundData.done = true;
+  const btn = document.querySelector(`.choose-btn[data-i="${i}"]`);
+  if (btn.dataset.en === state.roundData.answer) {
+    btn.classList.add('correct');
+    state.gameScore++;
+    showEncourage(true);
+    recordWord(state.gameWords[state.gameIndex], true);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelector(`.choose-btn[data-en="${state.roundData.answer}"]`).classList.add('correct');
+    showEncourage(false);
+    recordWord(state.gameWords[state.gameIndex], false);
+  }
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+// --- Fill in the Blank ---
+const SENTENCES = [
+  {w:"cat",s:"The ___ is sleeping on the bed."},
+  {w:"dog",s:"The ___ is barking at the mailman."},
+  {w:"sun",s:"The ___ is shining in the sky."},
+  {w:"book",s:"I read a ___ every night."},
+  {w:"apple",s:"I eat a red ___ every day."},
+  {w:"water",s:"Please give me a glass of ___."},
+  {w:"happy",s:"I am very ___ today!"},
+  {w:"school",s:"I go to ___ every morning."},
+  {w:"car",s:"My dad drives a red ___."},
+  {w:"house",s:"We live in a big ___."}
+];
+
+function renderFillBlank(c) {
+  const word = state.gameWords[state.gameIndex];
+  // Try to find a sentence, otherwise generate one
+  let sentence = SENTENCES.find(s => s.w === word.en);
+  if (!sentence) {
+    sentence = {w: word.en, s: `I see a ${word.en} in the picture.`};
+  }
+  const parts = sentence.s.split(word.en);
+  const pool = shuffle(getWordsByCategory(state.selectedCat));
+  const options = pool.filter(w => w.en !== word.en).slice(0, 3);
+  options.push(word);
+  state.roundData = {answer: word.en, done: false};
+  c.innerHTML = `
+    <h2>השלם את המילה החסרה</h2>
+    <div class="fill-blank-area">
+      <div class="fill-sentence">
+        ${parts[0]}<span class="fill-blank" id="fill-blank">?</span>${parts[1]||''}
+      </div>
+      <div class="fill-emoji" style="font-size:3rem;">${word.emoji}</div>
+      <div class="fill-options">
+        ${shuffle(options).map((o,i)=>
+          `<button class="fill-opt" data-en="${o.en}" onclick="chooseFill('${o.en}')">${o.en}</button>`
+        ).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function chooseFill(en) {
+  if (state.roundData.done) return;
+  state.roundData.done = true;
+  const btn = document.querySelector(`.fill-opt[data-en="${en}"]`);
+  if (en === state.roundData.answer) {
+    btn.classList.add('correct');
+    document.getElementById('fill-blank').textContent = en;
+    document.getElementById('fill-blank').style.color = '#6BCB77';
+    state.gameScore++;
+    showEncourage(true);
+    recordWord(state.gameWords[state.gameIndex], true);
+  } else {
+    btn.classList.add('wrong');
+    const correctBtn = document.querySelector(`.fill-opt[data-en="${state.roundData.answer}"]`);
+    if (correctBtn) correctBtn.classList.add('correct');
+    document.getElementById('fill-blank').textContent = state.roundData.answer;
+    document.getElementById('fill-blank').style.color = '#FF6B6B';
+    showEncourage(false);
+    recordWord(state.gameWords[state.gameIndex], false);
+  }
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+// --- Typing ---
+function renderTyping(c) {
+  const word = state.gameWords[state.gameIndex];
+  state.roundData = {answer: word.en, done: false};
+  c.innerHTML = `
+    <h2>הקלד את המילה באנגלית</h2>
+    <div class="type-area">
+      <div class="type-emoji">${word.emoji}</div>
+      <div class="type-hint">${word.he}</div>
+      <input type="text" class="type-input" id="type-input" placeholder="?type here" autocomplete="off" autocapitalize="off" onkeyup="if(event.key==='Enter')checkTyping()">
+      <button class="type-submit" onclick="checkTyping()">בדוק ✓</button>
+      <button onclick="speakWord('${word.en}')" style="margin-top:8px;padding:8px 20px;border-radius:20px;border:none;background:#C7A6FF;color:white;font-weight:700;cursor:pointer;">🔊 שמע</button>
+    </div>
+  `;
+  document.getElementById('type-input').focus();
+}
+
+function checkTyping() {
+  if (state.roundData.done) return;
+  state.roundData.done = true;
+  const input = document.getElementById('type-input');
+  const val = input.value.trim().toLowerCase();
+  if (val === state.roundData.answer.toLowerCase()) {
+    input.style.borderColor = '#6BCB77';
+    input.style.color = '#6BCB77';
+    state.gameScore++;
+    showEncourage(true);
+    recordWord(state.gameWords[state.gameIndex], true);
+  } else {
+    input.style.borderColor = '#FF6B6B';
+    input.style.color = '#FF6B6B';
+    showEncourage(false);
+    recordWord(state.gameWords[state.gameIndex], false);
+    showToast('התשובה: ' + state.roundData.answer);
+  }
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+// --- Quiz ---
+function renderQuiz(c) {
+  const word = state.gameWords[state.gameIndex];
+  const pool = shuffle(getWordsByCategory(state.selectedCat));
+  const options = pool.filter(w => w.en !== word.en).slice(0, 3);
+  options.push(word);
+  state.roundData = {answer: word.he, en: word.en, done: false};
+  c.innerHTML = `
+    <h2>מה התרגום של המילה?</h2>
+    <div style="font-family:'Fredoka',sans-serif;font-size:2.5rem;font-weight:700;color:#FF6B6B;margin:16px 0;">${word.en}</div>
+    <div style="font-size:3rem;margin:8px 0;">${word.emoji}</div>
+    <div class="choose-grid">
+      ${shuffle(options).map((o,i)=>
+        `<button class="choose-btn" data-i="${i}" data-he="${o.he}" onclick="chooseQuiz(${i})">${o.he}</button>`
+      ).join('')}
+    </div>
+  `;
+}
+
+function chooseQuiz(i) {
+  if (state.roundData.done) return;
+  state.roundData.done = true;
+  const btn = document.querySelector(`.choose-btn[data-i="${i}"]`);
+  if (btn.dataset.he === state.roundData.answer) {
+    btn.classList.add('correct');
+    state.gameScore++;
+    showEncourage(true);
+    recordWord(state.gameWords[state.gameIndex], true);
+  } else {
+    btn.classList.add('wrong');
+    const correctBtn = document.querySelector(`.choose-btn[data-he="${state.roundData.answer}"]`);
+    if (correctBtn) correctBtn.classList.add('correct');
+    showEncourage(false);
+    recordWord(state.gameWords[state.gameIndex], false);
+  }
+  updateGameHeader();
+  document.getElementById('next-btn').classList.add('show');
+}
+
+// ============ PARENT DASHBOARD ============
+function showParentLock() {
+  showScreen('screen-parent-lock');
+  document.getElementById('parent-pass').value = '';
+}
+
+function checkParentPass() {
+  const pass = document.getElementById('parent-pass').value;
+  if (pass === PARENT_PASS) {
+    renderParentDashboard();
+    showScreen('screen-parent');
+  } else {
+    showToast('סיסמה שגויה');
+    document.getElementById('parent-pass').value = '';
+  }
+}
+
+function renderParentDashboard() {
+  const totalWords = Object.keys(state.wordsLearned).length;
+  const totalCorrect = Object.values(state.wordsLearned).reduce((s,w)=>s+w.correct,0);
+  const totalWrong = Object.values(state.wordsLearned).reduce((s,w)=>s+w.wrong,0);
+  const accuracy = totalCorrect+totalWrong > 0 ? Math.round((totalCorrect/(totalCorrect+totalWrong))*100) : 0;
+  const gamesPlayed = Object.values(state.gameStats).reduce((s,g)=>s+g.played,0);
+  const sessionTime = state.sessionStart ? Math.round((Date.now()-state.sessionStart)/60000) : 0;
+
+  let html = `
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="label">🪙 מטבעות</div>
+        <div class="value" style="color:#E8A317;">${state.coins}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">⭐ כוכבים</div>
+        <div class="value" style="color:#FFD700;">${state.stars}</div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="label">📚 מילים נלמדו</div>
+        <div class="value" style="color:#4ECDC4;">${totalWords}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">🎯 דיוק</div>
+        <div class="value" style="color:${accuracy>=70?'#6BCB77':accuracy>=50?'#FFE66D':'#FF6B6B'};">${accuracy}%</div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="label">🎮 משחקים שוחקו</div>
+        <div class="value" style="color:#C7A6FF;">${gamesPlayed}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">🔥 רצף מקסימלי</div>
+        <div class="value" style="color:#FF6B6B;">${state.bestStreak||0}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="label">⏱️ זמן באפליקציה היום</div>
+      <div class="value">${sessionTime} דקות</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="label">💰 כסף בקופסה</div>
+        <div class="value" style="color:#6BCB77;">${state.dailyChallenge.totalEarned || 0} ₪</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">📅 ימי אתגר שהושלמו</div>
+        <div class="value" style="color:#FFA45B;">${(state.dailyChallenge.completedDays || []).length}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">🎯 סטטוס אתגר יומי</div>
+
+    <div style="margin-top:8px;">
+      <span style="font-weight:700;">היום:</span> ${(state.dailyChallenge.lastCompletedDate === getTodayStr()) ? '✅ הושלם!' : 'טרם הושלם'}
+    </div>
+    <div style="margin-top:4px;font-size:0.85rem;color:#888;">
+      ימים שהושלמו: ${(state.dailyChallenge.completedDays || []).join(', ') || 'אין עדיין'}
+    </div>
+  </div>
+
+  // Category breakdown
+  if (Object.keys(state.categoryStats).length > 0) {
+    html += `<div class="stat-card">
+      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">📊 התקדמות לפי קטגוריה</div>`;
+    Object.entries(state.categoryStats).forEach(([cat, stats]) => {
+      const catInfo = CATEGORIES.find(c => c.id === cat);
+      const pct = stats.seen > 0 ? Math.round((stats.correct/stats.seen)*100) : 0;
+      html += `<div class="cat-progress-item">
+        <span class="cat-name">${catInfo?catInfo.emoji+' '+catInfo.name:cat}</span>
+        <span class="cat-val">${stats.correct}/${stats.seen} (${pct}%)</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Game breakdown
+  if (Object.keys(state.gameStats).length > 0) {
+    html += `<div class="stat-card">
+      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">🎮 משחקים</div>`;
+    Object.entries(state.gameStats).forEach(([game, stats]) => {
+      const gameInfo = GAMES.find(g => g.id === game);
+      const avg = stats.played > 0 ? (stats.score/stats.played).toFixed(1) : 0;
+      html += `<div class="cat-progress-item">
+        <span class="cat-name">${gameInfo?gameInfo.icon+' '+gameInfo.name:game}</span>
+        <span class="cat-val">${stats.played} משחקים | ממוצע ${avg}/10</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Words that need practice
+  const needPractice = Object.entries(state.wordsLearned)
+    .filter(([id, w]) => w.wrong > w.correct)
+    .sort((a,b) => b[1].wrong - a[1].wrong)
+    .slice(0, 10);
+
+  if (needPractice.length > 0) {
+    html += `<div class="stat-card">
+      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">💪 מילים שצריך לתרגל</div>`;
+    needPractice.forEach(([id, w]) => {
+      const word = WORDS.find(x => wordId(x) === id);
+      if (word) {
+        html += `<div class="cat-progress-item">
+          <span class="cat-name">${word.emoji} ${word.en} (${word.he})</span>
+          <span class="cat-val">✓${w.correct} ✗${w.wrong}</span>
+        </div>`;
+      }
+    });
+    html += `</div>`;
+  }
+
+  html += `<div style="text-align:center;margin-top:20px;">
+    <button onclick="resetProgress()" style="padding:10px 24px;border-radius:20px;border:2px solid #FF6B6B;background:white;color:#FF6B6B;font-weight:700;cursor:pointer;">🗑️ אפס התקדמות</button>
+  </div>`;
+
+  document.getElementById('parent-dashboard').innerHTML = html;
+}
+
+function resetProgress() {
+  if (confirm('האם אתה בטוח שברצונך לאפס את כל ההתקדמות?')) {
+    localStorage.removeItem(STORAGE_KEY);
+    state = {
+      coins:0, stars:0, streak:0, bestStreak:0,
+      wordsLearned:{}, categoryStats:{}, gameStats:{},
+      sessionStart:Date.now(), selectedCat:"all",
+      currentGame:null, gameWords:[], gameIndex:0, gameScore:0, roundData:null,
+      dailyChallenge: {
+        lastCompletedDate: null, todayTimeMs: 0, todayDate: null,
+        totalEarned: 0, completedDays: [], active: false
+      },
+      dailyGoalMinutes: 30
+    };
+    renderParentDashboard();
+    showToast('ההתקדמות אופסה');
+  }
+}
+
+// ============ INIT ============
+function createBubbles() {
+  const container = document.getElementById('bubbles');
+  const colors = ['#FF6B6B','#4ECDC4','#FFE66D','#C7A6FF','#6BCB77','#FFA45B','#95E1D3','#FFB7B2'];
+  for (let i = 0; i < 15; i++) {
+    const span = document.createElement('span');
+    const size = 20 + Math.random() * 60;
+    span.style.width = size + 'px';
+    span.style.height = size + 'px';
+    span.style.left = Math.random() * 100 + '%';
+    span.style.background = colors[Math.floor(Math.random()*colors.length)];
+    span.style.opacity = '0.15';
+    span.style.animationDuration = (15 + Math.random() * 20) + 's';
+    span.style.animationDelay = (Math.random() * 20) + 's';
+    container.appendChild(span);
+  }
+}
+
+// Initialize
+loadState();
+checkDailyReset();
+createBubbles();
+goHome();
+</script>
+</body>
+</html>
