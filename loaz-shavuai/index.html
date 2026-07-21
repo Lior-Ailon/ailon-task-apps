@@ -2,7 +2,9 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="2026-07-19-v2">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="version" content="2026-07-21-v3">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>לוז שבועי — ניהול מוטיבציה</title>
 <style>
@@ -72,6 +74,17 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .status-notdone { background: #dc2626; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
 .cell-done { background: rgba(22,163,74,0.12); }
 .cell-notdone { background: rgba(220,38,38,0.08); }
+
+.modal-duration-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.modal-duration-btn { background: #f8fafc; border: 2px solid #e2e8f0; color: #475569; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; font-family: inherit; }
+.modal-duration-btn:hover { border-color: #14b8a6; color: #14b8a6; }
+.modal-duration-btn.active { background: linear-gradient(135deg,#0d9488,#14b8a6); color: #fff; border-color: #14b8a6; }
+.modal-duration-note { font-size: 11px; color: #64748b; margin-top: 4px; }
+.motivation-optional { display: none; margin-top: 12px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; }
+.motivation-optional.show { display: block; }
+.motivation-toggle { background: none; border: 1px solid #cbd5e1; color: #64748b; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: inherit; margin-top: 4px; }
+.motivation-toggle:hover { border-color: #14b8a6; color: #14b8a6; }
+
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.25); z-index: 100; justify-content: center; align-items: center; padding:16px; }
 .modal-overlay.active { display: flex; }
 .modal { background: #ffffff; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; }
@@ -92,14 +105,14 @@ td:first-child { text-align: center; color: #64748b; font-size: 11px; font-weigh
 .status-btn.notdone.active { background: #dc2626; color: #fff; }
 .status-btn.pending { border-color: #64748b; color: #94a3b8; background: transparent; }
 .status-btn.pending.active { background: #e2e8f0; color: #475569; }
-.modal-buttons { display: flex; gap: 10px; margin-top: 24px; }
+.modal-buttons { display: flex; gap: 10px; margin-top: 24px; align-items: center; }
 .btn { flex: 1; padding: 10px 16px; border-radius: 8px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; }
-.btn-save { background: #14b8a6; color: #ffffff; font-weight: 600; }
-.btn-save:hover { background: #0d9488; }
-.btn-cancel { background: #f1f5f9; color: #475569; }
+.btn-save { background: linear-gradient(135deg,#0d9488,#14b8a6); color: #ffffff; font-weight: 800; font-size: 16px; padding: 14px 20px; box-shadow: 0 4px 14px rgba(20,184,166,0.35); border: none; }
+.btn-save:hover { background: linear-gradient(135deg,#0f766e,#0d9488); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(20,184,166,0.45); }
+.btn-cancel { background: #f1f5f9; color: #475569; font-weight: 600; padding: 14px 18px; }
 .btn-cancel:hover { background: #e2e8f0; }
-.btn-delete { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
-.btn-delete:hover { background: #fecaca; }
+.btn-delete { background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; border: none; font-weight: 700; font-size: 14px; padding: 12px 18px; box-shadow: 0 3px 10px rgba(220,38,38,0.3); }
+.btn-delete:hover { background: linear-gradient(135deg,#dc2626,#b91c1c); transform: translateY(-1px); }
 .stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .stat-card { background: #ffffff; padding: 12px 16px; border-radius: 10px; flex: 1; min-width: 120px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; }
 .stat-label { font-size: 11px; color: #64748b; }
@@ -553,8 +566,14 @@ body::after {
         <option value="4">חמישי</option>
         <option value="5">שישי</option>
       </select>
-      <label>⏰ מתי להזכיר?</label>
-      <div class="mini-task-time-row">
+      <label>⏰ מתי להזכיר? (אופציונלי)</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#475569;cursor:pointer;">
+          <input type="checkbox" id="miniTaskNoTime" style="width:18px;height:18px;accent-color:#f97316;cursor:pointer;">
+          רק משימה בלי תזכורת (כמו משימה בגוגל)
+        </label>
+      </div>
+      <div class="mini-task-time-row" id="miniTaskTimeRow">
         <select id="miniTaskHour"></select>
         <select id="miniTaskMinute"></select>
         <span style="font-size:13px;color:#64748b">שעה בה האפליקציה תזכיר לך</span>
@@ -597,11 +616,24 @@ body::after {
     <div class="modal-subtitle" id="modalSubtitle"></div>
     <label>מה הלו"ז שלך בשעה הזו?</label>
     <textarea id="taskInput" placeholder="לדוגמה: פגישת עבודה, אימון, זמן משפחה, לימוד..."></textarea>
-    <label>מה המוטיבציה שלך לביצוע הלו"ז הזה? (1-10)</label>
-    <div class="motivation-input">
-      <input type="range" id="motivationInput" min="1" max="10" value="5">
-      <span class="motivation-emoji" id="motivationEmoji">😐</span>
-      <span class="motivation-value" id="motivationValue">5</span>
+    <label>⏱️ משך הפעילות (למשימות ארוכות כמו דייט, עבודה, טיול...)</label>
+    <div class="modal-duration-row" id="modalDurationRow">
+      <div class="modal-duration-btn active" data-dur="1">חצי שעה</div>
+      <div class="modal-duration-btn" data-dur="2">שעה</div>
+      <div class="modal-duration-btn" data-dur="3">שעה וחצי</div>
+      <div class="modal-duration-btn" data-dur="4">שעתיים</div>
+      <div class="modal-duration-btn" data-dur="6">3 שעות</div>
+      <div class="modal-duration-btn" data-dur="8">4 שעות</div>
+    </div>
+    <div class="modal-duration-note" id="durationNote">הפעילות תמולא באופן אוטומטי בכל משבצות הזמן הרלוונטיות</div>
+    <label>⭐ מוטיבציה (אופציונלי — רק אם בא לך)</label>
+    <button class="motivation-toggle" id="motivationToggle">😅 אין לי כוח לזה — דלג</button>
+    <div class="motivation-optional" id="motivationOptional">
+      <div class="motivation-input">
+        <input type="range" id="motivationInput" min="1" max="10" value="5">
+        <span class="motivation-emoji" id="motivationEmoji">😐</span>
+        <span class="motivation-value" id="motivationValue">5</span>
+      </div>
     </div>
     <label>🔁 להוסיף את הפעולה הזאת גם באופן קבוע בימים נוספים:</label>
     <div class="recurring-days" id="modalDaysPicker" style="margin-bottom:14px"></div>
@@ -612,9 +644,9 @@ body::after {
       <div class="status-btn notdone" id="statusNotDoneBtn" onclick="setStatus('notdone')">❌ לא בוצע</div>
     </div>
     <div class="modal-buttons">
-      <button class="btn btn-delete" id="deleteBtn" style="display:none">מחק</button>
+      <button class="btn btn-delete" id="deleteBtn" style="display:none">🗑️ מחק</button>
       <button class="btn btn-cancel" id="cancelBtn">ביטול</button>
-      <button class="btn btn-save" id="saveBtn">שמור</button>
+      <button class="btn btn-save" id="saveBtn">💾 שמור</button>
     </div>
   </div>
 </div>
@@ -681,6 +713,32 @@ let currentWeekStart = getWeekStart(new Date());
 let selectedCell = null;
 let modalSelectedDays = [false,false,false,false,false,false];
 let currentStatus = 'pending';
+let modalDuration = 1; // number of half-hour slots (1 = 30 min, 2 = 1 hr, etc.)
+
+// Duration button handlers
+document.querySelectorAll('.modal-duration-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    modalDuration = parseInt(btn.dataset.dur);
+    document.querySelectorAll('.modal-duration-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    const note = document.getElementById('durationNote');
+    if (modalDuration === 1) note.textContent = 'חצי שעה — משבצת אחת';
+    else if (modalDuration <= 2) note.textContent = 'יתמלאו ' + modalDuration + ' משבצות (שעה)';
+    else note.textContent = 'יתמלאו ' + modalDuration + ' משבצות (' + (modalDuration/2) + ' שעות)';
+  });
+});
+
+// Motivation toggle — show/hide
+document.getElementById('motivationToggle').addEventListener('click', function() {
+  const opt = document.getElementById('motivationOptional');
+  if (opt.classList.contains('show')) {
+    opt.classList.remove('show');
+    this.textContent = '😅 אין לי כוח לזה — דלג';
+  } else {
+    opt.classList.add('show');
+    this.textContent = '✓ מוטיבציה נבחרה';
+  }
+});
 
 function getWeekStart(date) { const d=new Date(date); d.setDate(d.getDate()-d.getDay()); d.setHours(0,0,0,0); return d; }
 function formatDate(d) { return d.getDate()+'/'+(d.getMonth()+1); }
@@ -897,23 +955,36 @@ function saveCell() {
   const task = document.getElementById('taskInput').value.trim();
   if (!task) { alert('אנא הכנס את הלו"ז שלך'); return; }
   const wasDone = currentStatus === 'done';
-  const mot = parseInt(document.getElementById('motivationInput').value);
-  setCellData(selectedCell.dayIdx, selectedCell.hourIdx, { task: task, motivation: mot, status: currentStatus });
+  // Motivation: use 5 as default if the optional section is hidden
+  const motVisible = document.getElementById('motivationOptional').classList.contains('show');
+  const mot = motVisible ? parseInt(document.getElementById('motivationInput').value) : 5;
+  
+  // Multi-slot spanning: fill consecutive slots for long tasks
+  const startH = selectedCell.hourIdx;
+  const endH = Math.min(HOURS.length - 1, startH + modalDuration - 1);
+  
+  // Fill all slots in the duration range
+  for (let h = startH; h <= endH; h++) {
+    setCellData(selectedCell.dayIdx, h, { task: task, motivation: mot, status: currentStatus });
+  }
+  
   const extraDays = [];
   for (let d = 0; d < 6; d++) { if (d !== selectedCell.dayIdx && modalSelectedDays[d]) extraDays.push(d); }
   if (extraDays.length) {
     extraDays.forEach(function(d) {
-      setCellData(d, selectedCell.hourIdx, { task: task, motivation: mot, status: 'pending' });
+      for (let h = startH; h <= endH; h++) {
+        setCellData(d, h, { task: task, motivation: mot, status: 'pending' });
+      }
     });
     const allDays = [false,false,false,false,false,false];
     allDays[selectedCell.dayIdx] = true;
     extraDays.forEach(function(d) { allDays[d] = true; });
     const list = getRecurringEvents();
-    const existingIdx = list.findIndex(function(ev) { return ev.task === task && ev.hour === selectedCell.hourIdx; });
+    const existingIdx = list.findIndex(function(ev) { return ev.task === task && ev.hour === startH; });
     if (existingIdx >= 0) {
       for (let d = 0; d < 6; d++) if (allDays[d]) list[existingIdx].days[d] = true;
     } else {
-      list.push({ task: task, hour: selectedCell.hourIdx, days: allDays, motivation: mot });
+      list.push({ task: task, hour: startH, days: allDays, motivation: mot, duration: modalDuration });
     }
     setRecurringEvents(list);
   }
@@ -921,9 +992,25 @@ function saveCell() {
   renderDailyFocusBanner();
   if (document.getElementById('chartSection').classList.contains('active')) renderChart();
   if (wasDone) showCongrats();
-  if (extraDays.length) alert('הפעולה נוספה גם ל-' + extraDays.length + ' ימים נוספים, ותוגדר כאירוע קבוע לשבועות הבאים.');
+  if (extraDays.length) alert('הפעולה נוספה גם ל-' + extraDays.length + ' ימים נוספים באותן שעות, ותוגדר כאירוע קבוע לשבועות הבאים.');
 }
-function deleteCell() { if(!selectedCell) return; setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null); closeModal(); renderTable(); }
+function deleteCell() {
+  if(!selectedCell) return;
+  // Delete the current cell and any consecutive cells with the same task (multi-slot spanning)
+  const startH = selectedCell.hourIdx;
+  const data = getCellData(selectedCell.dayIdx, startH);
+  if (data && data.task) {
+    // Delete current and all following cells with same task name
+    for (let h = startH; h < HOURS.length; h++) {
+      const cellData = getCellData(selectedCell.dayIdx, h);
+      if (!cellData || cellData.task !== data.task) break;
+      setCellData(selectedCell.dayIdx, h, null);
+    }
+  } else {
+    setCellData(selectedCell.dayIdx, selectedCell.hourIdx, null);
+  }
+  closeModal(); renderTable();
+}
 function updateMotivationDisplay() { const v=document.getElementById('motivationInput').value; document.getElementById('motivationValue').textContent=v; document.getElementById('motivationEmoji').textContent=MOTIVATION_EMOJIS[v-1]; }
 
 function loadFixedSchedule(silent) {
@@ -1015,7 +1102,17 @@ function renderSleepSection() {
   });
 }
 
-function ensureWeekPopulated() { if (!hasAnyData()) loadFixedSchedule(true); else renderTable(); applyRecurringEvents(true); }
+function ensureWeekPopulated() {
+  // Only auto-populate the VERY FIRST time (when there's zero data across ALL weeks)
+  if (!hasAnyData() && !localStorage.getItem('loaz_initialized')) {
+    localStorage.setItem('loazInitialized', '1');
+    localStorage.setItem('loaz_initialized', '1');
+    loadFixedSchedule(true);
+  } else {
+    renderTable();
+    applyRecurringEvents(true);
+  }
+}
 
 
 // --- מיקוד יומי: משימה אחת חובה + חשבון נפש ערב + תכנון מחר ---
@@ -1546,9 +1643,16 @@ function openMiniTaskModal() {
   document.getElementById('miniTaskDay').value = '-1';
   miniTaskDuration = 15;
   document.querySelectorAll('.mini-task-dur-btn').forEach(function(b) { b.classList.toggle('active', parseInt(b.dataset.dur) === 15); });
+  document.getElementById('miniTaskNoTime').checked = false;
+  document.getElementById('miniTaskTimeRow').style.display = 'flex';
   document.getElementById('miniTaskOverlay').classList.add('active');
   setTimeout(function() { document.getElementById('miniTaskName').focus(); }, 100);
 }
+
+// Toggle time row when "no time" is checked
+document.getElementById('miniTaskNoTime').addEventListener('change', function() {
+  document.getElementById('miniTaskTimeRow').style.display = this.checked ? 'none' : 'flex';
+});
 function closeMiniTaskModal() { document.getElementById('miniTaskOverlay').classList.remove('active'); }
 
 
@@ -1563,8 +1667,9 @@ function safeBind(id, event, handler) {
 safeBind('miniTaskSave', 'click', function() {
   const name = document.getElementById('miniTaskName').value.trim();
   if (!name) { alert('אנא הכנס שם משימה'); return; }
-  const hour = parseInt(document.getElementById('miniTaskHour').value);
-  const minute = parseInt(document.getElementById('miniTaskMinute').value);
+  const noTime = document.getElementById('miniTaskNoTime').checked;
+  const hour = noTime ? -1 : parseInt(document.getElementById('miniTaskHour').value);
+  const minute = noTime ? 0 : parseInt(document.getElementById('miniTaskMinute').value);
   var dayVal = parseInt(document.getElementById('miniTaskDay').value);
   
   // Determine the actual day offset
@@ -1587,8 +1692,8 @@ safeBind('miniTaskSave', 'click', function() {
   tasks.push({ id: Date.now(), name: name, duration: miniTaskDuration, hour: hour, minute: minute, done: false, dayOffset: dayOffset });
   setMiniTasks(tasks, storageDayOffset);
   
-  // ALSO save to the regular weekly schedule
-  if (dayOffset >= 0 && dayOffset < 6) {
+  // ALSO save to the regular weekly schedule (only if time is set)
+  if (!noTime && dayOffset >= 0 && dayOffset < 6) {
     // Find the best matching hour slot in the schedule
     var hourIdx = -1;
     var bestDiff = 999;
@@ -1625,7 +1730,8 @@ safeBind('miniTaskSave', 'click', function() {
   const el = document.createElement('div');
   el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(245,158,11,0.3);';
   var dayLabel = (dayVal === -1) ? 'היום' : ['ראשון','שני','שלישי','רביעי','חמישי','שישי'][dayVal];
-  el.textContent = '⚡ משימה נוספה! ' + dayLabel + ' ' + String(hour).padStart(2,'0') + ':' + String(minute).padStart(2,'0');
+  var timeLabel = noTime ? '' : ' ' + String(hour).padStart(2,'0') + ':' + String(minute).padStart(2,'0');
+  el.textContent = '⚡ משימה נוספה! ' + dayLabel + timeLabel;
   document.body.appendChild(el);
   setTimeout(function() { el.remove(); }, 2500);
 });
@@ -1706,6 +1812,7 @@ function checkMiniTaskReminders() {
   tasks.forEach(function(t) {
     if (t.done) return;
     if (t.notified) return;
+    if (t.hour < 0) return; // skip no-time tasks
     const taskTime = new Date();
     taskTime.setHours(t.hour, t.minute, 0, 0);
     const diff = (now - taskTime) / 60000; // minutes
