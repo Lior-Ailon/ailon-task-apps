@@ -132,9 +132,9 @@ function completeDailyChallenge(){stopDcTimer();const t=getTodayStr();if(state.d
 function shuffle(a){return[...a].sort(()=>Math.random()-0.5)}
 
 // Hebrew word banks
-const SCRAMBLE_WORDS=["שלום","ספר","חבר","בית","ספריה","מחברת","עיפרון","מחק","שולחן","כיסא","חלון","דלת","אור","שמש","ירח","כוכב","ענן","גשם","שלג","רוח","פרח","עץ","דשא","יער","הר","נהר","ים","חוף","חול","אבן"];
-const SYNONYMS=[["גדול","עצום"],["שמח","שש"],["יפה","מרהיב"],["מהר","מיהר"],["חזק","איתן"],["זקן","קשיש"],["קטן","קט"],["עני","מרוד"],["חכם","נבון"],["טוב","מצוין"],["יפה","נאה"],["אומץ","גבורה"]];
-const ANTONYMS=[["גדול","קטן"],["שמח","עצוב"],["חם","קר"],["יום","לילה"],["מעלה","מטה"],["אור","חושך"],["חזק","חלש"],["מהר","לאט"],["עשיר","עני"],["חכם","טיפש"],["ארוך","קצר"],["ישן","חדש"]];
+const SCRAMBLE_WORDS=["שלום","ספר","חבר","בית","ספריה","מחברת","עיפרון","מחק","שולחן","כיסא","חלון","דלת","אור","שמש","ירח","כוכב","ענן","גשם","שלג","רוח","פרח","עץ","דשא","יער","הר","נהר","ים","חוף","חול","אבן","סלע","מדבר","גבעה","עמק","אי","נחל","מעיין","באר","אגם","שדה","גן","זרע","שורש","עלה","פרי","זית","תאנה","גפן","רימון","תמר","שקד","אורן","ארז","אלון","דקל","שיטה","ורד","חבצלת","שושן","כלנית","רקפת"];
+const SYNONYMS=[["גדול","עצום"],["שמח","שש"],["יפה","מרהיב"],["מהר","מיהר"],["חזק","איתן"],["זקן","קשיש"],["קטן","קט"],["עני","מרוד"],["חכם","נבון"],["טוב","מצוין"],["יפה","נאה"],["אומץ","גבורה"],["קר","צונן"],["חם","לוהט"],["זריז","מהיר"],["אמיץ","גיבור"],["זהיר","זריז"],["קל","קליל"],["כבד","מכביד"],["ישן","עתיק"],["חדש","מחודש"],["עשיר","מוכסף"],["עצוב","זועף"],["כעוס","זועם"],["שקט","רגוע"],["רועש","קולני"],["נמוך","שפל"],["גבוה","תלול"],["רחב","מרווח"],["צר","צפוף"]];
+const ANTONYMS=[["גדול","קטן"],["שמח","עצוב"],["חם","קר"],["יום","לילה"],["מעלה","מטה"],["אור","חושך"],["חזק","חלש"],["מהר","לאט"],["עשיר","עני"],["חכם","טיפש"],["ארוך","קצר"],["ישן","חדש"],["יבש","רטוב"],["קל","כבד"],["רחב","צר"],["גבוה","נמוך"],["יפה","מכוער"],["צעיר","זקן"],["קל","קשה"],["מתחיל","מסיים"],["אוהב","שונא"],["פותח","סוגר"],["עולה","יורד"],["נכנס","יוצא"],["לוקח","נותן"],["קונה","מוכר"],["מנצח","מפסיד"],["שותה","אוכל"],["ישן","ער"],["אמת","שקר"]];
 const IDIOMS=[["עשה לי טובה...","בבקשה"],["פתחתי פה ל...","התחלתי"],["יצאתי מ...","התרגשתי"],["זה לא...","לא נכון"],["אין לי...","איני יכול"],["בסדר...","הכל תקין"]];
 const IDIOMS_FILL=[
   {start:"העיניים שלי",end:"שמיים",answer:"ב"},
@@ -144,19 +144,41 @@ const IDIOMS_FILL=[
   {start:"זה נפל",end:"על הרצפה",answer:"מ"},
   {start:"אין לי",end:"מה לעשות",answer:"מושג"},
   {start:"נפלתי מה",end:"",answer:"סוס"},
-  {start:"יש לי",end:"בבטן",answer:"פרפרים"}
+  {start:"יש לי",end:"בבטן",answer:"פרפרים"},
+  {start:"יצאתי מה",end:"",answer:"כלים"},
+  {start:"הוא חי ב",end:"עננים",answer:"על"},
+  {start:"זה נכנס לי ל",end:"",answer:"דם"},
+  {start:"יש לו ראש",end:"טוב",answer:"גדול"},
+  {start:"היא על קצה ה",end:"",answer:"צוק"},
+  {start:"זה פיל",end:"בחנות",answer:"ב"},
+  {start:"נפל לי ה",end:"מהשמיים",answer:"אסימון"},
+  {start:"הוא שם את ה",end:"על השולחן",answer:"כל"},
+  {start:"יש לי",end:"בעיניים",answer:"עשן"},
+  {start:"זה היה קורן",end:"באוזן",answer:"צמר"},
+  {start:"הוא עלה ל",end:"הגדול",answer:"מגדל"},
+  {start:"יצאת מ",end:"העיניים",answer:"ל"}
 ];
 const GRAMMAR=[
-  {word:"רץ",type:"פועל"},{word:"ספר",type:"שם עצם"},{word:"יפה",type:"תואר"},{word:"שמח",type:"תואר"},{word:"קנה",type:"פועל"},{word:"בית",type:"שם עצם"},{word:"גבוה",type:"תואר"},{word:"כתב",type:"פועל"},{word:"חתול",type:"שם עצם"},{word:"מהר",type:"תואר"},{word:"שיר",type:"שם עצם"},{word:"קפץ",type:"פועל"},{word:"חכם",type:"תואר"},{word:"חלון",type:"שם עצם"},{word:"אכל",type:"פועל"}
+  {word:"רץ",type:"פועל"},{word:"ספר",type:"שם עצם"},{word:"יפה",type:"תואר"},{word:"שמח",type:"תואר"},{word:"קנה",type:"פועל"},{word:"בית",type:"שם עצם"},{word:"גבוה",type:"תואר"},{word:"כתב",type:"פועל"},{word:"חתול",type:"שם עצם"},{word:"מהר",type:"תואר"},{word:"שיר",type:"שם עצם"},{word:"קפץ",type:"פועל"},{word:"חכם",type:"תואר"},{word:"חלון",type:"שם עצם"},{word:"אכל",type:"פועל"},
+  {word:"כלב",type:"שם עצם"},{word:"גדול",type:"תואר"},{word:"שיחק",type:"פועל"},{word:"שולחן",type:"שם עצם"},{word:"חם",type:"תואר"},{word:"ישן",type:"פועל"},{word:"חבר",type:"שם עצם"},{word:"טוב",type:"תואר"},{word:"למד",type:"פועל"},{word:"עץ",type:"שם עצם"},{word:"קר",type:"תואר"},{word:"הלך",type:"פועל"},{word:"דלת",type:"שם עצם"},{word:"חזק",type:"תואר"},{word:"צחק",type:"פועל"},
+  {word:"פרח",type:"שם עצם"},{word:"רע",type:"תואר"},{word:"דיבר",type:"פועל"},{word:"ירח",type:"שם עצם"},{word:"מהר",type:"תואר"},{word:"קרא",type:"פועל"},{word:"אור",type:"שם עצם"},{word:"ישן",type:"תואר"},{word:"בנה",type:"פועל"},{word:"ספסל",type:"שם עצם"}
 ];
 const SPELLING_WRONG=[
-  {wrong:"מכונית",correct:"מכונית"},{wrong:"ירושליים",correct:"ירושלים"},{wrong:"ארבעה",correct:"ארבע"},{wrong:"תפוח עץ",correct:"תפוח עץ"},
-  {wrong:"משפחה",correct:"משפחה"},{wrong:"ספריה",correct:"ספרייה"},{wrong:"בית ספר",correct:"בית ספר"},{wrong:"מטאטא",correct:"מטאטא"}
+  {wrong:"ירושליים",correct:"ירושלים"},{wrong:"ספריה",correct:"ספרייה"},{wrong:"מכונית",correct:"מכונית"},{wrong:"ארבעה",correct:"ארבע"},
+  {wrong:"אפס",correct:"אפס"},{wrong:"מספריים",correct:"מספריים"},{wrong:"תפוזים",correct:"תפוזים"},{wrong:"קיבוצי",correct:"קיבוצי"},
+  {wrong:"גברת",correct:"גברת"},{wrong:"נרתיק",correct:"נרתיק"},{wrong:"פרטי",correct:"פרטי"},{wrong:"שמחה",correct:"שמחה"},
+  {wrong:"יפה",correct:"יפה"},{wrong:"משפחה",correct:"משפחה"},{wrong:"תוכנית",correct:"תוכנית"},{wrong:"מדעית",correct:"מדעית"},
+  {wrong:"כיתה",correct:"כיתה"},{wrong:"מנהלת",correct:"מנהלת"},{wrong:"שערה",correct:"שערה"},{wrong:"בעיה",correct:"בעיה"}
 ];
 const PLURAL_PAIRS=[
   {singular:"ספר",plural:"ספרים"},{singular:"ילד",plural:"ילדים"},{singular:"חתול",plural:"חתולים"},{singular:"בית",plural:"בתים"},
   {singular:"שולחן",plural:"שולחנות"},{singular:"פרח",plural:"פרחים"},{singular:"מחברת",plural:"מחברות"},{singular:"עיפרון",plural:"עיפרונות"},
-  {singular:"חבר",plural:"חברים"},{singular:"חלון",plural:"חלונות"}
+  {singular:"חבר",plural:"חברים"},{singular:"חלון",plural:"חלונות"},{singular:"כלב",plural:"כלבים"},{singular:"דלת",plural:"דלתות"},
+  {singular:"מורה",plural:"מורים"},{singular:"שיר",plural:"שירים"},{singular:"עץ",plural:"עצים"},{singular:"חודש",plural:"חודשים"},
+  {singular:"מקל",plural:"מקלות"},{singular:"גבעה",plural:"גבעות"},{singular:"כיסא",plural:"כיסאות"},{singular:"מחבר",plural:"מחברים"},
+  {singular:"רגל",plural:"רגליים"},{singular:"יד",plural:"ידיים"},{singular:"עין",plural:"עיניים"},{singular:"אוזן",plural:"אוזניים"},
+  {singular:"שן",plural:"שיניים"},{singular:"בית ספר",plural:"בתי ספר"},{singular:"לילה",plural:"לילות"},{singular:"יום",plural:"ימים"},
+  {singular:"מילה",plural:"מילים"}
 ];
 const READING_PASSAGES=[
   {text:"דני הלך לפארק עם חברו תום. הם שיחקו במחבוא ובכדור. דני הסתתר מאחורי עץ גדול, אבל תום מצא אותו מהר. הם צחקו ושיחקו עד הערב. אז חזרו הביתה שמחים ועייפים.",questions:[
@@ -175,19 +197,21 @@ const READING_PASSAGES=[
 
 const GAME_NAMES={scramble:'סידור אותיות',synonyms:'מילים נרדפות',antonyms:'הפכים',idioms:'פתגמים',grammar:'דקדוק',spelling:'איות נכון',plura:'יחיד ורבים',reading:'הבנת הנקרא'};
 
-function genScramble(){const w=SCRAMBLE_WORDS[Math.floor(Math.random()*SCRAMBLE_WORDS.length)];return{type:'scramble',answer:w,hebrew:w}}
-function genSynonym(){const p=SYNONYMS[Math.floor(Math.random()*SYNONYMS.length)];return{type:'choice',q:`מה המילה הנרדפת ל"${p[0]}"?`,answer:p[1],options:shuffle([...p,SCRAMBLE_WORDS[Math.floor(Math.random()*SCRAMBLE_WORDS.length)],SCRAMBLE_WORDS[Math.floor(Math.random()*SCRAMBLE_WORDS.length)]])}}
-function genAntonym(){const p=ANTONYMS[Math.floor(Math.random()*ANTONYMS.length)];return{type:'choice',q:`מה ההיפך של "${p[0]}"?`,answer:p[1],options:shuffle([...p,SCRAMBLE_WORDS[Math.floor(Math.random()*SCRAMBLE_WORDS.length)],SCRAMBLE_WORDS[Math.floor(Math.random()*SCRAMBLE_WORDS.length)]])}}
-function genIdiom(){const p=IDIOMS_FILL[Math.floor(Math.random()*IDIOMS_FILL.length)];const opts=[p.answer,p.answer+'ת',p.answer+'ו',p.answer+'י'];return{type:'choice',q:`השלם: ${p.start} ___ ${p.end}`,answer:p.answer,options:shuffle([...new Set(opts)])}}
-function genGrammar(){const g=GRAMMAR[Math.floor(Math.random()*GRAMMAR.length)];const all=['שם עצם','פועל','תואר'];return{type:'choice',q:`מה חלק הדיבור של "${g.word}"?`,answer:g.type,options:shuffle(all)}}
-function genSpelling(){const w=SCRAMBLE_WORDS[Math.floor(Math.random()*SCRAMBLE_WORDS.length)];return{type:'input',q:`אייתו את המילה: ${w}`,answer:w}}
-function genPlural(){const p=PLURAL_PAIRS[Math.floor(Math.random()*PLURAL_PAIRS.length)];const wrongs=PLURAL_PAIRS.filter(x=>x!==p).map(x=>x.plural);return{type:'choice',q:`מה הרבים של "${p.singular}"?`,answer:p.plural,options:shuffle([p.plural,wrongs[0],wrongs[1],wrongs[2]])}}
+let seenItems={scramble:[],synonyms:[],antonyms:[],idioms:[],grammar:[],spelling:[],plura:[]};
+function pickUnique(arr,key){const seen=seenItems[key]||[];let available=arr.map((_,i)=>i).filter(i=>!seen.includes(i));if(available.length===0){seenItems[key]=[];available=arr.map((_,i)=>i);}const idx=available[Math.floor(Math.random()*available.length)];seenItems[key].push(idx);return arr[idx];}
+function genScramble(){const w=pickUnique(SCRAMBLE_WORDS,'scramble');return{type:'scramble',answer:w,hebrew:w}}
+function genSynonym(){const idx=SYNONYMS.indexOf(pickUnique(SYNONYMS,'synonyms'));const p=SYNONYMS[idx];const distractors=SCRAMBLE_WORDS.filter(w=>w!==p[0]&&w!==p[1]);const d1=distractors[Math.floor(Math.random()*distractors.length)];let d2=distractors[Math.floor(Math.random()*distractors.length)];if(d2===d1)d2=distractors[(distractors.indexOf(d1)+1)%distractors.length];return{type:'choice',q:`מה המילה הנרדפת ל"${p[0]}"?`,answer:p[1],options:shuffle([p[1],p[0],d1,d2])}}
+function genAntonym(){const idx=ANTONYMS.indexOf(pickUnique(ANTONYMS,'antonyms'));const p=ANTONYMS[idx];const distractors=SCRAMBLE_WORDS.filter(w=>w!==p[0]&&w!==p[1]);const d1=distractors[Math.floor(Math.random()*distractors.length)];let d2=distractors[Math.floor(Math.random()*distractors.length)];if(d2===d1)d2=distractors[(distractors.indexOf(d1)+1)%distractors.length];return{type:'choice',q:`מה ההיפך של "${p[0]}"?`,answer:p[1],options:shuffle([p[1],p[0],d1,d2])}}
+function genIdiom(){const p=pickUnique(IDIOMS_FILL,'idioms');const opts=[p.answer,p.answer+'ת',p.answer+'ו',p.answer+'י'];return{type:'choice',q:`השלם: ${p.start} ___ ${p.end}`,answer:p.answer,options:shuffle([...new Set(opts)])}}
+function genGrammar(){const g=pickUnique(GRAMMAR,'grammar');const all=['שם עצם','פועל','תואר'];return{type:'choice',q:`מה חלק הדיבור של "${g.word}"?`,answer:g.type,options:shuffle(all)}}
+function genSpelling(){const w=pickUnique(SCRAMBLE_WORDS,'spelling');return{type:'input',q:`אייתו את המילה: ${w}`,answer:w}}
+function genPlural(){const p=pickUnique(PLURAL_PAIRS,'plura');const wrongs=PLURAL_PAIRS.filter(x=>x!==p).map(x=>x.plural);shuffle(wrongs);return{type:'choice',q:`מה הרבים של "${p.singular}"?`,answer:p.plural,options:shuffle([p.plural,wrongs[0],wrongs[1],wrongs[2]])}}
 function genReading(){const p=READING_PASSAGES[Math.floor(Math.random()*READING_PASSAGES.length)];return{type:'reading',text:p.text,questions:p.questions}}
 
 const GENERATORS={scramble:genScramble,synonyms:genSynonym,antonyms:genAntonym,idioms:genIdiom,grammar:genGrammar,spelling:genSpelling,plura:genPlural,reading:genReading};
 
 function startGame(type){
-  currentGame=type;questions=[];
+  currentGame=type;questions=[];seenItems={scramble:[],synonyms:[],antonyms:[],idioms:[],grammar:[],spelling:[],plura:[]};
   if(type==='reading'){
     const r=genReading();
     questions=[{...r,qIndex:0}];

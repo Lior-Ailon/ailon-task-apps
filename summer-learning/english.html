@@ -1260,9 +1260,31 @@ function updateDcUI() {
   if (shekelsEl) shekelsEl.textContent = state.dailyChallenge.totalEarned;
 }
 
+let recentWordIds = []; // track recently used words across games
+let recentWordLimit = 80; // don't repeat last 80 words (if pool is big enough)
+
 function getWordsByCategory(cat) {
-  if (cat === "all") return WORDS;
-  return WORDS.filter(w => w.cat === cat);
+  if (cat === "all") {
+    // Filter out recently used words if enough remain
+    let pool = WORDS.filter(w => !recentWordIds.includes(wordId(w)));
+    if (pool.length < 30) pool = WORDS; // reset if pool too small
+    return pool;
+  }
+  let pool = WORDS.filter(w => w.cat === cat);
+  let fresh = pool.filter(w => !recentWordIds.includes(wordId(w)));
+  if (fresh.length < 10) fresh = pool; // reset if not enough fresh words
+  return fresh;
+}
+
+function markWordsUsed(words) {
+  words.forEach(w => {
+    const id = wordId(w);
+    if (!recentWordIds.includes(id)) recentWordIds.push(id);
+  });
+  // Trim to prevent unbounded growth
+  if (recentWordIds.length > recentWordLimit) {
+    recentWordIds = recentWordIds.slice(-recentWordLimit);
+  }
 }
 
 function shuffle(arr) {
@@ -1380,7 +1402,7 @@ function startGame(gameType) {
   state.currentGame = gameType;
   // If daily challenge is active, keep tracking time
   if (state.dailyChallenge.active) startDcTimer();
-  state.gameWords = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 10);
+  state.gameWords = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 10); markWordsUsed(state.gameWords);
   state.gameIndex = 0;
   state.gameScore = 0;
   showScreen('screen-game');
@@ -1524,7 +1546,7 @@ function markFlashcard(correct) {
 
 // --- Matching ---
 function renderMatching(c) {
-  const pool = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 6);
+  const pool = shuffle(getWordsByCategory(state.selectedCat)).slice(0, 6); markWordsUsed(pool); markWordsUsed(pool);
   const words = shuffle(pool);
   const emojis = shuffle(pool);
   state.roundData = {words, emojis, selected: null, matched: 0, pairs: pool.length};
@@ -1732,7 +1754,7 @@ function flipMemory(i) {
 // --- Listening ---
 function renderListening(c) {
   const word = state.gameWords[state.gameIndex];
-  const pool = shuffle(getWordsByCategory(state.selectedCat));
+  const pool = shuffle(getWordsByCategory(state.selectedCat)); markWordsUsed(pool.slice(0,10));
   const options = pool.filter(w => w.en !== word.en).slice(0, 3);
   options.push(word);
   const shuffledOpts = shuffle(options);
@@ -1800,7 +1822,7 @@ function renderFillBlank(c) {
     sentence = {w: word.en, s: `I see a ${word.en} in the picture.`};
   }
   const parts = sentence.s.split(word.en);
-  const pool = shuffle(getWordsByCategory(state.selectedCat));
+  const pool = shuffle(getWordsByCategory(state.selectedCat)); markWordsUsed(pool.slice(0,10));
   const options = pool.filter(w => w.en !== word.en).slice(0, 3);
   options.push(word);
   state.roundData = {answer: word.en, done: false};
@@ -1886,7 +1908,7 @@ function checkTyping() {
 // --- Quiz ---
 function renderQuiz(c) {
   const word = state.gameWords[state.gameIndex];
-  const pool = shuffle(getWordsByCategory(state.selectedCat));
+  const pool = shuffle(getWordsByCategory(state.selectedCat)); markWordsUsed(pool.slice(0,10));
   const options = pool.filter(w => w.en !== word.en).slice(0, 3);
   options.push(word);
   state.roundData = {answer: word.he, en: word.en, done: false};
