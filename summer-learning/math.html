@@ -328,9 +328,9 @@ function renderQuestion(){
     const opts=shuffle(q.options.map(String));
     // Remove duplicates
     const unique=[...new Set(opts)];
-    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div>${q.emoji?'<div style="font-size:3rem;margin:8px;">'+q.emoji+'</div>':''}<div style="font-size:1.4rem;margin:12px 0;">${q.q}</div><div class="ans-grid">${unique.map(o=>`<button class="ans-btn" onclick="checkChoice('${o}','${q.answer}')">${o}</button>`).join('')}</div></div>`;
+    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div>${q.emoji?'<div style="font-size:3rem;margin:8px;">'+q.emoji+'</div>':''}<div style="font-size:1.4rem;margin:12px 0;">${q.q}</div><div class="ans-grid">${unique.map(o=>`<button class="ans-btn" onclick="checkChoice(this,'${o}','${q.answer}')">${o}</button>`).join('')}</div></div>`;
   }else if(q.type==='tf'){
-    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div><div style="font-size:1.6rem;margin:16px 0;">${q.q}</div><div class="tf-grid"><button class="tf-btn true" onclick="checkTF(true,${q.answer})">✓ נכון</button><button class="tf-btn false" onclick="checkTF(false,${q.answer})">✗ לא נכון</button></div></div>`;
+    c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div><div style="font-size:1.6rem;margin:16px 0;">${q.q}</div><div class="tf-grid"><button class="tf-btn true" onclick="checkTF(this,true,${q.answer})">✓ נכון</button><button class="tf-btn false" onclick="checkTF(this,false,${q.answer})">✗ לא נכון</button></div></div>`;
   }else if(q.type==='order'){
     c.innerHTML=`<div class="q-card"><div class="q-prompt">${GAME_NAMES[currentGame]}</div><div style="font-size:1.2rem;margin:8px;">${q.q}</div><div id="order-items" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;">${shuffle(q.items).map((n,i)=>`<button class="ans-btn" style="min-width:80px" data-val="${n}" onclick="orderPick(${i})">${n}</button>`).join('')}</div><div id="order-answer" style="display:flex;gap:6px;justify-content:center;min-height:50px;align-items:center;margin:12px 0;"></div></div>`;
     roundData={orderAnswer:[],correctOrder:q.answer.split(',').map(Number)};
@@ -346,17 +346,17 @@ function checkInput(ans){
   document.getElementById('next-btn').classList.add('show');
 }
 
-function checkChoice(picked,correct){
-  if(String(picked)===String(correct)){gameScore++;showEncourage(true);event.target.classList.add('correct')}
-  else{event.target.classList.add('wrong');showEncourage(false);document.querySelectorAll('.ans-btn').forEach(b=>{if(b.textContent===String(correct))b.classList.add('correct')})}
+function checkChoice(btn,picked,correct){
+  if(String(picked)===String(correct)){gameScore++;showEncourage(true);btn.classList.add('correct')}
+  else{btn.classList.add('wrong');showEncourage(false);document.querySelectorAll('.ans-btn').forEach(b=>{if(b.textContent===String(correct))b.classList.add('correct')})}
   document.querySelectorAll('.ans-btn').forEach(b=>b.style.pointerEvents='none');
   updateGameHeader();
   document.getElementById('next-btn').classList.add('show');
 }
 
-function checkTF(picked,correct){
-  if(picked===correct){gameScore++;showEncourage(true);event.target.classList.add('correct')}
-  else{event.target.classList.add('wrong');showEncourage(false)}
+function checkTF(btn,picked,correct){
+  if(picked===correct){gameScore++;showEncourage(true);btn.classList.add('correct')}
+  else{btn.classList.add('wrong');showEncourage(false)}
   document.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
   updateGameHeader();
   document.getElementById('next-btn').classList.add('show');

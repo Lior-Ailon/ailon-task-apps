@@ -258,7 +258,8 @@ function checkReading(picked,correct){
 
 function renderScrambleAnswer(){
   const c=document.getElementById('scramble-answer');
-  c.innerHTML=state.roundData?state.roundData.answer.split('').map((_,i)=>{if(roundData.placed[i])return`<div class="scramble-slot filled">${roundData.placed[i].letter}</div>`;return`<div class="scramble-slot"></div>`}).join(''):'';
+  if(!c||!roundData)return;
+  c.innerHTML=roundData.answer.split('').map((_,i)=>{if(roundData.placed[i])return`<div class="scramble-slot filled">${roundData.placed[i].letter}</div>`;return`<div class="scramble-slot"></div>`}).join('');
 }
 
 function placeLetter(i){

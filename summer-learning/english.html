@@ -424,7 +424,7 @@ body {
     <span class="dc-stamp" id="dc-stamp" style="display:none;">✓ הושלם</span>
     <span class="dc-icon" id="dc-icon">🎯</span>
     <div class="dc-title" id="dc-title">אתגר יומי</div>
-    <div class="dc-sub" id="dc-sub">20 דקות אנגלית היום</div>
+    <div class="dc-sub" id="dc-sub">30 דקות אנגלית היום</div>
     <div class="dc-progress-bar">
       <div class="dc-progress-fill" id="dc-fill" style="width:0%"></div>
     </div>
@@ -434,6 +434,8 @@ body {
   <div class="home-grid" id="game-grid"></div>
   <div class="footer-link">
     <a href="javascript:void(0)" onclick="showParentLock()">👨‍👩‍👧 אזור הורים</a>
+    <span style="margin: 0 8px; color: #ddd;">|</span>
+    <a href="javascript:void(0)" onclick="goToHub()">🏠 תפריט ראשי</a>
   </div>
 </div>
 
@@ -1282,6 +1284,15 @@ function showScreen(id) {
 function goHome() {
   state.currentGame = null;
   stopDcTimer();
+  showScreen('screen-home');
+  updateHomeStats();
+  updateDcUI();
+  renderCategories();
+  renderGames();
+}
+
+function goToHub() {
+  stopDcTimer();
   saveState();
   window.location.href = "index.html";
 }
@@ -1423,7 +1434,7 @@ function endGame() {
       <div style="font-size:1rem;color:#888;margin:8px 0;">צברת ${state.gameScore} כוכבים ⭐</div>
       <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
         <button onclick="startGame('${state.currentGame}')" style="padding:14px 30px;border-radius:30px;border:none;background:#4ECDC4;color:white;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(78,205,196,0.3);">🔄 שחק שוב</button>
-        <button onclick="goHome()" style="padding:14px 30px;border-radius:30px;border:none;background:#FF6B6B;color:white;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,107,107,0.3);">🏠 חזור לתפריט</button>
+        <button onclick="goHome()" style="padding:14px 30px;border-radius:30px;border:none;background:#FF6B6B;color:white;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,107,107,0.3);">🏠 תפריט אנגלית</button>
       </div>
     </div>
   `;
