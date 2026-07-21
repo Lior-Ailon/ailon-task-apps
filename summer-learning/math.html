@@ -2,6 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>קיץ חכם - חשבון</title>
 <style>
@@ -220,7 +222,7 @@ function genFractions(){
   const n1=Math.floor(Math.random()*(d1-1))+1;
   const n2=Math.floor(Math.random()*(d2-1))+1;
   const v1=n1/d1, v2=n2/d2;
-  const correct=v1>v2?'>'+v1<v2?'<':'=';
+  const correct=v1>v2?'>':(v1<v2?'<':'=');
   const opts=['>','<','='];
   return{q:`איזה גדול יותר? ${n1}/${d1} או ${n2}/${d2}`,answer:correct,type:'choice',options:opts,emoji:'🍕'};
 }

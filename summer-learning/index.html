@@ -2,6 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>קיץ חכם - משחקי לימוד לחופש</title>
 <style>
@@ -204,7 +206,8 @@ function openSubject(subject){
   saveState();
   // Store which subject in sessionStorage for the subject page to pick up
   sessionStorage.setItem('summer_subject',subject);
-  const url = subject==='english'?'english.html':subject==='math'?'math.html':'hebrew.html';
+  const v='?v=20260721';
+  const url = subject==='english'?'english.html'+v:subject==='math'?'math.html'+v:'hebrew.html'+v;
   window.location.href=url;
 }
 

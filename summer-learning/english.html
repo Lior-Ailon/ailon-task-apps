@@ -2,6 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Quest - לומד אנגלית</title>
 <style>
@@ -2000,6 +2002,7 @@ function renderParentDashboard() {
       ימים שהושלמו: ${(state.dailyChallenge.completedDays || []).join(', ') || 'אין עדיין'}
     </div>
   </div>
+  `;
 
   // Category breakdown
   if (Object.keys(state.categoryStats).length > 0) {
