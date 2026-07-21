@@ -1077,7 +1077,7 @@ let state = {
     completedDays: [],       // array of "YYYY-MM-DD" strings
     active: false            // is challenge currently active
   },
-  dailyGoalMinutes: 30
+  dailyGoalMinutes: 30  // matches DAILY_GOAL_MIN constant
 };
 
 const PARENT_PASS = "1234";
@@ -1109,7 +1109,6 @@ function saveState() {
 }
 
 // ============ DAILY CHALLENGE ============
-const DAILY_GOAL_MIN = 20;
 const DAILY_REWARD = 10;
 
 function getTodayStr() {
@@ -2072,7 +2071,7 @@ function resetProgress() {
         lastCompletedDate: null, todayTimeMs: 0, todayDate: null,
         totalEarned: 0, completedDays: [], active: false
       },
-      dailyGoalMinutes: 30
+      dailyGoalMinutes: 30  // matches DAILY_GOAL_MIN constant
     };
     renderParentDashboard();
     showToast('ההתקדמות אופסה');
