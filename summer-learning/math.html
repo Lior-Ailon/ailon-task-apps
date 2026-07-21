@@ -194,17 +194,18 @@ function completeDailyChallenge(){
 
 // Math Question Generators
 function genSpeed(){
-  const ops=['+','-'];
+  const ops=['+','-','×'];
   const op=ops[Math.floor(Math.random()*ops.length)];
   let a,b,ans;
   if(op==='+'){a=Math.floor(Math.random()*900)+100;b=Math.floor(Math.random()*900)+100;ans=a+b}
-  else{a=Math.floor(Math.random()*900)+100;b=Math.floor(Math.random()*a);ans=a-b}
+  else if(op==='-'){a=Math.floor(Math.random()*900)+100;b=Math.floor(Math.random()*a);ans=a-b}
+  else{a=Math.floor(Math.random()*12)+2;b=Math.floor(Math.random()*12)+2;ans=a*b}
   return{q:a+' '+op+' '+b+' = ?',answer:ans,type:'input',hint:''};
 }
 
 function genMultiply(){
-  const a=Math.floor(Math.random()*9)+2;
-  const b=Math.floor(Math.random()*9)+2;
+  const a=Math.floor(Math.random()*11)+2;
+  const b=Math.floor(Math.random()*11)+2;
   return{q:a+' × '+b+' = ?',answer:a*b,type:'input',hint:''};
 }
 
@@ -233,9 +234,74 @@ function genWordProb(){
     ()=>{const a=Math.floor(Math.random()*8)+3;const b=Math.floor(Math.random()*8)+3;return{q:`בכיתה יש ${a} שולחנות. על כל שולחן יושבים ${b} תלמידים. כמה תלמידים?`,answer:a*b,type:'choice',options:[a*b,a+b,a*b+2,a-b]}},
     ()=>{const total=Math.floor(Math.random()*80)+20;const per=Math.floor(Math.random()*8)+3;return{q:`${total} ילדים רצו לנסוע. בכל אוטובוס יש ${per} מקומות. כמה אוטובוסים צריך?`,answer:Math.ceil(total/per),type:'choice',options:[Math.ceil(total/per),Math.floor(total/per),total*per,total+per]}},
     ()=>{const a=Math.floor(Math.random()*60)+20;const b=Math.floor(Math.random()*60)+20;const c=Math.floor(Math.random()*60)+20;return{q:`שלושה חברים אספו כסף. הראשון ${a}₪, השני ${b}₪, השלישי ${c}₪. כמה בסה"כ?`,answer:a+b+c,type:'choice',options:[a+b+c,a+b,a*b+c,a+b-c]}},
-    ()=>{const a=Math.floor(Math.random()*40)+10;return{q:`במחסן היו ${a} קופסאות. הכניסו עוד 3 פעמים כמות. כמה עכשיו?`,answer:a*4,type:'choice',options:[a*4,a+3,a*3,a+12]}}
+    ()=>{const a=Math.floor(Math.random()*40)+10;return{q:`במחסן היו ${a} קופסאות. הכניסו עוד 3 פעמים כמות. כמה עכשיו?`,answer:a*4,type:'choice',options:[a*4,a+3,a*3,a+12]}},
+    ()=>{const a=Math.floor(Math.random()*50)+20;const b=Math.floor(Math.random()*9)+2;return{q:`בגן היו ${a} עצים. כרתו ${b} עצים. כמה נשארו?`,answer:a-b,type:'choice',options:[a-b,a+b,a*b,a-b+5]}},
+    ()=>{const price=Math.floor(Math.random()*30)+5;const qty=Math.floor(Math.random()*8)+3;return{q:`כל חפיסת שוקולד עולה ${price}₪. קנו ${qty} חפיסות. כמה שילמו?`,answer:price*qty,type:'choice',options:[price*qty,price+qty,price*qty+5,price-qty]}},
+    ()=>{const total=Math.floor(Math.random()*100)+50;const each=Math.floor(Math.random()*8)+4;const num=Math.floor(Math.random()*4)+2;return{q:`${num} ילדים חילקו ${total} שקלים בצורה שווה. כמה קיבל כל ילד?`,answer:Math.floor(total/num),type:'choice',options:[Math.floor(total/num),Math.floor(total/each),total*num,total-num]}},
+    ()=>{const a=Math.floor(Math.random()*30)+10;const b=Math.floor(Math.random()*30)+10;const c=Math.floor(Math.random()*30)+10;return{q:`במחברת ${a} עמודים. כתבו ב-${b} עמודים בשיעור ראשון וב-${c} עמודים בשיעור שני. כמה עמודים ריקים נשארו?`,answer:a-b-c,type:'choice',options:[a-b-c,a+b+c,a-b+c,a+b-c]}},
+    ()=>{const a=Math.floor(Math.random()*40)+20;const b=Math.floor(Math.random()*5)+2;return{q:`במאפיה אפו ${a} לחמים. ארזו אותם בחבילות של ${b}. כמה חבילות יצאו?`,answer:Math.ceil(a/b),type:'choice',options:[Math.ceil(a/b),Math.floor(a/b),a*b,a+b]}},
+    ()=>{const a=Math.floor(Math.random()*60)+30;const b=Math.floor(Math.random()*20)+5;return{q:`במשחק היו ${a} נקודות. הקבוצה השנייה הובילה ב-${b} נקודות. כמה נקודות היו לקבוצה השנייה?`,answer:a+b,type:'choice',options:[a+b,a-b,a*b,a-b+10]}},
+    ()=>{const a=Math.floor(Math.random()*8)+3;return{q:`בספריה יש ${a} מדפים. על כל מדף 10 ספרים. כמה ספרים בסה"כ?`,answer:a*10,type:'choice',options:[a*10,a+10,a*5,a+5]}},
+    ()=>{const total=Math.floor(Math.random()*200)+100;const spent=Math.floor(Math.random()*80)+20;return{q:`היו ${total}₪ בקופה. הוציאו ${spent}₪. כמה נשאר?`,answer:total-spent,type:'choice',options:[total-spent,total+spent,total*spent,total+spent-10]}},
+    ()=>{const a=Math.floor(Math.random()*5)+3;const b=Math.floor(Math.random()*5)+3;const c=Math.floor(Math.random()*5)+3;return{q:`בכיתה ${a} תלמידים. ${b} יצאו להפסקה ועוד ${c} הלכו לספריה. כמה נשארו בכיתה?`,answer:a-b-c,type:'choice',options:[a-b-c,a+b+c,a-b+c,a+b-c]}},
+    ()=>{const a=Math.floor(Math.random()*6)+3;return{q:`כל תלמיד קיבל ${a} עפרונות. יש 30 תלמידים. כמה עפרונות סה"כ?`,answer:a*30,type:'choice',options:[a*30,a+30,a*3,a+3]}}
   ];
   return types[Math.floor(Math.random()*types.length)]();
+}
+
+// New game: Percentages
+function genPercent(){
+  const pcts=[10,20,25,50,75,100];
+  const p=pcts[Math.floor(Math.random()*pcts.length)];
+  const base=(Math.floor(Math.random()*9)+2)*100;
+  const ans=base*p/100;
+  return{q:`${p}% מתוך ${base} = ?`,answer:ans,type:'input',hint:''};
+}
+
+// New game: Geometry
+function genGeometry(){
+  const types=[
+    ()=>{const a=Math.floor(Math.random()*15)+3;const b=Math.floor(Math.random()*15)+3;return{q:`שטח מלבן: אורך ${a}, רוחב ${b}. מה השטח?`,answer:a*b,type:'input',hint:'שטח = אורך × רוחב'}},
+    ()=>{const a=Math.floor(Math.random()*15)+3;const b=Math.floor(Math.random()*15)+3;return{q:`היקף מלבן: אורך ${a}, רוחב ${b}. מה ההיקף?`,answer:2*(a+b),type:'input',hint:'היקף = 2×(אורך+רוחב)'}},
+    ()=>{const a=Math.floor(Math.random()*15)+3;return{q:`היקף ריבוע: צלע ${a}. מה ההיקף?`,answer:4*a,type:'input',hint:'היקף = 4×צלע'}},
+    ()=>{const a=Math.floor(Math.random()*15)+3;return{q:`שטח ריבוע: צלע ${a}. מה השטח?`,answer:a*a,type:'input',hint:'שטח = צלע²'}}
+  ];
+  return types[Math.floor(Math.random()*types.length)]();
+}
+
+// New game: Decimals
+function genDecimals(){
+  const a=Math.floor(Math.random()*90)+10;
+  const b=Math.floor(Math.random()*90)+10;
+  const ops=['+','-'];
+  const op=ops[Math.floor(Math.random()*ops.length)];
+  const da=a/10, db=b/10;
+  let ans;
+  if(op==='+')ans=Math.round((da+db)*100)/100;
+  else{const big=Math.max(da,db);const small=Math.min(da,db);ans=Math.round((big-small)*100)/100}
+  const qa=Math.max(da,db),qb=Math.min(da,db);
+  return{q:''+qa+' '+(op==='+'?'+':'-')+' '+qb+' = ?',answer:ans,type:'input',hint:''};
+}
+
+// New game: Sequences
+function genSequence(){
+  const types=[
+    ()=>{const start=Math.floor(Math.random()*10)+1;const step=Math.floor(Math.random()*5)+2;const seq=[start,start+step,start+2*step,start+3*step];return{q:'איזה מספר ממשיך: '+seq.join(', ')+', ?',answer:start+4*step,type:'input',hint:''}},
+    ()=>{const start=Math.floor(Math.random()*5)+2;const seq=[start,start*2,start*4,start*8];return{q:'איזה מספר ממשיך: '+seq.join(', ')+', ?',answer:start*16,type:'input',hint:''}},
+    ()=>{const a=Math.floor(Math.random()*10)+1;const b=Math.floor(Math.random()*10)+1;const seq=[a,a+b,a+2*b,a+3*b];return{q:'איזה מספר ממשיך: '+seq.join(', ')+', ?',answer:a+4*b,type:'input',hint:''}},
+    ()=>{const a=Math.floor(Math.random()*8)+2;const seq=[a,a*a,a*a*a,a*a*a*a];return{q:'איזה מספר הבא: '+seq.join(', ')+', ?',answer:a*a*a*a*a,type:'input',hint:''}}
+  ];
+  return types[Math.floor(Math.random()*types.length)]();
+}
+
+// New game: Average
+function genAverage(){
+  const n=Math.floor(Math.random()*3)+3;
+  const nums=[];
+  for(let i=0;i<n;i++)nums.push(Math.floor(Math.random()*90)+10);
+  const sum=nums.reduce((a,b)=>a+b,0);
+  const avg=Math.round(sum/n);
+  return{q:'מה הממוצע של: '+nums.join(', ')+'?',answer:avg,type:'input',hint:'ממוצע = סכום ÷ כמות'}};
 }
 
 function genTrueFalse(){
@@ -268,8 +334,8 @@ function genMissing(){
   return{q:`${a} + ? = ${c}`,answer:b,type:'input',hint:''};
 }
 
-const GENERATORS={speed:genSpeed,multiply:genMultiply,divide:genDivide,fractions:genFractions,wordprob:genWordProb,truefalse:genTrueFalse,numberline:genNumberLine,missing:genMissing};
-const GAME_NAMES={speed:'חשבון מהיר',multiply:'לוח הכפל',divide:'חילוק',fractions:'שברים',wordprob:'בעיות מילוליות',truefalse:'נכון או לא?',numberline:'סדר מספרים',missing:'מספר חסר'};
+const GENERATORS={speed:genSpeed,multiply:genMultiply,divide:genDivide,fractions:genFractions,wordprob:genWordProb,truefalse:genTrueFalse,numberline:genNumberLine,missing:genMissing,percent:genPercent,geometry:genGeometry,decimals:genDecimals,sequence:genSequence,average:genAverage};
+const GAME_NAMES={speed:'חשבון מהיר',multiply:'לוח הכפל',divide:'חילוק',fractions:'שברים',wordprob:'בעיות מילוליות',truefalse:'נכון או לא?',numberline:'סדר מספרים',missing:'מספר חסר',percent:'אחוזים',geometry:'גאומטריה',decimals:'עשרוניים',sequence:'מספרים בסדר',average:'ממוצע'};
 
 function startGame(type){
   currentGame=type;
