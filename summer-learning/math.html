@@ -301,7 +301,7 @@ function genAverage(){
   for(let i=0;i<n;i++)nums.push(Math.floor(Math.random()*90)+10);
   const sum=nums.reduce((a,b)=>a+b,0);
   const avg=Math.round(sum/n);
-  return{q:'מה הממוצע של: '+nums.join(', ')+'?',answer:avg,type:'input',hint:'ממוצע = סכום ÷ כמות'}};
+  return{q:'מה הממוצע של: '+nums.join(', ')+'?',answer:avg,type:'input',hint:'ממוצע = סכום ÷ כמות'};
 }
 
 function genTrueFalse(){
