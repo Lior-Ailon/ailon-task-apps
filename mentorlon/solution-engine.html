@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מנוע הפתרונות | Mentor-IT</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --teal: #0d9488; --teal-light: #14b8a6; --teal-dark: #0f766e;
+  --navy: #0f172a; --slate: #1e293b; --mint: #f0fdfa;
+  --white: #fff; --gold: #f59e0b; --red: #ef4444; --green: #22c55e;
+}
+body { font-family: 'Heebo', sans-serif; background: linear-gradient(135deg, #0f172a, #1e293b); color: var(--white); min-height: 100vh; }
+
+/* Header */
+.header { background: linear-gradient(135deg, var(--teal-dark), var(--teal)); padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.header h1 { font-size: 1.5rem; font-weight: 900; }
+.header p { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
+.logo-text { font-size: 0.8rem; font-weight: 900; color: var(--teal-light); letter-spacing: 2px; }
+
+/* Container */
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+/* Progress Bar */
+.progress-bar { display: flex; justify-content: space-between; margin: 20px 0; position: relative; }
+.progress-bar::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.1); z-index: 0; }
+.progress-step { width: 36px; height: 36px; border-radius: 50%; background: var(--slate); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; z-index: 1; border: 2px solid transparent; transition: all 0.3s; cursor: pointer; }
+.progress-step.active { background: var(--teal); border-color: var(--teal-light); transform: scale(1.1); }
+.progress-step.done { background: var(--green); border-color: var(--green); }
+.progress-step:hover { border-color: var(--teal-light); }
+
+/* Cards */
+.step-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(20,184,166,0.2); border-radius: 20px; padding: 30px; margin: 20px 0; backdrop-filter: blur(10px); display: none; animation: fadeIn 0.5s; }
+.step-card.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+.step-card h2 { font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; color: var(--teal-light); }
+.step-card .principle-tag { display: inline-block; background: var(--teal-dark); padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; }
+.step-card .question { font-size: 1.3rem; font-weight: 700; margin: 15px 0; line-height: 1.5; }
+.step-card .hint { font-size: 0.95rem; opacity: 0.6; margin: 10px 0; font-style: italic; }
+.step-card .voice-box { border-right: 3px solid var(--teal-light); padding: 10px 15px; margin: 12px 0; background: rgba(20,184,166,0.08); border-radius: 8px; font-size: 0.95rem; }
+
+/* Inputs */
+.input-field { width: 100%; background: rgba(255,255,255,0.05); border: 2px solid rgba(20,184,166,0.2); border-radius: 12px; padding: 15px; color: var(--white); font-size: 1.05rem; font-family: 'Heebo', sans-serif; margin: 10px 0; transition: border-color 0.3s; resize: vertical; }
+.input-field:focus { outline: none; border-color: var(--teal-light); box-shadow: 0 0 0 3px rgba(20,184,166,0.1); }
+.input-field::placeholder { color: rgba(255,255,255,0.3); }
+
+/* Options */
+.option-group { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
+.option-btn { background: rgba(255,255,255,0.05); border: 2px solid rgba(20,184,166,0.15); border-radius: 12px; padding: 15px 20px; color: var(--white); font-size: 1rem; cursor: pointer; transition: all 0.3s; text-align: right; font-family: 'Heebo', sans-serif; }
+.option-btn:hover { border-color: var(--teal-light); background: rgba(20,184,166,0.1); }
+.option-btn.selected { border-color: var(--teal); background: rgba(13,148,136,0.15); }
+
+/* Buttons */
+.btn { padding: 14px 30px; border-radius: 12px; border: none; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Heebo', sans-serif; }
+.btn-primary { background: var(--teal); color: white; }
+.btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13,148,136,0.3); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-secondary { background: rgba(255,255,255,0.1); color: white; margin-right: 10px; }
+.btn-secondary:hover { background: rgba(255,255,255,0.15); }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-row { display: flex; justify-content: space-between; margin-top: 25px; }
+
+/* Result */
+.result-card { background: linear-gradient(135deg, rgba(13,148,136,0.15), rgba(20,184,166,0.05)); border: 2px solid var(--teal-light); border-radius: 20px; padding: 30px; margin: 20px 0; }
+.result-card h2 { color: var(--gold); font-size: 1.8rem; }
+.result-section { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin: 12px 0; }
+.result-section h3 { color: var(--teal-light); font-size: 1.1rem; margin-bottom: 8px; }
+.result-section p { font-size: 1rem; line-height: 1.6; }
+
+/* Venn mini */
+.mini-venn { display: flex; justify-content: center; align-items: center; gap: 0; margin: 20px 0; }
+.mini-venn-circle { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; position: relative; }
+.mini-venn-left { background: rgba(13,148,136,0.3); border: 2px solid var(--teal-light); margin-left: -30px; }
+.mini-venn-right { background: rgba(245,158,11,0.2); border: 2px solid var(--gold); margin-left: -30px; }
+.mini-venn-center { position: absolute; z-index: 5; background: white; color: var(--navy); padding: 4px 12px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container { padding: 15px; }
+  .step-card { padding: 20px; }
+  .step-card h2 { font-size: 1.3rem; }
+  .step-card .question { font-size: 1.1rem; }
+  .header h1 { font-size: 1.2rem; }
+  .progress-step { width: 30px; height: 30px; font-size: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-text">AILON TASK • MENTOR-IT</div>
+  <h1>מנוע הפתרונות</h1>
+  <p>מניהול בעיות לפתרון נטול מאמץ</p>
+</div>
+
+<div class="container">
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- STEP 0: Welcome -->
+  <div class="step-card active" id="step-0">
+    <span class="principle-tag">התחלה</span>
+    <h2>ברוכים הבאים למנוע הפתרונות</h2>
+    <p style="font-size: 1.1rem; margin: 15px 0; line-height: 1.7;">
+      כלי זה יוביל אותך דרך 7 שלבים המבוססים על 11 עקרונות מתוך ספרי "ליהנות" (מקאון) ו"כנות רדיקלית" (סקוט).
+      <br><br>
+      בסוף התהלי�יך תקבל תוכנית פעולה ברורה — הדרך הפשוטה והאקספוננציאלית ביותר לפתור את הבעיה שלך בשורש.
+    </p>
+    <div style="margin: 20px 0;">
+      <label style="font-size: 1.1rem; font-weight: 700; display:block; margin-bottom: 8px;">מהי הבעיה/הפרויקט שאתה רוצה לפתור?</label>
+      <textarea class="input-field" id="problemInput" rows="3" placeholder="תאר את הבעיה או הפרויקט במשפט או שניים..."></textarea>
+    </div>
+    <div class="btn-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="goToStep(1)" id="startBtn" disabled>התחל &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: Complexity Removal -->
+  <div class="step-card" id="step-1">
+    <span class="principle-tag">עקרון 1 — עקרון המורכבות</span>
+    <h2>מה הדבר המורכב?</h2>
+    <p class="question">מהו הדבר המורכב ביותר בבעיה הזאת? מה מסיח את דעתך, מבלבל, או דורש יותר מדי אנרגיה?</p>
+    <p class="hint">זכור: כשמסלקים את המורכבות, נוצרת בהירות</p>
+    <textarea class="input-field" id="q1" rows="3" placeholder="המורכבות העיקרית היא..."></textarea>
+    <p class="question" style="margin-top: 20px;">מהי הדרך הפשוטה ביותר להשיג את התוצאה?</p>
+    <textarea class="input-field" id="q1b" rows="3" placeholder="הדרך הפשוטה ביותר היא..."></textarea>
+    <div class="voice-box">קול ליאור: הפתרון האמיתי מגיע מהסרה, לא מהוספה. בהירות נוצרת רק אחרי הסרה.</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(0)">&#8594; חזור</button>
+      <button class="btn btn-primary" onclick="goToStep(2)">הבא &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Focus Paradox -->
+  <div class="step-card" id="step-2">
+    <span class="principle-tag">עקרון 2 — פרדוקס המיקוד</span>
+    <h2>על מה אתה מתמקד?</h2>
+    <div class="option-group">
+      <button class="option-btn" onclick="selectOption(this, 'q2', 'lack')">אני מתמקד במה שחסר לי / בחיסרון</button>
+      <button class="option-btn" onclick="selectOption(this, 'q2', 'have')">אני מתמקד במה שיש לי / במשאבים שלי</button>
+      <button class="option-btn" onclick="selectOption(this, 'q2', 'mixed')">אני לא בטוח — קצת מזה וקצת מזה</button>
+    </div>
+    <input type="hidden" id="q2" value="">
+    <div id="q2-feedback" style="display:none;"></div>
+    <p class="question" style="margin-top: 20px;">מה כן יש לך עכשיו שיכול לעזור? (ידע, קשרים, כישורים, משאבים)</p>
+    <textarea class="input-field" id="q2b" rows="3" placeholder="מה שיש לי עכשיו..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(1)">&#8594; חזור</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">הבא &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Root vs Branches -->
+  <div class="step-card" id="step-3">
+    <span class="principle-tag">עקרון 3 — להכות בשורש</span>
+    <h2>ענף או שורש?</h2>
+    <p class="question">האם מה שאתה עושה עכשיו הוא טיפול בסימפטום (ענף) או פתרון הסיבה (שורש)?</p>
+    <div class="option-group">
+      <button class="option-btn" onclick="selectOption(this, 'q3', 'branch')">אני חובט בענפים — מטפל בסימפטום</button>
+      <button class="option-btn" onclick="selectOption(this, 'q3', 'root')">אני כורת בשורש — פותר את הסיבה</button>
+      <button class="option-btn" onclick="selectOption(this, 'q3', 'notsure')">אני לא בטוח מה השורש</button>
+    </div>
+    <input type="hidden" id="q3" value="">
+    <p class="question" style="margin-top: 20px;">מהו השורש? מה הסיבה האמיתית לבעיה?</p>
+    <textarea class="input-field" id="q3b" rows="3" placeholder="השורש / הסיבה האמיתית היא..."></textarea>
+    <div class="voice-box">"אלף איש חובטים בענפי הרשע, לעומת אחד שכורת בשורש." — טורו</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(2)">&#8594; חזור</button>
+      <button class="btn btn-primary" onclick="goToStep(4)">הבא &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Effortless Inversion -->
+  <div class="step-card" id="step-4">
+    <span class="principle-tag">עקרונות 4-6 — נטול מאמץ</span>
+    <h2>"אולי זה יכול להיות קל?"</h2>
+    <p class="question">היפוך ההנחה: במקום "זה דורש מאמץ אדיר" — מה אם דווקא ההפך נכון?</p>
+    <textarea class="input-field" id="q4" rows="3" placeholder="אם זה היה קל, איך זה היה נראה?"></textarea>
+    <p class="question" style="margin-top: 20px;">איך תהפוך את החיוני לקל והמיותר לקשה?</p>
+    <textarea class="input-field" id="q4b" rows="3" placeholder="החיוני יהיה קל על ידי... והמיותר יהיה קשה על ידי..."></textarea>
+    <div class="mini-venn">
+      <div class="mini-venn-circle mini-venn-left">חיוני</div>
+      <div class="mini-venn-circle mini-venn-right">מהנה</div>
+      <div class="mini-venn-center">נטול מאמץ</div>
+    </div>
+    <p class="hint">כשהחיוני והמהנה נפגשים — נוצר הנטול מאמץ</p>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(3)">&#8594; חזור</button>
+      <button class="btn btn-primary" onclick="goToStep(5)">הבא &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Leverage & Exponential -->
+  <div class="step-card" id="step-5">
+    <span class="principle-tag">עקרונות 7-8 — מנוף ואקספוננציאלי</span>
+    <h2>מה נקודת המשען?</h2>
+    <p class="question">מהי פעולה אחת שתעשה פעם אחת ותמשיך להניב תוצאות שוב ושוב? (המנוף שלך)</p>
+    <textarea class="input-field" id="q5" rows="3" placeholder="הפעולה האחת שתמשיך להניב תוצאות היא..."></textarea>
+    <p class="question" style="margin-top: 20px;">האם הגישה שלך כרגע ליניארית או אקספוננציאלית?</p>
+    <div class="option-group">
+      <button class="option-btn" onclick="selectOption(this, 'q5b', 'linear')">ליניארית — משקיע מאמץ כל יום מחדש</button>
+      <button class="option-btn" onclick="selectOption(this, 'q5b', 'expo')">אקספוננציאלית — משקיע פעם אחת וזה זורם</button>
+      <button class="option-btn" onclick="selectOption(this, 'q5b', 'transition')">רוצה לעבור מליניארי לאקספוננציאלי</button>
+    </div>
+    <input type="hidden" id="q5b" value="">
+    <div class="voice-box">קול זקס: "כשמלך מת כוחו נגמר. כשנביא מת השפעתו מתחילה." כוח = ליניארי. השפעה = אקספוננציאלית.</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(4)">&#8594; חזור</button>
+      <button class="btn btn-primary" onclick="goToStep(6)">הבא &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: Trust & Systems -->
+  <div class="step-card" id="step-6">
+    <span class="principle-tag">עקרונות 9-11 — אמון ומערכות</span>
+    <h2>הסכם אמון גבוה</h2>
+    <p class="question">אם הבעיה מערבת אנשים — מלא את 5 הפרטים של הסכם אמון גבוה:</p>
+    <div style="margin: 10px 0;">
+      <label style="font-weight:700; font-size:0.95rem;">1. תוצאות — אלו תוצאות אנחנו רוצים?</label>
+      <textarea class="input-field" id="q6a" rows="2" placeholder="התוצאה הרצויה..."></textarea>
+    </div>
+    <div style="margin: 10px 0;">
+      <label style="font-weight:700; font-size:0.95rem;">2. תפקידים — מי עושה מה?</label>
+      <textarea class="input-field" id="q6b" rows="2" placeholder="חלוקת התפקידים..."></textarea>
+    </div>
+    <div style="margin: 10px 0;">
+      <label style="font-weight:700; font-size:0.95rem;">3. כללים — על אילו סטנדרטים חובה לשמור?</label>
+      <textarea class="input-field" id="q6c" rows="2" placeholder="הסטנדרטים המינימליים..."></textarea>
+    </div>
+    <div style="margin: 10px 0;">
+      <label style="font-weight:700; font-size:0.95rem;">4. משאבים — איזה כוח אדם, כסף, ציוד נחוץ?</label>
+      <textarea class="input-field" id="q6d" rows="2" placeholder="המשאבים הנחוצים..."></textarea>
+    </div>
+    <div style="margin: 10px 0;">
+      <label style="font-weight:700; font-size:0.95rem;">5. גמולים — איך תוערך ההתקדמות וכיצד יתוגמל?</label>
+      <textarea class="input-field" id="q6e" rows="2" placeholder="מערכת המשוב והתגמול..."></textarea>
+    </div>
+    <div class="voice-box">אמון הוא שמן המנוע. "אני סומך על כושר השיפוט שלך" — שש מילים שמשנות הכל.</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(5)">&#8594; חזור</button>
+      <button class="btn btn-primary" onclick="goToStep(7)">הבא &#8592;</button>
+    </div>
+  </div>
+
+  <!-- STEP 7: The Choice -->
+  <div class="step-card" id="step-7">
+    <span class="principle-tag">העקרון האחרון — כוח הבחירה</span>
+    <h2>הכי חשוב זה לבחור</h2>
+    <div style="text-align:center; margin: 30px 0;">
+      <p style="font-size: 1.4rem; font-weight: 700; line-height: 1.6;">"מה שלא קרה לכם בחייכם, אלו מצוקות שלא סבלתם — <span style="color: var(--teal-light);">הם חבירים בהשוואה לכוח הנתון בכם לבחור מה לעשות עכשיו.</span>"</p>
+    </div>
+    <div style="text-align:center; margin: 20px 0;">
+      <p style="font-size: 1.6rem; font-weight: 900; color: var(--gold);">הכי חשוב זה לבחור.</p>
+    </div>
+    <p class="question">מה אתה בוחר לעשות עכשיו?</p>
+    <textarea class="input-field" id="q7" rows="3" placeholder="הבחירה שלי עכשיו היא..."></textarea>
+    <div class="voice-box">העבר = נתונים (לא משתנים). הבחירה עכשיו = המשתנה. התוצאה = פונקציה של המשתנה, לא של הנתונים. E + R = O.</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(6)">&#8594; חזור</button>
+      <button class="btn btn-gold" onclick="generateResult()">צור תוכנית פעולה &#10003;</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="step-card" id="step-result">
+    <div class="result-card">
+      <h2>תוכנית הפעולה שלך</h2>
+      <p style="font-size: 1.1rem; margin: 15px 0; opacity: 0.8;" id="resultProblem"></p>
+      <div id="resultContent"></div>
+    </div>
+    <div style="text-align:center; margin: 20px 0;">
+      <p style="font-size: 1.3rem; font-weight: 700; color: var(--gold);">E + R = O</p>
+      <p style="opacity: 0.7;">האירוע קבוע • התגובה בידך • התוצאה נקבעת</p>
+    </div>
+    <div style="text-align:center; margin: 20px 0;">
+      <button class="btn btn-primary" onclick="window.print()">הדפס &#128424;</button>
+      <button class="btn btn-secondary" onclick="resetTool()" style="margin-right:10px;">התחל מחדש</button>
+    </div>
+    <div style="text-align:center; margin: 20px 0; opacity: 0.5; font-size: 0.85rem;">
+      AILON TASK • Mentor-IT • ליאור סופר
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 0;
+const totalSteps = 8; // 0-7 + result
+
+// Enable start button when problem is entered
+document.getElementById('problemInput').addEventListener('input', function() {
+  document.getElementById('startBtn').disabled = this.value.trim().length < 5;
+});
+
+function goToStep(step) {
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById('step-' + step) || document.getElementById('step-result');
+  card.classList.add('active');
+  currentStep = step;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Feedback for focus paradox
+  if (step === 2) {
+    setTimeout(() => {
+      const feedback = document.getElementById('q2-feedback');
+      const val = document.getElementById('q2').value;
+      if (val === 'lack') {
+        feedback.style.display = 'block';
+        feedback.innerHTML = '<div class="voice-box" style="border-color:#f87171; background:rgba(239,68,68,0.1);">זקס: "אשרי האיש ששמח בחלקו." נסה להעביר את המיקוד למה שיש — ותגלה שהחיסרון מתמלא מעצמו.</div>';
+      } else if (val === 'have') {
+        feedback.style.display = 'block';
+        feedback.innerHTML = '<div class="voice-box">מצוין! אתה בכיוון הנכון. המיקוד ביש הוא המנוף שממלא את החיסרון.</div>';
+      }
+    }, 100);
+  }
+}
+
+function selectOption(btn, hiddenId, value) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById(hiddenId).value = value;
+}
+
+function updateProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  for (let i = 0; i < totalSteps; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-step';
+    if (i < currentStep) dot.classList.add('done');
+    if (i === currentStep) dot.classList.add('active');
+    dot.textContent = i === 0 ? 'START' : i;
+    dot.onclick = () => { if (i <= currentStep) goToStep(i); };
+    bar.appendChild(dot);
+  }
+}
+
+function generateResult() {
+  const problem = document.getElementById('problemInput').value;
+  const q1 = document.getElementById('q1').value;
+  const q1b = document.getElementById('q1b').value;
+  const q2 = document.getElementById('q2').value;
+  const q2b = document.getElementById('q2b').value;
+  const q3 = document.getElementById('q3').value;
+  const q3b = document.getElementById('q3b').value;
+  const q4 = document.getElementById('q4').value;
+  const q4b = document.getElementById('q4b').value;
+  const q5 = document.getElementById('q5').value;
+  const q5b = document.getElementById('q5b').value;
+  const q6a = document.getElementById('q6a').value;
+  const q6b = document.getElementById('q6b').value;
+  const q6c = document.getElementById('q6c').value;
+  const q6d = document.getElementById('q6d').value;
+  const q6e = document.getElementById('q6e').value;
+  const q7 = document.getElementById('q7').value;
+
+  document.getElementById('resultProblem').innerHTML = '<strong>הבעיה:</strong> ' + problem;
+
+  let html = '';
+
+  if (q1 || q1b) {
+    html += '<div class="result-section"><h3>1. הסרת מורכבות</h3>';
+    if (q1) html += '<p><strong>המורכבות:</strong> ' + q1 + '</p>';
+    if (q1b) html += '<p><strong>הדרך הפשוטה ביותר:</strong> ' + q1b + '</p>';
+    html += '</div>';
+  }
+
+  if (q2 || q2b) {
+    html += '<div class="result-section"><h3>2. מיקוד ביש</h3>';
+    if (q2 === 'lack') html += '<p style="color:#f87171;">מיקוד נוכחי: בחיסרון — העבר את המיקוד למה שיש</p>';
+    if (q2 === 'have') html += '<p style="color:var(--teal-light);">מיקוד נוכחי: ביש — כל הכבוד!</p>';
+    if (q2 === 'mixed') html += '<p>מיקוד מעורב — בחר להתמקד במה שיש</p>';
+    if (q2b) html += '<p><strong>מה שיש לי:</strong> ' + q2b + '</p>';
+    html += '</div>';
+  }
+
+  if (q3 || q3b) {
+    html += '<div class="result-section"><h3>3. הכאה בשורש</h3>';
+    if (q3 === 'branch') html += '<p style="color:#f87171;">כרגע חובט בענפים — עבור לשורש</p>';
+    if (q3 === 'root') html += '<p style="color:var(--teal-light);">כבר פועל בשורש — מצוין!</p>';
+    if (q3 === 'notsure') html += '<p>זהה את השורש כדי לפתור את הבעיה לתמיד</p>';
+    if (q3b) html += '<p><strong>השורש:</strong> ' + q3b + '</p>';
+    html += '</div>';
+  }
+
+  if (q4 || q4b) {
+    html += '<div class="result-section"><h3>4. היפוך נטול מאמץ</h3>';
+    if (q4) html += '<p><strong>אם זה היה קל:</strong> ' + q4 + '</p>';
+    if (q4b) html += '<p><strong>היפוך הקלות:</strong> ' + q4b + '</p>';
+    html += '</div>';
+  }
+
+  if (q5 || q5b) {
+    html += '<div class="result-section"><h3>5. המנוף</h3>';
+    if (q5) html += '<p><strong>פעולה אחת אקספוננציאלית:</strong> ' + q5 + '</p>';
+    if (q5b === 'linear') html += '<p style="color:#f87171;">כרגע ליניארי — חפש את המעבר לאקספוננציאלי</p>';
+    if (q5b === 'expo') html += '<p style="color:var(--teal-light);">אקספוננציאלי — מצוין!</p>';
+    if (q5b === 'transition') html += '<p>בדרך לאקספוננציאלי — המשך</p>';
+    html += '</div>';
+  }
+
+  if (q6a || q6b || q6c || q6d || q6e) {
+    html += '<div class="result-section"><h3>6. הסכם אמון גבוה</h3>';
+    if (q6a) html += '<p><strong>תוצאות:</strong> ' + q6a + '</p>';
+    if (q6b) html += '<p><strong>תפקידים:</strong> ' + q6b + '</p>';
+    if (q6c) html += '<p><strong>כללים:</strong> ' + q6c + '</p>';
+    if (q6d) html += '<p><strong>משאבים:</strong> ' + q6d + '</p>';
+    if (q6e) html += '<p><strong>גמולים:</strong> ' + q6e + '</p>';
+    html += '</div>';
+  }
+
+  if (q7) {
+    html += '<div class="result-section" style="border:2px solid var(--gold); background:rgba(245,158,11,0.05);"><h3 style="color:var(--gold);">7. הבחירה שלך</h3>';
+    html += '<p style="font-size:1.2rem; font-weight:700;">' + q7 + '</p>';
+    html += '<p style="margin-top:10px; opacity:0.7;">"הכי חשוב זה לבחור."</p>';
+    html += '</div>';
+  }
+
+  document.getElementById('resultContent').innerHTML = html;
+  goToStep('result');
+}
+
+function resetTool() {
+  document.querySelectorAll('.input-field, input[type="hidden"]').forEach(el => el.value = '');
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('startBtn').disabled = true;
+  goToStep(0);
+}
+
+// Initialize
+updateProgress();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מניהול בעיות לפתרון נטול מאמץ | הרצאה מאת ליאור סופר</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --teal: #0d9488; --teal-light: #14b8a6; --teal-dark: #0f766e;
+  --navy: #0f172a; --slate: #1e293b; --slate-light: #334155;
+  --mint: #f0fdfa; --white: #ffffff; --gold: #f59e0b;
+}
+body { font-family: 'Heebo', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+.slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 40px; position: relative; overflow: hidden; }
+.slide-1 { background: linear-gradient(135deg, #0f172a 0%, #0d9488 50%, #0f766e 100%); }
+.slide-2 { background: linear-gradient(135deg, #1e293b 0%, #0f766e 100%); }
+.slide-3 { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+.slide-4 { background: linear-gradient(135deg, #0d9488 0%, #0f172a 100%); }
+.slide-5 { background: linear-gradient(135deg, #0f766e 0%, #1e293b 50%, #0d9488 100%); }
+.slide-final { background: linear-gradient(135deg, #0f172a 0%, #0d9488 50%, #14b8a6 100%); }
+.math-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.math-symbol { position: absolute; font-size: 3rem; opacity: 0.06; color: var(--teal-light); animation: float 20s infinite ease-in-out; }
+@keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(10deg); } }
+.content { position: relative; z-index: 2; max-width: 900px; width: 100%; }
+h1 { font-size: 3.5rem; font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
+h2 { font-size: 2.8rem; font-weight: 900; line-height: 1.2; margin-bottom: 18px; }
+h3 { font-size: 1.6rem; font-weight: 700; color: var(--teal-light); margin-bottom: 12px; }
+p { font-size: 1.25rem; line-height: 1.7; font-weight: 300; }
+.big-quote { font-size: 2rem; font-weight: 700; line-height: 1.5; text-align: center; }
+.principle-num { font-size: 5rem; font-weight: 900; color: var(--teal-light); opacity: 0.3; position: absolute; top: 20px; right: 20px; }
+.card { background: rgba(255,255,255,0.08); border: 1px solid rgba(20,184,166,0.2); border-radius: 20px; padding: 30px; margin: 15px 0; backdrop-filter: blur(10px); transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 10px 40px rgba(13,148,136,0.2); }
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.tag { display: inline-block; background: var(--teal); color: var(--white); padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin: 4px 0; }
+.tag-gold { background: var(--gold); } .tag-dark { background: var(--slate); }
+.voice { border-right: 4px solid; padding: 12px 20px; margin: 12px 0; border-radius: 8px; font-size: 1.1rem; font-weight: 300; }
+.voice-sacks { border-color: #818cf8; background: rgba(129,140,248,0.1); }
+.voice-sinek { border-color: #f59e0b; background: rgba(245,158,11,0.1); }
+.voice-lior { border-color: var(--teal-light); background: rgba(20,184,166,0.1); }
+.venn-container { display: flex; justify-content: center; align-items: center; position: relative; height: 280px; margin: 30px 0; }
+.venn-circle { width: 220px; height: 220px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 1.3rem; position: absolute; }
+.venn-left { background: rgba(13,148,136,0.4); border: 2px solid var(--teal-light); right: 120px; }
+.venn-right { background: rgba(245,158,11,0.3); border: 2px solid var(--gold); left: 120px; }
+.venn-center { position: absolute; z-index: 5; background: var(--white); color: var(--navy); padding: 12px 24px; border-radius: 30px; font-weight: 900; font-size: 1.2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.chart-row { display: flex; align-items: center; gap: 15px; margin: 12px 0; }
+.chart-bar { height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.bar-linear { background: linear-gradient(90deg, var(--slate-light), var(--slate)); width: 30%; }
+.bar-expo { background: linear-gradient(90deg, var(--teal), var(--teal-light)); width: 95%; }
+.nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 100; background: rgba(15,23,42,0.9); padding: 10px 20px; border-radius: 40px; backdrop-filter: blur(10px); border: 1px solid rgba(20,184,166,0.2); }
+.nav-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: all 0.3s; }
+.nav-dot.active { background: var(--teal-light); width: 30px; border-radius: 6px; }
+.nav-dot:hover { background: var(--teal-light); }
+.nav-arrow { position: fixed; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; background: rgba(13,148,136,0.8); border: none; color: white; font-size: 1.5rem; cursor: pointer; z-index: 100; display: flex; justify-content: center; align-items: center; transition: all 0.3s; }
+.nav-arrow:hover { background: var(--teal-light); transform: translateY(-50%) scale(1.1); }
+.nav-prev { right: 20px; } .nav-next { left: 20px; }
+.mini-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.mini-table th { background: var(--teal-dark); padding: 12px; text-align: right; font-weight: 700; }
+.mini-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.mini-table tr:hover { background: rgba(20,184,166,0.05); }
+.logo { position: absolute; top: 30px; left: 30px; z-index: 10; }
+.logo-text { font-size: 1rem; font-weight: 900; color: var(--teal-light); letter-spacing: 2px; }
+.highlight { color: var(--teal-light); font-weight: 700; }
+.fade-in { animation: fadeIn 0.8s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 768px) { h1 { font-size: 2.2rem; } h2 { font-size: 1.8rem; } p { font-size: 1rem; } .card-grid { grid-template-columns: 1fr; } .venn-circle { width: 160px; height: 160px; } .venn-left { right: 80px; } .venn-right { left: 80px; } }
+</style>
+</head>
+<body>
+<div class="logo"><div class="logo-text">AILON TASK</div></div>
+<button class="nav-arrow nav-next" onclick="nextSlide()">&#8249;</button>
+<button class="nav-arrow nav-prev" onclick="prevSlide()">&#8250;</button>
+<div class="nav" id="nav"></div>
+
+<div class="slide slide-1" id="slide-0">
+  <div class="math-bg"><span class="math-symbol" style="top:10%;left:5%;">+</span><span class="math-symbol" style="top:60%;right:10%;">=</span><span class="math-symbol" style="bottom:15%;left:20%;">&#8721;</span><span class="math-symbol" style="top:30%;right:30%;">&#8734;</span><span class="math-symbol" style="bottom:40%;right:5%;">x</span></div>
+  <div class="content fade-in" style="text-align:center;">
+    <div style="margin-bottom: 20px;"><span class="tag">הרצאה מאת ליאור סופר</span></div>
+    <h1>מניהול בעיות<br>לפתרון נטול מאמץ</h1>
+    <p style="font-size: 1.5rem; margin-top: 20px; color: var(--teal-light);">11 עקרונות לפתרון בעיות, קבלת החלטות ותוצאות אקספוננציאליות</p>
+    <p style="margin-top: 30px; font-size: 1rem; opacity: 0.7;">מבוסס על ספרי "ליהנות" (גרג מקאון) ו"כנות רדיקלית" (קים סקוט)<br>משולב עם מודל E+R=O • תורת הפתרונות • זקס • סינק</p>
+    <div style="margin-top: 40px;"><span class="tag tag-gold">AILON TASK</span> <span class="tag tag-dark">Dream it. Plan it. Achieve it.</span></div>
+  </div>
+</div>
+
+<div class="slide slide-2" id="slide-1">
+  <div class="content fade-in">
+    <div class="principle-num">0</div>
+    <h2>השאלה שמשנה הכל</h2>
+    <div class="big-quote" style="margin: 30px 0;">"אלף איש חובטים בענפי הרשע,<br>לעומת אחד שכורת בשורש."</div>
+    <p style="text-align:center; margin-top: 20px; color: var(--teal-light);">— הנרי דויד טורו</p>
+    <div style="margin-top: 40px;">
+      <div class="card"><h3>הבעיה</h3><p>רובנו מנהלים בעיות במקום לפתור אותן. אנחנו חובטים בענפים — מטפלים בסימפטומים, מתנצלים, מתלוננים, חוזרים שוב ושוב על אותו דפוס. אבל הבעיה חוזרת. כי השורש נשאר.</p></div>
+      <div class="card"><h3>ההזמנה</h3><p>בהרצאה הזו נלמד 11 עקרונות שיעזרו לנו להפסיק לנהל בעיות ולהתחיל <span class="highlight">לפתור אותן בשורש</span> — עם פחות מאמץ ויותר תוצאות.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-3" id="slide-2">
+  <div class="content fade-in" style="text-align:center;">
+    <span class="tag" style="font-size: 1.1rem;">חלק א׳</span>
+    <h2 style="margin-top: 20px;">הבנת הבעיה</h2>
+    <p style="font-size: 1.4rem; margin-top: 20px; opacity: 0.8;">3 עקרונות לראיית הבעיה בבהירות</p>
+    <div style="margin-top: 40px;"><span class="tag">1. עקרון המורכבות</span> <span class="tag">2. פרדוקס המיקוד</span> <span class="tag">3. להכות בשורש</span></div>
+  </div>
+</div>
+
+<div class="slide slide-4" id="slide-3">
+  <div class="content fade-in">
+    <div class="principle-num">1</div>
+    <span class="tag">עקרון 1</span>
+    <h2>עקרון המורכבות</h2>
+    <div class="big-quote" style="font-size: 1.6rem; margin: 25px 0;">מה הדבר המורכב בפרויקט?<br>כשמסלקים את המורכבות — נוצרת בהירות.</div>
+    <div class="card"><h3>השאלה המכריעה</h3><p>מהי הדרך הפשוטה ביותר להשיג את התוצאה הזאת?</p></div>
+    <div class="card"><h3>השרשרת</h3><p>מורכבות &#8594; הסרת מורכבות &#8594; <span class="highlight">בהירות</span> &#8594; תוצאות</p></div>
+    <div class="voice voice-lior"><strong>קול ליאור:</strong> הפתרון האמיתי מגיע מהסרה, לא מהוספה. זה נגד האינסטינקט — אנחנו רגילים לחשוב שצריך להוסיף. אבל בהירות נוצרת רק אחרי הסרה.</div>
+  </div>
+</div>
+
+<div class="slide slide-5" id="slide-4">
+  <div class="content fade-in">
+    <div class="principle-num">2</div>
+    <span class="tag">עקרון 2</span>
+    <h2>פרדוקס המיקוד</h2>
+    <div class="big-quote" style="font-size: 1.6rem; margin: 25px 0;">"כשאתם מתמקדים במה שחסר לכם — אתם מאבדים את מה שיש לכם.<br>כשאתם מתמקדים במה שיש לכם — אתם מקבלים את מה שחסר לכם."</div>
+    <div class="card"><h3>הפרדוקס</h3><p>האינסטינקט אומר: "אם חסר לי משהו, אני צריך להסתכל על החיסרון." אבל האמת הפוכה — הסתכלות על החיסרון מקטינה אותך. הסתכלות על היש מגדילה אותך.</p></div>
+    <div class="voice voice-sacks"><strong>קול זקס:</strong> "אשרי האיש ששמח בחלקו" — לא ויתור על צמיחה, אלא הכלי לצמיחה. השמחה בחלק היא המצע ממנו צומחים הלאה.</div>
+    <div class="voice voice-sinek"><strong>קול סינק:</strong> כשיודעים למה (הערך שכבר יש), האיך (מילוי החיסרון) מגיע מעצמו.</div>
+  </div>
+</div>
+
+<div class="slide slide-3" id="slide-5">
+  <div class="content fade-in">
+    <div class="principle-num">3</div>
+    <span class="tag">עקרון 3</span>
+    <h2>להכות בשורש,<br>לא בענפים</h2>
+    <div class="card-grid">
+      <div class="card"><h3 style="color: #f87171;">חבטה בענפים</h3><p>רופא &#8594; שנים של תרופות וניתוח<br>עובד &#8594; מתנצל שוב ושוב על איחור<br>מחנך &#8594; מתלונן שתלמידים לא מקשיבים<br>סטודנט &#8594; עובד ללא הפסקה<br>הורה &#8594; מסדר יום-יום אחרי הילדים</p></div>
+      <div class="card"><h3 style="color: var(--teal-light);">הכאה בשורש</h3><p>רופא &#8594; מעודד תזונה והתעמלות<br>עובד &#8594; משפר את התהליך<br>מחנך &#8594; כורת הסכם לפני תחילת השנה<br>סטודנט &#8594; משקיע דקה לתכנון<br>הורה &#8594; בונה הרגל חיובי</p></div>
+    </div>
+    <div class="card" style="text-align:center; margin-top: 20px;"><p style="font-size: 1.3rem;"><span style="color:#f87171;">חבטה בענפים = ליניארי</span> (כל יום מחדש)<br><span class="highlight">הכאה בשורש = אקספוננציאלי</span> (פעם אחת, וזה נגמר)</p></div>
+  </div>
+</div>
+
+<div class="slide slide-4" id="slide-6">
+  <div class="content fade-in" style="text-align:center;">
+    <span class="tag" style="font-size: 1.1rem;">חלק ב׳</span>
+    <h2 style="margin-top: 20px;">כלים לפתרון</h2>
+    <p style="font-size: 1.4rem; margin-top: 20px; opacity: 0.8;">4 עקרונות לפתרון נטול מאמץ</p>
+    <div style="margin-top: 40px;"><span class="tag">4. חוק המאמץ המזערי</span> <span class="tag">5. היפוך הקלות</span> <span class="tag">6. היפוך נטול מאמץ</span> <span class="tag">7. עקרון המנוף</span></div>
+  </div>
+</div>
+
+<div class="slide slide-2" id="slide-7">
+  <div class="content fade-in">
+    <div class="principle-num">4</div>
+    <span class="tag">עקרון 4</span>
+    <h2>חוק המאמץ המזערי</h2>
+    <div class="big-quote" style="font-size: 1.5rem; margin: 25px 0;">הנטייה שלנו לבחור בנתיב<br>שיציב בפנינו את ההתנגדות הקטנה ביותר.</div>
+    <div class="card"><h3>החוק הכפול</h3><p><span style="color:#f87171;">לרע:</span> כשהקל = המיותר (גלילה, דחיינות, מידע שטחי) — אנחנו נופלים<br><span class="highlight">לטוב:</span> כשמזהים את הדרך הקלה ומעצבים אותה לטובה — אפשר להגיע לתוצאות מצוינות עם מינימום מאמץ</p></div>
+    <div class="voice voice-sinek"><strong>קול סינק:</strong> פשטות = כוח. הדרך הקלה לא תמיד קלה כי היא רדודה — לפעמים היא קלה כי היא פשוטה ונכונה.</div>
+  </div>
+</div>
+
+<div class="slide slide-5" id="slide-8">
+  <div class="content fade-in">
+    <div class="principle-num">5</div>
+    <span class="tag">עקרון 5</span>
+    <h2>שאלת היפוך הקלות</h2>
+    <div class="big-quote" style="font-size: 1.5rem; margin: 25px 0;">מה עשוי לקרות בחייכם אם הדברים הקלים,<br>החסרי משמעות, יעשו קשים יותר,<br>והדברים החיוניים יעשו קלים יותר?</div>
+    <div class="card-grid">
+      <div class="card"><h3 style="color:#f87171;">הופכים לקשה</h3><p>טלפון בחדר אחר &#8594; גלילה קשה<br>מחיקת אפליקציות &#8594; חיכוך גבוה<br>ספר בחדר אחר &#8594; קריאה קשה</p></div>
+      <div class="card"><h3 style="color: var(--teal-light);">הופכים לקל</h3><p>נעלי ספורט ליד הדלת &#8594; תנועה קלה<br>ספר על השולחן &#8594; קריאה קלה<br>בקבוק מים לידך &#8594; שתייה קלה</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide slide-3" id="slide-9">
+  <div class="content fade-in">
+    <div class="principle-num">6</div>
+    <span class="tag">עקרון 6</span>
+    <h2>היפוך נטול מאמץ</h2>
+    <div class="big-quote" style="font-size: 1.5rem; margin: 25px 0;">"אולי זה יכול להיות קל?"</div>
+    <div class="card"><h3>ההנחה שצריך להפוך</h3><p>ההנחה שכל הדברים הערכיים מצריכים מאמץ אדיר — זאת רק דרך אחת להסתכל על הבעיה. לבעלי שאיפות גבוהות, לא פעם זאת הדרך היחידה שהם למדו.</p></div>
+    <div class="card"><h3>ההיפוך</h3><p>להסתכל על בעיות מנקודת מבט מנוגדת. לשאול "אולי זה יכול להיות קל?" ללמוד לפתור בעיות מתוך מיקוד, בהירות ושלווה.</p></div>
+    <div class="venn-container"><div class="venn-circle venn-left">חיוני</div><div class="venn-circle venn-right">מהנה</div><div class="venn-center">נטול מאמץ</div></div>
+  </div>
+</div>
+
+<div class="slide slide-4" id="slide-10">
+  <div class="content fade-in">
+    <div class="principle-num">7</div>
+    <span class="tag">עקרון 7</span>
+    <h2>עקרון המנוף</h2>
+    <div class="big-quote" style="font-size: 1.4rem; margin: 20px 0;">"אילו היה לי מנוף ארוך דיו ונקודת משען נכונה,<br>הייתי יכול להזיז את העולם."</div>
+    <p style="text-align:center; color: var(--teal-light);">— ארכימדס</p>
+    <div class="card"><h3>מנוף למידה</h3><p>מפתחים ידע פעם אחת &#8594; ההזדמנויות זורמות שנים<br>מבינים עקרונות יסוד &#8594; מחילים אותם בכל עשור<br>מנהיגים מרגל פעם אחת &#8594; הוא משרת חיים שלמים</p></div>
+    <div class="card"><h3>המנוף האולטימטיבי — הוראה</h3><p>ככל שאנחנו מלמדים יותר, כך אנחנו עצמנו לומדים יותר. המנוף פועל בשני הכיוונים.</p></div>
+    <div class="voice voice-sacks"><strong>קול זקס:</strong> "כשמלך מת כוחו נגמר. כשנביא מת השפעתו מתחילה." המנוף הוא ההסבר המכני לזה — פעולה אחת שממשיכה להשפיע הרבה אחרי שהסתיימה.</div>
+  </div>
+</div>
+
+<div class="slide slide-5" id="slide-11">
+  <div class="content fade-in" style="text-align:center;">
+    <span class="tag" style="font-size: 1.1rem;">חלק ג׳</span>
+    <h2 style="margin-top: 20px;">מערכות ואמון</h2>
+    <p style="font-size: 1.4rem; margin-top: 20px; opacity: 0.8;">4 עקרונות לתוצאות אקספוננציאליות בצוות</p>
+    <div style="margin-top: 40px;"><span class="tag">8. ליניארי מול אקספוננציאלי</span> <span class="tag">9. אמון כשמן המנוע</span> <span class="tag">10. הסכם אמון גבוה</span> <span class="tag">11. כנות רדיקלית</span></div>
+  </div>
+</div>
+
+<div class="slide slide-2" id="slide-12">
+  <div class="content fade-in">
+    <div class="principle-num">8</div>
+    <span class="tag">עקרון 8</span>
+    <h2>ליניארי מול<br>אקספוננציאלי</h2>
+    <div class="card"><h3>תוצאות ליניאריות</h3><div class="chart-bar bar-linear">מוגבלות במאמץ — נגמרות כשמפסיקים</div><p style="font-size: 1rem; margin-top: 10px;">שננן &#8594; ציון. מתאמן &#8594; החלטה חוזרת. פרילנסר &#8594; מרוויח רק כשעובד</p></div>
+    <div class="card"><h3>תוצאות אקספוננציאליות</h3><div class="chart-bar bar-expo">מאמץ חד-פעמי &#8594; תוצאה אינסופית</div><p style="font-size: 1rem; margin-top: 10px;">ספר &#8594; תמלוגים שנים. הרגל &#8594; זורם לבד. מערכת &#8594; עובדת בחופשה</p></div>
+    <div class="voice voice-sacks"><strong>קול זקס:</strong> כוח = ליניארי (נגמר כשמפסיקים). השפעה = אקספוננציאלית (ממשיכה אחרי שמפסיקים). זו ההגדרה המדויקת של ההבדל.</div>
+  </div>
+</div>
+
+<div class="slide slide-3" id="slide-13">
+  <div class="content fade-in">
+    <div class="principle-num">9</div>
+    <span class="tag">עקרון 9</span>
+    <h2>אמון כשמן המנוע</h2>
+    <div class="card"><h3>המטאפורה</h3><p>חלקים רבים במנוע נעים במהירות ומייצרים חיכוך. השמן הוא חומר סיכה שעוזר להם להחליק במקום לשחוק זה את זה. כשחסר שמן — המנוע נתקע ונהרס.</p></div>
+    <div class="card"><h3>בצוות</h3><p>בלי אמון — סוחטים, מתחקרים זה את זה, שוחקים את כולם. עם אמון — החלקים מחליקים, העבודה זורמת, זה נטול מאמץ.</p></div>
+    <div class="big-quote" style="font-size: 1.5rem; margin: 20px 0; text-align:center;">"אני סומך על כושר השיפוט שלך."</div>
+    <p style="text-align:center;">שש מילים שמשמנות את המנוע ומעצימות את הצוות.</p>
+    <div class="voice voice-sacks"><strong>קול זקס:</strong> ברית = אמון = שמן המנוע. חוזה = חשד = חיכוך. ברית נטולת מאמץ כי היא מבוססת על אמון.</div>
+  </div>
+</div>
+
+<div class="slide slide-4" id="slide-14">
+  <div class="content fade-in">
+    <div class="principle-num">10</div>
+    <span class="tag">עקרון 10</span>
+    <h2>הסכם אמון גבוה</h2>
+    <p>שבו יחד והסדירו חמישה פרטים — השקעה חד-פעמית שפועלת כמנוף.</p>
+    <table class="mini-table">
+      <tr><th>פרט</th><th>השאלה</th></tr>
+      <tr><td><span class="highlight">תוצאות</span></td><td>אלו תוצאות אנחנו רוצים?</td></tr>
+      <tr><td><span class="highlight">תפקידים</span></td><td>מי עושה מה?</td></tr>
+      <tr><td><span class="highlight">כללים</span></td><td>על אילו סטנדרטים חובה לשמור?</td></tr>
+      <tr><td><span class="highlight">משאבים</span></td><td>איזה כוח אדם, כסף, ציוד נחוץ?</td></tr>
+      <tr><td><span class="highlight">גמולים</span></td><td>איך תוערך ההתקדמות וכיצד יתוגמל?</td></tr>
+    </table>
+    <div class="card"><p style="text-align:center; font-size: 1.2rem;">עובד על: שיפוץ בית • צוות בעבודה • זוגיות • משפחה</p></div>
+  </div>
+</div>
+
+<div class="slide slide-5" id="slide-15">
+  <div class="content fade-in">
+    <div class="principle-num">11</div>
+    <span class="tag">עקרון 11</span>
+    <h2>כנות רדיקלית</h2>
+    <div class="big-quote" style="font-size: 1.3rem; margin: 20px 0;">אכפתיות אישית + אתגור ישיר<br>= כנות רדיקלית</div>
+    <table class="mini-table">
+      <tr><th>סגנון</th><th>אכפתיות</th><th>אתגור</th><th>תוצאה</th></tr>
+      <tr><td>תוקפנות בוטה</td><td>&#10007;</td><td>&#10003;</td><td>ברור אבל פוגע</td></tr>
+      <tr><td>אמפתיה הרסנית</td><td>&#10003;</td><td>&#10007;</td><td>נעים אבל לא יעיל</td></tr>
+      <tr><td>ציניות מניפולטיבית</td><td>&#10007;</td><td>&#10007;</td><td>הרסני לחלוטין</td></tr>
+      <tr style="background: rgba(13,148,136,0.2);"><td><span class="highlight">כנות רדיקלית</span></td><td>&#10003;</td><td>&#10003;</td><td>אמון + צמיחה</td></tr>
+    </table>
+    <div class="voice voice-lior"><strong>קול ליאור:</strong> "אני סומך על כושר השיפוט שלך" זו כנות רדיקלית בדיוק — אכפתיות (סומך עליך) + אתגור (לך תחליט). המעבר מ"להיות צודק" ל"לפתור את הבעיה."</div>
+  </div>
+</div>
+
+<div class="slide slide-1" id="slide-16">
+  <div class="content fade-in" style="text-align:center;">
+    <span class="tag tag-gold" style="font-size: 1.1rem;">חלק ד׳ — הסיום</span>
+    <h2 style="margin-top: 20px;">כוח הבחירה</h2>
+    <div class="big-quote" style="font-size: 1.6rem; margin: 30px 0; line-height: 1.6;">"מה שלא קרה לכם בחייכם, אלו מצוקות שלא סבלתם, איזה כאב — משמעותיים ככל שהיו — <span class="highlight">הם חבירים בהשוואה לכוח הנתון בכם לבחור מה לעשות עכשיו.</span>"</div>
+    <div class="big-quote" style="font-size: 1.4rem; margin: 30px 0; color: var(--gold);">"הכי חשוב זה לבחור."</div>
+    <div class="card" style="max-width: 600px; margin: 20px auto;"><p style="text-align:center; font-size: 1.1rem;">העבר = נתונים (לא משתנים)<br>הבחירה עכשיו = המשתנה (הדבר היחיד שבידך)<br>התוצאה = פונקציה של המשתנה, לא של הנתונים</p></div>
+    <div class="voice voice-sacks" style="max-width: 600px; margin: 15px auto;"><strong>קול זקס:</strong> "בחרת בחיים" — הבחירה היא החיים עצמם. לא לבחור זו גם בחירה — בחירה להישאר. ולהישאר זה לתת לעבר לקבוע במקומך.</div>
+  </div>
+</div>
+
+<div class="slide slide-final" id="slide-17">
+  <div class="math-bg"><span class="math-symbol" style="top:10%;left:5%;">E+R=O</span><span class="math-symbol" style="top:60%;right:10%;">&#8734;</span><span class="math-symbol" style="bottom:15%;left:20%;">&#8721;</span><span class="math-symbol" style="top:30%;right:30%;">&#215;</span></div>
+  <div class="content fade-in" style="text-align:center;">
+    <h2>11 עקרונות במודל אחד</h2>
+    <div class="card-grid" style="margin-top: 30px; text-align: right;">
+      <div class="card"><h3>הבנת הבעיה</h3><p style="font-size: 1rem;">1. מורכבות &#8594; בהירות<br>2. פרדוקס המיקוד<br>3. הכאה בשורש</p></div>
+      <div class="card"><h3>כלים לפתרון</h3><p style="font-size: 1rem;">4. חוק המאמץ המזערי<br>5. היפוך הקלות<br>6. היפוך נטול מאמץ<br>7. עקרון המנוף</p></div>
+      <div class="card"><h3>מערכות ואמון</h3><p style="font-size: 1rem;">8. ליניארי vs אקספוננציאלי<br>9. אמון כשמן המנוע<br>10. הסכם אמון גבוה<br>11. כנות רדיקלית</p></div>
+      <div class="card"><h3>הבחירה</h3><p style="font-size: 1rem; text-align:center;">הכי חשוב<br>זה לבחור.<br><br>E + R = O<br>האירוע קבוע<br>התגובה בידך<br>התוצאה נקבעת</p></div>
+    </div>
+    <div style="margin-top: 40px;"><span class="tag tag-gold">AILON TASK</span><p style="margin-top: 15px; opacity: 0.7;">ליאור סופר | Dream it. Plan it. Achieve it.</p></div>
+  </div>
+</div>
+
+<script>
+let currentSlide = 0; const totalSlides = 18;
+function showSlide(index) { document.querySelectorAll('.slide').forEach((s, i) => { s.style.display = i === index ? 'flex' : 'none'; }); updateNav(); }
+function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; showSlide(currentSlide); } }
+function prevSlide() { if (currentSlide > 0) { currentSlide--; showSlide(currentSlide); } }
+function updateNav() { const nav = document.getElementById('nav'); nav.innerHTML = ''; for (let i = 0; i < totalSlides; i++) { const dot = document.createElement('div'); dot.className = 'nav-dot' + (i === currentSlide ? ' active' : ''); dot.onclick = () => { currentSlide = i; showSlide(i); }; nav.appendChild(dot); } }
+document.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') nextSlide(); if (e.key === 'ArrowRight') prevSlide(); if (e.key === ' ') { e.preventDefault(); nextSlide(); } });
+showSlide(0);
+</script>
+</body>
+</html>
