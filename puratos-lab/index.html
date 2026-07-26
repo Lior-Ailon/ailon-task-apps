@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puratos R&D — טופס בדיקות מעבדה דיגיטלי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --puratos-red: #e30613;
+    --puratos-dark: #2d2d2d;
+    --puratos-light: #f8f5f2;
+    --puratos-gold: #c9a227;
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --bg: #f0f4f5;
+    --card-bg: #ffffff;
+    --text: #2d2d2d;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; }
+  .header { background: linear-gradient(135deg, #fff 0%, #f8f5f2 100%); border-radius: var(--radius); padding: 24px 32px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; border-top: 4px solid var(--puratos-red); }
+  .header-brand { display: flex; align-items: center; gap: 16px; }
+  .header-logo { width: 48px; height: 48px; background: var(--puratos-red); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 22px; }
+  .header h1 { font-size: 22px; font-weight: 700; color: var(--puratos-dark); }
+  .header h1 small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+  .header-date { font-size: 14px; color: var(--muted); font-weight: 500; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; margin-bottom: 20px; }
+  .card-title { font-size: 18px; font-weight: 600; color: var(--puratos-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+  .card-title .icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--teal), var(--teal-light)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .form-grid.two { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 768px) { .form-grid, .form-grid.two { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .field input, .field select, .field textarea { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: 'Heebo', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; background: #fafafa; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); background: white; }
+  .field textarea { min-height: 80px; resize: vertical; }
+  .trials-section { margin-top: 8px; }
+  .trial-row { background: #f9fbfb; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; }
+  .trial-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .trial-title { font-weight: 600; font-size: 15px; color: var(--teal); }
+  .trial-delete { background: #fee2e2; color: #dc2626; border: none; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 13px; font-family: 'Heebo', sans-serif; }
+  .trial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .trial-grid .field input { padding: 8px 12px; font-size: 14px; }
+  .results-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .results-table th { background: linear-gradient(135deg, var(--teal), var(--teal-light)); color: white; padding: 12px 16px; text-align: right; font-size: 14px; font-weight: 500; }
+  .results-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .results-table input { width: 100%; border: none; padding: 6px 10px; font-size: 14px; font-family: 'Heebo', sans-serif; background: transparent; border-radius: 6px; }
+  .results-table input:focus { outline: none; background: #f0fdfa; box-shadow: inset 0 0 0 2px var(--teal-light); }
+  .results-table tr:nth-child(even) { background: #f9fbfb; }
+  .btn { padding: 12px 24px; border-radius: var(--radius-sm); font-size: 15px; font-family: 'Heebo', sans-serif; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: linear-gradient(135deg, var(--teal), var(--teal-light)); color: white; box-shadow: 0 4px 14px rgba(13,148,136,0.3); }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-secondary { background: white; color: var(--teal); border: 1.5px solid var(--teal); }
+  .btn-red { background: linear-gradient(135deg, var(--puratos-red), #c50510); color: white; box-shadow: 0 4px 14px rgba(227,6,19,0.3); }
+  .btn-outline { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .actions-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 20px 0; }
+  .save-status { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--teal); color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 1000; }
+  .save-status.show { opacity: 1; }
+  .saved-item { background: #f9fbfb; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .saved-item:hover { border-color: var(--teal-light); background: #f0fdfa; }
+  .saved-item-title { font-weight: 600; font-size: 15px; }
+  .saved-item-meta { font-size: 13px; color: var(--muted); }
+  .saved-item-actions { display: flex; gap: 8px; }
+  .saved-item-actions button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 13px; font-family: 'Heebo', sans-serif; }
+  .saved-item-actions .load-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .saved-item-actions .del-btn:hover { border-color: #dc2626; color: #dc2626; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: white; padding: 6px; border-radius: 12px; box-shadow: var(--shadow); width: fit-content; }
+  .tab { padding: 10px 24px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--muted); font-family: 'Heebo', sans-serif; }
+  .tab.active { background: linear-gradient(135deg, var(--teal), var(--teal-light)); color: white; }
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 24px 0; }
+  .conclusions-box { background: linear-gradient(135deg, #fffdf5, #fff8e1); border: 2px solid var(--puratos-gold); border-radius: var(--radius-sm); padding: 20px; }
+  .conclusions-box label { font-size: 14px; font-weight: 600; color: #8a6d00; margin-bottom: 10px; display: block; }
+  .conclusions-box textarea { width: 100%; border: 1.5px solid rgba(201,162,39,0.3); border-radius: 8px; padding: 12px; font-size: 15px; font-family: 'Heebo', sans-serif; min-height: 100px; resize: vertical; background: rgba(255,255,255,0.7); }
+  .conclusions-box textarea:focus { outline: none; border-color: var(--puratos-gold); box-shadow: 0 0 0 3px rgba(201,162,39,0.15); }
+  .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 15px; }
+  @media print { body { background: white; padding: 0; } .tabs, .actions-bar, .trial-delete, .saved-item-actions, .btn { display: none !important; } .card { box-shadow: none; border: 1px solid #ccc; } .results-table input { border: 1px solid #ddd; background: white; } .field input, .field select, .field textarea { border: 1px solid #ccc !important; background: white !important; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-brand">
+      <div class="header-logo">P</div>
+      <div><h1>Puratos R&D — טופס בדיקות מעבדה<small>מחלקת מחקר ופיתוח | דיגיטלי אוטומטי</small></h1></div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('new', this)">טופס חדש</button>
+    <button class="tab" onclick="switchTab('saved', this)">דוחות שמורים (<span id="savedCount">0</span>)</button>
+  </div>
+
+  <div id="tab-new">
+    <div class="card">
+      <div class="card-title"><div class="icon">📋</div>פרטי הבדיקה</div>
+      <div class="form-grid">
+        <div class="field"><label>שם מאשר / חוקר</label><input type="text" id="researcher" placeholder="לדוגמה: דר קלי פלומבו"></div>
+        <div class="field"><label>תאריך</label><input type="date" id="testDate"></div>
+        <div class="field"><label>תחום</label><select id="category"><option value="">בחר תחום...</option><option value="bakery">לחמים (Bakery)</option><option value="pastry">מאפים (Pastry)</option><option value="chocolate">שוקולד</option><option value="dairy">חלב</option><option value="ingredients">רכיבים</option><option value="shelf_life">חיי מדף</option><option value="other">אחר</option></select></div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-grid two">
+        <div class="field"><label>נושא הבדיקה</label><input type="text" id="subject" placeholder="לדוגמה: השפעת ריכוזים שונים של S-500"></div>
+        <div class="field"><label>מטרת הבדיקה</label><input type="text" id="objective" placeholder="לדוגמה: מציאת מינון אופטימלי"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">🧪</div>ניסיונות ומתכון</div>
+      <div id="trialsContainer" class="trials-section"></div>
+      <button class="btn btn-secondary" onclick="addTrial()">+ הוסף ניסוי</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">📊</div>תוצאות ומדידות</div>
+      <div style="overflow-x:auto;"><table class="results-table" id="resultsTable"><thead><tr><th>פרמטר</th><th>ניסוי 1</th><th>ניסוי 2</th><th>ניסוי 3</th><th>ניסוי 4</th><th>ניסוי 5</th></tr></thead><tbody id="resultsBody"></tbody></table></div>
+      <button class="btn btn-secondary" onclick="addParameter()" style="margin-top:12px;">+ הוסף פרמטר למדידה</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">✏️</div>מסקנות והמלצות</div>
+      <div class="conclusions-box">
+        <label>מסקנות הבדיקה</label>
+        <textarea id="conclusions" placeholder="כתוב כאן את המסקנות..."></textarea>
+      </div>
+      <div class="form-grid two" style="margin-top:16px;">
+        <div class="field"><label>המלצה להמשך</label><input type="text" id="recommendation" placeholder="לדוגמה: לעבור למינון גבוה בייצור"></div>
+        <div class="field"><label>סטטוס</label><select id="testStatus"><option value="draft">טיוטה</option><option value="in_progress">בתהליך</option><option value="completed">הושלם</option><option value="needs_review">דורש סקירה</option></select></div>
+      </div>
+    </div>
+
+    <div class="actions-bar">
+      <button class="btn btn-primary" onclick="saveReport()">💾 שמור דוח</button>
+      <button class="btn btn-red" onclick="printReport()">🖨️ הדפס / PDF</button>
+      <button class="btn btn-outline" onclick="clearForm()">🔄 טופס חדש</button>
+    </div>
+  </div>
+
+  <div id="tab-saved" style="display:none;">
+    <div class="card">
+      <div class="card-title"><div class="icon">📁</div>דוחות שמורים</div>
+      <div id="savedList" class="saved-list"><div class="empty-state">אין דוחות שמורים עדיין</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="save-status" id="saveStatus">✅ נשמר בהצלחה</div>
+
+<script>
+let trialCount=0, parameterCount=0;
+let savedReports = JSON.parse(localStorage.getItem('puratos_lab_reports') || '[]');
+
+function init() {
+  document.getElementById('testDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('headerDate').textContent = new Date().toLocaleDateString('he-IL', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  addTrial(); addTrial(); addTrial();
+  addParameter('טמפרטורת בצק'); addParameter('נפח'); addParameter('אחידות');
+  updateSavedList();
+}
+
+function addTrial() {
+  trialCount++;
+  const c = document.getElementById('trialsContainer');
+  const t = document.createElement('div');
+  t.className='trial-row'; t.id=`trial-${trialCount}`;
+  t.innerHTML=`<div class="trial-header"><span class="trial-title">ניסוי ${trialCount}</span><button class="trial-delete" onclick="this.parentElement.parentElement.remove()">הסר</button></div>
+  <div class="trial-grid">
+    <div class="field"><label>שם רכיב</label><input type="text" placeholder="לדוגמה: קמח" class="trial-ingredient"></div>
+    <div class="field"><label>כמות</label><input type="text" placeholder="1000" class="trial-amount"></div>
+    <div class="field"><label>יחידות</label><select class="trial-unit"><option value="gr">גרם</option><option value="kg">ק"ג</option><option value="ml">מ"ל</option><option value="liter">ליטר</option><option value="percent">%</option><option value="x">x (מכפלה)</option></select></div>
+    <div class="field"><label>הערה</label><input type="text" placeholder="הערה" class="trial-note"></div>
+  </div>`;
+  c.appendChild(t);
+}
+
+function addParameter(defaultName='') {
+  parameterCount++;
+  const tbody = document.getElementById('resultsBody');
+  const row = document.createElement('tr');
+  row.id=`param-${parameterCount}`;
+  row.innerHTML=`<td><input type="text" placeholder="שם פרמטר" value="${defaultName}" class="param-name"></td>
+  <td><input type="text" placeholder="—" class="param-val"></td>
+  <td><input type="text" placeholder="—" class="param-val"></td>
+  <td><input type="text" placeholder="—" class="param-val"></td>
+  <td><input type="text" placeholder="—" class="param-val"></td>
+  <td><input type="text" placeholder="—" class="param-val"></td>`;
+  tbody.appendChild(row);
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-new').style.display = tab==='new'?'block':'none';
+  document.getElementById('tab-saved').style.display = tab==='saved'?'block':'none';
+}
+
+function showStatus(msg, isError=false) {
+  const s=document.getElementById('saveStatus');
+  s.textContent=msg; s.style.background=isError?'#dc2626':'var(--teal)';
+  s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'),2500);
+}
+
+function saveReport() {
+  const report={
+    id: parseInt(document.body.dataset.editingId) || Date.now(),
+    researcher: document.getElementById('researcher').value,
+    date: document.getElementById('testDate').value,
+    category: document.getElementById('category').value,
+    subject: document.getElementById('subject').value,
+    objective: document.getElementById('objective').value,
+    trials: collectTrials(),
+    parameters: collectParameters(),
+    conclusions: document.getElementById('conclusions').value,
+    recommendation: document.getElementById('recommendation').value,
+    status: document.getElementById('testStatus').value,
+    savedAt: new Date().toISOString()
+  };
+  if(!report.subject&&!report.researcher){showStatus('⚠️ נא למלא לפחות נושא או חוקר',true);return;}
+  savedReports=savedReports.filter(r=>r.id!==report.id);
+  savedReports.unshift(report);
+  localStorage.setItem('puratos_lab_reports',JSON.stringify(savedReports));
+  delete document.body.dataset.editingId;
+  showStatus('✅ נשמר בהצלחה');
+  updateSavedList();
+}
+
+function collectTrials(){return Array.from(document.querySelectorAll('.trial-row')).map(r=>({ingredient:r.querySelector('.trial-ingredient')?.value||'',amount:r.querySelector('.trial-amount')?.value||'',unit:r.querySelector('.trial-unit')?.value||'',note:r.querySelector('.trial-note')?.value||''}));}
+function collectParameters(){return Array.from(document.querySelectorAll('#resultsBody tr')).map(r=>({name:r.querySelector('.param-name')?.value||'',values:Array.from(r.querySelectorAll('.param-val')).map(i=>i.value||'')})).filter(p=>p.name);}
+
+function loadReport(id){
+  const r=savedReports.find(x=>x.id===id);if(!r)return;
+  document.body.dataset.editingId=id;
+  document.getElementById('researcher').value=r.researcher||'';
+  document.getElementById('testDate').value=r.date||'';
+  document.getElementById('category').value=r.category||'';
+  document.getElementById('subject').value=r.subject||'';
+  document.getElementById('objective').value=r.objective||'';
+  document.getElementById('conclusions').value=r.conclusions||'';
+  document.getElementById('recommendation').value=r.recommendation||'';
+  document.getElementById('testStatus').value=r.status||'draft';
+  document.getElementById('trialsContainer').innerHTML=''; trialCount=0;
+  (r.trials||[]).forEach(t=>{addTrial();const rows=document.querySelectorAll('.trial-row');const last=rows[rows.length-1];if(last){last.querySelector('.trial-ingredient').value=t.ingredient||'';last.querySelector('.trial-amount').value=t.amount||'';last.querySelector('.trial-unit').value=t.unit||'';last.querySelector('.trial-note').value=t.note||'';}});
+  document.getElementById('resultsBody').innerHTML=''; parameterCount=0;
+  (r.parameters||[]).forEach(p=>{addParameter(p.name);const rows=document.querySelectorAll('#resultsBody tr');const last=rows[rows.length-1];if(last){const vals=last.querySelectorAll('.param-val');p.values.forEach((v,i)=>{if(vals[i])vals[i].value=v;});}});
+  document.querySelectorAll('.tab')[0].click();
+  showStatus('📂 דוח נטען');
+}
+
+function deleteReport(id){if(!confirm('האם למחוק דוח זה?'))return;savedReports=savedReports.filter(r=>r.id!==id);localStorage.setItem('puratos_lab_reports',JSON.stringify(savedReports));updateSavedList();showStatus('🗑️ נמחק');}
+
+function updateSavedList(){
+  const list=document.getElementById('savedList');
+  document.getElementById('savedCount').textContent=savedReports.length;
+  if(!savedReports.length){list.innerHTML='<div class="empty-state">אין דוחות שמורים עדיין</div>';return;}
+  const cl={bakery:'לחמים',pastry:'מאפים',chocolate:'שוקולד',dairy:'חלב',ingredients:'רכיבים',shelf_life:'חיי מדף',other:'אחר'};
+  const sl={draft:'טיוטה',in_progress:'בתהליך',completed:'הושלם',needs_review:'דורש סקירה'};
+  const sc={draft:'#9ca3af',in_progress:'#f59e0b',completed:'#10b981',needs_review:'#ef4444'};
+  list.innerHTML=savedReports.map(r=>`<div class="saved-item"><div><div class="saved-item-title">${r.subject||'ללא נושא'}</div><div class="saved-item-meta">${r.researcher||''} | ${r.date||''} | ${cl[r.category]||''} <span style="color:${sc[r.status]};font-weight:600;">| ${sl[r.status]||''}</span></div></div><div class="saved-item-actions"><button class="load-btn" onclick="loadReport(${r.id})">פתח</button><button class="del-btn" onclick="deleteReport(${r.id})">מחק</button></div></div>`).join('');
+}
+
+function clearForm(){
+  if(!confirm('האם לנקות את הטופס?'))return;
+  document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.type!=='date')el.value='';});
+  document.getElementById('testDate').value=new Date().toISOString().split('T')[0];
+  delete document.body.dataset.editingId;
+  document.getElementById('trialsContainer').innerHTML='';document.getElementById('resultsBody').innerHTML='';trialCount=0;parameterCount=0;
+  addTrial();addTrial();addTrial();addParameter('טמפרטורת בצק');addParameter('נפח');addParameter('אחידות');
+  showStatus('🔄 טופס נוקה');
+}
+
+function printReport(){window.print();}
+init();
+</script>
+</body>
+</html>
