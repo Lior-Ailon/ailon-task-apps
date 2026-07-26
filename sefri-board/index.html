@@ -3,368 +3,509 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ספרי-בורד — לוח מודעות דיגיטלי לספריות</title>
+<title>ספרי-בורד 2.0 — לוח מודעות דיגיטלי חכם לספריות</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --primary:#1a5276;--primary-light:#2980b9;--accent:#e67e22;--accent-light:#f39c12;
   --bg:#f4f1ea;--card:#ffffff;--text:#2c3e50;--muted:#7f8c8d;
-  --border:#e0dcd3;--success:#27ae60;--danger:#e74c3c;
+  --border:#e0dcd3;--success:#27ae60;--danger:#e74c3c;--warning:#f39c12;
   --shadow:0 4px 20px rgba(0,0,0,0.06);--shadow-lg:0 8px 32px rgba(0,0,0,0.12);
-  --radius:14px;--radius-sm:8px;
+  --radius:16px;--radius-sm:10px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* ===== DISPLAY MODE (TV Screen) ===== */
-.display-mode{position:fixed;inset:0;background:linear-gradient(135deg,#1a5276 0%,#2c3e50 50%,#1a5276 100%);display:none;flex-direction:column;z-index:9999}
+/* ===== LAYOUT ===== */
+.app{display:flex;min-height:100vh}
+.sidebar{width:280px;background:linear-gradient(180deg,var(--primary) 0%,#1b3a52 100%);color:white;padding:0;position:fixed;height:100vh;overflow-y:auto;z-index:100;transition:transform 0.3s}
+.sidebar-header{padding:24px 24px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.sidebar-header .logo{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.sidebar-header .logo-icon{width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.sidebar-header h1{font-size:20px;font-weight:700}
+.sidebar-header p{font-size:12px;opacity:0.6;margin-top:2px}
+.sidebar-nav{padding:12px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.7);font-size:15px;font-weight:500;border:none;background:transparent;width:100%;text-align:right;font-family:'Heebo'}
+.nav-item:hover{background:rgba(255,255,255,0.1);color:white}
+.nav-item.active{background:rgba(255,255,255,0.15);color:white;font-weight:600}
+.nav-item .badge{margin-right:auto;background:var(--accent);color:white;font-size:12px;padding:2px 10px;border-radius:10px;font-weight:600}
+.nav-section{padding:20px 16px 8px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.3);font-weight:600}
 
-.display-header{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px)}
-.display-header h1{color:white;font-size:28px;font-weight:700}
-.display-header h1 span{color:var(--accent-light)}
-.display-time{color:white;font-size:32px;font-weight:300;display:flex;align-items:center;gap:20px}
-.display-time .date{font-size:18px;opacity:0.7;font-weight:400}
+.main{flex:1;margin-right:280px;padding:24px;max-width:calc(100% - 280px)}
 
-.display-content{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;position:relative}
+@media(max-width:900px){
+  .sidebar{transform:translateX(100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-right:0;max-width:100%;padding:16px}
+  .mobile-menu{display:flex!important}
+}
+.mobile-menu{display:none;position:fixed;top:16px;right:16px;z-index:101;background:var(--primary);color:white;border:none;border-radius:12px;width:48px;height:48px;font-size:22px;cursor:pointer;box-shadow:var(--shadow)}
 
-.slide{position:absolute;inset:40px;display:none;align-items:center;justify-content:center}
-.slide.active{display:flex;animation:fadeIn 0.8s ease}
+/* ===== HEADER BAR ===== */
+.topbar{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.topbar h2{font-size:22px;font-weight:700;color:var(--primary)}
+.topbar .actions{display:flex;gap:10px;align-items:center}
+.library-name{font-size:14px;color:var(--muted);margin-top:2px}
 
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* ===== CARDS ===== */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:20px}
+.card-title{font-size:17px;font-weight:600;color:var(--primary);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-title .icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:16px;color:white}
 
-/* Slide types */
-.slide-announcement{text-align:center;max-width:800px}
-.slide-announcement .icon{font-size:64px;margin-bottom:24px}
-.slide-announcement h2{color:white;font-size:48px;font-weight:700;margin-bottom:20px;text-shadow:0 2px 10px rgba(0,0,0,0.3)}
-.slide-announcement p{color:rgba(255,255,255,0.9);font-size:28px;line-height:1.6}
-.slide-announcement .tag{display:inline-block;background:var(--accent);color:white;padding:6px 18px;border-radius:20px;font-size:16px;margin-bottom:16px;font-weight:500}
-
-.slide-book{display:flex;gap:40px;align-items:center;max-width:900px}
-.slide-book .book-cover{width:240px;height:340px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px rgba(0,0,0,0.4);flex-shrink:0}
-.slide-book .book-cover .book-icon{font-size:80px}
-.slide-book .book-info{text-align:right}
-.slide-book .book-info .label{color:var(--accent-light);font-size:18px;font-weight:600;margin-bottom:8px}
-.slide-book .book-info h2{color:white;font-size:36px;font-weight:700;margin-bottom:12px}
-.slide-book .book-info .author{color:rgba(255,255,255,0.7);font-size:22px;margin-bottom:16px}
-.slide-book .book-info .desc{color:rgba(255,255,255,0.85);font-size:20px;line-height:1.5;max-width:500px}
-
-.slide-event{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:20px;padding:40px;max-width:700px;text-align:center}
-.slide-event .date-badge{display:inline-flex;flex-direction:column;align-items:center;background:var(--accent);border-radius:12px;padding:16px 24px;margin-bottom:24px;box-shadow:0 4px 20px rgba(231,126,34,0.4)}
-.slide-event .date-badge .day{color:white;font-size:48px;font-weight:800;line-height:1}
-.slide-event .date-badge .month{color:white;font-size:18px;font-weight:500}
-.slide-event h2{color:white;font-size:36px;font-weight:700;margin-bottom:16px}
-.slide-event .time{color:var(--accent-light);font-size:24px;font-weight:600;margin-bottom:12px}
-.slide-event .location{color:rgba(255,255,255,0.7);font-size:20px}
-.slide-event .desc{color:rgba(255,255,255,0.85);font-size:20px;margin-top:16px;line-height:1.5}
-
-.slide-hours{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:20px;padding:48px;min-width:500px}
-.slide-hours h2{color:white;font-size:36px;text-align:center;margin-bottom:28px;font-weight:700}
-.slide-hours .hours-row{display:flex;justify-content:space-between;color:white;font-size:22px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.1)}
-.slide-hours .hours-row .day{font-weight:500}
-.slide-hours .hours-row .time{color:var(--accent-light);font-weight:600}
-.slide-hours .hours-row.closed .time{color:var(--danger);font-weight:600}
-
-.slide-weather{display:flex;flex-direction:column;align-items:center;gap:20px}
-.slide-weather .temp{color:white;font-size:120px;font-weight:200;line-height:1}
-.slide-weather .desc{color:rgba(255,255,255,0.9);font-size:32px;font-weight:500}
-.slide-weather .city{color:rgba(255,255,255,0.6);font-size:24px}
-.slide-weather .weather-icon{font-size:80px}
-
-.slide-quote{text-align:center;max-width:700px}
-.slide-quote .quote-mark{font-size:100px;color:var(--accent);line-height:0.5;height:60px}
-.slide-quote blockquote{color:white;font-size:32px;font-weight:300;line-height:1.5;font-style:italic;margin:20px 0}
-.slide-quote .author{color:var(--accent-light);font-size:22px;font-weight:500}
-
-/* Display footer (news ticker) */
-.display-footer{background:rgba(0,0,0,0.4);padding:12px 0;overflow:hidden;white-space:nowrap}
-.ticker{display:inline-block;animation:scroll 40s linear infinite;color:white;font-size:18px;font-weight:400}
-.ticker .ticker-item{display:inline-block;margin:0 30px}
-.ticker .ticker-item::before{content:"📢 ";color:var(--accent-light)}
-@keyframes scroll{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-
-/* Display controls */
-.display-exit{position:fixed;top:20px;left:20px;background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;z-index:10001;transition:all 0.2s}
-.display-exit:hover{background:rgba(255,255,255,0.3)}
-
-.slide-indicator{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10000}
-.slide-indicator .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all 0.3s}
-.slide-indicator .dot.active{background:var(--accent);width:24px;border-radius:4px}
-
-/* ===== ADMIN MODE ===== */
-.admin-mode{padding:20px;max-width:1200px;margin:0 auto}
-
-.admin-header{background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:var(--radius);padding:24px 32px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.admin-header .brand{display:flex;align-items:center;gap:16px}
-.admin-header .logo{width:52px;height:52px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px}
-.admin-header h1{color:white;font-size:24px;font-weight:700}
-.admin-header h1 small{display:block;font-size:13px;opacity:0.8;font-weight:400}
-.admin-header .btn-display{background:var(--accent);color:white;border:none;padding:12px 24px;border-radius:var(--radius-sm);font-size:15px;font-family:'Heebo';font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s}
-.admin-header .btn-display:hover{background:var(--accent-light);transform:translateY(-1px)}
-
-.tabs{display:flex;gap:4px;margin-bottom:20px;background:white;padding:6px;border-radius:12px;box-shadow:var(--shadow);width:fit-content}
-.tab{padding:10px 24px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'Heebo';transition:all 0.2s}
-.tab.active{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white}
-.tab:hover:not(.active){background:#f0f4f8;color:var(--primary)}
-
-.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;margin-bottom:20px}
-.card-title{font-size:18px;font-weight:600;color:var(--primary);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:10px}
-.card-title .icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:18px}
-
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-grid.three{grid-template-columns:1fr 1fr 1fr}
-.form-grid.full{grid-template-columns:1fr}
-@media(max-width:768px){.form-grid,.form-grid.three{grid-template-columns:1fr}}
-.field{display:flex;flex-direction:column;gap:6px}
+/* ===== FORMS ===== */
+.form-grid{display:grid;gap:14px}
+.form-grid.cols-2{grid-template-columns:1fr 1fr}
+.form-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:768px){.form-grid.cols-2,.form-grid.cols-3{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:13px;font-weight:500;color:var(--muted)}
 .field input,.field select,.field textarea{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-family:'Heebo';background:#fafafa;transition:all 0.2s}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(41,128,185,0.1);background:white}
-.field textarea{min-height:80px;resize:vertical}
+.field textarea{min-height:70px;resize:vertical}
 
+/* ===== BUTTONS ===== */
 .btn{padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-family:'Heebo';font-weight:600;cursor:pointer;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;box-shadow:0 3px 12px rgba(41,128,185,0.3)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(41,128,185,0.4)}
-.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:white;box-shadow:0 3px 12px rgba(231,126,34,0.3)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;box-shadow:0 3px 12px rgba(41,128,185,0.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(41,128,185,0.35)}
+.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:white;box-shadow:0 3px 12px rgba(231,126,34,0.25)}
 .btn-accent:hover{transform:translateY(-1px)}
+.btn-success{background:var(--success);color:white}
 .btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
 .btn-outline:hover{border-color:var(--muted);color:var(--text)}
 .btn-danger{background:#fee2e2;color:#dc2626;border:1px solid #fecaca}
-.btn-danger:hover{background:#fecaca}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:14px 28px;font-size:16px}
 
-.item-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-.item-row{background:#f8f9fa;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s}
+/* ===== TEMPLATES ===== */
+.templates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.template-card{background:linear-gradient(135deg,#f8f9fa,#eef2f5);border:2px solid var(--border);border-radius:var(--radius-sm);padding:16px;cursor:pointer;transition:all 0.2s;text-align:center}
+.template-card:hover{border-color:var(--primary-light);transform:translateY(-2px);box-shadow:var(--shadow)}
+.template-card .tpl-icon{font-size:32px;margin-bottom:8px}
+.template-card .tpl-name{font-size:14px;font-weight:600;color:var(--primary)}
+.template-card .tpl-desc{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ===== ITEM LIST ===== */
+.item-row{background:#f8f9fa;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s}
 .item-row:hover{border-color:var(--primary-light);background:#f0f6fb}
-.item-row .info{display:flex;flex-direction:column;gap:2px;flex:1}
-.item-row .info .title{font-weight:600;font-size:15px}
+.item-row.disabled{opacity:0.45}
+.item-row .info{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.item-row .info .title{font-weight:600;font-size:15px;display:flex;align-items:center;gap:8px}
 .item-row .info .meta{font-size:13px;color:var(--muted)}
-.item-row .actions{display:flex;gap:8px;flex-shrink:0}
-.item-row .actions button{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;font-size:13px;font-family:'Heebo';transition:all 0.2s}
-.item-row .actions .del:hover{border-color:var(--danger);color:var(--danger)}
+.item-row .info .meta .tag{display:inline-block;padding:1px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-right:6px}
+.tag-active{background:#d4edda;color:#155724}
+.tag-expired{background:#f8d7da;color:#721c24}
+.tag-scheduled{background:#fff3cd;color:#856404}
+.item-row .actions{display:flex;gap:6px;flex-shrink:0}
+.item-row .actions button{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer;font-size:13px;font-family:'Heebo';transition:all 0.2s}
+.item-row .actions .del:hover{border-color:var(--danger);color:var(--danger);background:#fee2e2}
+.item-row .actions .edit:hover{border-color:var(--primary-light);color:var(--primary)}
 .item-row .actions .toggle:hover{border-color:var(--success);color:var(--success)}
-.item-row.disabled{opacity:0.4}
-.item-row .badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600;margin-right:8px}
-.badge.active{background:#d4edda;color:#155724}
-.badge.inactive{background:#f8d7da;color:#721c24}
 
-.settings-row{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)}
+/* ===== LIVE PREVIEW ===== */
+.preview-panel{position:sticky;top:24px}
+.preview-box{background:linear-gradient(135deg,#1a5276 0%,#2c3e50 50%,#1a5276 100%);border-radius:var(--radius);padding:20px;min-height:280px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.preview-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
+.preview-content{text-align:center;color:white;max-width:100%}
+.preview-content .pv-icon{font-size:48px;margin-bottom:12px}
+.preview-content .pv-tag{display:inline-block;background:var(--accent);color:white;padding:4px 14px;border-radius:16px;font-size:13px;margin-bottom:10px}
+.preview-content .pv-title{font-size:28px;font-weight:700;margin-bottom:10px;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.preview-content .pv-body{font-size:18px;opacity:0.9;line-height:1.5}
+.preview-content .pv-book{display:flex;gap:16px;align-items:center;text-align:right}
+.preview-content .pv-cover{width:80px;height:110px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+.preview-content .pv-event{background:rgba(255,255,255,0.1);border-radius:12px;padding:16px}
+.preview-content .pv-date-badge{display:inline-flex;flex-direction:column;align-items:center;background:var(--accent);border-radius:8px;padding:8px 14px;margin-bottom:10px}
+.preview-content .pv-date-badge .day{font-size:28px;font-weight:800;line-height:1}
+.preview-content .pv-date-badge .month{font-size:14px}
+.preview-label{position:absolute;top:8px;right:12px;font-size:10px;color:rgba(255,255,255,0.4);font-weight:500;letter-spacing:1px}
+
+.editor-layout{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+@media(max-width:900px){.editor-layout{grid-template-columns:1fr}.preview-panel{position:static}}
+
+/* ===== IMAGE UPLOAD ===== */
+.img-upload{display:flex;gap:12px;align-items:center}
+.img-preview{width:80px;height:80px;border-radius:10px;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted);overflow:hidden;background:#f8f9fa;flex-shrink:0}
+.img-preview img{width:100%;height:100%;object-fit:cover}
+.img-upload .img-inputs{flex:1;display:flex;flex-direction:column;gap:8px}
+
+/* ===== SETTINGS ===== */
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
 .settings-row:last-child{border-bottom:none}
-.settings-row .label{font-size:15px;font-weight:500}
-.settings-row .desc{font-size:13px;color:var(--muted);margin-top:2px}
-.settings-row input[type="number"]{width:80px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Heebo';text-align:center}
+.settings-row .s-label{font-size:15px;font-weight:500}
+.settings-row .s-desc{font-size:13px;color:var(--muted);margin-top:2px}
+.settings-row input[type="number"]{width:80px;padding:8px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-size:15px}
+.settings-row input[type="text"]{width:200px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px}
 .settings-row input[type="checkbox"]{width:24px;height:24px;cursor:pointer}
 
+/* ===== TOAST ===== */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:all 0.3s;z-index:10000}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
 
+/* ===== EMPTY ===== */
 .empty{text-align:center;padding:40px;color:var(--muted);font-size:15px}
-.add-form{background:#f8f9fa;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px}
-.add-form h3{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:16px}
-.add-form .actions{display:flex;gap:10px;margin-top:16px}
 
-.color-row{display:flex;gap:10px;align-items:center}
-.color-swatch{width:40px;height:40px;border-radius:10px;cursor:pointer;border:3px solid transparent;transition:all 0.2s}
+/* ===== DISPLAY MODE ===== */
+.display-mode{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column}
+.display-mode.active{display:flex}
+.dm-header{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:10}
+.dm-header .dm-brand{display:flex;align-items:center;gap:12px}
+.dm-header .dm-brand .logo{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.dm-header .dm-brand h1{color:white;font-size:24px;font-weight:700}
+.dm-header .dm-brand h1 span{color:var(--accent-light)}
+.dm-clock{color:white;font-size:28px;font-weight:300;display:flex;align-items:center;gap:16px}
+.dm-clock .date{font-size:16px;opacity:0.7}
+.dm-content{flex:1;position:relative;overflow:hidden}
+.dm-slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:40px}
+.dm-slide.active{display:flex;animation:dmFade 0.8s ease}
+@keyframes dmFade{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
+.dm-exit{position:fixed;top:16px;left:16px;background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:18px;z-index:10001;display:flex;align-items:center;justify-content:center}
+.dm-exit:hover{background:rgba(255,255,255,0.3)}
+.dm-indicator{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10000}
+.dm-indicator .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all 0.3s}
+.dm-indicator .dot.active{background:var(--accent);width:24px;border-radius:4px}
+.dm-ticker{background:rgba(0,0,0,0.4);padding:10px 0;overflow:hidden;white-space:nowrap}
+.dm-ticker .ticker-text{display:inline-block;animation:dmScroll 40s linear infinite;color:white;font-size:17px}
+.dm-ticker .ticker-item{margin:0 30px}
+@keyframes dmScroll{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+
+/* Slide content styles */
+.dm-announcement{text-align:center;max-width:800px}
+.dm-announcement .icon{font-size:56px;margin-bottom:20px}
+.dm-announcement h2{color:white;font-size:44px;font-weight:700;margin-bottom:16px;text-shadow:0 2px 10px rgba(0,0,0,0.3)}
+.dm-announcement p{color:rgba(255,255,255,0.9);font-size:24px;line-height:1.6}
+.dm-announcement .tag{display:inline-block;background:var(--accent);color:white;padding:5px 16px;border-radius:18px;font-size:15px;margin-bottom:14px}
+.dm-announcement .pv-img{max-width:400px;max-height:250px;border-radius:12px;margin:16px auto;box-shadow:0 8px 32px rgba(0,0,0,0.4);display:block}
+
+.dm-book{display:flex;gap:32px;align-items:center;max-width:900px}
+.dm-book .book-cover{width:200px;height:280px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:64px;flex-shrink:0;box-shadow:0 10px 40px rgba(0,0,0,0.4);overflow:hidden}
+.dm-book .book-cover img{width:100%;height:100%;object-fit:cover}
+.dm-book .book-info{text-align:right}
+.dm-book .book-info .label{color:var(--accent-light);font-size:16px;font-weight:600;margin-bottom:6px}
+.dm-book .book-info h2{color:white;font-size:32px;font-weight:700;margin-bottom:10px}
+.dm-book .book-info .author{color:rgba(255,255,255,0.7);font-size:20px;margin-bottom:12px}
+.dm-book .book-info .desc{color:rgba(255,255,255,0.85);font-size:18px;max-width:500px;line-height:1.5}
+
+.dm-event{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:18px;padding:32px;max-width:600px;text-align:center}
+.dm-event .date-badge{display:inline-flex;flex-direction:column;align-items:center;background:var(--accent);border-radius:10px;padding:12px 20px;margin-bottom:20px}
+.dm-event .date-badge .day{color:white;font-size:42px;font-weight:800;line-height:1}
+.dm-event .date-badge .month{color:white;font-size:16px}
+.dm-event h2{color:white;font-size:32px;font-weight:700;margin-bottom:12px}
+.dm-event .time{color:var(--accent-light);font-size:22px;font-weight:600;margin-bottom:8px}
+.dm-event .location{color:rgba(255,255,255,0.7);font-size:18px}
+.dm-event .desc{color:rgba(255,255,255,0.85);font-size:18px;margin-top:12px;line-height:1.5}
+
+.dm-hours{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:18px;padding:36px;min-width:450px}
+.dm-hours h2{color:white;font-size:32px;text-align:center;margin-bottom:24px;font-weight:700}
+.dm-hours .h-row{display:flex;justify-content:space-between;color:white;font-size:20px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1)}
+.dm-hours .h-row .h-time{color:var(--accent-light);font-weight:600}
+.dm-hours .h-row.closed .h-time{color:var(--danger)}
+
+.dm-quote{text-align:center;max-width:700px}
+.dm-quote .q-mark{font-size:80px;color:var(--accent);line-height:0.5;height:50px}
+.dm-quote blockquote{color:white;font-size:28px;font-weight:300;line-height:1.5;font-style:italic;margin:16px 0}
+.dm-quote .q-author{color:var(--accent-light);font-size:20px;font-weight:500}
+
+.dm-weather{display:flex;flex-direction:column;align-items:center;gap:16px}
+.dm-weather .w-icon{font-size:72px}
+.dm-weather .w-temp{color:white;font-size:100px;font-weight:200;line-height:1}
+.dm-weather .w-desc{color:rgba(255,255,255,0.9);font-size:28px;font-weight:500}
+.dm-weather .w-city{color:rgba(255,255,255,0.6);font-size:22px}
+
+/* Color themes */
+.color-row{display:flex;gap:10px;flex-wrap:wrap}
+.color-swatch{width:44px;height:44px;border-radius:12px;cursor:pointer;border:3px solid transparent;transition:all 0.2s}
 .color-swatch.selected{border-color:white;box-shadow:0 0 0 2px var(--primary);transform:scale(1.1)}
 </style>
 </head>
 <body>
 
-<!-- ===== DISPLAY MODE ===== -->
-<div class="display-mode" id="displayMode">
-  <div class="display-exit" onclick="exitDisplay()">✕</div>
-  <div class="display-header">
-    <h1>ספרי<span>-בורד</span></h1>
-    <div class="display-time">
-      <div class="date" id="displayDate"></div>
-      <div id="displayClock"></div>
+<button class="mobile-menu" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <div><h1>ספרי-בורד</h1><p>לוח מודעות דיגיטלי</p></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">תוכן</div>
+      <button class="nav-item active" onclick="navTo('dashboard',this)">🏠 לוח בקרה</button>
+      <button class="nav-item" onclick="navTo('announcements',this)">📢 מודעות <span class="badge" id="count-ann">0</span></button>
+      <button class="nav-item" onclick="navTo('books',this)">📖 המלצות ספרים <span class="badge" id="count-books">0</span></button>
+      <button class="nav-item" onclick="navTo('events',this)">📅 אירועים <span class="badge" id="count-evts">0</span></button>
+      <button class="nav-item" onclick="navTo('quotes',this)">💬 ציטוטים <span class="badge" id="count-quotes">0</span></button>
+      <button class="nav-item" onclick="navTo('ticker',this)">📰 פס חדשות <span class="badge" id="count-ticker">0</span></button>
+      <div class="nav-section">הגדרות</div>
+      <button class="nav-item" onclick="navTo('hours',this)">🕐 שעות פתיחה</button>
+      <button class="nav-item" onclick="navTo('branding',this)">🎨 מיתוג הספרייה</button>
+      <button class="nav-item" onclick="navTo('display',this)">📺 הגדרות תצוגה</button>
+      <button class="nav-item" onclick="navTo('data',this)">💾 גיבוי / שחזור</button>
+    </nav>
+    <div style="padding:16px;border-top:1px solid rgba(255,255,255,0.1);margin-top:auto">
+      <button class="nav-item" onclick="enterDisplay()" style="background:var(--accent);color:white;font-weight:600">📺 הפעל מסך תצוגה</button>
     </div>
   </div>
-  <div class="display-content" id="displayContent"></div>
-  <div class="slide-indicator" id="slideIndicator"></div>
-  <div class="display-footer">
-    <div class="ticker" id="ticker"></div>
+
+  <!-- Main -->
+  <div class="main">
+    
+    <!-- DASHBOARD -->
+    <div id="page-dashboard">
+      <div class="topbar">
+        <div><h2>לוח בקרה</h2><div class="library-name" id="dashLibName">ספריית...</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">⚡</div>יצירה מהירה — תבניות מוכנות</div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:16px">בחרי תבנית והמערכת תיצור עבורך שלד מוכן לעריכה</p>
+        <div class="templates-grid">
+          <div class="template-card" onclick="quickAdd('ann_holiday')"><div class="tpl-icon">🎉</div><div class="tpl-name">ברכת חג</div><div class="tpl-desc">מודעת חג עונתית</div></div>
+          <div class="template-card" onclick="quickAdd('ann_hours')"><div class="tpl-icon">🕐</div><div class="tpl-name">שינוי שעות</div><div class="tpl-desc">עדכון שעות פתיחה</div></div>
+          <div class="template-card" onclick="quickAdd('ann_new_arrival')"><div class="tpl-icon">🆕</div><div class="tpl-name">ספר חדש הגיע</div><div class="tpl-desc">הכרזה על ספר חדש</div></div>
+          <div class="template-card" onclick="quickAdd('book_recommend')"><div class="tpl-icon">📖</div><div class="tpl-name">המלצת ספר</div><div class="tpl-desc">ספר מומלץ לקריאה</div></div>
+          <div class="template-card" onclick="quickAdd('evt_storytime')"><div class="tpl-icon">👶</div><div class="tpl-name">שעת סיפור</div><div class="tpl-desc">אירוע לילדים</div></div>
+          <div class="template-card" onclick="quickAdd('evt_author')"><div class="tpl-icon">✍️</div><div class="tpl-name">מפגש סופר</div><div class="tpl-desc">סופר/ת אורח/ת</div></div>
+          <div class="template-card" onclick="quickAdd('evt_workshop')"><div class="tpl-icon">🎨</div><div class="tpl-name">סדנה</div><div class="tpl-desc">סדנא / הרצאה</div></div>
+          <div class="template-card" onclick="quickAdd('quote_book')"><div class="tpl-icon">💬</div><div class="tpl-name">ציטוט ספרותי</div><div class="tpl-desc">ציטוט מתוך ספר</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📊</div>מצב המערכת</div>
+        <div id="dashStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📋</div>תוכן פעיל כעת</div>
+        <div id="dashActive"></div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div id="page-announcements" style="display:none">
+      <div class="topbar"><h2>📢 מודעות</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">➕</div>מודעה חדשה</div>
+        <div class="editor-layout">
+          <div>
+            <div class="form-grid cols-2">
+              <div class="field"><label>כותרת</label><input type="text" id="annTitle" placeholder="ברכת חג פורים!" oninput="updatePreview()"></div>
+              <div class="field"><label>סמל (אימוג'י)</label><input type="text" id="annIcon" value="📢" oninput="updatePreview()"></div>
+            </div>
+            <div class="form-grid" style="margin-top:12px">
+              <div class="field"><label>תוכן</label><textarea id="annBody" placeholder="תוכן המודעה..." oninput="updatePreview()"></textarea></div>
+            </div>
+            <div class="form-grid cols-2" style="margin-top:12px">
+              <div class="field"><label>תגית (אופציונלי)</label><input type="text" id="annTag" placeholder="חדש / דחוף" oninput="updatePreview()"></div>
+              <div class="field"><label>תמונה (URL אופציונלי)</label><input type="text" id="annImg" placeholder="https://..." oninput="updatePreview()"></div>
+            </div>
+            <div class="form-grid cols-2" style="margin-top:12px">
+              <div class="field"><label>תאריך התחלה</label><input type="date" id="annStart"></div>
+              <div class="field"><label>תאריך סיום (אופציונלי)</label><input type="date" id="annEnd"></div>
+            </div>
+            <div style="margin-top:16px"><button class="btn btn-primary btn-lg" onclick="addAnnouncement()">+ הוסף מודעה</button></div>
+          </div>
+          <div class="preview-panel">
+            <div class="preview-box"><div class="preview-label">תצוגה מקדימה</div><div class="preview-content" id="annPreview"><div class="pv-icon">📢</div><div class="pv-title">הכותרת תופיע כאן</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📋</div>מודעות קיימות</div>
+        <div id="annList"></div>
+      </div>
+    </div>
+
+    <!-- BOOKS -->
+    <div id="page-books" style="display:none">
+      <div class="topbar"><h2>📖 המלצות ספרים</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">➕</div>המלצת ספר חדשה</div>
+        <div class="editor-layout">
+          <div>
+            <div class="form-grid cols-2">
+              <div class="field"><label>שם הספר</label><input type="text" id="bookTitle" placeholder="שם הספר" oninput="updateBookPreview()"></div>
+              <div class="field"><label>מחבר/ת</label><input type="text" id="bookAuthor" placeholder="שם המחבר" oninput="updateBookPreview()"></div>
+            </div>
+            <div class="form-grid cols-2" style="margin-top:12px">
+              <div class="field"><label>סמל (אימוג'י)</label><input type="text" id="bookIcon" value="📚" oninput="updateBookPreview()"></div>
+              <div class="field"><label>תמונת כריכה (URL)</label><input type="text" id="bookImg" placeholder="https://..." oninput="updateBookPreview()"></div>
+            </div>
+            <div class="form-grid" style="margin-top:12px">
+              <div class="field"><label>תיאור / תקציר</label><textarea id="bookDesc" placeholder="תיאור קצר..." oninput="updateBookPreview()"></textarea></div>
+            </div>
+            <div class="form-grid cols-2" style="margin-top:12px">
+              <div class="field"><label>קטגוריה</label><select id="bookCategory"><option value="">בחר...</option><option value="children">ילדים</option><option value="teens">נוער</option><option value="adults">מבוגרים</option><option value="reference">עיון</option><option value="fiction">ספרות</option><option value="new">חדש בספרייה</option></select></div>
+              <div class="field"><label>תאריך סיום תצוגה (אופציונלי)</label><input type="date" id="bookEnd"></div>
+            </div>
+            <div style="margin-top:16px"><button class="btn btn-primary btn-lg" onclick="addBook()">+ הוסף ספר</button></div>
+          </div>
+          <div class="preview-panel">
+            <div class="preview-box"><div class="preview-label">תצוגה מקדימה</div><div class="preview-content" id="bookPreview"><div style="font-size:28px;opacity:0.5">כריכת הספר תופיע כאן</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📚</div>ספרים מומלצים</div>
+        <div id="bookList"></div>
+      </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div id="page-events" style="display:none">
+      <div class="topbar"><h2>📅 אירועים</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">➕</div>אירוע חדש</div>
+        <div class="editor-layout">
+          <div>
+            <div class="form-grid cols-2">
+              <div class="field"><label>שם האירוע</label><input type="text" id="evtTitle" placeholder="שעת סיפור לקטנטנים" oninput="updateEvtPreview()"></div>
+              <div class="field"><label>תאריך</label><input type="date" id="evtDate" oninput="updateEvtPreview()"></div>
+            </div>
+            <div class="form-grid cols-2" style="margin-top:12px">
+              <div class="field"><label>שעה</label><input type="time" id="evtTime" oninput="updateEvtPreview()"></div>
+              <div class="field"><label>מיקום</label><input type="text" id="evtLocation" placeholder="אולם הספרייה" oninput="updateEvtPreview()"></div>
+            </div>
+            <div class="form-grid" style="margin-top:12px">
+              <div class="field"><label>תיאור</label><textarea id="evtDesc" placeholder="פרטי האירוע..." oninput="updateEvtPreview()"></textarea></div>
+            </div>
+            <div class="form-grid cols-2" style="margin-top:12px">
+              <div class="field"><label>תמונה (URL אופציונלי)</label><input type="text" id="evtImg" placeholder="https://..." oninput="updateEvtPreview()"></div>
+              <div class="field"><label>סמל (אימוג'י)</label><input type="text" id="evtIcon" value="📅" oninput="updateEvtPreview()"></div>
+            </div>
+            <div style="margin-top:16px"><button class="btn btn-primary btn-lg" onclick="addEvent()">+ הוסף אירוע</button></div>
+          </div>
+          <div class="preview-panel">
+            <div class="preview-box"><div class="preview-label">תצוגה מקדימה</div><div class="preview-content" id="evtPreview"><div style="font-size:28px;opacity:0.5">האירוע יופיע כאן</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📋</div>אירועים קרובים</div>
+        <div id="evtList"></div>
+      </div>
+    </div>
+
+    <!-- QUOTES -->
+    <div id="page-quotes" style="display:none">
+      <div class="topbar"><h2>💬 ציטוטים</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">➕</div>ציטוט חדש</div>
+        <div class="form-grid">
+          <div class="field"><label>טקסט</label><textarea id="quoteText" placeholder="ספרים הם ספינות שמפליגות בים הזמן..."></textarea></div>
+        </div>
+        <div class="form-grid cols-2" style="margin-top:12px">
+          <div class="field"><label>מחבר/ת</label><input type="text" id="quoteAuthor" placeholder="שם המחבר"></div>
+          <div class="field"><label>מקור (אופציונלי)</label><input type="text" id="quoteSource" placeholder="שם הספר / הנאום"></div>
+        </div>
+        <div style="margin-top:16px"><button class="btn btn-primary btn-lg" onclick="addQuote()">+ הוסף ציטוט</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📚</div>ציטוטים שמורים</div>
+        <div id="quoteList"></div>
+      </div>
+    </div>
+
+    <!-- TICKER -->
+    <div id="page-ticker" style="display:none">
+      <div class="topbar"><h2>📰 פס חדשות</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">➕</div>הודעה חדשה לפס החדשות</div>
+        <div class="field"><label>טקסט</label><input type="text" id="tickerText" placeholder="הרשמה לקורס קריאה מהירה פתוחה!"></div>
+        <div style="margin-top:12px"><button class="btn btn-primary" onclick="addTicker()">+ הוסף</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📋</div>הודעות פס חדשות</div>
+        <div id="tickerList"></div>
+      </div>
+    </div>
+
+    <!-- HOURS -->
+    <div id="page-hours" style="display:none">
+      <div class="topbar"><h2>🕐 שעות פתיחה</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">🕐</div>הגדרת שעות פתיחה</div>
+        <p style="color:var(--muted);margin-bottom:16px;font-size:14px">השאירי שדה ריק או כתבי "סגור" לימים שהספרייה סגורה</p>
+        <div id="hoursEditor"></div>
+        <button class="btn btn-primary" onclick="saveHours()" style="margin-top:16px">💾 שמור שעות</button>
+      </div>
+    </div>
+
+    <!-- BRANDING -->
+    <div id="page-branding" style="display:none">
+      <div class="topbar"><h2>🎨 מיתוג הספרייה</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">🏫</div>פרטי הספרייה</div>
+        <div class="form-grid cols-2">
+          <div class="field"><label>שם הספרייה</label><input type="text" id="libName" placeholder="ספריית רמת אביב" value=""></div>
+          <div class="field"><label>כיתוב משני</label><input type="text" id="libSubtitle" placeholder="עיריית תל אביב - יפו"></div>
+        </div>
+        <div class="form-grid cols-2" style="margin-top:12px">
+          <div class="field"><label>סמל (אימוג'י)</label><input type="text" id="libIcon" value="📚"></div>
+          <div class="field"><label>טלפון (אופציונלי)</label><input type="text" id="libPhone" placeholder="03-..."></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveBranding()" style="margin-top:16px">💾 שמור מיתוג</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="icon">🎨</div>צבע נושא למסך התצוגה</div>
+        <p style="color:var(--muted);margin-bottom:16px;font-size:14px">בחרי צבע רקע למסך הדיגיטלי</p>
+        <div class="color-row" id="colorRow"></div>
+      </div>
+    </div>
+
+    <!-- DISPLAY SETTINGS -->
+    <div id="page-display" style="display:none">
+      <div class="topbar"><h2>📺 הגדרות תצוגה</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">⚙️</div>הגדרות כלליות</div>
+        <div class="settings-row"><div><div class="s-label">משך כל שקופית (שניות)</div><div class="s-desc">זמן הצגה לפני מעבר לשקופית הבאה</div></div><input type="number" id="setSlideDur" min="3" max="60" value="8"></div>
+        <div class="settings-row"><div><div class="s-label">שעון 24 שעות</div><div class="s-desc">פורמט תצוגת שעה</div></div><input type="checkbox" id="set24h" checked></div>
+        <div class="settings-row"><div><div class="s-label">הצג מזג אוויר</div><div class="s-desc">שקופית מזג אוויר אוטומטית</div></div><input type="checkbox" id="setWeather" checked></div>
+        <div class="settings-row"><div><div class="s-label">עיר לתחזית</div><div class="s-desc">שם העיר באנגלית</div></div><input type="text" id="setCity" value="Ashkelon"></div>
+        <div class="settings-row"><div><div class="s-label">הצג שעות פתיחה</div><div class="s-desc">שקופית אוטומטית</div></div><input type="checkbox" id="setShowHours" checked></div>
+        <div class="settings-row"><div><div class="s-label">הסתר תוכן שפג תוקפו</div><div class="s-desc">הסתר אוטומטי מודעות שעבר תאריך סיום</div></div><input type="checkbox" id="setAutoHide" checked></div>
+        <button class="btn btn-primary" onclick="saveDisplaySettings()" style="margin-top:16px">💾 שמור הגדרות</button>
+      </div>
+    </div>
+
+    <!-- DATA -->
+    <div id="page-data" style="display:none">
+      <div class="topbar"><h2>💾 גיבוי / שחזור</h2></div>
+      <div class="card">
+        <div class="card-title"><div class="icon">💾</div>ניהול נתונים</div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:16px">כל הנתונים נשמרים באופן מקומי בדפדפן. ניתן לייצא ולגבות.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="btn btn-outline" onclick="exportData()">📥 ייצא נתונים (JSON)</button>
+          <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 ייבא נתונים</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+          <button class="btn btn-danger" onclick="clearAll()">🗑️ מחק הכל</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- ===== ADMIN MODE ===== -->
-<div class="admin-mode" id="adminMode">
-  <div class="admin-header">
-    <div class="brand">
-      <div class="logo">📚</div>
-      <div><h1>ספרי-בורד<small>לוח מודעות דיגיטלי לספריות</small></h1></div>
+<!-- Display Mode -->
+<div class="display-mode" id="displayMode">
+  <button class="dm-exit" onclick="exitDisplay()">✕</button>
+  <div class="dm-header">
+    <div class="dm-brand">
+      <div class="logo" id="dmLogo">📚</div>
+      <h1 id="dmLibName">ספרי<span>-בורד</span></h1>
     </div>
-    <button class="btn-display" onclick="enterDisplay()">📺 הפעל מצב תצוגה</button>
+    <div class="dm-clock"><div class="date" id="dmDate"></div><div id="dmTime"></div></div>
   </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchAdminTab('announcements',this)">📢 מודעות</button>
-    <button class="tab" onclick="switchAdminTab('books',this)">📖 המלצות ספרים</button>
-    <button class="tab" onclick="switchAdminTab('events',this)">📅 אירועים</button>
-    <button class="tab" onclick="switchAdminTab('hours',this)">🕐 שעות פעילות</button>
-    <button class="tab" onclick="switchAdminTab('quotes',this)">💬 ציטוטים</button>
-    <button class="tab" onclick="switchAdminTab('ticker',this)">📰 פס חדשות</button>
-    <button class="tab" onclick="switchAdminTab('settings',this)">⚙️ הגדרות</button>
-  </div>
-
-  <!-- Announcements -->
-  <div id="tab-announcements">
-    <div class="card">
-      <div class="card-title"><div class="icon">📢</div>מודעה חדשה</div>
-      <div class="add-form">
-        <div class="form-grid">
-          <div class="field"><label>כותרת</label><input type="text" id="annTitle" placeholder="לדוגמה: ספריית קיץ נפתחה!"></div>
-          <div class="field"><label>סמל (אימוג'י)</label><input type="text" id="annIcon" placeholder="🌞" value="📢"></div>
-        </div>
-        <div class="form-grid full" style="margin-top:12px">
-          <div class="field"><label>תוכן</label><textarea id="annBody" placeholder="תוכן המודעה..."></textarea></div>
-        </div>
-        <div class="field" style="margin-top:12px"><label>תגית (אופציונלי)</label><input type="text" id="annTag" placeholder="חדש / דחוף / מבצע"></div>
-        <div class="actions"><button class="btn btn-primary" onclick="addAnnouncement()">+ הוסף מודעה</button></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">📋</div>מודעות קיימות</div>
-      <div class="item-list" id="annList"></div>
-    </div>
-  </div>
-
-  <!-- Books -->
-  <div id="tab-books" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="icon">📖</div>המלצת ספר חדשה</div>
-      <div class="add-form">
-        <div class="form-grid three">
-          <div class="field"><label>שם הספר</label><input type="text" id="bookTitle" placeholder="שם הספר"></div>
-          <div class="field"><label>מחבר</label><input type="text" id="bookAuthor" placeholder="שם המחבר"></div>
-          <div class="field"><label>סמל (אימוג'י)</label><input type="text" id="bookIcon" placeholder="📚" value="📚"></div>
-        </div>
-        <div class="form-grid full" style="margin-top:12px">
-          <div class="field"><label>תיאור / תקציר</label><textarea id="bookDesc" placeholder="תיאור קצר של הספר..."></textarea></div>
-        </div>
-        <div class="actions"><button class="btn btn-primary" onclick="addBook()">+ הוסף ספר</button></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">📚</div>ספרים מומלצים</div>
-      <div class="item-list" id="bookList"></div>
-    </div>
-  </div>
-
-  <!-- Events -->
-  <div id="tab-events" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="icon">📅</div>אירוע חדש</div>
-      <div class="add-form">
-        <div class="form-grid">
-          <div class="field"><label>שם האירוע</label><input type="text" id="evtTitle" placeholder="לדוגמה: מפגש סופרים"></div>
-          <div class="field"><label>תאריך</label><input type="date" id="evtDate"></div>
-        </div>
-        <div class="form-grid" style="margin-top:12px">
-          <div class="field"><label>שעה</label><input type="time" id="evtTime"></div>
-          <div class="field"><label>מיקום</label><input type="text" id="evtLocation" placeholder="אולם הספרייה"></div>
-        </div>
-        <div class="form-grid full" style="margin-top:12px">
-          <div class="field"><label>תיאור</label><textarea id="evtDesc" placeholder="פרטי האירוע..."></textarea></div>
-        </div>
-        <div class="actions"><button class="btn btn-primary" onclick="addEvent()">+ הוסף אירוע</button></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">📋</div>אירועים קרובים</div>
-      <div class="item-list" id="evtList"></div>
-    </div>
-  </div>
-
-  <!-- Hours -->
-  <div id="tab-hours" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="icon">🕐</div>שעות פעילות</div>
-      <p style="color:var(--muted);margin-bottom:16px;font-size:14px">הגדר את שעות הפתיחה של הספרייה. יופיע כשקופית במצב תצוגה.</p>
-      <div id="hoursList"></div>
-      <button class="btn btn-primary" onclick="saveHours()" style="margin-top:16px">💾 שמור שעות</button>
-    </div>
-  </div>
-
-  <!-- Quotes -->
-  <div id="tab-quotes" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="icon">💬</div>ציטוט חדש</div>
-      <div class="add-form">
-        <div class="form-grid full">
-          <div class="field"><label>טקסט</label><textarea id="quoteText" placeholder="ספרים הם משאבות שלא מתרוקנים..."></textarea></div>
-        </div>
-        <div class="field" style="margin-top:12px"><label>מחבר</label><input type="text" id="quoteAuthor" placeholder="שם המחבר"></div>
-        <div class="actions" style="margin-top:16px"><button class="btn btn-primary" onclick="addQuote()">+ הוסף ציטוט</button></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">📚</div>ציטוטים שמורים</div>
-      <div class="item-list" id="quoteList"></div>
-    </div>
-  </div>
-
-  <!-- Ticker -->
-  <div id="tab-ticker" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="icon">📰</div>פס חדשות — הודעה חדשה</div>
-      <div class="add-form">
-        <div class="field"><label>טקסט לפס החדשות</label><input type="text" id="tickerText" placeholder="הרשמה לקורס קריאה מהירה פתוחה!"></div>
-        <div class="actions" style="margin-top:12px"><button class="btn btn-primary" onclick="addTicker()">+ הוסף</button></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">📋</div>הודעות פס חדשות</div>
-      <div class="item-list" id="tickerList"></div>
-    </div>
-  </div>
-
-  <!-- Settings -->
-  <div id="tab-settings" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="icon">⚙️</div>הגדרות תצוגה</div>
-      <div class="settings-row">
-        <div><div class="label">משך כל שקופית (שניות)</div><div class="desc">כמה זמן כל מודעה מוצגת לפני המעבר הבא</div></div>
-        <input type="number" id="setSlideDuration" min="3" max="60" value="8">
-      </div>
-      <div class="settings-row">
-        <div><div class="label">שעון 24 שעות</div><div class="desc">הצגת שעות בפורמט 24 שעות</div></div>
-        <input type="checkbox" id="set24h" checked>
-      </div>
-      <div class="settings-row">
-        <div><div class="label">הצג מזג אוויר</div><div class="desc">שקופית מזג אוויר אוטומטית</div></div>
-        <input type="checkbox" id="setWeather" checked>
-      </div>
-      <div class="settings-row">
-        <div><div class="label">עיר לתחזית מזג אוויר</div><div class="desc">שם העיר באנגלית</div></div>
-        <input type="text" id="setCity" placeholder="Ashkelon" value="Ashkelon" style="width:150px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px">
-      </div>
-      <div class="settings-row">
-        <div><div class="label">הצג שעות פתיחה</div><div class="desc">שקופית שעות פעילות אוטומטית</div></div>
-        <input type="checkbox" id="setShowHours" checked>
-      </div>
-      <button class="btn btn-primary" onclick="saveSettings()" style="margin-top:16px">💾 שמור הגדרות</button>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">🎨</div>צבע נושא</div>
-      <p style="color:var(--muted);margin-bottom:16px;font-size:14px">בחר צבע רקע למצב תצוגה</p>
-      <div class="color-row" id="colorRow"></div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="icon">💾</div>גיבוי / שחזור</div>
-      <p style="color:var(--muted);font-size:14px;margin-bottom:16px">ייצוא וייבוא של כל הנתונים</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-outline" onclick="exportData()">📥 ייצא נתונים (JSON)</button>
-        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📤 ייבא נתונים</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-      </div>
-    </div>
-  </div>
+  <div class="dm-content" id="dmContent"></div>
+  <div class="dm-indicator" id="dmIndicator"></div>
+  <div class="dm-ticker"><div class="ticker-text" id="dmTicker"></div></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== DATA STORE =====
-const STORE_KEY='sefri_board_data';
+// ===== DATA =====
+const STORE_KEY='sefri_board_v2';
 const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 const months=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const themes=[
@@ -373,392 +514,407 @@ const themes=[
   {name:'סגול',from:'#6c3483',to:'#2c3e50'},
   {name:'חום חם',from:'#8e5a2b',to:'#4a2c10'},
   {name:'כחול כהה',from:'#1b2631',to:'#0d1b2a'},
+  {name:'בורדו',from:'#922b21',to:'#4a1c16'},
+  {name:'תכלת',from:'#1a7a8c',to:'#0d3b4a'},
 ];
-
-let data=loadData();
-let currentSlide=0;
-let slideTimer=null;
-let displaySlides=[];
-let weatherData=null;
+const bookCats={children:'ילדים',teens:'נוער',adults:'מבוגרים',reference:'עיון',fiction:'ספרות',new:'חדש בספרייה'};
 
 function loadData(){
   const def={
     announcements:[],books:[],events:[],quotes:[],ticker:[],
     hours:{0:'','1':'08:00-16:00','2':'08:00-16:00','3':'08:00-16:00','4':'08:00-16:00','5':'08:00-12:00','6':''},
-    settings:{slideDuration:8,hour24:true,showWeather:true,city:'Ashkelon',showHours:true,theme:0}
+    branding:{name:'',subtitle:'',icon:'📚',phone:''},
+    settings:{slideDuration:8,hour24:true,showWeather:true,city:'Ashkelon',showHours:true,autoHide:true,theme:0}
   };
   try{return {...def,...JSON.parse(localStorage.getItem(STORE_KEY)||'{}')}}catch(e){return def}
 }
+let data=loadData();
 function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data))}
+function showToast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.style.background=err?'#dc2626':'var(--primary)';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function today(){return new Date().toISOString().split('T')[0]}
+function isExpired(endDate){if(!endDate)return false;return new Date(endDate)<new Date(today())}
+function isStarted(startDate){if(!startDate)return true;return new Date(startDate)<=new Date(today())}
+function isActive(item){return item.active&&isStarted(item.start)&&!isExpired(item.end)}
 
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+// ===== NAV =====
+function navTo(page,btn){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.querySelectorAll('[id^="page-"]').forEach(p=>p.style.display='none');
+  document.getElementById('page-'+page).style.display='block';
+  if(page==='dashboard')renderDashboard();
+  if(page==='branding')renderBranding();
+  if(page==='display')renderDisplaySettings();
+  if(page==='hours')renderHoursEditor();
+  if(page==='announcements')renderAnnouncements();
+  if(page==='books')renderBooks();
+  if(page==='events')renderEvents();
+  if(page==='quotes')renderQuotes();
+  if(page==='ticker')renderTicker();
+  if(window.innerWidth<900)document.querySelector('.sidebar').classList.remove('open');
 }
 
-// ===== ADMIN TABS =====
-function switchAdminTab(tab,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  ['announcements','books','events','hours','quotes','ticker','settings'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
-  });
-  if(tab==='hours')renderHours();
-  if(tab==='settings')renderThemes();
+// ===== DASHBOARD =====
+function renderDashboard(){
+  document.getElementById('dashLibName').textContent=data.branding.name||'ספרייה';
+  const activeAnn=data.announcements.filter(isActive).length;
+  const activeBooks=data.books.filter(isActive).length;
+  const activeEvts=data.events.filter(e=>e.active&&isStarted(e.date)).length;
+  const activeQuotes=data.quotes.filter(q=>q.active).length;
+  const stats=[
+    {icon:'📢',label:'מודעות פעילות',value:activeAnn,color:'#2980b9'},
+    {icon:'📖',label:'ספרים מומלצים',value:activeBooks,color:'#e67e22'},
+    {icon:'📅',label:'אירועים קרובים',value:activeEvts,color:'#27ae60'},
+    {icon:'💬',label:'ציטוטים',value:activeQuotes,color:'#8e44ad'},
+    {icon:'📰',label:'פס חדשות',value:data.ticker.filter(t=>t.active).length,color:'#e74c3c'},
+    {icon:'📺',label:'שקופיות סה״כ',value:activeAnn+activeBooks+activeEvts+activeQuotes+(data.settings.showHours?1:0)+(data.settings.showWeather?1:0),color:'#16a085'},
+  ];
+  document.getElementById('dashStats').innerHTML=stats.map(s=>`
+    <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:center;border:1.5px solid var(--border)">
+      <div style="font-size:28px;margin-bottom:4px">${s.icon}</div>
+      <div style="font-size:28px;font-weight:800;color:${s.color}">${s.value}</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:2px">${s.label}</div>
+    </div>`).join('');
+
+  // Active content list
+  const items=[];
+  data.announcements.filter(isActive).forEach(a=>items.push({type:'📢',title:a.title,meta:'מודעה'}));
+  data.books.filter(isActive).forEach(b=>items.push({type:'📖',title:b.title,meta:'ספר'+(b.author?' - '+b.author:'')}));
+  data.events.filter(e=>e.active&&isStarted(e.date)).forEach(e=>items.push({type:'📅',title:e.title,meta:e.date||''}));
+  data.quotes.filter(q=>q.active).forEach(q=>items.push({type:'💬',title:q.text.substring(0,40)+'...',meta:q.author||''}));
+  
+  if(!items.length){document.getElementById('dashActive').innerHTML='<div class="empty">אין תוכן פעיל כעת</div>';return}
+  document.getElementById('dashActive').innerHTML=items.map(i=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:20px">${i.type}</span>
+      <div><div style="font-weight:600;font-size:14px">${i.title}</div><div style="font-size:12px;color:var(--muted)">${i.meta}</div></div>
+    </div>`).join('');
+}
+
+// ===== QUICK TEMPLATES =====
+function quickAdd(type){
+  const todayStr=today();
+  if(type==='ann_holiday'){
+    data.announcements.push({id:Date.now(),title:'ברכת חג!',body:'חג שמח לכל הקוראים והקוראות! 🎉',icon:'🎉',tag:'חג',img:'',start:todayStr,end:'',active:true});
+    navTo('announcements',null);saveData();renderAnnouncements();renderCounts();showToast('✅ נוצר — ערוך את המודעה');
+  }else if(type==='ann_hours'){
+    data.announcements.push({id:Date.now(),title:'שינוי שעות פתיחה',body:'החל מיום ראשון ישנו שינוי בשעות הפתיחה של הספרייה. עדכן את השעות בהגדרות.',icon:'🕐',tag:'עדכון',img:'',start:todayStr,end:'',active:true});
+    navTo('announcements',null);saveData();renderAnnouncements();renderCounts();showToast('✅ נוצר');
+  }else if(type==='ann_new_arrival'){
+    data.announcements.push({id:Date.now(),title:'ספר חדש הגיע לספרייה!',body:'ספר חדש ומרגש הגיע אלינו. מוזמנים לבוא ולשאול!',icon:'🆕',tag:'חדש',img:'',start:todayStr,end:'',active:true});
+    navTo('announcements',null);saveData();renderAnnouncements();renderCounts();showToast('✅ נוצר');
+  }else if(type==='book_recommend'){
+    data.books.push({id:Date.now(),title:'שם הספר',author:'שם המחבר/ת',desc:'תיאור קצר של הספר ולמה כדאי לקרוא אותו.',icon:'📚',img:'',category:'',start:todayStr,end:'',active:true});
+    navTo('books',null);saveData();renderBooks();renderCounts();showToast('✅ נוצר — ערוך את ההמלצה');
+  }else if(type==='evt_storytime'){
+    data.events.push({id:Date.now(),title:'שעת סיפור לקטנטנים',date:'',time:'16:00',location:'פינת הילדים',desc:'שעת סיפור מהנה לילדים בגילאי 3-6. הכניסה חופשית!',img:'',icon:'👶',active:true});
+    navTo('events',null);saveData();renderEvents();renderCounts();showToast('✅ נוצר — ערוך את האירוע');
+  }else if(type==='evt_author'){
+    data.events.push({id:Date.now(),title:'מפגש עם סופר/ת',date:'',time:'19:00',location:'אולם הספרייה',desc:'ערב מיוחד עם סופר/ת אורח/ת. הרשמה מראש בדלפק הספרייה.',img:'',icon:'✍️',active:true});
+    navTo('events',null);saveData();renderEvents();renderCounts();showToast('✅ נוצר');
+  }else if(type==='evt_workshop'){
+    data.events.push({id:Date.now(),title:'סדנה / הרצאה',date:'',time:'18:00',location:'אולם הספרייה',desc:'סדנא מעניינת. מומלץ להגיע מראש.',img:'',icon:'🎨',active:true});
+    navTo('events',null);saveData();renderEvents();renderCounts();showToast('✅ נוצר');
+  }else if(type==='quote_book'){
+    data.quotes.push({id:Date.now(),text:'"ספר הוא חלום שאתה מחזיק בידך."',author:'ניל גיימן',source:'',active:true});
+    navTo('quotes',null);saveData();renderQuotes();renderCounts();showToast('✅ נוצר');
+  }
+}
+
+// ===== PREVIEWS =====
+function updatePreview(){
+  const icon=document.getElementById('annIcon').value||'📢';
+  const title=document.getElementById('annTitle').value||'הכותרת תופיע כאן';
+  const body=document.getElementById('annBody').value;
+  const tag=document.getElementById('annTag').value;
+  const img=document.getElementById('annImg').value;
+  let html=`<div class="pv-icon">${icon}</div>`;
+  if(tag)html+=`<div class="pv-tag">${tag}</div>`;
+  html+=`<div class="pv-title">${title}</div>`;
+  if(body)html+=`<div class="pv-body">${body}</div>`;
+  if(img)html+=`<img src="${img}" class="pv-img" style="max-width:200px;max-height:140px;border-radius:8px;margin-top:10px">`;
+  document.getElementById('annPreview').innerHTML=html;
+}
+function updateBookPreview(){
+  const title=document.getElementById('bookTitle').value||'שם הספר';
+  const author=document.getElementById('bookAuthor').value;
+  const desc=document.getElementById('bookDesc').value;
+  const icon=document.getElementById('bookIcon').value||'📚';
+  const img=document.getElementById('bookImg').value;
+  let coverHtml=img?`<img src="${img}" style="width:80px;height:110px;object-fit:cover;border-radius:6px">`:icon;
+  let html=`<div class="pv-book"><div class="pv-cover">${coverHtml}</div><div><div class="pv-label" style="color:#f39c12;font-size:13px;font-weight:600">📖 המלצת הספרייה</div><div class="pv-title" style="font-size:22px">${title}</div>${author?`<div style="color:rgba(255,255,255,0.7);font-size:16px">${author}</div>`:''}${desc?`<div style="color:rgba(255,255,255,0.85);font-size:14px;margin-top:6px">${desc.substring(0,80)}</div>`:''}</div></div>`;
+  document.getElementById('bookPreview').innerHTML=html;
+}
+function updateEvtPreview(){
+  const title=document.getElementById('evtTitle').value||'שם האירוע';
+  const date=document.getElementById('evtDate').value;
+  const time=document.getElementById('evtTime').value;
+  const location=document.getElementById('evtLocation').value;
+  const desc=document.getElementById('evtDesc').value;
+  let day='',mon='';
+  if(date){const d=new Date(date);day=d.getDate();mon=months[d.getMonth()]}
+  let html=`<div class="pv-event" style="background:rgba(255,255,255,0.1);border-radius:12px;padding:16px;text-align:center">`;
+  if(date)html+=`<div class="pv-date-badge" style="display:inline-flex;flex-direction:column;align-items:center;background:#e67e22;border-radius:8px;padding:8px 14px;margin-bottom:10px"><div style="color:white;font-size:28px;font-weight:800;line-height:1">${day}</div><div style="color:white;font-size:13px">${mon}</div></div>`;
+  html+=`<div class="pv-title" style="font-size:22px">${title}</div>`;
+  if(time)html+=`<div style="color:#f39c12;font-size:18px;font-weight:600;margin-top:6px">⏰ ${time}</div>`;
+  if(location)html+=`<div style="color:rgba(255,255,255,0.7);font-size:16px;margin-top:4px">📍 ${location}</div>`;
+  if(desc)html+=`<div style="color:rgba(255,255,255,0.85);font-size:15px;margin-top:8px">${desc.substring(0,80)}</div>`;
+  html+=`</div>`;
+  document.getElementById('evtPreview').innerHTML=html;
 }
 
 // ===== ANNOUNCEMENTS =====
 function addAnnouncement(){
   const title=document.getElementById('annTitle').value.trim();
-  if(!title){showToast('⚠️ נא להזין כותרת');return}
-  data.announcements.push({
-    id:Date.now(),title,body:document.getElementById('annBody').value.trim(),
-    icon:document.getElementById('annIcon').value.trim()||'📢',
-    tag:document.getElementById('annTag').value.trim(),active:true
-  });
-  saveData();
-  ['annTitle','annBody','annTag'].forEach(i=>document.getElementById(i).value='');
-  document.getElementById('annIcon').value='📢';
-  renderAnnouncements();showToast('✅ נוסף');
+  if(!title){showToast('⚠️ נא להזין כותרת',true);return}
+  data.announcements.unshift({id:Date.now(),title,body:document.getElementById('annBody').value.trim(),icon:document.getElementById('annIcon').value.trim()||'📢',tag:document.getElementById('annTag').value.trim(),img:document.getElementById('annImg').value.trim(),start:document.getElementById('annStart').value||today(),end:document.getElementById('annEnd').value,active:true});
+  saveData();['annTitle','annBody','annTag','annImg'].forEach(i=>document.getElementById(i).value='');document.getElementById('annIcon').value='📢';document.getElementById('annStart').value=today();document.getElementById('annEnd').value='';renderAnnouncements();renderCounts();showToast('✅ מודעה נוספה');
 }
-function delAnnouncement(id){data.announcements=data.announcements.filter(a=>a.id!==id);saveData();renderAnnouncements();showToast('🗑️ נמחק')}
-function toggleAnnouncement(id){const a=data.announcements.find(x=>x.id===id);if(a){a.active=!a.active;saveData();renderAnnouncements()}}
+function delAnn(id){data.announcements=data.announcements.filter(a=>a.id!==id);saveData();renderAnnouncements();renderCounts();showToast('🗑️ נמחק')}
+function toggleAnn(id){const a=data.announcements.find(x=>x.id===id);if(a){a.active=!a.active;saveData();renderAnnouncements();renderCounts()}}
 function renderAnnouncements(){
   const list=document.getElementById('annList');
   if(!data.announcements.length){list.innerHTML='<div class="empty">אין מודעות עדיין</div>';return}
-  list.innerHTML=data.announcements.map(a=>`
-    <div class="item-row ${a.active?'':'disabled'}">
-      <div class="info">
-        <span class="title">${a.icon||'📢'} ${a.title}</span>
-        <span class="meta">${a.body?a.body.substring(0,60)+(a.body.length>60?'...':''):''}</span>
-      </div>
-      <div class="actions">
-        <button class="toggle" onclick="toggleAnnouncement(${a.id})">${a.active?'✓ פעיל':'✗ מוסתר'}</button>
-        <button class="del" onclick="delAnnouncement(${a.id})">🗑️</button>
-      </div>
-    </div>`).join('');
+  list.innerHTML=data.announcements.map(a=>{
+    let status='<span class="tag tag-active">פעיל</span>';
+    if(!a.active)status='<span class="tag tag-expired">מוסתר</span>';
+    else if(isExpired(a.end))status='<span class="tag tag-expired">פג תוקף</span>';
+    else if(!isStarted(a.start))status='<span class="tag tag-scheduled">מתוזמן</span>';
+    return `<div class="item-row ${a.active&&!isExpired(a.end)?'':'disabled'}">
+      <div class="info"><span class="title">${a.icon||'📢'} ${a.title} ${status}</span><span class="meta">${a.tag?'🏷️ '+a.tag+' | ':''}${a.start?'מ-'+a.start:''}${a.end?' עד '+a.end:''}</span></div>
+      <div class="actions"><button class="toggle" onclick="toggleAnn(${a.id})">${a.active?'✓':'✗'}</button><button class="del" onclick="delAnn(${a.id})">🗑️</button></div>
+    </div>`}).join('');
 }
 
 // ===== BOOKS =====
 function addBook(){
   const title=document.getElementById('bookTitle').value.trim();
-  if(!title){showToast('⚠️ נא להזין שם ספר');return}
-  data.books.push({id:Date.now(),title,author:document.getElementById('bookAuthor').value.trim(),desc:document.getElementById('bookDesc').value.trim(),icon:document.getElementById('bookIcon').value.trim()||'📚',active:true});
-  saveData();['bookTitle','bookAuthor','bookDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('bookIcon').value='📚';renderBooks();showToast('✅ נוסף');
+  if(!title){showToast('⚠️ נא להזין שם ספר',true);return}
+  data.books.unshift({id:Date.now(),title,author:document.getElementById('bookAuthor').value.trim(),desc:document.getElementById('bookDesc').value.trim(),icon:document.getElementById('bookIcon').value.trim()||'📚',img:document.getElementById('bookImg').value.trim(),category:document.getElementById('bookCategory').value,start:today(),end:document.getElementById('bookEnd').value,active:true});
+  saveData();['bookTitle','bookAuthor','bookDesc','bookImg'].forEach(i=>document.getElementById(i).value='');document.getElementById('bookIcon').value='📚';document.getElementById('bookEnd').value='';renderBooks();renderCounts();showToast('✅ ספר נוסף');
 }
-function delBook(id){data.books=data.books.filter(b=>b.id!==id);saveData();renderBooks();showToast('🗑️ נמחק')}
-function toggleBook(id){const b=data.books.find(x=>x.id===id);if(b){b.active=!b.active;saveData();renderBooks()}}
+function delBook(id){data.books=data.books.filter(b=>b.id!==id);saveData();renderBooks();renderCounts();showToast('🗑️ נמחק')}
+function toggleBook(id){const b=data.books.find(x=>x.id===id);if(b){b.active=!b.active;saveData();renderBooks();renderCounts()}}
 function renderBooks(){
   const list=document.getElementById('bookList');
-  if(!data.books.length){list.innerHTML='<div class="empty">אין ספרים מומלצים עדיין</div>';return}
-  list.innerHTML=data.books.map(b=>`
-    <div class="item-row ${b.active?'':'disabled'}">
-      <div class="info">
-        <span class="title">${b.icon||'📚'} ${b.title}</span>
-        <span class="meta">${b.author||''} ${b.desc?'— '+b.desc.substring(0,50):''}</span>
-      </div>
-      <div class="actions">
-        <button class="toggle" onclick="toggleBook(${b.id})">${b.active?'✓ פעיל':'✗ מוסתר'}</button>
-        <button class="del" onclick="delBook(${b.id})">🗑️</button>
-      </div>
-    </div>`).join('');
+  if(!data.books.length){list.innerHTML='<div class="empty">אין ספרים מומלצים</div>';return}
+  list.innerHTML=data.books.map(b=>{
+    let status='<span class="tag tag-active">פעיל</span>';
+    if(!b.active)status='<span class="tag tag-expired">מוסתר</span>';
+    else if(isExpired(b.end))status='<span class="tag tag-expired">פג תוקף</span>';
+    return `<div class="item-row ${b.active&&!isExpired(b.end)?'':'disabled'}">
+      <div class="info"><span class="title">${b.icon||'📚'} ${b.title} ${status}</span><span class="meta">${b.author||''} ${b.category?'| '+bookCats[b.category]:''} ${b.img?'| 🖼️ יש כריכה':''}</span></div>
+      <div class="actions"><button class="toggle" onclick="toggleBook(${b.id})">${b.active?'✓':'✗'}</button><button class="del" onclick="delBook(${b.id})">🗑️</button></div>
+    </div>`}).join('');
 }
 
 // ===== EVENTS =====
 function addEvent(){
   const title=document.getElementById('evtTitle').value.trim();
-  if(!title){showToast('⚠️ נא להזין שם אירוע');return}
-  data.events.push({id:Date.now(),title,date:document.getElementById('evtDate').value,time:document.getElementById('evtTime').value,location:document.getElementById('evtLocation').value.trim(),desc:document.getElementById('evtDesc').value.trim(),active:true});
-  saveData();['evtTitle','evtDate','evtTime','evtLocation','evtDesc'].forEach(i=>document.getElementById(i).value='');renderEvents();showToast('✅ נוסף');
+  if(!title){showToast('⚠️ נא להזין שם אירוע',true);return}
+  data.events.unshift({id:Date.now(),title,date:document.getElementById('evtDate').value,time:document.getElementById('evtTime').value,location:document.getElementById('evtLocation').value.trim(),desc:document.getElementById('evtDesc').value.trim(),img:document.getElementById('evtImg').value.trim(),icon:document.getElementById('evtIcon').value.trim()||'📅',active:true});
+  saveData();['evtTitle','evtDate','evtTime','evtLocation','evtDesc','evtImg'].forEach(i=>document.getElementById(i).value='');document.getElementById('evtIcon').value='📅';renderEvents();renderCounts();showToast('✅ אירוע נוסף');
 }
-function delEvent(id){data.events=data.events.filter(e=>e.id!==id);saveData();renderEvents();showToast('🗑️ נמחק')}
-function toggleEvent(id){const e=data.events.find(x=>x.id===id);if(e){e.active=!e.active;saveData();renderEvents()}}
+function delEvent(id){data.events=data.events.filter(e=>e.id!==id);saveData();renderEvents();renderCounts();showToast('🗑️ נמחק')}
+function toggleEvent(id){const e=data.events.find(x=>x.id===id);if(e){e.active=!e.active;saveData();renderEvents();renderCounts()}}
 function renderEvents(){
   const list=document.getElementById('evtList');
-  const active=data.events.filter(e=>e.active).sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
-  if(!active.length){list.innerHTML='<div class="empty">אין אירועים קרובים</div>';return}
-  list.innerHTML=active.map(e=>{
+  const sorted=data.events.filter(e=>e.active).sort((a,b)=>(a.date||'')>(b.date||'')?1:-1).concat(data.events.filter(e=>!e.active));
+  if(!data.events.length){list.innerHTML='<div class="empty">אין אירועים</div>';return}
+  list.innerHTML=sorted.map(e=>{
     let dateStr=e.date||'';
     if(dateStr){const d=new Date(dateStr);dateStr=`${d.getDate()} ${months[d.getMonth()]}`}
-    return `<div class="item-row">
-      <div class="info">
-        <span class="title">📅 ${e.title}</span>
-        <span class="meta">${dateStr} ${e.time?e.time:''} ${e.location?'| '+e.location:''}</span>
-      </div>
-      <div class="actions">
-        <button class="toggle" onclick="toggleEvent(${e.id})">✓ פעיל</button>
-        <button class="del" onclick="delEvent(${e.id})">🗑️</button>
-      </div>
+    return `<div class="item-row ${e.active?'':'disabled'}">
+      <div class="info"><span class="title">${e.icon||'📅'} ${e.title}</span><span class="meta">${dateStr} ${e.time?'⏰ '+e.time:''} ${e.location?'📍 '+e.location:''}</span></div>
+      <div class="actions"><button class="toggle" onclick="toggleEvent(${e.id})">${e.active?'✓':'✗'}</button><button class="del" onclick="delEvent(${e.id})">🗑️</button></div>
     </div>`}).join('');
-}
-
-// ===== HOURS =====
-function renderHours(){
-  const list=document.getElementById('hoursList');
-  list.innerHTML=days.map((d,i)=>`
-    <div class="settings-row">
-      <div class="label">יום ${d}</div>
-      <input type="text" id="hour_${i}" placeholder="סגור" value="${data.hours[i]||''}" style="width:200px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Heebo';text-align:center">
-    </div>`).join('');
-}
-function saveHours(){
-  days.forEach((d,i)=>{data.hours[i]=document.getElementById('hour_'+i).value.trim()||''});
-  saveData();showToast('✅ שעות נשמרו');
 }
 
 // ===== QUOTES =====
 function addQuote(){
   const text=document.getElementById('quoteText').value.trim();
-  if(!text){showToast('⚠️ נא להזין ציטוט');return}
-  data.quotes.push({id:Date.now(),text,author:document.getElementById('quoteAuthor').value.trim(),active:true});
-  saveData();document.getElementById('quoteText').value='';document.getElementById('quoteAuthor').value='';renderQuotes();showToast('✅ נוסף');
+  if(!text){showToast('⚠️ נא להזין ציטוט',true);return}
+  data.quotes.push({id:Date.now(),text,author:document.getElementById('quoteAuthor').value.trim(),source:document.getElementById('quoteSource').value.trim(),active:true});
+  saveData();['quoteText','quoteAuthor','quoteSource'].forEach(i=>document.getElementById(i).value='');renderQuotes();renderCounts();showToast('✅ נוסף');
 }
-function delQuote(id){data.quotes=data.quotes.filter(q=>q.id!==id);saveData();renderQuotes();showToast('🗑️ נמחק')}
-function toggleQuote(id){const q=data.quotes.find(x=>x.id===id);if(q){q.active=!q.active;saveData();renderQuotes()}}
+function delQuote(id){data.quotes=data.quotes.filter(q=>q.id!==id);saveData();renderQuotes();renderCounts();showToast('🗑️ נמחק')}
+function toggleQuote(id){const q=data.quotes.find(x=>x.id===id);if(q){q.active=!q.active;saveData();renderQuotes();renderCounts()}}
 function renderQuotes(){
   const list=document.getElementById('quoteList');
-  if(!data.quotes.length){list.innerHTML='<div class="empty">אין ציטוטים עדיין</div>';return}
-  list.innerHTML=data.quotes.map(q=>`
-    <div class="item-row ${q.active?'':'disabled'}">
-      <div class="info">
-        <span class="title">💬 "${q.text.substring(0,60)}${q.text.length>60?'...':''}"</span>
-        <span class="meta">${q.author||'אנונימי'}</span>
-      </div>
-      <div class="actions">
-        <button class="toggle" onclick="toggleQuote(${q.id})">${q.active?'✓ פעיל':'✗ מוסתר'}</button>
-        <button class="del" onclick="delQuote(${q.id})">🗑️</button>
-      </div>
-    </div>`).join('');
+  if(!data.quotes.length){list.innerHTML='<div class="empty">אין ציטוטים</div>';return}
+  list.innerHTML=data.quotes.map(q=>`<div class="item-row ${q.active?'':'disabled'}">
+    <div class="info"><span class="title">💬 "${q.text.substring(0,60)}${q.text.length>60?'...':''}"</span><span class="meta">${q.author||'אנונימי'} ${q.source?'| '+q.source:''}</span></div>
+    <div class="actions"><button class="toggle" onclick="toggleQuote(${q.id})">${q.active?'✓':'✗'}</button><button class="del" onclick="delQuote(${q.id})">🗑️</button></div>
+  </div>`).join('');
 }
 
 // ===== TICKER =====
 function addTicker(){
   const text=document.getElementById('tickerText').value.trim();
-  if(!text){showToast('⚠️ נא להזין טקסט');return}
+  if(!text){showToast('⚠️ נא להזין טקסט',true);return}
   data.ticker.push({id:Date.now(),text,active:true});
-  saveData();document.getElementById('tickerText').value='';renderTicker();showToast('✅ נוסף');
+  saveData();document.getElementById('tickerText').value='';renderTicker();renderCounts();showToast('✅ נוסף');
 }
-function delTicker(id){data.ticker=data.ticker.filter(t=>t.id!==id);saveData();renderTicker();showToast('🗑️ נמחק')}
-function toggleTicker(id){const t=data.ticker.find(x=>x.id===id);if(t){t.active=!t.active;saveData();renderTicker()}}
+function delTicker(id){data.ticker=data.ticker.filter(t=>t.id!==id);saveData();renderTicker();renderCounts();showToast('🗑️ נמחק')}
+function toggleTicker(id){const t=data.ticker.find(x=>x.id===id);if(t){t.active=!t.active;saveData();renderTicker();renderCounts()}}
 function renderTicker(){
   const list=document.getElementById('tickerList');
-  if(!data.ticker.length){list.innerHTML='<div class="empty">אין הודעות בפס החדשות</div>';return}
-  list.innerHTML=data.ticker.map(t=>`
-    <div class="item-row ${t.active?'':'disabled'}">
-      <div class="info"><span class="title">📰 ${t.text}</span></div>
-      <div class="actions">
-        <button class="toggle" onclick="toggleTicker(${t.id})">${t.active?'✓ פעיל':'✗ מוסתר'}</button>
-        <button class="del" onclick="delTicker(${t.id})">🗑️</button>
-      </div>
-    </div>`).join('');
+  if(!data.ticker.length){list.innerHTML='<div class="empty">אין הודעות</div>';return}
+  list.innerHTML=data.ticker.map(t=>`<div class="item-row ${t.active?'':'disabled'}">
+    <div class="info"><span class="title">📰 ${t.text}</span></div>
+    <div class="actions"><button class="toggle" onclick="toggleTicker(${t.id})">${t.active?'✓':'✗'}</button><button class="del" onclick="delTicker(${t.id})">🗑️</button></div>
+  </div>`).join('');
 }
 
-// ===== SETTINGS =====
-function renderThemes(){
-  const row=document.getElementById('colorRow');
-  row.innerHTML=themes.map((t,i)=>`<div class="color-swatch ${data.settings.theme===i?'selected':''}" style="background:linear-gradient(135deg,${t.from},${t.to})" onclick="setTheme(${i})" title="${t.name}"></div>`).join('');
-  document.getElementById('setSlideDuration').value=data.settings.slideDuration;
+// ===== HOURS =====
+function renderHoursEditor(){
+  document.getElementById('hoursEditor').innerHTML=days.map((d,i)=>`
+    <div class="settings-row"><div class="s-label">יום ${d}</div><input type="text" id="hour_${i}" placeholder="סגור" value="${data.hours[i]||''}" style="width:200px;text-align:center"></div>`).join('');
+}
+function saveHours(){days.forEach((d,i)=>{data.hours[i]=document.getElementById('hour_'+i).value.trim()||''});saveData();showToast('✅ שעות נשמרו')}
+
+// ===== BRANDING =====
+function renderBranding(){
+  document.getElementById('libName').value=data.branding.name||'';
+  document.getElementById('libSubtitle').value=data.branding.subtitle||'';
+  document.getElementById('libIcon').value=data.branding.icon||'📚';
+  document.getElementById('libPhone').value=data.branding.phone||'';
+  document.getElementById('colorRow').innerHTML=themes.map((t,i)=>`<div class="color-swatch ${data.settings.theme===i?'selected':''}" style="background:linear-gradient(135deg,${t.from},${t.to})" onclick="setTheme(${i})" title="${t.name}"></div>`).join('');
+}
+function saveBranding(){
+  data.branding={name:document.getElementById('libName').value.trim(),subtitle:document.getElementById('libSubtitle').value.trim(),icon:document.getElementById('libIcon').value.trim()||'📚',phone:document.getElementById('libPhone').value.trim()};
+  saveData();showToast('✅ מיתוג נשמר');
+}
+function setTheme(i){data.settings.theme=i;saveData();renderBranding();showToast('🎨 נושא נבחר')}
+
+// ===== DISPLAY SETTINGS =====
+function renderDisplaySettings(){
+  document.getElementById('setSlideDur').value=data.settings.slideDuration;
   document.getElementById('set24h').checked=data.settings.hour24;
   document.getElementById('setWeather').checked=data.settings.showWeather;
   document.getElementById('setCity').value=data.settings.city;
   document.getElementById('setShowHours').checked=data.settings.showHours;
+  document.getElementById('setAutoHide').checked=data.settings.autoHide!==false;
 }
-function setTheme(i){data.settings.theme=i;saveData();renderThemes();showToast('🎨 נושא נבחר')}
-function saveSettings(){
-  data.settings.slideDuration=parseInt(document.getElementById('setSlideDuration').value)||8;
+function saveDisplaySettings(){
+  data.settings.slideDuration=parseInt(document.getElementById('setSlideDur').value)||8;
   data.settings.hour24=document.getElementById('set24h').checked;
   data.settings.showWeather=document.getElementById('setWeather').checked;
   data.settings.city=document.getElementById('setCity').value.trim()||'Ashkelon';
   data.settings.showHours=document.getElementById('setShowHours').checked;
+  data.settings.autoHide=document.getElementById('setAutoHide').checked;
   saveData();showToast('✅ הגדרות נשמרו');
 }
 
 // ===== EXPORT/IMPORT =====
-function exportData(){
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`sefri-board-${new Date().toISOString().split('T')[0]}.json`;a.click();
-  showToast('📥 נתונים יוצאו');
-}
-function importData(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=()=>{try{data={...loadData(),...JSON.parse(reader.result)};saveData();renderAll();showToast('✅ נתונים יובאו')}catch(err){showToast('⚠️ שגיאה בקובץ',true)}};
-  reader.readAsText(file);
+function exportData(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`sefri-board-${today()}.json`;a.click();showToast('📥 נתונים יוצאו')}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{data={...loadData(),...JSON.parse(r.result)};saveData();renderCounts();navTo('dashboard');showToast('✅ נתונים יובאו')}catch(err){showToast('⚠️ שגיאה בקובץ',true)}};r.readAsText(f)}
+function clearAll(){if(!confirm('האם למחוק את כל הנתונים? פעולה זו בלתי הפיכה!'))return;data=loadData();localStorage.removeItem(STORE_KEY);data=loadData();renderCounts();navTo('dashboard');showToast('🗑️ הכל נמחק')}
+
+// ===== COUNTS =====
+function renderCounts(){
+  document.getElementById('count-ann').textContent=data.announcements.length;
+  document.getElementById('count-books').textContent=data.books.length;
+  document.getElementById('count-evts').textContent=data.events.length;
+  document.getElementById('count-quotes').textContent=data.quotes.length;
+  document.getElementById('count-ticker').textContent=data.ticker.length;
 }
 
 // ===== DISPLAY MODE =====
+let dmSlides=[],dmCurrent=0,dmTimer=null,dmWeather=null;
 function enterDisplay(){
-  document.getElementById('adminMode').style.display='none';
-  const dm=document.getElementById('displayMode');
-  dm.style.display='flex';
-  buildSlides();
-  startClock();
-  startSlides();
-  loadWeather();
+  document.getElementById('displayMode').classList.add('active');
+  const theme=themes[data.settings.theme]||themes[0];
+  document.getElementById('displayMode').style.background=`linear-gradient(135deg,${theme.from} 0%,${theme.to} 50%,${theme.from} 100%)`;
+  document.getElementById('dmLogo').textContent=data.branding.icon||'📚';
+  const libName=data.branding.name||'ספרי-בורד';
+  const subtitle=data.branding.subtitle;
+  document.getElementById('dmLibName').innerHTML=libName+'<span>'+(subtitle?' — '+subtitle:'')+'</span>';
+  buildDisplaySlides();startDisplayClock();startDisplayRotation();loadDisplayWeather();
 }
-function exitDisplay(){
-  document.getElementById('displayMode').style.display='none';
-  document.getElementById('adminMode').style.display='block';
-  if(slideTimer)clearInterval(slideTimer);
-}
-
-function startClock(){
+function exitDisplay(){document.getElementById('displayMode').classList.remove('active');if(dmTimer)clearInterval(dmTimer)}
+function startDisplayClock(){
   function tick(){
     const now=new Date();
-    document.getElementById('displayClock').textContent=
-      data.settings.hour24?now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',hour12:false}):now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',hour12:true});
-    document.getElementById('displayDate').textContent=
-      `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    document.getElementById('dmTime').textContent=data.settings.hour24?now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',hour12:false}):now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',hour12:true});
+    document.getElementById('dmDate').textContent=`${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
   }
   tick();setInterval(tick,1000);
 }
-
-function buildSlides(){
-  const content=document.getElementById('displayContent');
-  displaySlides=[];
-  let html='';
-
-  // Apply theme
-  const theme=themes[data.settings.theme]||themes[0];
-  document.getElementById('displayMode').style.background=`linear-gradient(135deg,${theme.from} 0%,${theme.to} 50%,${theme.from} 100%)`;
-
+function buildDisplaySlides(){
+  dmSlides=[];let html='';
+  const filterFn=data.settings.autoHide!==false?isActive:x=>x.active;
   // Announcements
-  data.announcements.filter(a=>a.active).forEach(a=>{
-    displaySlides.push('ann-'+a.id);
-    html+=`<div class="slide" id="slide-ann-${a.id}">
-      <div class="slide-announcement">
-        <div class="icon">${a.icon||'📢'}</div>
-        ${a.tag?`<div class="tag">${a.tag}</div>`:''}
-        <h2>${a.title}</h2>
-        ${a.body?`<p>${a.body}</p>`:''}
-      </div></div>`;
+  data.announcements.filter(filterFn).forEach(a=>{
+    dmSlides.push('ann-'+a.id);
+    html+=`<div class="dm-slide" id="dms-ann-${a.id}"><div class="dm-announcement"><div class="icon">${a.icon||'📢'}</div>${a.tag?`<div class="tag">${a.tag}</div>`:''}<h2>${a.title}</h2>${a.body?`<p>${a.body}</p>`:''}${a.img?`<img src="${a.img}" class="pv-img">`:''}</div></div>`;
   });
-
   // Books
-  data.books.filter(b=>b.active).forEach(b=>{
-    displaySlides.push('book-'+b.id);
-    html+=`<div class="slide" id="slide-book-${b.id}">
-      <div class="slide-book">
-        <div class="book-cover"><div class="book-icon">${b.icon||'📚'}</div></div>
-        <div class="book-info">
-          <div class="label">📖 המלצת הספרייה</div>
-          <h2>${b.title}</h2>
-          ${b.author?`<div class="author">${b.author}</div>`:''}
-          ${b.desc?`<div class="desc">${b.desc}</div>`:''}
-        </div></div></div>`;
+  data.books.filter(filterFn).forEach(b=>{
+    dmSlides.push('book-'+b.id);
+    const cover=b.img?`<img src="${b.img}" style="width:100%;height:100%;object-fit:cover">`:b.icon||'📚';
+    html+=`<div class="dm-slide" id="dms-book-${b.id}"><div class="dm-book"><div class="book-cover" style="background:linear-gradient(135deg,#e67e22,#f39c12)">${cover}</div><div class="book-info"><div class="label">📖 המלצת הספרייה</div><h2>${b.title}</h2>${b.author?`<div class="author">${b.author}</div>`:''}${b.desc?`<div class="desc">${b.desc}</div>`:''}</div></div></div>`;
   });
-
   // Events
   data.events.filter(e=>e.active).sort((a,b)=>(a.date||'')>(b.date||'')?1:-1).forEach(e=>{
-    displaySlides.push('evt-'+e.id);
-    let day='',mon='';
-    if(e.date){const d=new Date(e.date);day=d.getDate();mon=months[d.getMonth()]}
-    html+=`<div class="slide" id="slide-evt-${e.id}">
-      <div class="slide-event">
-        ${e.date?`<div class="date-badge"><div class="day">${day}</div><div class="month">${mon}</div></div>`:''}
-        <h2>${e.title}</h2>
-        ${e.time?`<div class="time">⏰ ${e.time}</div>`:''}
-        ${e.location?`<div class="location">📍 ${e.location}</div>`:''}
-        ${e.desc?`<div class="desc">${e.desc}</div>`:''}
-      </div></div>`;
+    dmSlides.push('evt-'+e.id);
+    let day='',mon='';if(e.date){const d=new Date(e.date);day=d.getDate();mon=months[d.getMonth()]}
+    html+=`<div class="dm-slide" id="dms-evt-${e.id}"><div class="dm-event">${e.date?`<div class="date-badge"><div class="day">${day}</div><div class="month">${mon}</div></div>`:''}<h2>${e.title}</h2>${e.time?`<div class="time">⏰ ${e.time}</div>`:''}${e.location?`<div class="location">📍 ${e.location}</div>`:''}${e.desc?`<div class="desc">${e.desc}</div>`:''}</div></div>`;
   });
-
   // Hours
   if(data.settings.showHours){
-    displaySlides.push('hours');
-    let hoursHtml=days.map((d,i)=>{
-      const h=data.hours[i]||'סגור';
-      return `<div class="hours-row ${h==='סגור'||!h?'closed':''}"><span class="day">${d}</span><span class="time">${h||'סגור'}</span></div>`;
-    }).join('');
-    html+=`<div class="slide" id="slide-hours"><div class="slide-hours"><h2>🕐 שעות פתיחה</h2>${hoursHtml}</div></div>`;
+    dmSlides.push('hours');
+    html+=`<div class="dm-slide" id="dms-hours"><div class="dm-hours"><h2>🕐 שעות פתיחה</h2>${days.map((d,i)=>{const h=data.hours[i]||'סגור';return `<div class="h-row ${h==='סגור'||!h?'closed':''}"><span>${d}</span><span class="h-time">${h||'סגור'}</span></div>`}).join('')}</div></div>`;
   }
-
   // Quotes
   data.quotes.filter(q=>q.active).forEach(q=>{
-    displaySlides.push('quote-'+q.id);
-    html+=`<div class="slide" id="slide-quote-${q.id}">
-      <div class="slide-quote">
-        <div class="quote-mark">"</div>
-        <blockquote>${q.text}</blockquote>
-        <div class="author">${q.author||''}</div>
-      </div></div>`;
+    dmSlides.push('quote-'+q.id);
+    html+=`<div class="dm-slide" id="dms-quote-${q.id}"><div class="dm-quote"><div class="q-mark">"</div><blockquote>${q.text}</blockquote><div class="q-author">${q.author||''} ${q.source?'— '+q.source:''}</div></div></div>`;
   });
-
   // Weather
   if(data.settings.showWeather){
-    displaySlides.push('weather');
-    html+=`<div class="slide" id="slide-weather">
-      <div class="slide-weather" id="weatherSlide">
-        <div class="weather-icon">⏳</div>
-        <div class="temp">--</div>
-        <div class="desc">טוען מזג אוויר...</div>
-        <div class="city">${data.settings.city}</div>
-      </div></div>`;
+    dmSlides.push('weather');
+    html+=`<div class="dm-slide" id="dms-weather"><div class="dm-weather" id="dmWeather"><div class="w-icon">⏳</div><div class="w-temp">--</div><div class="w-desc">טוען...</div><div class="w-city">${data.settings.city}</div></div></div>`;
   }
-
-  content.innerHTML=html;
-
+  document.getElementById('dmContent').innerHTML=html;
   // Ticker
-  const tickerItems=data.ticker.filter(t=>t.active);
-  document.getElementById('ticker').innerHTML=tickerItems.length
-    ?tickerItems.map(t=>`<span class="ticker-item">${t.text}</span>`).join('')
-    :'<span class="ticker-item">ברוכים הבאים לספרייה 📚</span>';
-
-  // Indicator
-  document.getElementById('slideIndicator').innerHTML=displaySlides.map((_,i)=>
-    `<div class="dot ${i===0?'active':''}" data-idx="${i}"></div>`).join('');
-
-  currentSlide=0;
+  const tk=data.ticker.filter(t=>t.active);
+  document.getElementById('dmTicker').innerHTML=tk.length?tk.map(t=>`<span class="ticker-item">${t.text}</span>`).join(''):'<span class="ticker-item">ברוכים הבאים לספרייה 📚</span>';
+  // Indicators
+  document.getElementById('dmIndicator').innerHTML=dmSlides.map((_,i)=>`<div class="dot ${i===0?'active':''}" data-idx="${i}"></div>`).join('');
+  dmCurrent=0;
 }
-
-function startSlides(){
-  if(slideTimer)clearInterval(slideTimer);
-  showSlide(0);
+function startDisplayRotation(){
+  if(dmTimer)clearInterval(dmTimer);
+  showDmSlide(0);
   const dur=(data.settings.slideDuration||8)*1000;
-  slideTimer=setInterval(()=>{currentSlide=(currentSlide+1)%displaySlides.length;showSlide(currentSlide)},dur);
+  dmTimer=setInterval(()=>{dmCurrent=(dmCurrent+1)%dmSlides.length;showDmSlide(dmCurrent)},dur);
 }
-
-function showSlide(idx){
-  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
-  const slide=displaySlides[idx];
-  if(!slide)return;
-  const el=document.getElementById('slide-'+slide);
-  if(el)el.classList.add('active');
-  document.querySelectorAll('.slide-indicator .dot').forEach(d=>d.classList.remove('active'));
-  const dot=document.querySelector(`.dot[data-idx="${idx}"]`);
-  if(dot)dot.classList.add('active');
-  currentSlide=idx;
+function showDmSlide(idx){
+  document.querySelectorAll('.dm-slide').forEach(s=>s.classList.remove('active'));
+  const slide=dmSlides[idx];if(!slide)return;
+  const el=document.getElementById('dms-'+slide);if(el)el.classList.add('active');
+  document.querySelectorAll('.dm-indicator .dot').forEach(d=>d.classList.remove('active'));
+  const dot=document.querySelector(`.dot[data-idx="${idx}"]`);if(dot)dot.classList.add('active');
+  dmCurrent=idx;
 }
-
-async function loadWeather(){
+async function loadDisplayWeather(){
   if(!data.settings.showWeather)return;
   try{
     const city=data.settings.city||'Ashkelon';
     const res=await fetch(`https://wttr.in/${city}?format=j1`);
-    const w=await res.json();
-    const cur=w.current_condition[0];
-    const tempC=cur.temp_C;
-    const desc=cur.lang[0]?.value||cur.weatherDesc[0]?.value||'';
-    const code=cur.weatherCode;
-    const icons={'113':'☀️','116':'⛅','119':'☁️','122':'☁️','143':'🌫️','176':'🌦️','179':'🌨️','182':'🌨️','185':'🌨️','200':'⛈️','227':'🌨️','230':'❄️','248':'🌫️','260':'🌫️','263':'🌦️','266':'🌧️','281':'🌨️','284':'🌨️','293':'🌦️','296':'🌧️','299':'🌧️','302':'🌧️','305':'🌧️','308':'🌧️','311':'🌧️','314':'🌧️','317':'🌨️','320':'🌨️','323':'🌨️','326':'🌨️','329':'❄️','332':'❄️','335':'❄️','338':'❄️','350':'🌨️','353':'🌦️','356':'🌧️','359':'🌧️','362':'🌨️','365':'🌨️','368':'🌨️','371':'❄️','374':'🌨️','377':'🌨️','386':'⛈️','389':'⛈️','392':'⛈️','395':'❄️'};
-    const slide=document.getElementById('weatherSlide');
-    if(slide){
-      slide.innerHTML=`
-        <div class="weather-icon">${icons[code]||'🌤️'}</div>
-        <div class="temp">${tempC}°</div>
-        <div class="desc">${desc}</div>
-        <div class="city">${city}</div>`;
-    }
-  }catch(e){
-    const slide=document.getElementById('weatherSlide');
-    if(slide)slide.innerHTML=`<div class="weather-icon">🌤️</div><div class="temp">--</div><div class="desc">מזג אוויר לא זמין</div><div class="city">${data.settings.city}</div>`;
-  }
+    const w=await res.json();const cur=w.current_condition[0];
+    const tempC=cur.temp_C;const desc=cur.lang[0]?.value||cur.weatherDesc[0]?.value||'';
+    const icons={'113':'☀️','116':'⛅','119':'☁️','122':'☁️','143':'🌫️','176':'🌦️','200':'⛈️','293':'🌦️','296':'🌧️','302':'🌧️','308':'🌧️','311':'🌧️','320':'🌨️','323':'🌨️','326':'🌨️','329':'❄️','332':'❄️','335':'❄️','338':'❄️','353':'🌦️','356':'🌧️','368':'🌨️','371':'❄️','386':'⛈️','389':'⛈️','392':'⛈️','395':'❄️'};
+    const el=document.getElementById('dmWeather');
+    if(el)el.innerHTML=`<div class="w-icon">${icons[cur.weatherCode]||'🌤️'}</div><div class="w-temp">${tempC}°</div><div class="w-desc">${desc}</div><div class="w-city">${city}</div>`;
+  }catch(e){const el=document.getElementById('dmWeather');if(el)el.innerHTML=`<div class="w-icon">🌤️</div><div class="w-temp">--</div><div class="w-desc">לא זמין</div><div class="w-city">${data.settings.city}</div>`}
 }
 
 // ===== INIT =====
-function renderAll(){renderAnnouncements();renderBooks();renderEvents();renderQuotes();renderTicker()}
-renderAll();
+document.getElementById('annStart').value=today();
+renderCounts();
+renderDashboard();
 </script>
 </body>
 </html>
