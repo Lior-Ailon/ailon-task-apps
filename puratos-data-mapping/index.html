@@ -3,592 +3,322 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מיפוי פערי דאטא ופלטפורמות דיגיטליות | Puratos Israel</title>
+<title>מיפוי פערי דאטא | Puratos Israel</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #ecfeff 100%);
-  color: #1e293b;
-  min-height: 100vh;
-  padding: 16px;
-}
-.header {
-  text-align: center;
-  padding: 28px 20px;
-  background: linear-gradient(135deg, #0369a1, #0284c7);
-  color: white;
-  border-radius: 16px;
-  margin-bottom: 24px;
-  box-shadow: 0 10px 30px rgba(3,105,161,0.2);
-}
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #ecfeff 100%); color: #1e293b; min-height: 100vh; padding: 16px; }
+.header { text-align: center; padding: 28px 20px; background: linear-gradient(135deg, #0369a1, #0284c7); color: white; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(3,105,161,0.2); }
 .header h1 { font-size: 22px; margin-bottom: 6px; }
 .header p { font-size: 14px; opacity: 0.9; }
-.container { max-width: 900px; margin: 0 auto; }
-
-.info-banner {
-  background: #fff;
-  border-right: 4px solid #0284c7;
-  padding: 16px 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+.container { max-width: 850px; margin: 0 auto; }
+.info-banner { background: #fff; border-right: 4px solid #0284c7; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .info-banner h3 { font-size: 15px; color: #0369a1; margin-bottom: 6px; }
 .info-banner p { font-size: 13px; color: #475569; line-height: 1.6; }
-
-.section {
-  background: white;
-  border-radius: 14px;
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-.section-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #0369a1;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-icon {
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  background: linear-gradient(135deg, #0284c7, #38bdf8);
-  color: white;
-}
+.section { background: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.section-title { font-size: 18px; font-weight: 700; color: #0369a1; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+.section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; }
 .section-desc { font-size: 13px; color: #64748b; margin-bottom: 20px; }
-
 .form-group { margin-bottom: 16px; }
 .form-group label { font-size: 14px; font-weight: 600; display: block; margin-bottom: 6px; }
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%;
-  padding: 10px 14px;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: #fafbfc;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  outline: none;
-  border-color: #0284c7;
-  box-shadow: 0 0 0 3px rgba(2,132,199,0.1);
-  background: white;
-}
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: inherit; background: #fafbfc; transition: border-color 0.2s, box-shadow 0.2s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); background: white; }
 .form-row { display: flex; gap: 12px; }
 .form-row > div { flex: 1; }
-
-/* Dynamic tables */
-.table-container { margin-top: 16px; }
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 12px;
-  font-size: 13px;
-}
-.data-table th {
-  background: #0369a1;
-  color: white;
-  padding: 10px 8px;
-  text-align: right;
-  font-weight: 600;
-  font-size: 12px;
-  border: 1px solid #0369a1;
-}
-.data-table td {
-  padding: 8px;
-  border: 1px solid #e2e8f0;
-  vertical-align: top;
-}
+.required { color: #dc2626; }
+.option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.option-card { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 14px; transition: all 0.2s; background: #fafbfc; }
+.option-card:hover { border-color: #38bdf8; background: #f0f9ff; }
+.option-card.selected { border-color: #0284c7; background: #e0f2fe; }
+.option-card input { width: 18px; height: 18px; accent-color: #0284c7; }
+.scale-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.scale-btn { padding: 10px 18px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; background: #fafbfc; }
+.scale-btn:hover { border-color: #38bdf8; }
+.scale-btn.selected { background: #0284c7; color: white; border-color: #0284c7; }
+.data-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; }
+.data-table th { background: #0369a1; color: white; padding: 10px 8px; text-align: right; font-weight: 600; font-size: 12px; border: 1px solid #0369a1; }
+.data-table td { padding: 8px; border: 1px solid #e2e8f0; vertical-align: top; }
 .data-table tr:nth-child(even) { background: #f8fafc; }
-.data-table input, .data-table select, .data-table textarea {
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 12px;
-  font-family: inherit;
-  background: white;
-}
-.data-table input:focus, .data-table select:focus, .data-table textarea:focus {
-  outline: none;
-  border-color: #0284c7;
-  box-shadow: 0 0 0 2px rgba(2,132,199,0.1);
-}
+.data-table input, .data-table select, .data-table textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: inherit; background: white; }
+.data-table input:focus, .data-table select:focus, .data-table textarea:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2,132,199,0.1); }
 .data-table textarea { min-height: 40px; resize: vertical; }
-.btn-remove {
-  background: #fee2e2;
-  color: #dc2626;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
+.btn-remove { background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .btn-remove:hover { background: #fecaca; }
-
-.btn-add {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  background: #0284c7;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.2s;
-}
+.btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.2s; }
 .btn-add:hover { background: #0369a1; }
 .btn-add.green { background: #16a34a; }
 .btn-add.green:hover { background: #15803d; }
-
-.submit-section {
-  text-align: center;
-  padding: 28px 20px;
-  background: white;
-  border-radius: 14px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-.btn-submit {
-  padding: 14px 40px;
-  background: linear-gradient(135deg, #0369a1, #0284c7);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 6px 20px rgba(3,105,161,0.3);
-}
+.progress-bar { position: sticky; top: 0; z-index: 100; background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.progress-track { flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #0284c7, #38bdf8); border-radius: 4px; transition: width 0.3s; }
+.progress-text { font-size: 13px; font-weight: 600; color: #64748b; white-space: nowrap; }
+.submit-section { text-align: center; padding: 28px 20px; background: white; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.btn-submit { padding: 14px 40px; background: linear-gradient(135deg, #0369a1, #0284c7); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 6px 20px rgba(3,105,161,0.3); }
 .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(3,105,161,0.4); }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.success-msg {
-  display: none;
-  background: #dcfce7;
-  border: 2px solid #16a34a;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  margin-bottom: 20px;
-}
+.success-msg { display: none; background: #dcfce7; border: 2px solid #16a34a; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
 .success-msg h3 { color: #15803d; font-size: 18px; margin-bottom: 8px; }
 .success-msg p { color: #16a34a; font-size: 14px; }
-
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1e293b;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 14px;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 10px; font-size: 14px; z-index: 9999; opacity: 0; transition: opacity 0.3s; }
 .toast.show { opacity: 1; }
-
-.preview-section { margin-top: 20px; }
-.btn-export {
-  padding: 12px 28px;
-  background: #16a34a;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  margin: 8px;
-}
+.btn-export { padding: 12px 28px; background: #16a34a; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; margin: 8px; }
 .btn-export:hover { background: #15803d; }
 .btn-export.gray { background: #475569; }
 .btn-export.gray:hover { background: #334155; }
-
-.submissions-list {
-  margin-top: 16px;
-}
-.submission-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 12px;
-}
+.submission-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
 .submission-card h4 { font-size: 15px; color: #0369a1; margin-bottom: 4px; }
 .submission-card .meta { font-size: 12px; color: #64748b; margin-bottom: 8px; }
 .submission-card .stats { font-size: 13px; color: #475569; }
-.badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-}
+.badge { display: inline-block; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
 .badge.blue { background: #dbeafe; color: #1d4ed8; }
 .badge.green { background: #dcfce7; color: #16a34a; }
-
-@media (max-width: 600px) {
-  .form-row { flex-direction: column; gap: 0; }
-  .data-table { font-size: 11px; }
-  .data-table th, .data-table td { padding: 4px; }
-}
+@media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } .option-grid { grid-template-columns: 1fr; } .data-table { font-size: 11px; } .data-table th, .data-table td { padding: 4px; } }
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="header">
-    <h1>📊 מיפוי פערי דאטא ופלטפורמות דיגיטליות</h1>
-    <p>Puratos Israel — הטמעת AI בתהליכי העבודה</p>
-  </div>
+<div class="header">
+<h1>📊 מיפוי פערי דאטא ופלטפורמות דיגיטליות</h1>
+<p>Puratos Israel — הטמעת AI | יעד: SharePoint Learning Center</p>
+</div>
+<div class="info-banner">
+<h3>📍 הנחיות</h3>
+<p>אנא מלאו את השאלון. מטרה: למפות היכן המידע מאוחסן היום ולתכנן העברה ל-SharePoint. התוצאות נשלחות אוטומטית ל-IT.</p>
+</div>
+<div class="progress-bar"><div class="progress-track"><div class="progress-fill" id="progress" style="width:0%"></div></div><span class="progress-text" id="progressText">0% הושלם</span></div>
 
-  <div class="info-banner">
-    <h3>📍 הנחיות</h3>
-    <p>אנא מלאו את שני החלקים: (1) מיפוי פערי דאטא בתחום אחריותכם (2) בקשות לפרויקטי שדרוג דיגיטלי. ניתן להוסיף שורות לפי הצורך. הנתונים נשמרים במרכז וניתן לייצא לאקסל לפגישת יום חמישי.</p>
-  </div>
-
-  <!-- Department Info -->
-  <div class="section">
-    <div class="section-title"><div class="section-icon">👤</div> פרטי המחלקה</div>
-    <div class="section-desc">מי ממלא את הטופס ועבור איזה תחום</div>
-    
-    <div class="form-row">
-      <div class="form-group">
-        <label>שם המחלקה / תחום אחריות *</label>
-        <input type="text" id="department" placeholder="לדוגמה: IT, שיווק, ייצור, פיננסים, שרשרת אספקה...">
-      </div>
-      <div class="form-group">
-        <label>שם הממלא *</label>
-        <input type="text" id="submitted_by" placeholder="שם מלא">
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 1: Data Gap Mapping -->
-  <div class="section">
-    <div class="section-title"><div class="section-icon">📋</div> 1. מיפוי פערי דאטא</div>
-    <div class="section-desc">מיפוי כל הפערים שקיימים בתחום אחריותכם — סוג הדאטא, היכן מאוחסן היום, פלטפורמת יעד, ומשאבים נדרשים</div>
-    
-    <div class="table-container">
-      <table class="data-table" id="dataTable">
-        <thead>
-          <tr>
-            <th style="width:20%">סוג הדאטא</th>
-            <th style="width:20%">היכן מאוחסן היום</th>
-            <th style="width:20%">פלטפורמת יעד</th>
-            <th style="width:25%">משאבים נדרשים</th>
-            <th style="width:10%">הערות</th>
-            <th style="width:5%"></th>
-          </tr>
-        </thead>
-        <tbody id="dataRows"></tbody>
-      </table>
-    </div>
-    
-    <button class="btn-add" onclick="addDataRow()">
-      ➕ הוסף שורת דאטא
-    </button>
-  </div>
-
-  <!-- Section 2: Digital Platform Requests -->
-  <div class="section">
-    <div class="section-title"><div class="section-icon">💻</div> 2. פלטפורמות דיגיטליות רצויות</div>
-    <div class="section-desc">בקשות לפרויקטי שדרוג דיגיטלי — שם הפרויקט, תיאור הבעיה, תיאור הפתרון, עלויות</div>
-    
-    <div class="table-container">
-      <table class="data-table" id="platformTable">
-        <thead>
-          <tr>
-            <th style="width:18%">שם הפרויקט</th>
-            <th style="width:25%">תיאור הבעיה / אתגר</th>
-            <th style="width:27%">תיאור הפתרון</th>
-            <th style="width:15%">עלויות (אם ידוע)</th>
-            <th style="width:10%">עדיפות</th>
-            <th style="width:5%"></th>
-          </tr>
-        </thead>
-        <tbody id="platformRows"></tbody>
-      </table>
-    </div>
-    
-    <button class="btn-add green" onclick="addPlatformRow()">
-      ➕ הוסף פרויקט
-    </button>
-  </div>
-
-  <!-- Submit -->
-  <div class="submit-section">
-    <button class="btn-submit" id="submitBtn" onclick="submitForm()">
-      שמור ושלח 📤
-    </button>
-    <p style="margin-top:10px; color:#64748b; font-size:13px;">הנתונים יישמרו במערכת המרכזית</p>
-  </div>
-
-  <div class="success-msg" id="successMsg">
-    <h3>✅ הטופס נשמר בהצלחה!</h3>
-    <p>הנתונים נשמרו במערכת ויצורפו לדוח המרכזי</p>
-  </div>
-
-  <!-- Export Section -->
-  <div class="section preview-section">
-    <div class="section-title"><div class="section-icon">📤</div> ייצוא וצפייה</div>
-    <div class="section-desc">צפה בכל ההגשות שהתקבלו וייצא לאקסל לפגישת יום חמישי</div>
-    
-    <button class="btn-export" onclick="loadSubmissions()">רענן רשימה 🔄</button>
-    <button class="btn-export gray" onclick="exportToExcel()">ייצא לאקסל 📊</button>
-    
-    <div class="submissions-list" id="submissionsList"></div>
-  </div>
-
-  <div style="text-align:center; padding:20px; color:#94a3b8; font-size:12px;">
-    Puratos Israel — AI Adoption Initiative | 2026
-  </div>
+<div class="section">
+<div class="section-title"><div class="section-icon">👤</div> פרטי המנהל/ת</div>
+<div class="section-desc">מי ממלא/ה את השאלון</div>
+<div class="form-row">
+<div class="form-group"><label>שם מלא <span class="required">*</span></label><input type="text" id="manager_name" placeholder="שם מלא"></div>
+<div class="form-group"><label>מחלקה <span class="required">*</span></label><input type="text" id="department" placeholder="ייצור, שיווק, פיננסים..."></div>
+</div>
 </div>
 
+<div class="section">
+<div class="section-title"><div class="section-icon">❓</div> 1. שאלון מודרך — הרגלי אחסון מידע</div>
+<div class="section-desc">שאלות כלליות על אופן אחסון וניהול המידע</div>
+
+<div class="question" data-q="q1">
+<div class="form-group">
+<label>1. היכן המידע שאתם עובדים איתו נשמר בדרך כלל? <span class="required">*</span></label>
+<p style="font-size:12px;color:#64748b;margin-bottom:8px;">סמנו את כל המקומות הרלוונטיים</p>
+<div class="option-grid">
+<label class="option-card"><input type="checkbox" name="q1" value="sharepoint"> SharePoint / OneDrive</label>
+<label class="option-card"><input type="checkbox" name="q1" value="local_pc"> מחשב אישי</label>
+<label class="option-card"><input type="checkbox" name="q1" value="paper"> דפים / פתקים</label>
+<label class="option-card"><input type="checkbox" name="q1" value="excel_local"> אקסל מקומי</label>
+<label class="option-card"><input type="checkbox" name="q1" value="email"> אימייל</label>
+<label class="option-card"><input type="checkbox" name="q1" value="whatsapp"> WhatsApp</label>
+<label class="option-card"><input type="checkbox" name="q1" value="erp"> ERP / Priority</label>
+<label class="option-card"><input type="checkbox" name="q1" value="other_system"> מערכת אחרת</label>
+<label class="option-card"><input type="checkbox" name="q1" value="in_head"> בראש (לא מתועד)</label>
+</div>
+</div>
+</div>
+
+<div class="question" data-q="q2">
+<div class="form-group">
+<label>2. אילו סוגי מידע אתם מנהלים?</label>
+<div class="option-grid">
+<label class="option-card"><input type="checkbox" name="q2" value="customer"> נתוני לקוחות</label>
+<label class="option-card"><input type="checkbox" name="q2" value="financial"> פיננסי / תקציב</label>
+<label class="option-card"><input type="checkbox" name="q2" value="hr"> משאבי אנוש</label>
+<label class="option-card"><input type="checkbox" name="q2" value="production"> ייצור / תפעול</label>
+<label class="option-card"><input type="checkbox" name="q2" value="inventory"> מלאי / אחסנה</label>
+<label class="option-card"><input type="checkbox" name="q2" value="quality"> בקרת איכות</label>
+<label class="option-card"><input type="checkbox" name="q2" value="training"> הדרכות / נהלים</label>
+<label class="option-card"><input type="checkbox" name="q2" value="reports"> דוחות / אנליטיקה</label>
+<label class="option-card"><input type="checkbox" name="q2" value="suppliers"> ספקים / רכש</label>
+<label class="option-card"><input type="checkbox" name="q2" value="compliance"> רגולציה / תקנים</label>
+<label class="option-card"><input type="checkbox" name="q2" value="other_data"> אחר</label>
+</div>
+</div>
+</div>
+
+<div class="question" data-q="q3">
+<div class="form-group">
+<label>3. האם יש מידע רגיש / חסוי בתחום אחריותכם?</label>
+<div class="scale-options" data-question="q3">
+<div class="scale-btn" data-value="high">🔴 רגיש מאוד</div>
+<div class="scale-btn" data-value="medium">🟡 רגיש חלקית</div>
+<div class="scale-btn" data-value="low">🟢 לא רגיש</div>
+<div class="scale-btn" data-value="unsure">⚪ לא בטוח/ה</div>
+</div>
+</div>
+</div>
+
+<div class="question" data-q="q4">
+<div class="form-group">
+<label>4. באיזו תדירות אתם צריכים לשתף מידע עם אחרים?</label>
+<div class="scale-options" data-question="q4">
+<div class="scale-btn" data-value="daily">יומי</div>
+<div class="scale-btn" data-value="weekly">שבועי</div>
+<div class="scale-btn" data-value="monthly">חודשי</div>
+<div class="scale-btn" data-value="rarely">לעתים רחוקות</div>
+</div>
+</div>
+</div>
+
+<div class="question" data-q="q5">
+<div class="form-group">
+<label>5. האם אתם משתמשים ב-SharePoint Puratos Learning Center?</label>
+<div class="scale-options" data-question="q5">
+<div class="scale-btn" data-value="yes_regular">כן, קבוע</div>
+<div class="scale-btn" data-value="yes_occasional">כן, לפעמים</div>
+<div class="scale-btn" data-value="know_not_use">מכיר/ה, לא משתמש/ת</div>
+<div class="scale-btn" data-value="dont_know">לא מכיר/ה</div>
+</div>
+</div>
+</div>
+
+<div class="question" data-q="q6">
+<div class="form-group">
+<label>6. מה יכול לעזור לכם להעביר מידע לפלטפורמה מרכזית?</label>
+<div class="option-grid">
+<label class="option-card"><input type="checkbox" name="q6" value="training"> הדרכה / ליווי</label>
+<label class="option-card"><input type="checkbox" name="q6" value="migration"> עזרה בהעברת נתונים</label>
+<label class="option-card"><input type="checkbox" name="q6" value="access"> הרשאות / גישה</label>
+<label class="option-card"><input type="checkbox" name="q6" value="time"> זמן</label>
+<label class="option-card"><input type="checkbox" name="q6" value="budget"> תקציב</label>
+<label class="option-card"><input type="checkbox" name="q6" value="tool"> כלי עבודה נוח</label>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">📋</div> 2. מיפוי מפורט — פערי דאטא</div>
+<div class="section-desc">פרטו כל סוג דאטא, היכן מאוחסן, רגישות, ויעד. הוסיפו שורות לפי הצורך.</div>
+<div style="overflow-x:auto;">
+<table class="data-table" id="dataTable"><thead><tr>
+<th style="width:18%">סוג דאטא</th><th style="width:15%">אחסון היום</th><th style="width:10%">רגיש?</th><th style="width:17%">פלטפורמת יעד</th><th style="width:22%">משאבים נדרשים</th><th style="width:10%">הערות</th><th style="width:8%"></th>
+</tr></thead><tbody id="dataRows"></tbody></table>
+</div>
+<button class="btn-add" onclick="addDataRow()">➕ הוסף שורה</button>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">💻</div> 3. בקשות שדרוג דיגיטלי</div>
+<div class="section-desc">פרויקטים שהייתם רוצים לקדם</div>
+<div style="overflow-x:auto;">
+<table class="data-table" id="platformTable"><thead><tr>
+<th style="width:17%">שם פרויקט</th><th style="width:24%">תיאור בעיה</th><th style="width:26%">תיאור פתרון</th><th style="width:14%">עלות</th><th style="width:11%">עדיפות</th><th style="width:8%"></th>
+</tr></thead><tbody id="platformRows"></tbody></table>
+</div>
+<button class="btn-add green" onclick="addPlatformRow()">➕ הוסף פרויקט</button>
+</div>
+
+<div class="submit-section">
+<button class="btn-submit" id="submitBtn" onclick="submitForm()">שמור ושלח 📤</button>
+<p style="margin-top:10px;color:#64748b;font-size:13px;">הנתונים נשמרים + נשלחים אוטומטית ל-IT</p>
+</div>
+<div class="success-msg" id="successMsg"><h3>✅ נשמר ונשלח!</h3><p>תודה! הנתונים התקבלו.</p></div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">📤</div> צפייה וייצוא</div>
+<button class="btn-export" onclick="loadSubmissions()">רענן 🔄</button>
+<button class="btn-export gray" onclick="exportToExcel()">ייצא לאקסל 📊</button>
+<div id="submissionsList" style="margin-top:16px;"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#94a3b8;font-size:12px;">Puratos Israel — AI Adoption | 2026</div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-const storageOptions = ['בראש (ידע אישי)', 'פתקים / ניירת', 'אקסל', 'WhatsApp', 'אימייל', 'מערכת קיימת', 'לא מאוחסן'];
-const platformOptions = ['ERP / Priority', 'CRM', 'Power BI', 'SharePoint', 'יישום חדש', 'אתר אינטרנט', 'אפליקציית מובייל', 'מערכת קיימת (שדרוג)', 'אחר'];
-const priorityOptions = ['גבוה', 'בינוני', 'נמוך', 'עתידי'];
+const storageOptions=['בראש (ידע אישי)','פתקים / ניירת','אקסל מקומי','SharePoint / OneDrive','אימייל','WhatsApp','ERP / Priority','מערכת אחרת','לא מאוחסן'];
+const platformOptions=['SharePoint Learning Center','SharePoint (כללי)','OneDrive','ERP / Priority','Power BI','יישום חדש','אפליקציית מובייל','שדרוג מערכת קיימת','אחר'];
+const sensitivityOptions=['🔴 רגיש מאוד','🟡 חלקית','🟢 לא רגיש','⚪ לא ברור'];
+const priorityOptions=['גבוה — דחוף','בינוני','נמוך','עתידי'];
+let rc=0;
 
-let rowCounter = 0;
-
-function addDataRow(data = {}) {
-  const tbody = document.getElementById('dataRows');
-  const row = document.createElement('tr');
-  const id = `data_${rowCounter++}`;
-  row.id = id;
-  
-  const storageSelect = storageOptions.map(o => 
-    `<option ${data.storage === o ? 'selected' : ''}>${o}</option>`
-  ).join('');
-  const platformSelect = platformOptions.map(o => 
-    `<option ${data.platform === o ? 'selected' : ''}>${o}</option>`
-  ).join('');
-  
-  row.innerHTML = `
-    <td><input type="text" placeholder="סוג הדאטא" value="${data.type || ''}"></td>
-    <td><select>${storageSelect}</select></td>
-    <td><select>${platformSelect}</select></td>
-    <td><textarea placeholder="משאבים נדרשים...">${data.resources || ''}</textarea></td>
-    <td><input type="text" placeholder="הערות" value="${data.notes || ''}"></td>
-    <td><button class="btn-remove" onclick="removeRow('${id}')">✕</button></td>
-  `;
-  tbody.appendChild(row);
+function addDataRow(d={}){
+  const tb=document.getElementById('dataRows');const r=document.createElement('tr');const id=`d_${rc++}`;r.id=id;
+  const s=storageOptions.map(o=>`<option ${d.storage===o?'selected':''}>${o}</option>`).join('');
+  const p=platformOptions.map(o=>`<option ${d.platform===o?'selected':''}>${o}</option>`).join('');
+  const se=sensitivityOptions.map(o=>`<option ${d.sensitivity===o?'selected':''}>${o}</option>`).join('');
+  r.innerHTML=`<td><input type="text" placeholder="סוג דאטא" value="${d.type||''}"></td><td><select>${s}</select></td><td><select>${se}</select></td><td><select>${p}</select></td><td><textarea placeholder="משאבים...">${d.resources||''}</textarea></td><td><input type="text" placeholder="הערות" value="${d.notes||''}"></td><td><button class="btn-remove" onclick="document.getElementById('${id}')?.remove();updateProgress();">✕</button></td>`;
+  tb.appendChild(r);updateProgress();
 }
 
-function addPlatformRow(data = {}) {
-  const tbody = document.getElementById('platformRows');
-  const row = document.createElement('tr');
-  const id = `plat_${rowCounter++}`;
-  row.id = id;
-  
-  const prioritySelect = priorityOptions.map(o => 
-    `<option ${data.priority === o ? 'selected' : ''}>${o}</option>`
-  ).join('');
-  
-  row.innerHTML = `
-    <td><input type="text" placeholder="שם הפרויקט" value="${data.name || ''}"></td>
-    <td><textarea placeholder="תיאור הבעיה / אתגר">${data.problem || ''}</textarea></td>
-    <td><textarea placeholder="תיאור הפתרון">${data.solution || ''}</textarea></td>
-    <td><input type="text" placeholder="הערכת עלות" value="${data.cost || ''}"></td>
-    <td><select>${prioritySelect}</select></td>
-    <td><button class="btn-remove" onclick="removeRow('${id}')">✕</button></td>
-  `;
-  tbody.appendChild(row);
+function addPlatformRow(d={}){
+  const tb=document.getElementById('platformRows');const r=document.createElement('tr');const id=`p_${rc++}`;r.id=id;
+  const pr=priorityOptions.map(o=>`<option ${d.priority===o?'selected':''}>${o}</option>`).join('');
+  r.innerHTML=`<td><input type="text" placeholder="שם פרויקט" value="${d.name||''}"></td><td><textarea placeholder="בעיה / אתגר">${d.problem||''}</textarea></td><td><textarea placeholder="פתרון">${d.solution||''}</textarea></td><td><input type="text" placeholder="עלות" value="${d.cost||''}"></td><td><select>${pr}</select></td><td><button class="btn-remove" onclick="document.getElementById('${id}')?.remove();updateProgress();">✕</button></td>`;
+  tb.appendChild(r);updateProgress();
 }
 
-function removeRow(id) {
-  document.getElementById(id)?.remove();
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+document.querySelectorAll('.scale-options').forEach(g=>{g.querySelectorAll('.scale-btn').forEach(b=>{b.addEventListener('click',()=>{g.querySelectorAll('.scale-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');updateProgress();});});});
+
+function updateProgress(){
+  let a=0;if(document.getElementById('manager_name').value.trim())a++;if(document.getElementById('department').value.trim())a++;
+  document.querySelectorAll('.question').forEach(q=>{if(q.querySelectorAll('input[type=checkbox]:checked').length>0||q.querySelectorAll('.scale-btn.selected').length>0)a++;});
+  if(document.querySelectorAll('#dataRows tr').length>0)a++;if(document.querySelectorAll('#platformRows tr').length>0)a++;
+  const pct=Math.min(100,Math.round(a/8*100));
+  document.getElementById('progress').style.width=pct+'%';document.getElementById('progressText').textContent=pct+'% הושלם';
+}
+document.querySelectorAll('input,textarea,select').forEach(e=>{e.addEventListener('input',updateProgress);e.addEventListener('change',updateProgress);});
+
+function collectGuided(){
+  const a={};
+  a.q1=Array.from(document.querySelectorAll('input[name="q1"]:checked')).map(e=>e.value);
+  a.q2=Array.from(document.querySelectorAll('input[name="q2"]:checked')).map(e=>e.value);
+  const q3=document.querySelector('[data-question="q3"] .scale-btn.selected');a.q3=q3?q3.dataset.value:'';
+  const q4=document.querySelector('[data-question="q4"] .scale-btn.selected');a.q4=q4?q4.dataset.value:'';
+  const q5=document.querySelector('[data-question="q5"] .scale-btn.selected');a.q5=q5?q5.dataset.value:'';
+  a.q6=Array.from(document.querySelectorAll('input[name="q6"]:checked')).map(e=>e.value);
+  return a;
 }
 
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
+function collectTables(){
+  const dg=[];document.querySelectorAll('#dataRows tr').forEach(r=>{const i=r.querySelectorAll('input,select,textarea');if(i[0]&&i[0].value.trim())dg.push({type:i[0].value,storage:i[1].value,sensitivity:i[2].value,platform:i[3].value,resources:i[4].value,notes:i[5].value});});
+  const pr=[];document.querySelectorAll('#platformRows tr').forEach(r=>{const i=r.querySelectorAll('input,select,textarea');if(i[0]&&i[0].value.trim())pr.push({name:i[0].value,problem:i[1].value,solution:i[2].value,cost:i[3].value,priority:i[4].value});});
+  return{dg,pr};
 }
 
-function collectData() {
-  const dataGaps = [];
-  document.querySelectorAll('#dataRows tr').forEach(row => {
-    const inputs = row.querySelectorAll('input, select, textarea');
-    if (inputs[0] && inputs[0].value.trim()) {
-      dataGaps.push({
-        type: inputs[0].value,
-        storage: inputs[1].value,
-        platform: inputs[2].value,
-        resources: inputs[3].value,
-        notes: inputs[4].value
-      });
-    }
-  });
-  
-  const platformRequests = [];
-  document.querySelectorAll('#platformRows tr').forEach(row => {
-    const inputs = row.querySelectorAll('input, select, textarea');
-    if (inputs[0] && inputs[0].value.trim()) {
-      platformRequests.push({
-        name: inputs[0].value,
-        problem: inputs[1].value,
-        solution: inputs[2].value,
-        cost: inputs[3].value,
-        priority: inputs[4].value
-      });
-    }
-  });
-  
-  return { dataGaps, platformRequests };
+function fmtEmail(n,d,g,t){
+  let s=`שאלון מיפוי פערי דאטא — Puratos Israel\n=========================================\n\nמנהל/ת: ${n}\nמחלקה: ${d}\nתאריך: ${new Date().toLocaleString('he-IL')}\n\n--- שאלון מודרך ---\n\n1. מיקום אחסון: ${g.q1.join(', ')||'לא צוין'}\n2. סוגי מידע: ${g.q2.join(', ')||'לא צוין'}\n3. רגישות: ${g.q3||'לא צוין'}\n4. תדירות שיתוף: ${g.q4||'לא צוין'}\n5. SharePoint: ${g.q5||'לא צוין'}\n6. צרכים: ${g.q6.join(', ')||'לא צוין'}\n\n--- מיפוי פערי דאטא (${t.dg.length}) ---\n\n`;
+  t.dg.forEach((g,i)=>{s+=`${i+1}. ${g.type} | אחסון: ${g.storage} | רגיש: ${g.sensitivity} | יעד: ${g.platform} | משאבים: ${g.resources}\n`;});
+  s+=`\n--- בקשות פרויקטים (${t.pr.length}) ---\n\n`;
+  t.pr.forEach((p,i)=>{s+=`${i+1}. ${p.name} | בעיה: ${p.problem} | פתרון: ${p.solution} | עלות: ${p.cost} | עדיפות: ${p.priority}\n`;});
+  return s;
 }
 
-async function submitForm() {
-  const department = document.getElementById('department').value.trim();
-  const submitted_by = document.getElementById('submitted_by').value.trim();
-  
-  if (!department) { showToast('⚠️ נא למלא שם מחלקה'); return; }
-  if (!submitted_by) { showToast('⚠️ נא למלא שם מלא'); return; }
-  
-  const { dataGaps, platformRequests } = collectData();
-  
-  if (dataGaps.length === 0 && platformRequests.length === 0) {
-    showToast('⚠️ נא למלא לפחות שורה אחת'); return;
-  }
-  
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'שומר...';
-  
-  try {
-    const response = await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/submitDataMapping', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ department, submitted_by, data_gaps: dataGaps, platform_requests: platformRequests })
-    });
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      document.getElementById('successMsg').style.display = 'block';
-      showToast('✅ נשמר בהצלחה!');
-      setTimeout(() => document.getElementById('successMsg').style.display = 'none', 5000);
-    } else {
-      throw new Error(result.error || 'שגיאה');
-    }
-  } catch (e) {
-    // Fallback: save locally
-    const localData = { department, submitted_by, data_gaps: dataGaps, platform_requests: platformRequests, date: new Date().toISOString() };
-    let saved = JSON.parse(localStorage.getItem('puratos_mappings') || '[]');
-    saved.push(localData);
-    localStorage.setItem('puratos_mappings', JSON.stringify(saved));
-    showToast('✅ נשמר מקומית (offline)');
-    document.getElementById('successMsg').style.display = 'block';
-    setTimeout(() => document.getElementById('successMsg').style.display = 'none', 5000);
-  }
-  
-  btn.disabled = false;
-  btn.textContent = 'שמור ושלח 📤';
+async function submitForm(){
+  const n=document.getElementById('manager_name').value.trim(),d=document.getElementById('department').value.trim();
+  if(!n){showToast('⚠️ נא למלא שם');return;}if(!d){showToast('⚠️ נא למלא מחלקה');return;}
+  const g=collectGuided(),t=collectTables(),body=fmtEmail(n,d,g,t);
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='שולח...';
+  try{await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/submitDataMapping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({department:d,submitted_by:n,data_gaps:[...t.dg,{_guided:g}],platform_requests:t.pr})});}
+  catch(e){let s=JSON.parse(localStorage.getItem('puratos_mappings')||'[]');s.push({department:d,submitted_by:n,data_gaps:t.dg,platform_requests:t.pr,guided:g,date:new Date().toISOString()});localStorage.setItem('puratos_mappings',JSON.stringify(s));}
+  const sub=encodeURIComponent(`מיפוי דאטא - ${d} - ${n}`),bdy=encodeURIComponent(body);
+  window.location.href=`mailto:liors@puratos.co.il?subject=${sub}&body=${bdy}`;
+  document.getElementById('successMsg').style.display='block';showToast('✅ נשמר! אימייל נפתח');
+  setTimeout(()=>document.getElementById('successMsg').style.display='none',6000);
+  btn.disabled=false;btn.textContent='שמור ושלח 📤';
 }
 
-async function loadSubmissions() {
-  const list = document.getElementById('submissionsList');
-  list.innerHTML = '<p style="color:#64748b;">טוען...</p>';
-  
-  try {
-    const response = await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/getAllDataMappings');
-    const result = await response.json();
-    
-    if (result.items && result.items.length > 0) {
-      list.innerHTML = result.items.map(item => `
-        <div class="submission-card">
-          <h4>${item.department} <span class="badge blue">${item.submitted_by}</span></h4>
-          <div class="meta">תאריך: ${new Date(item.submission_date).toLocaleDateString('he-IL')}</div>
-          <div class="stats">
-            📋 ${item.data_gaps.length} פערי דאטא | 
-            💻 ${item.platform_requests.length} בקשות פרויקט
-          </div>
-        </div>
-      `).join('');
-      window.allSubmissions = result.items;
-    } else {
-      list.innerHTML = '<p style="color:#64748b;">עדיין אין הגשות. הטופס הראשון יופיע כאן לאחר שליחה.</p>';
-      window.allSubmissions = [];
-    }
-  } catch (e) {
-    // Load from localStorage
-    const saved = JSON.parse(localStorage.getItem('puratos_mappings') || '[]');
-    if (saved.length > 0) {
-      list.innerHTML = saved.map(item => `
-        <div class="submission-card">
-          <h4>${item.department} <span class="badge green">מקומי</span></h4>
-          <div class="stats">📋 ${item.data_gaps.length} | 💻 ${item.platform_requests.length}</div>
-        </div>
-      `).join('');
-      window.allSubmissions = saved;
-    } else {
-      list.innerHTML = '<p style="color:#64748b;">אין הגשות עדיין.</p>';
-    }
-  }
+async function loadSubmissions(){
+  const l=document.getElementById('submissionsList');l.innerHTML='<p style="color:#64748b;">טוען...</p>';
+  try{const r=await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/getAllDataMappings');const res=await r.json();
+    if(res.items&&res.items.length){l.innerHTML=res.items.map(i=>`<div class="submission-card"><h4>${i.department} <span class="badge blue">${i.submitted_by}</span></h4><div class="meta">${new Date(i.submission_date).toLocaleDateString('he-IL')}</div><div class="stats">📋 ${i.data_gaps.length} | 💻 ${i.platform_requests.length}</div></div>`).join('');window.allSubmissions=res.items;}
+    else{l.innerHTML='<p style="color:#64748b;">אין הגשות עדיין.</p>';window.allSubmissions=[];}}
+  catch(e){const s=JSON.parse(localStorage.getItem('puratos_mappings')||'[]');if(s.length){l.innerHTML=s.map(i=>`<div class="submission-card"><h4>${i.department} <span class="badge green">מקומי</span></h4><div class="stats">📋 ${i.data_gaps.length}|💻 ${i.platform_requests.length}</div></div>`).join('');window.allSubmissions=s;}else{l.innerHTML='<p style="color:#64748b;">אין הגשות.</p>';}}
 }
 
-function exportToExcel() {
-  const submissions = window.allSubmissions || [];
-  if (submissions.length === 0) {
-    showToast('⚠️ אין נתונים לייצוא. טען קודם את הרשימה.');
-    return;
-  }
-  
-  let csv = '\uFEFF'; // BOM for Hebrew
-  csv += 'מחלקה,מוגש על ידי,תאריך,סוג דאטא,מיקום אחסון,פלטפורמת יעד,משאבים נדרשים,הערות\n';
-  
-  submissions.forEach(s => {
-    s.data_gaps.forEach(g => {
-      csv += `"${s.department}","${s.submitted_by}","${new Date(s.submission_date).toLocaleDateString('he-IL')}","${g.type}","${g.storage}","${g.platform}","${g.resources}","${g.notes}"\n`;
-    });
-    if (s.data_gaps.length === 0) {
-      csv += `"${s.department}","${s.submitted_by}","${new Date(s.submission_date).toLocaleDateString('he-IL')}","","","","",""\n`;
-    }
-  });
-  
-  csv += '\n\nמחלקה,מוגש על ידי,שם פרויקט,תיאור בעיה,תיאור פתרון,עלות,עדיפות\n';
-  submissions.forEach(s => {
-    s.platform_requests.forEach(p => {
-      csv += `"${s.department}","${s.submitted_by}","${p.name}","${p.problem}","${p.solution}","${p.cost}","${p.priority}"\n`;
-    });
-    if (s.platform_requests.length === 0) {
-      csv += `"${s.department}","${s.submitted_by}","","","","",""\n`;
-    }
-  });
-  
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `puratos_data_mapping_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  showToast('📊 קובץ אקסל הורד');
+function exportToExcel(){
+  const subs=window.allSubmissions||[];if(!subs.length){showToast('⚠️ אין נתונים');return;}
+  let csv='\uFEFF';csv+='מחלקה,מנהל,תאריך,סוג דאטא,אחסון,רגישות,יעד,משאבים,הערות\n';
+  subs.forEach(s=>{(s.data_gaps||[]).forEach(g=>{if(g._guided)return;csv+=`"${s.department}","${s.submitted_by}","${new Date(s.submission_date||s.date).toLocaleDateString('he-IL')}","${g.type||''}","${g.storage||''}","${g.sensitivity||''}","${g.platform||''}","${g.resources||''}","${g.notes||''}"\n`;});});
+  csv+='\n\nמחלקה,מנהל,פרויקט,בעיה,פתרון,עלות,עדיפות\n';
+  subs.forEach(s=>{(s.platform_requests||[]).forEach(p=>{csv+=`"${s.department}","${s.submitted_by}","${p.name||''}","${p.problem||''}","${p.solution||''}","${p.cost||''}","${p.priority||''}"\n`;});});
+  const b=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`puratos_mapping_${new Date().toISOString().slice(0,10)}.csv`;a.click();showToast('📊 אקסל הורד');
 }
 
-// Init with 2 rows each
-addDataRow();
-addDataRow();
-addPlatformRow();
-addPlatformRow();
-loadSubmissions();
+addDataRow();addDataRow();addPlatformRow();addPlatformRow();loadSubmissions();updateProgress();
 </script>
 </body>
 </html>
