@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שאלון אפיון אפליקציית ניהול נדל"ן | AILON Task</title>
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --teal-dark: #0f766e;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 50%, #ecfdf5 100%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 16px;
+}
+.header {
+  text-align: center;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+  color: white;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(13,148,136,0.2);
+}
+.header img { height: 60px; margin-bottom: 12px; }
+.header h1 { font-size: 24px; margin-bottom: 8px; }
+.header p { font-size: 15px; opacity: 0.9; }
+.container { max-width: 800px; margin: 0 auto; }
+.section {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid var(--border);
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: white;
+  flex-shrink: 0;
+}
+.section-title { font-size: 18px; font-weight: 700; color: var(--teal-dark); }
+.section-desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.question { margin-bottom: 20px; }
+.question:last-child { margin-bottom: 0; }
+.question-label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.q-num {
+  background: var(--teal);
+  color: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.question-hint { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+input[type="text"], input[type="number"], textarea, select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fafbfc;
+}
+input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+  background: white;
+}
+textarea { min-height: 80px; resize: vertical; }
+.radio-group, .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.radio-option, .checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  background: #fafbfc;
+}
+.radio-option:hover, .checkbox-option:hover {
+  border-color: var(--teal-light);
+  background: #f0fdfa;
+}
+.radio-option input, .checkbox-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--teal);
+}
+.radio-option.selected, .checkbox-option.selected {
+  border-color: var(--teal);
+  background: #f0fdfa;
+}
+.scale-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.scale-option {
+  padding: 8px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.scale-option:hover { border-color: var(--teal-light); }
+.scale-option.selected { background: var(--teal); color: white; border-color: var(--teal); }
+.priority-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.priority-card {
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.priority-card:hover { border-color: var(--teal-light); }
+.priority-card.selected { border-color: var(--teal); background: #f0fdfa; }
+.priority-card .priority-emoji { font-size: 24px; display: block; margin-bottom: 4px; }
+.multi-input { display: flex; flex-direction: column; gap: 8px; }
+.multi-input-row { display: flex; gap: 8px; }
+.multi-input-row input { flex: 1; }
+.btn-add {
+  padding: 8px 14px;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.btn-add:hover { background: var(--teal-dark); }
+.submit-section {
+  text-align: center;
+  padding: 32px 20px;
+  background: var(--card);
+  border-radius: 14px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.btn-submit {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 20px rgba(13,148,136,0.3);
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,148,136,0.4); }
+.progress-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.progress-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 4px; transition: width 0.3s; }
+.progress-text { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.nav-buttons { display: flex; justify-content: space-between; margin-top: 16px; }
+.btn-nav {
+  padding: 10px 24px;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  background: white;
+  color: var(--teal);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-nav:hover { background: var(--teal); color: white; }
+.btn-nav:disabled { opacity: 0.4; cursor: not-allowed; }
+.footer { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
+@media (max-width: 600px) {
+  .header h1 { font-size: 20px; }
+  .section { padding: 16px; }
+  .priority-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" alt="AILON Task" onerror="this.style.display='none'">
+    <h1>שאלון אפיון אפליקציית ניהול נדל"ן</h1>
+    <p>לייעול מחלקת התפעול | חברת נדל"ן — יזמות, בנייה וניהול</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-track"><div class="progress-fill" id="progress" style="width: 0%"></div></div>
+    <span class="progress-text" id="progressText">0% הושלם</span>
+  </div>
+
+  <!-- Section 1: Company Overview -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏢</div>
+      <div>
+        <div class="section-title">1. פרטי החברה והיקף הפעילות</div>
+        <div class="section-desc">הבנת הגודל, המבנה ותחומי האחריות</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> כמה סוחרים/שוכרים פעילים יש כיום?</div>
+      <input type="number" id="q1" placeholder="לדוגמה: 30">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> מהו יעד מספר הסוחרים בשנה הקרובה?</div>
+      <input type="number" id="q2" placeholder="לדוגמה: 120">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> כמה מתחמים/פארקים מנוהלים כיום?</div>
+      <input type="number" id="q3" placeholder="מספר מתחמים">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> מהי כמות העובדים הצפויה במחלקת התפעול בעתיד הקרוב?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q4" value="1-2"> 1-2 עובדים</label>
+        <label class="radio-option"><input type="radio" name="q4" value="3-5"> 3-5 עובדים</label>
+        <label class="radio-option"><input type="radio" name="q4" value="6-10"> 6-10 עובדים</label>
+        <label class="radio-option"><input type="radio" name="q4" value="10+"> 10+ עובדים</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">5</span> אילו תפקידים יהיו במחלקה?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q5" value="ops_manager"> מנהל תפעול</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5" value="coordinator"> רכז תפעול</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5" value="maintenance"> איש אחזקה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5" value="cleaning"> עובד ניקיון</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5" value="security"> שומר</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5" value="contractors"> קבלני מיקור חוץ</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">6</span> אילו מערכות מידע נוספות קיימות כיום בחברה?</div>
+      <div class="question-hint">סמנו את כל המערכות שבשימוש</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q6" value="erp"> ERP (Priority/SAP/NetSuite)</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6" value="accounting"> תוכנת הנהלת חשבונות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6" value="crm"> CRM קיים</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6" value="excel"> Excel/Google Sheets</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6" value="whatsapp"> WhatsApp לניהול</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6" value="paper"> ניירת וטפסים</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Procurement & Budget -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🛒</div>
+      <div>
+        <div class="section-title">2. רכש, הצעות מחיר ותקציב</div>
+        <div class="section-desc">ניהול ספקים, הזמנות ובקרת תקציב</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> כמה ספקים פעילים יש כיום?</div>
+      <input type="number" id="q2_1" placeholder="מספר ספקים">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> באילו קטגוריות רכש עוסקים?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="construction"> חומרי בניין</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="maintenance"> חומרי אחזקה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="cleaning"> ציוד ניקיון</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="safety"> בטיחות וכיבוי אש</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="electrical"> חשמל ותאורה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="plumbing"> אינסטלציה ואיטום</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="paint"> צבע</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="tools"> כלי עבודה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q2_2" value="services"> שירותים (קבלנים)</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> כיצד נשמרות היום הצעות מחיר מספקים?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q2_3" value="email"> אימייל</label>
+        <label class="radio-option"><input type="radio" name="q2_3" value="whatsapp"> WhatsApp</label>
+        <label class="radio-option"><input type="radio" name="q2_3" value="excel"> Excel</label>
+        <label class="radio-option"><input type="radio" name="q2_3" value="paper"> ניירת פיזית</label>
+        <label class="radio-option"><input type="radio" name="q2_3" value="none"> לא נשמר באופן מסודר</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> האם יש צורך במערכת השוואת הצעות מחיר בין ספקים?</div>
+      <div class="scale-group" data-question="q2_4">
+        <div class="scale-option" data-value="1">1 - לא נחוץ</div>
+        <div class="scale-option" data-value="2">2</div>
+        <div class="scale-option" data-value="3">3 - נחמד</div>
+        <div class="scale-option" data-value="4">4</div>
+        <div class="scale-option" data-value="5">5 - קריטי</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">5</span> האם נדרש תהליך אישור הזמנות רכש?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q2_5" value="yes_approval"> כן, נדרש אישור מנהל</label>
+        <label class="radio-option"><input type="radio" name="q2_5" value="yes_budget"> כן, עד תקרה מסוימת</label>
+        <label class="radio-option"><input type="radio" name="q2_5" value="no"> לא, חופשי</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">6</span> איך מנוהל התקציב היום?</div>
+      <div class="question-hint">כמה תקציבים נפרדים יש? לפי מתחם? לפי קטגוריה?</div>
+      <textarea id="q2_6" placeholder="תאר/י כיצד התקציב מחולק ומנוהל היום..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">7</span> האם נדרש דוח תקציב מול ביצוע?</div>
+      <div class="scale-group" data-question="q2_7">
+        <div class="scale-option" data-value="1">1 - לא</div>
+        <div class="scale-option" data-value="3">3</div>
+        <div class="scale-option" data-value="5">5 - קריטי</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">8</span> האם נדרש מספור אוטומטי של הזמנות רכש?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q2_8" value="yes"> כן, חיוני</label>
+        <label class="radio-option"><input type="radio" name="q2_8" value="maybe"> יהיה נחמד</label>
+        <label class="radio-option"><input type="radio" name="q2_8" value="no"> לא נחוץ</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Merchant Management -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div>
+        <div class="section-title">3. ניהול סוחרים והשכרה</div>
+        <div class="section-desc">שוכרים, הסכמי שכירות, לידים ונכסים</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> איזה מידע נדרש לניהול עבור כל סוחר?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="company"> פרטי חברה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="contact"> איש קשר</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="lease"> חוזה שכירות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="payments"> תשלומים</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="area"> שטח מושכר</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="rentals"> השכרת ציוד</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="complaints"> פניות/תלונות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q3_1" value="violations"> הפרות/אכיפה</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> אילו נכסים/ציוד מושכרים לסוחרים?</div>
+      <div class="question-hint">רשום/י את סוגי הציוד (מלגזה, בומפר רמה, וכו') והאם נדרש ניהול זמינות/הזמנות</div>
+      <textarea id="q3_2" placeholder="מלגזה, בומפר רמה, ועוד..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> האם נדרש לוח שנה להזמנת ציוד?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q3_3" value="yes"> כן</label>
+        <label class="radio-option"><input type="radio" name="q3_3" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> כיצד נאספים ומנוהלים לידים לסוחרים חדשים היום?</div>
+      <textarea id="q3_4" placeholder="תאר/י את תהליך איסוף הלידים..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">5</span> האם נדרש ניהול סיורים עם לקוחות פוטנציאליים?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q3_5" value="yes"> כן, ניהול תיאום ותיעוד</label>
+        <label class="radio-option"><input type="radio" name="q3_5" value="maybe"> אולי בעתיד</label>
+        <label class="radio-option"><input type="radio" name="q3_3" value="no"> לא נחוץ</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">6</span> מה תדירות גביית התשלומים מהסוחרים?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q3_6" value="monthly"> חודשי</label>
+        <label class="radio-option"><input type="radio" name="q3_6" value="quarterly"> רבעוני</label>
+        <label class="radio-option"><input type="radio" name="q3_6" value="annual"> שנתי</label>
+        <label class="radio-option"><input type="radio" name="q3_6" value="varies"> משתנה</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Maintenance & Service Calls -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔧</div>
+      <div>
+        <div class="section-title">4. אחזקה, קריאות שירות ותיעדוף</div>
+        <div class="section-desc">ניהול קריאות, סיורים, קבלנים ודוחות</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> כמה קריאות שירות מתקבלות בחודש בממוצע?</div>
+      <input type="number" id="q4_1" placeholder="מספר קריאות לחודש">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> באילו קטגוריות אחזקה עוסקים?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="sealing"> איטום</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="plumbing"> אינסטלציה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="electrical"> חשמל</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="locks"> מנעולנות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="paint"> צבע</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="cleaning"> ניקיון</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="waste"> פינוי פסולת</label>
+        <label class="checkbox-option"><input type="checkbox" name="q4_2" value="landscaping"> גינון</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> איך מתבצע תיעדוף קריאות שירות היום?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q4_3" value="intuition"> לפי שיקול דעת</label>
+        <label class="radio-option"><input type="radio" name="q4_3" value="fifo"> לפי סדר הגעה (FIFO)</label>
+        <label class="radio-option"><input type="radio" name="q4_3" value="verbal"> לפי פנייה טלפונית</label>
+        <label class="radio-option"><input type="radio" name="q4_3" value="whatsapp"> WhatsApp</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> האם נדרש מערכת תיעדוף מבוססת חומרה (Urgent/Normal/Low)?</div>
+      <div class="scale-group" data-question="q4_4">
+        <div class="scale-option" data-value="1">1</div>
+        <div class="scale-option" data-value="3">3</div>
+        <div class="scale-option" data-value="5">5</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">5</span> כמה סיורים בשטח מבוצעים בשבוע?</div>
+      <input type="number" id="q4_5" placeholder="מספר סיורים בשבוע">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">6</span> האם נדרש דוח סיור דיגיטלי מהשטח?</div>
+      <div class="question-hint">צילום, תיעוד ליקויים, מעקב תיקון</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q4_6" value="yes"> כן, חיוני</label>
+        <label class="radio-option"><input type="radio" name="q4_6" value="maybe"> יהיה נחמד</label>
+        <label class="radio-option"><input type="radio" name="q4_6" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">7</span> כמה קבלני מיקור חוץ פעילים יש?</div>
+      <input type="number" id="q4_7" placeholder="מספר קבלנים">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">8</span> האם נדרש ניהול ודוחות על ביצועי קבלנים?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q4_8" value="yes"> כן</label>
+        <label class="radio-option"><input type="radio" name="q4_8" value="no"> לא</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: Regulatory Compliance -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div>
+        <div class="section-title">5. רגולציה, בטיחות וביטוחים</div>
+        <div class="section-desc">היתרים, רישוי עסקים, כיבוי אש, ביטוחים</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> אילו רישויים/היתרים נדרש לעקוב אחריהם?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q5_1" value="business_license"> רישיון עסק</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_1" value="building_permit"> היתר בנייה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_1" value="fire_safety"> כיבוי אש</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_1" value="safety_regulations"> בטיחות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_1" value="environmental"> סביבתי</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> אילו סוגי ביטוחים נדרש לנהל?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q5_2" value="third_party"> צד ג'</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_2" value="contractor"> קבלנים</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_2" value="property"> נכסים</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_2" value="liability"> אחריות מקצועית</label>
+        <label class="checkbox-option"><input type="checkbox" name="q5_2" value="vehicle"> רכב/ציוד</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> האם נדרש תזכורות אוטומטיות לחידוש רישוי/ביטוח?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q5_3" value="yes"> כן, חיוני</label>
+        <label class="radio-option"><input type="radio" name="q5_3" value="maybe"> יהיה נחמד</label>
+        <label class="radio-option"><input type="radio" name="q5_3" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> כמה מתחמים דורשים מעקב רגולטורי נפרד?</div>
+      <input type="number" id="q5_4" placeholder="מספר מתחמים">
+    </div>
+  </div>
+
+  <!-- Section 6: Enforcement & Waste Management -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">♻️</div>
+      <div>
+        <div class="section-title">6. אכיפה, ניקיון והפרדת פסולת</div>
+        <div class="section-desc">אכיפת כללים על סוחרים, ניהול פסולת אקולוגית</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> אילו נושאי אכיפה נדרשים במערכת?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q6_1" value="yard_cleaning"> ניקיון חצרות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_1" value="parking"> חניית רכבים ממושכת</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_1" value="waste_disposal"> פינוי זבל</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_1" value="waste_separation"> הפרדת פסולת</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_1" value="noise"> רעש</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_1" value="visual"> מראה ותחזוקה</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> אילו סוגי פסולת נדרשים להפרדה?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q6_2" value="domestic"> פסולת ביתית</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_2" value="wet"> פסולת רטובה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_2" value="oily"> פסולת שומנית</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_2" value="cardboard"> קרטון/נייר</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_2" value="construction"> פסולת בניין</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> כיצד יש לתעד אכיפה מול סוחרים?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q6_3" value="photo"> צילום ליקוי</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_3" value="warning"> אזהרה רשומה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_3" value="fine"> קנס/חיוב</label>
+        <label class="checkbox-option"><input type="checkbox" name="q6_3" value="followup"> מעקב תיקון</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> האם נדרש מערכת דירוג סוחרים (Green Merchant)?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q6_4" value="yes"> כן</label>
+        <label class="radio-option"><input type="radio" name="q6_4" value="maybe"> אולי</label>
+        <label class="radio-option"><input type="radio" name="q6_4" value="no"> לא</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 7: Warehouse & Inventory -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div>
+        <div class="section-title">7. מחסן וניהול מלאי</div>
+        <div class="section-desc">כלי עבודה, חומרים, צבע וציוד</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> מה מכיל המחסן היום?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q7_1" value="tools"> כלי עבודה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q7_1" value="materials"> חומרי בניין</label>
+        <label class="checkbox-option"><input type="checkbox" name="q7_1" value="paint"> צבע</label>
+        <label class="checkbox-option"><input type="checkbox" name="q7_1" value="safety_gear"> ציוד בטיחות</label>
+        <label class="checkbox-option"><input type="checkbox" name="q7_1" value="spare_parts"> חלקי חילוף</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> האם נדרש ניהול מלאי עם התראות מלאי נמוך?</div>
+      <div class="scale-group" data-question="q7_2">
+        <div class="scale-option" data-value="1">1</div>
+        <div class="scale-option" data-value="3">3</div>
+        <div class="scale-option" data-value="5">5</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> האם נדרש ניהול השאלת כלים לקבלנים/עובדים?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q7_3" value="yes"> כן</label>
+        <label class="radio-option"><input type="radio" name="q7_3" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> כמה פריטים בערך מנוהלים במחסן?</div>
+      <input type="text" id="q7_4" placeholder="הערכה כללית">
+    </div>
+  </div>
+
+  <!-- Section 8: Cameras & Security -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📷</div>
+      <div>
+        <div class="section-title">8. מערכות מצלמות ואבטחה</div>
+        <div class="section-desc">ריכוז DVRs/NVRs וניהול מאוחד</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> כמה מערכות DVR/NVR קיימות כיום?</div>
+      <input type="number" id="q8_1" placeholder="מספר מערכות">
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> האם נדרש ריכוז צפייה במקום אחד?</div>
+      <div class="scale-group" data-question="q8_2">
+        <div class="scale-option" data-value="1">1</div>
+        <div class="scale-option" data-value="3">3</div>
+        <div class="scale-option" data-value="5">5</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> האם נדרש ניהול גישה למצלמות לפי מתחם?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q8_3" value="yes"> כן</label>
+        <label class="radio-option"><input type="radio" name="q8_3" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> מה מערכות המצלמות הקיימות?</div>
+      <input type="text" id="q8_4" placeholder="מותגים/דגמים אם ידוע">
+    </div>
+  </div>
+
+  <!-- Section 9: SOPs & Work Planning -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📅</div>
+      <div>
+        <div class="section-title">9. נהלים, תוכניות עבודה וגאנט</div>
+        <div class="section-desc">תיעוד נהלים, תוכנית עבודה שנתית, בקרה מתועדת</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> אילו נהלים קיימים היום (גם אם לא מתועדים)?</div>
+      <textarea id="q9_1" placeholder="רשום/י נהלים שקיימים היום..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> אילו נהלים נדרש לתעד במערכת?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q9_2" value="procurement"> נוהל רכש</label>
+        <label class="checkbox-option"><input type="checkbox" name="q9_2" value="maintenance"> נוהל אחזקה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q9_2" value="enforcement"> נוהל אכיפה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q9_2" value="emergency"> נוהל חירום</label>
+        <label class="checkbox-option"><input type="checkbox" name="q9_2" value="onboarding"> נוהל קליטת סוחר</label>
+        <label class="checkbox-option"><input type="checkbox" name="q9_2" value="safety"> נוהל בטיחות</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> האם נדרש גאנט שנתי לתוכנית עבודה?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q9_3" value="yes"> כן, חיוני</label>
+        <label class="radio-option"><input type="radio" name="q9_3" value="maybe"> יהיה נחמד</label>
+        <label class="radio-option"><input type="radio" name="q9_3" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> האם נדרש בקרה מתועדת (Checklists)?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q9_4" value="yes"> כן, חיוני</label>
+        <label class="radio-option"><input type="radio" name="q9_4" value="maybe"> יהיה נחמד</label>
+        <label class="radio-option"><input type="radio" name="q9_4" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">5</span> באיזו תדירות נדרש דוח בקרה?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q9_5" value="daily"> יומי</label>
+        <label class="radio-option"><input type="radio" name="q9_5" value="weekly"> שבועי</label>
+        <label class="radio-option"><input type="radio" name="q9_5" value="monthly"> חודשי</label>
+        <label class="radio-option"><input type="radio" name="q9_5" value="quarterly"> רבעוני</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 10: Reports & KPIs -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div>
+        <div class="section-title">10. דוחות, KPIs ובקרה ניהולית</div>
+        <div class="section-desc">מה חשוב לראות בדוח הניהולי?</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> אילו דוחות נדרשים במערכת?</div>
+      <div class="priority-grid">
+        <div class="priority-card" data-name="q10_1" data-value="budget_report">📊 דוח תקציב</div>
+        <div class="priority-card" data-name="q10_1" data-value="vendor_report">🛒 דוח ספקים</div>
+        <div class="priority-card" data-name="q10_1" data-value="merchant_report">🤝 דוח סוחרים</div>
+        <div class="priority-card" data-name="q10_1" data-value="maintenance_report">🔧 דוח אחזקה</div>
+        <div class="priority-card" data-name="q10_1" data-value="compliance_report">📋 דוח רגולטורי</div>
+        <div class="priority-card" data-name="q10_1" data-value="revenue_report">💰 דוח הכנסות</div>
+        <div class="priority-card" data-name="q10_1" data-value="enforcement_report">♻️ דוח אכיפה</div>
+        <div class="priority-card" data-name="q10_1" data-value="inventory_report">📦 דוח מלאי</div>
+      </div>
+      <div class="question-hint" style="margin-top:8px;">לחץ/י על הדוחות הנדרשים</div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> מהם 3 ה-KPIs החשובים ביותר למחלקת התפעול?</div>
+      <textarea id="q10_2" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> למי מיועדים הדוחות?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q10_3" value="ceo"> מנכ"ל/הנהלה</label>
+        <label class="checkbox-option"><input type="checkbox" name="q10_3" value="ops_manager"> מנהל תפעול</label>
+        <label class="checkbox-option"><input type="checkbox" name="q10_3" value="board"> דירקטוריון</label>
+        <label class="checkbox-option"><input type="checkbox" name="q10_3" value="auditors"> מבקר/רואה חשבון</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 11: Priorities & Timeline -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🎯</div>
+      <div>
+        <div class="section-title">11. סדר עדיפויות ולוח זמנים</div>
+        <div class="section-desc">מה דחוף, מה חשוב, ומה יכול לחכות</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">1</span> מה 3 התכונות הדחופות ביותר במערכת?</div>
+      <textarea id="q11_1" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">2</span> מתי נדרש שהמערכת תהיה שמישה?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q11_2" value="1month"> תוך חודש</label>
+        <label class="radio-option"><input type="radio" name="q11_2" value="3months"> תוך 3 חודשים</label>
+        <label class="radio-option"><input type="radio" name="q11_2" value="6months"> תוך חצי שנה</label>
+        <label class="radio-option"><input type="radio" name="q11_2" value="flexible"> גמיש</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">3</span> האם נדרש גישה מנייד בשטח?</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="q11_3" value="yes_critical"> כן, קריטי</label>
+        <label class="radio-option"><input type="radio" name="q11_3" value="yes_nice"> כן, נחמד</label>
+        <label class="radio-option"><input type="radio" name="q11_3" value="no"> לא</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">4</span> מי יהיו משתמשי המערכת?</div>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="q11_4" value="ops_manager"> מנהל תפעול</label>
+        <label class="checkbox-option"><input type="checkbox" name="q11_4" value="coordinator"> רכז</label>
+        <label class="checkbox-option"><input type="checkbox" name="q11_4" value="contractors"> קבלנים</label>
+        <label class="checkbox-option"><input type="checkbox" name="q11_4" value="merchants"> סוחרים (פורטל)</label>
+        <label class="checkbox-option"><input type="checkbox" name="q11_4" value="management"> הנהלה</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-label"><span class="q-num">5</span> תוספות, הערות או דרישות מיוחדות?</div>
+      <textarea id="q11_5" placeholder="כל דבר נוסף שחשוב לך לשתף..."></textarea>
+    </div>
+  </div>
+
+  <div class="submit-section">
+    <button class="btn-submit" onclick="submitForm()">שלח שאלון 📤</button>
+    <p style="margin-top:12px; color:var(--muted); font-size:13px;">השאלון יועבר לצוות AILON Task לאפיון ודיוק האפליקציה</p>
+  </div>
+
+  <div class="footer">
+    AILON Task — Dream it. Plan it. Achieve it. 🚀<br>
+    שאלון אפיון אפליקציית ניהול נדל"ן | 2026
+  </div>
+</div>
+
+<script>
+// Scale selection
+document.querySelectorAll('.scale-group').forEach(group => {
+  group.querySelectorAll('.scale-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      group.querySelectorAll('.scale-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      updateProgress();
+    });
+  });
+});
+
+// Priority cards
+document.querySelectorAll('.priority-card').forEach(card => {
+  card.addEventListener('click', () => {
+    card.classList.toggle('selected');
+    updateProgress();
+  });
+});
+
+// Progress tracking
+function updateProgress() {
+  const totalQuestions = document.querySelectorAll('.question').length;
+  let answered = 0;
+  document.querySelectorAll('.question').forEach(q => {
+    const inputs = q.querySelectorAll('input[type="text"], input[type="number"], textarea');
+    const radios = q.querySelectorAll('input[type="radio"]:checked');
+    const checkboxes = q.querySelectorAll('input[type="checkbox"]:checked');
+    const scales = q.querySelectorAll('.scale-option.selected');
+    const cards = q.querySelectorAll('.priority-card.selected');
+    if (inputs.length > 0 && Array.from(inputs).some(i => i.value.trim())) answered++;
+    else if (radios.length > 0) answered++;
+    else if (checkboxes.length > 0) answered++;
+    else if (scales.length > 0) answered++;
+    else if (cards.length > 0) answered++;
+  });
+  const pct = Math.round((answered / totalQuestions) * 100);
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% הושלם';
+}
+
+document.querySelectorAll('input, textarea').forEach(el => {
+  el.addEventListener('input', updateProgress);
+  el.addEventListener('change', updateProgress);
+});
+
+function submitForm() {
+  const data = {};
+  // Collect all answers
+  document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
+    if (el.value.trim()) data[el.id || el.name] = el.value.trim();
+  });
+  document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+    data[el.name] = el.value;
+  });
+  document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
+    if (!data[el.name]) data[el.name] = [];
+    data[el.name].push(el.value);
+  });
+  document.querySelectorAll('.scale-option.selected').forEach(el => {
+    const group = el.closest('.scale-group');
+    data[group.dataset.question || 'scale_' + Math.random()] = el.dataset.value;
+  });
+  document.querySelectorAll('.priority-card.selected').forEach(el => {
+    if (!data[el.dataset.name]) data[el.dataset.name] = [];
+    data[el.dataset.name].push(el.dataset.value);
+  });
+
+  // Generate summary
+  let summary = "שאלון אפיון אפליקציית נדל\"ן — תשובות\n\n";
+  Object.entries(data).forEach(([key, value]) => {
+    summary += `${key}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+  });
+
+  // Download as text file
+  const blob = new Blob([summary], {type: 'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'real_estate_questionnaire_answers.txt';
+  a.click();
+
+  alert('השאלון נשמר! נא לשלוח את הקובץ שהורד לצוות AILON Task');
+}
+
+updateProgress();
+</script>
+</body>
+</html>
