@@ -105,6 +105,7 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(
 <p style="font-size:12px;color:#64748b;margin-bottom:8px;">סמנו את כל המקומות הרלוונטיים</p>
 <div class="option-grid">
 <label class="option-card"><input type="checkbox" name="q1" value="sharepoint"> SharePoint / OneDrive</label>
+<label class="option-card"><input type="checkbox" name="q1" value="z_drive"> כונן Z (Network Drive)</label>
 <label class="option-card"><input type="checkbox" name="q1" value="local_pc"> מחשב אישי</label>
 <label class="option-card"><input type="checkbox" name="q1" value="paper"> דפים / פתקים</label>
 <label class="option-card"><input type="checkbox" name="q1" value="excel_local"> אקסל מקומי</label>
@@ -227,7 +228,7 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(
 <div class="toast" id="toast"></div>
 
 <script>
-const storageOptions=['בראש (ידע אישי)','פתקים / ניירת','אקסל מקומי','SharePoint / OneDrive','אימייל','WhatsApp','ERP / Priority','מערכת אחרת','לא מאוחסן'];
+const storageOptions=['כונן Z (Network Drive)','בראש (ידע אישי)','פתקים / ניירת','אקסל מקומי','SharePoint / OneDrive','אימייל','WhatsApp','ERP / Priority','מערכת אחרת','לא מאוחסן'];
 const platformOptions=['SharePoint Learning Center','SharePoint (כללי)','OneDrive','ERP / Priority','Power BI','יישום חדש','אפליקציית מובייל','שדרוג מערכת קיימת','אחר'];
 const sensitivityOptions=['🔴 רגיש מאוד','🟡 חלקית','🟢 לא רגיש','⚪ לא ברור'];
 const priorityOptions=['גבוה — דחוף','בינוני','נמוך','עתידי'];
