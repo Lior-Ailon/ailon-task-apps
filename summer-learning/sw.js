@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lomdim-bkait-v4';
+const CACHE_NAME = 'lomdim-bkait-v5';
 const ASSETS = [
   './',
   './index.html',
