@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>שאלון זוגיות | AILON Task</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Heebo',sans-serif;background:linear-gradient(135deg,#fdf6f0 0%,#f0e6e6 50%,#e8e4f0 100%);min-height:100vh;color:#333}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 60px}
+.header{text-align:center;padding:30px 0 20px}
+.header h1{font-size:28px;font-weight:900;color:#7c4a4a;margin-bottom:8px}
+.header p{font-size:16px;color:#888;line-height:1.6}
+.intro-card{background:#fff;border-radius:20px;padding:28px 24px;box-shadow:0 4px 20px rgba(0,0,0,.06);margin-bottom:24px;text-align:center}
+.intro-card p{font-size:16px;line-height:1.7;color:#555}
+.form-section{display:none}
+.form-section.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.q-card{background:#fff;border-radius:16px;padding:24px 20px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:16px}
+.q-num{display:inline-block;background:#7c4a4a;color:#fff;font-size:14px;font-weight:700;width:32px;height:32px;line-height:32px;text-align:center;border-radius:50%;margin-bottom:12px}
+.q-label{font-size:18px;font-weight:700;color:#444;margin-bottom:8px;display:block;line-height:1.5}
+.q-hint{font-size:14px;color:#aaa;margin-bottom:14px}
+.q-input{width:100%;padding:14px 16px;font-size:16px;font-family:'Heebo',sans-serif;border:2px solid #e8e0e0;border-radius:12px;outline:none;transition:border-color .2s;resize:vertical;min-height:80px;line-height:1.6}
+.q-input:focus{border-color:#7c4a4a}
+.q-input::placeholder{color:#ccc}
+.scale-row{display:flex;gap:6px;justify-content:space-between;margin-top:10px}
+.scale-btn{flex:1;padding:14px 0;text-align:center;border:2px solid #e8e0e0;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;transition:all .15s;background:#fff;color:#666}
+.scale-btn:hover{border-color:#c4a0a0}
+.scale-btn.selected{background:#7c4a4a;color:#fff;border-color:#7c4a4a;transform:scale(1.05)}
+.scale-labels{display:flex;justify-content:space-between;font-size:12px;color:#aaa;margin-top:6px;padding:0 4px}
+.btn{display:block;width:100%;padding:16px;font-size:18px;font-weight:700;border:none;border-radius:16px;cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s}
+.btn-next{background:linear-gradient(135deg,#7c4a4a,#a06060);color:#fff;box-shadow:0 4px 14px rgba(124,74,74,.3)}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,74,74,.4)}
+.btn-next:active{transform:scale(.97)}
+.btn-next:disabled{opacity:.5;cursor:not-allowed}
+.btn-back{background:transparent;color:#888;font-size:16px;margin-top:10px}
+.btn-back:hover{color:#555}
+.progress{height:6px;background:#e8e0e0;border-radius:3px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7c4a4a,#a06060);border-radius:3px;transition:width .3s ease;width:0}
+.progress-text{text-align:center;font-size:13px;color:#aaa;margin-bottom:16px}
+.name-input{width:100%;padding:16px 20px;font-size:20px;font-family:'Heebo',sans-serif;border:2px solid #e8e0e0;border-radius:14px;text-align:center;outline:none;margin-bottom:16px}
+.name-input:focus{border-color:#7c4a4a}
+.success-screen{text-align:center;padding:40px 20px}
+.success-emoji{font-size:64px;margin-bottom:16px}
+.success-title{font-size:26px;font-weight:900;color:#7c4a4a;margin-bottom:12px}
+.success-msg{font-size:17px;color:#666;line-height:1.7}
+.footer{text-align:center;padding:20px;font-size:13px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="header">
+<h1>שאלון זוגיות</h1>
+<p>מרחב בטוח לחשיבה כנה</p>
+</div>
+<div class="intro-card" id="intro">
+<p>ברוכים הבאים לשאלון אישי ומרחב בטוח.</p>
+<p style="margin-top:10px">השאלון נועד לעזור לכם לחשוב על הקשר בצורה מעמיקה.</p>
+<p style="margin-top:10px">כל התשובות נשמרות אצל המאמן בלבד ולא משותפות עם אף אחד אחר.</p>
+<p style="margin-top:10px;font-weight:700;color:#7c4a4a">תשובות כנות = תוצאות טובות יותר</p>
+<div style="margin-top:24px">
+<input type="text" class="name-input" id="respondentName" placeholder="השם שלך" maxlength="30">
+<button class="btn btn-next" id="btnStart" disabled>מתחילים</button>
+</div>
+</div>
+<div class="form-section" id="questions">
+<div class="progress"><div class="progress-fill" id="progressBar"></div></div>
+<div class="progress-text" id="progressText">שאלה 1 מתוך 14</div>
+<div id="questionContainer"></div>
+<button class="btn btn-next" id="btnNext">הבא</button>
+<button class="btn btn-back" id="btnBack" style="display:none">חזור</button>
+</div>
+<div class="form-section" id="success" style="display:none">
+<div class="success-screen">
+<div class="success-emoji">🙏</div>
+<div class="success-title">תודה רבה!</div>
+<div class="success-msg">התשובות שלך נשמרו בהצלחה.<br>המאמן יקבל אותן ויצרו איתך קשר.<br><br>המשך יום מקסים</div>
+</div>
+</div>
+<div class="footer">powered by <span style="color:#0d9488;font-weight:700">AILON Task</span> Coaching</div>
+</div>
+<script>
+const SESSION_CODE = 'COUPLE001';
+const API_URL = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/coupleSurvey';
+const QKEYS = ['q1_trust','q2_respect','q3_love','q4_caring','q5_change','q6_trigger','q7_difficulty','q8_challenge','q9_influence','q10_good','q11_future','q12_action','q13_safety','q14_changed'];
+const QUESTIONS = [
+  {type:'scale',label:'באיזו מידה את/ה מרגיש/ה שאת/ה יכול/ה לסמוך על בן/בת הזוג?',hint:'1 = בכלל לא, 10 = לחלוטין',min:1,max:10,lowLabel:'בכלל לא',highLabel:'לחלוטין'},
+  {type:'text',label:'מה הדבר שבן/בת הזוג עושה שגורם לך להרגיש הכי מוערך/ת?',hint:'תאר/י מצב ספציפי אם אפשר'},
+  {type:'text',label:'תאר/י רגע אחד בקשר שבו הרגשת הכי הרבה אהבה',hint:'זיכרון אחד, כמה שיותר מפורט'},
+  {type:'scale',label:'באיזו מידה את/ה מרגיש/ה שאכפת לבן/בת הזוג ממך?',hint:'1 = בכלל לא, 10 = מאוד',min:1,max:10,lowLabel:'בכלל לא',highLabel:'מאוד'},
+  {type:'text',label:'מתי הרגשת שהרגשות שלך כלפי בן/בת הזוג השתנו? מה קרה?',hint:'נסה/י להיזכר ברגע או תקופה ספציפית'},
+  {type:'text',label:'האם יש אירוע או משפט שבן/בת הזוג אמר שנשאר חקוק בזיכרון שלך?',hint:'לטובה או לרעה - גם דברים קטנים יכולים להיות משמעותיים'},
+  {type:'text',label:'מה הקושי הגדול ביותר שלך בקשר כרגע?',hint:'תאר/י בכנות - אין תשובה לא נכונה'},
+  {type:'text',label:'מה האתגר שאת/ה מרגיש/ה שאתם צריכים לעבוד עליו יחד?',hint:'חשוב על מה שצריך שיפור משותף'},
+  {type:'text',label:'האם מצב הרוח שלך מושפע ממצב הרוח של בן/בת הזוג? תאר/י',hint:'איך זה עובד אצלך? מתי זה קורה?'},
+  {type:'text',label:'מה הדבר הכי טוב בקשר שלכם?',hint:'מה היית רוצה לשמר ולחזק?'},
+  {type:'text',label:'איך היית רוצה שהקשר ייראה בעוד שישה חודשים?',hint:'תאר/י את החזון שלך לקשר'},
+  {type:'text',label:'מה את/ה מוכן/ה לעשות כדי לשפר את הקשר?',hint:'מה מצדך - לא מצד בן/בת הזוג'},
+  {type:'text',label:'האם את/ה מרגיש/ה בטוח/ה להביע את הרגשות שלך בפני בן/בת הזוג?',hint:'בטחון רגשי הוא בסיס לכל קשר. למה כן או לא?'},
+  {type:'text',label:'מה שונה בקשר עכשיו לעומת החודשים הראשונים?',hint:'נסה/י להיות ספציפי/ת כמה שאפשר'}
+];
+let currentQ = 0;
+const answers = {};
+const nameInput = document.getElementById('respondentName');
+const btnStart = document.getElementById('btnStart');
+nameInput.oninput = function(){ btnStart.disabled = !nameInput.value.trim(); };
+btnStart.onclick = function(){
+  if(!nameInput.value.trim()) return;
+  answers.respondent_name = nameInput.value.trim();
+  answers.session_code = SESSION_CODE;
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('questions').classList.add('active');
+  renderQuestion();
+};
+function renderQuestion(){
+  var q = QUESTIONS[currentQ];
+  var pct = ((currentQ + 1) / QUESTIONS.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = 'שאלה ' + (currentQ+1) + ' מתוך ' + QUESTIONS.length;
+  var qKey = QKEYS[currentQ];
+  var container = document.getElementById('questionContainer');
+  var html = '<div class="q-card">';
+  html += '<span class="q-num">' + (currentQ+1) + '</span>';
+  html += '<label class="q-label">' + q.label + '</label>';
+  html += '<div class="q-hint">' + q.hint + '</div>';
+  if(q.type === 'scale'){
+    html += '<div class="scale-row">';
+    for(var i = q.min; i <= q.max; i++){
+      var sel = answers[qKey] == String(i) ? 'selected' : '';
+      html += '<div class="scale-btn ' + sel + '" data-val="' + i + '">' + i + '</div>';
+    }
+    html += '</div>';
+    html += '<div class="scale-labels"><span>' + q.lowLabel + '</span><span>' + q.highLabel + '</span></div>';
+  } else {
+    var val = answers[qKey] || '';
+    html += '<textarea class="q-input" id="qInput" placeholder="כתוב/י כאן...">' + val + '</textarea>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
+  if(q.type === 'scale'){
+    container.querySelectorAll('.scale-btn').forEach(function(btn){
+      btn.onclick = function(){
+        container.querySelectorAll('.scale-btn').forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        answers[qKey] = btn.dataset.val;
+        document.getElementById('btnNext').disabled = false;
+      };
+    });
+    document.getElementById('btnNext').disabled = !answers[qKey];
+  } else {
+    var input = document.getElementById('qInput');
+    input.oninput = function(){
+      answers[qKey] = input.value;
+      document.getElementById('btnNext').disabled = !input.value.trim();
+    };
+    document.getElementById('btnNext').disabled = !answers[qKey];
+  }
+  document.getElementById('btnBack').style.display = currentQ > 0 ? 'block' : 'none';
+  document.getElementById('btnNext').textContent = currentQ === QUESTIONS.length - 1 ? 'סיום' : 'הבא';
+}
+document.getElementById('btnNext').onclick = async function(){
+  if(currentQ < QUESTIONS.length - 1){
+    currentQ++;
+    renderQuestion();
+    window.scrollTo(0,0);
+  } else {
+    await submitSurvey();
+  }
+};
+document.getElementById('btnBack').onclick = function(){
+  if(currentQ > 0){
+    currentQ--;
+    renderQuestion();
+    window.scrollTo(0,0);
+  }
+};
+async function submitSurvey(){
+  document.getElementById('btnNext').disabled = true;
+  document.getElementById('btnNext').textContent = 'שולח...';
+  try{
+    var res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(answers)
+    });
+    var data = await res.json();
+    document.getElementById('questions').classList.remove('active');
+    document.getElementById('success').style.display = 'block';
+    document.getElementById('success').classList.add('active');
+  } catch(err){
+    try{ localStorage.setItem('coupleSurvey_' + answers.respondent_name, JSON.stringify(answers)); }catch(e){}
+    document.getElementById('questions').classList.remove('active');
+    document.getElementById('success').style.display = 'block';
+    document.getElementById('success').classList.add('active');
+    document.querySelector('.success-title').textContent = 'תודה רבה!';
+    document.querySelector('.success-msg').innerHTML = 'התשובות שלך נשמרו.<br>המאמן יקרא אותן בקרוב';
+  }
+}
+</script>
+</body>
+</html>
