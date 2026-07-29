@@ -4,480 +4,184 @@
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FF6B6B">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="קיץ חכם">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="favicon-32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<title>קיץ חכם - משחקי לימוד לחופש</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF6B9D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="לומדים בקיץ">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<title>לומדים בקיץ! ☀️📚</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--c1:#FF6B6B;--c2:#4ECDC4;--c3:#FFE66D;--c4:#95E1D3;--c5:#C7A6FF;--c6:#FFB7B2;--c7:#6BCB77;--c8:#FFA45B;--bg:#F0F4FF;--text:#2D3047}
-body{font-family:'Heebo','Fredoka',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
-.bg-bubbles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden}
-.bg-bubbles span{position:absolute;bottom:-100px;border-radius:50%;animation:rise linear infinite}
-@keyframes rise{0%{bottom:-100px;opacity:0}10%{opacity:.5}90%{opacity:.3}100%{bottom:120%;opacity:0}}
-.screen{display:none;min-height:100vh;padding:20px 16px}
-.welcome-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px}
-.welcome-logo{font-size:5rem;animation:bounce 1.5s ease infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-.welcome-title{font-family:'Fredoka',sans-serif;font-size:2.6rem;font-weight:700;color:var(--c1);margin:16px 0 8px}
-.welcome-sub{font-size:1.1rem;color:#888;margin-bottom:30px}
-.welcome-input{padding:18px 24px;border-radius:20px;border:4px solid var(--c2);font-size:1.3rem;text-align:center;outline:none;width:280px;max-width:90%;font-family:'Heebo',sans-serif;margin-bottom:16px}
-.welcome-input:focus{border-color:var(--c1);box-shadow:0 4px 20px rgba(255,107,107,.15)}
-.welcome-input::placeholder{color:#ccc}
-.welcome-btn{padding:16px 50px;border-radius:30px;border:none;background:linear-gradient(135deg,var(--c2),var(--c4));color:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(78,205,196,.3);transition:all .3s}
-.welcome-btn:active{transform:scale(.95)}
-.welcome-btn:disabled{opacity:.5;cursor:not-allowed}
-.welcome-hint{font-size:.85rem;color:#bbb;margin-top:16px}
-.welcome-avatar{display:flex;gap:12px;margin:20px 0;flex-wrap:wrap;justify-content:center}
-.avatar-pick{width:60px;height:60px;border-radius:50%;border:3px solid transparent;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;transition:all .2s;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.avatar-pick:hover{transform:scale(1.1)}
-.avatar-pick.selected{border-color:var(--c1);transform:scale(1.15)}
-.screen.active{display:block;animation:fadeIn .4s ease}
-#screen-welcome.active{display:flex}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.app-header{text-align:center;padding:20px 0 16px}
-.app-title{font-family:'Fredoka',sans-serif;font-size:2.4rem;font-weight:700;color:var(--c1);text-shadow:2px 2px 0 rgba(0,0,0,.05)}
-.app-title span{color:var(--c2)}
-.app-subtitle{font-size:1rem;color:#888;margin-top:4px}
-.score-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px auto;padding:10px 20px;border-radius:50px;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.08);width:fit-content;flex-wrap:wrap}
-.score-bar .badge{display:flex;align-items:center;gap:4px;font-weight:700;font-size:1rem}
-.badge.coins{color:#E8A317}.badge.stars{color:#FFD700}.badge.streak{color:var(--c1)}.badge.shekels{color:#2D3047}
-.dc-banner{max-width:500px;margin:16px auto;padding:20px;border-radius:20px;text-align:center;cursor:pointer;background:linear-gradient(135deg,#FF6B6B,#FFA45B);color:#fff;box-shadow:0 8px 25px rgba(255,107,107,.3);transition:all .3s;position:relative;overflow:hidden}
-.dc-banner:active{transform:scale(.97)}
-.dc-banner.completed{background:linear-gradient(135deg,#6BCB77,#4ECDC4);box-shadow:0 8px 25px rgba(107,203,119,.3)}
-.dc-banner .dc-icon{font-size:2.5rem;display:block;margin-bottom:6px}
-.dc-banner .dc-title{font-size:1.3rem;font-weight:700}
-.dc-banner .dc-sub{font-size:.9rem;opacity:.9;margin-top:4px}
-.dc-bar{width:100%;height:8px;border-radius:10px;background:rgba(255,255,255,.3);margin-top:12px;overflow:hidden}
-.dc-fill{height:100%;border-radius:10px;background:#fff;transition:width .5s}
-.dc-reward{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 16px;border-radius:20px;background:rgba(255,255,255,.25);font-weight:700;font-size:.95rem}
-.subject-grid{display:grid;grid-template-columns:1fr;gap:16px;max-width:400px;margin:20px auto}
-.subject-card{background:#fff;border-radius:24px;padding:30px 20px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.08);cursor:pointer;transition:all .3s;border:3px solid transparent}
-.subject-card:active{transform:scale(.95)}
-.subject-card:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(0,0,0,.12)}
-.subject-card .s-icon{font-size:4rem;display:block;margin-bottom:12px}
-.subject-card .s-name{font-family:'Fredoka',sans-serif;font-size:1.5rem;font-weight:700}
-.subject-card .s-desc{font-size:.85rem;color:#999;margin-top:6px}
-.subject-card .s-progress{margin-top:12px;font-size:.8rem;color:#aaa}
-.subject-card.english{border-color:rgba(78,205,196,.4)}.subject-card.english .s-icon{color:var(--c2)}
-.subject-card.math{border-color:rgba(255,107,107,.4)}.subject-card.math .s-icon{color:var(--c1)}
-.subject-card.hebrew{border-color:rgba(199,166,255,.4)}.subject-card.hebrew .s-icon{color:#9B7AE0}
-.footer-link{text-align:center;padding:16px;margin-top:20px}
-.footer-link a{color:#aaa;font-size:.85rem;text-decoration:none;padding:8px 20px;border-radius:20px;background:rgba(255,255,255,.5)}
-.back-btn{position:fixed;top:16px;right:16px;z-index:100;width:44px;height:44px;border-radius:50%;border:none;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.1);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.parent-lock{max-width:350px;margin:60px auto;text-align:center}
-.parent-lock input{width:100%;padding:16px;border-radius:16px;border:3px solid var(--c5);font-size:1.2rem;text-align:center;outline:none;margin-top:16px}
-.parent-lock button{margin-top:16px;padding:14px 40px;border-radius:30px;border:none;background:var(--c5);color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:#fff;padding:14px 24px;border-radius:30px;font-weight:700;z-index:300;transition:transform .3s;font-size:.95rem}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.dc-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#fff;border-radius:24px;padding:40px 30px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:999;transition:transform .4s;max-width:340px}
-.dc-popup.show{transform:translate(-50%,-50%) scale(1)}
-.dc-popup .dc-emoji{font-size:4rem}
-.dc-popup .dc-msg{font-size:1.4rem;font-weight:700;margin:16px 0;color:#2D3047}
-.dc-popup .dc-amount{font-size:2.5rem;font-weight:900;color:#6BCB77;margin:12px 0}
-.dc-popup .dc-total{font-size:1rem;color:#888;margin-top:8px}
-.dc-popup button{margin-top:20px;padding:14px 40px;border-radius:30px;border:none;background:#4ECDC4;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer}
-.parent-dashboard{max-width:600px;margin:0 auto}
-.stat-card{background:#fff;border-radius:20px;padding:20px;margin-bottom:12px;box-shadow:0 4px 15px rgba(0,0,0,.08)}
-.stat-card .label{font-size:.85rem;color:#999}
-.stat-card .value{font-size:1.8rem;font-weight:900;margin-top:4px}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat-grid .stat-card{text-align:center}
-.cat-progress-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:.9rem}
-.cat-progress-item .cat-name{font-weight:700}
-.cat-progress-item .cat-val{color:#888}
+:root{--primary:#FF6B9D;--secondary:#6B5BFF;--success:#4ECDC4;--warn:#FFB84D;--card:#fff;--text:#333;--radius:24px}
+body{font-family:'Fredoka','Heebo',sans-serif;background:linear-gradient(135deg,#FFE5B4 0%,#FFB6C1 30%,#B0E0E6 60%,#E6E6FA 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;color:var(--text);overflow-x:hidden;user-select:none}
+.app{width:100%;max-width:480px;min-height:100vh;position:relative;display:flex;flex-direction:column}
+.cloud{position:fixed;font-size:40px;opacity:.15;animation:float 20s ease-in-out infinite;pointer-events:none;z-index:0}
+.cloud:nth-child(1){top:8%;left:5%}.cloud:nth-child(2){top:30%;right:8%;animation-delay:3s;font-size:30px}.cloud:nth-child(3){bottom:15%;left:10%;animation-delay:6s;font-size:35px}.cloud:nth-child(4){top:50%;right:15%;animation-delay:9s;font-size:25px}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(5deg)}}
+.screen{display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:24px 20px;position:relative;z-index:1;animation:fadeIn .5s ease}
+.screen.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.app-title{font-size:42px;font-weight:700;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,#FF6B9D,#6B5BFF,#4ECDC4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.app-subtitle{font-size:18px;color:#666;text-align:center;margin-bottom:30px;font-weight:500}
+.card{background:var(--card);border-radius:var(--radius);padding:28px 24px;box-shadow:0 8px 32px rgba(0,0,0,.12);width:100%;max-width:400px;text-align:center}
+.name-input{width:100%;padding:16px 20px;font-size:22px;font-family:'Fredoka',sans-serif;border:3px solid #E0E0E0;border-radius:16px;text-align:center;margin-bottom:20px;outline:none;transition:border-color .2s;font-weight:600}
+.name-input:focus{border-color:var(--primary)}
+.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:24px}
+.emoji-btn{font-size:28px;padding:8px;border:3px solid transparent;border-radius:14px;background:#F8F8F8;cursor:pointer;transition:all .2s;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.emoji-btn:hover{transform:scale(1.15);background:#FFF0F5}
+.emoji-btn.selected{border-color:var(--primary);background:#FFE5F0;transform:scale(1.1)}
+.grade-grid{display:flex;flex-direction:column;gap:14px;width:100%}
+.grade-card{background:var(--card);border-radius:20px;padding:20px 24px;box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:16px;border:3px solid transparent}
+.grade-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.grade-card:active{transform:scale(.97)}
+.grade-card.gan{background:linear-gradient(135deg,#FFE5F0,#FFB6C1)}
+.grade-card.aleph{background:linear-gradient(135deg,#E5F0FF,#B0C4FF)}
+.grade-card.gimel{background:linear-gradient(135deg,#E0FFE0,#A0E0A0)}
+.grade-emoji{font-size:44px}.grade-info{text-align:right;flex:1}.grade-name{font-size:22px;font-weight:700;color:#333}.grade-desc{font-size:14px;color:#666;margin-top:2px}
+.subject-grid{display:flex;flex-direction:column;gap:12px;width:100%}
+.subject-btn{background:var(--card);border-radius:18px;padding:18px 24px;box-shadow:0 4px 14px rgba(0,0,0,.08);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:14px;font-family:'Fredoka',sans-serif;border:3px solid transparent}
+.subject-btn:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.subject-btn:active{transform:scale(.97)}
+.subject-btn.hebrew{background:linear-gradient(135deg,#FFF5E0,#FFE5B4)}
+.subject-btn.math{background:linear-gradient(135deg,#E5F5FF,#B0E0E6)}
+.subject-btn.english{background:linear-gradient(135deg,#F0E5FF,#D4B8FF)}
+.subject-btn.disabled{opacity:.4;pointer-events:none}
+.subject-emoji{font-size:36px}.subject-name{font-size:20px;font-weight:600}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#FF8FB1);color:#fff;border:none;padding:16px 40px;border-radius:20px;font-size:22px;font-weight:600;font-family:'Fredoka',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(255,107,157,.4);width:100%;max-width:300px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,107,157,.5)}
+.btn-primary:active{transform:scale(.96)}
+.btn-primary:disabled{opacity:.5;pointer-events:none}
+.btn-back{background:transparent;color:#888;border:none;font-size:18px;cursor:pointer;font-family:'Fredoka',sans-serif;padding:12px;font-weight:500}
+.btn-back:hover{color:#555}
+.game-header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(255,255,255,.9);border-radius:16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.player-info{display:flex;align-items:center;gap:10px}.player-emoji{font-size:32px}.player-name{font-size:18px;font-weight:600}
+.stars-display{display:flex;align-items:center;gap:4px}.star-icon{font-size:22px}.star-count{font-size:20px;font-weight:700;color:#E6A700}
+.question-card{background:var(--card);border-radius:24px;padding:32px 24px;box-shadow:0 8px 28px rgba(0,0,0,.1);width:100%;max-width:420px;text-align:center}
+.question-prompt{font-size:20px;color:#888;margin-bottom:8px;font-weight:500}
+.question-text{font-size:48px;font-weight:700;margin-bottom:24px;color:#333;line-height:1.3}
+.answers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.answer-btn{background:linear-gradient(135deg,#F8F4FF,#EDE5FF);border:3px solid transparent;border-radius:18px;padding:22px 16px;font-size:32px;font-weight:700;font-family:'Fredoka',sans-serif;cursor:pointer;transition:all .2s;color:#333}
+.answer-btn:hover{transform:scale(1.05);border-color:var(--primary)}
+.answer-btn:active{transform:scale(.95)}
+.answer-btn.correct{background:linear-gradient(135deg,#D4EDDA,#A8E6A1);border-color:#28A745;animation:correctPulse .5s ease}
+.answer-btn.wrong{background:linear-gradient(135deg,#F8D7DA,#F5A0A8);border-color:#DC3545;animation:shake .4s ease}
+.answer-btn.disabled{pointer-events:none;opacity:.6}
+@keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.progress-section{width:100%;max-width:420px;margin-bottom:16px}
+.progress-bar-bg{width:100%;height:12px;background:rgba(255,255,255,.6);border-radius:10px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#FF6B9D,#6B5BFF,#4ECDC4);border-radius:10px;transition:width .5s ease;width:0%}
+.progress-text{text-align:center;font-size:14px;color:#666;margin-top:6px;font-weight:500}
+.feedback{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:80px;z-index:100;pointer-events:none;animation:feedbackPop 1s ease forwards}
+@keyframes feedbackPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1) translateY(-40px)}}
+.star-reward{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:rgba(255,255,255,.97);border-radius:30px;padding:40px 50px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:rewardBounce .6s ease}
+@keyframes rewardBounce{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-10deg)}60%{transform:translate(-50%,-50%) scale(1.1) rotate(3deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+.star-big{font-size:80px;animation:starGlow 1.5s ease-in-out infinite}
+@keyframes starGlow{0%,100%{transform:scale(1);filter:drop-shadow(0 0 10px #FFD700)}50%{transform:scale(1.15);filter:drop-shadow(0 0 25px #FFD700)}}
+.reward-text{font-size:28px;font-weight:700;margin-top:16px;color:#E6A700}
+.reward-sub{font-size:16px;color:#888;margin-top:8px}
+.prize-screen{background:linear-gradient(135deg,#FFD700,#FFA500);border-radius:30px;padding:50px 30px;text-align:center;width:100%;max-width:420px;animation:prizeBounce .8s ease}
+@keyframes prizeBounce{0%{opacity:0;transform:scale(.3) rotate(-15deg)}60%{transform:scale(1.1) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.prize-emoji{font-size:100px;animation:bounce 1s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.prize-title{font-size:36px;font-weight:700;color:#fff;margin:20px 0 10px;text-shadow:2px 2px 4px rgba(0,0,0,.2)}
+.prize-msg{font-size:20px;color:#fff;font-weight:500;text-shadow:1px 1px 2px rgba(0,0,0,.2)}
+.prize-stars{font-size:30px;margin:16px 0;letter-spacing:5px}
+.timer-badge{background:rgba(255,255,255,.9);border-radius:12px;padding:6px 14px;font-size:16px;font-weight:600;color:#666;display:flex;align-items:center;gap:6px}
+.confetti{position:fixed;top:-10px;font-size:20px;animation:confettiFall 3s linear forwards;z-index:300;pointer-events:none}
+@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+.ailon-footer{text-align:center;padding:16px;font-size:13px;color:#aaa;font-weight:500}
+@media(max-width:380px){.app-title{font-size:34px}.question-text{font-size:40px}.answer-btn{font-size:26px;padding:18px 12px}.emoji-grid{grid-template-columns:repeat(5,1fr)}}
 </style>
 </head>
 <body>
-<div class="bg-bubbles" id="bubbles"></div>
-
-<!-- Welcome / Name Entry -->
+<div class="cloud">☁️</div><div class="cloud">☁️</div><div class="cloud">☁️</div><div class="cloud">☁️</div>
+<div class="app" id="app">
 <div class="screen active" id="screen-welcome">
-  <div class="welcome-screen">
-    <div class="welcome-logo">☀️</div>
-    <div class="welcome-title">קיץ חכם</div>
-    <div class="welcome-sub">משחקי לימוד לחופש הגדול</div>
-    <div class="welcome-avatar" id="welcome-avatar"></div>
-    <input type="text" class="welcome-input" id="welcome-name" placeholder="איך קוראים לך?" maxlength="20" onkeyup="if(event.key==='Enter')enterApp()">
-    <button class="welcome-btn" id="welcome-btn" onclick="enterApp()">בואו נתחיל! 🚀</button>
-    <div class="welcome-hint">פשוט הזן את השם שלך — בלי סיסמה 😊</div>
-  </div>
+<div class="app-title">לומדים בקיץ! ☀️</div>
+<div class="app-subtitle">משחקים, לומדים וצוברים כוכבים ⭐</div>
+<div class="card">
+<div style="font-size:22px;font-weight:600;margin-bottom:16px">מה השם שלך?</div>
+<input type="text" class="name-input" id="playerName" placeholder="כתוב את השם שלך" maxlength="15">
+<div style="font-size:18px;font-weight:600;margin-bottom:12px">בחר את הדמות שלך!</div>
+<div class="emoji-grid" id="emojiGrid"></div>
+<button class="btn-primary" id="btnStart" disabled>בוא נתחיל! 🚀</button>
 </div>
-
-<!-- Home -->
-<div class="screen" id="screen-home">
-  <div class="app-header">
-    <div class="app-title">קיץ <span>חכם</span> ☀️</div>
-    <div class="app-subtitle" id="home-child-name">משחקי לימוד לחופש הגדול</div>
-  </div>
-  <div class="score-bar">
-    <div class="badge coins">🪙 <span id="home-coins">0</span></div>
-    <div class="badge stars">⭐ <span id="home-stars">0</span></div>
-    <div class="badge shekels">💰 <span id="home-shekels">0</span> ₪</div>
-  </div>
-  <div class="dc-banner" id="dc-banner" onclick="startDailyChallenge()">
-    <span class="dc-icon" id="dc-icon">🎯</span>
-    <div class="dc-title" id="dc-title">אתגר יומי</div>
-    <div class="dc-sub" id="dc-sub">30 דקות לימוד היום</div>
-    <div class="dc-bar"><div class="dc-fill" id="dc-fill" style="width:0%"></div></div>
-    <div class="dc-reward" id="dc-reward">🎁 10 ₪ לקופסה!</div>
-  </div>
-  <div class="subject-grid">
-    <div class="subject-card english" onclick="openSubject('english')">
-      <span class="s-icon">🔤</span>
-      <div class="s-name">אנגלית</div>
-      <div class="s-desc">משחקי מילים, הקלדה, הקראה והתאמה</div>
-      <div class="s-progress" id="prog-english">0 משחקים</div>
-    </div>
-    <div class="subject-card math" onclick="openSubject('math')">
-      <span class="s-icon">🔢</span>
-      <div class="s-name">חשבון</div>
-      <div class="s-desc">תרגול כפל, חיבור, שברים, בעיות מילוליות</div>
-      <div class="s-progress" id="prog-math">0 משחקים</div>
-    </div>
-    <div class="subject-card hebrew" onclick="openSubject('hebrew')">
-      <span class="s-icon">📖</span>
-      <div class="s-name">עברית</div>
-      <div class="s-desc">איות, דקדוק, פתגמים, השלמת מילים</div>
-      <div class="s-progress" id="prog-hebrew">0 משחקים</div>
-    </div>
-  </div>
-  <div class="footer-link">
-    <a href="javascript:void(0)" onclick="showParentLock()">👨‍👩‍👧 אזור הורים</a>
-  </div>
+<div class="ailon-footer">powered by <span style="color:#0d9488;font-weight:700">AILON Task</span></div>
 </div>
-
-<!-- Parent Lock -->
-<div class="screen" id="screen-parent-lock">
-  <button class="back-btn" onclick="goHome()">←</button>
-  <div class="parent-lock">
-    <h2 style="font-size:1.4rem;">🔒 אזור הורים</h2>
-    <p>הזן סיסמה לצפייה בהתקדמות</p>
-    <input type="password" id="parent-pass" placeholder="סיסמה" onkeyup="if(event.key==='Enter')checkParentPass()">
-    <button onclick="checkParentPass()">כניסה</button>
-    <div style="font-size:.85rem;color:#aaa;margin-top:12px">רמז: הסיסמה היא 1234</div>
-  </div>
+<div class="screen" id="screen-grade">
+<div class="app-title">שלום <span id="greetName"></span>! 👋</div>
+<div class="app-subtitle">לאיזה כיתה אתה עולה?</div>
+<div class="grade-grid">
+<div class="grade-card gan" data-grade="gan"><div class="grade-emoji">🌻</div><div class="grade-info"><div class="grade-name">גן חובה</div><div class="grade-desc">עברית ומספרים</div></div></div>
+<div class="grade-card aleph" data-grade="aleph"><div class="grade-emoji">🦁</div><div class="grade-info"><div class="grade-name">כיתה א'</div><div class="grade-desc">עברית, מתמטיקה ואנגלית</div></div></div>
+<div class="grade-card gimel" data-grade="gimel"><div class="grade-emoji">🚀</div><div class="grade-info"><div class="grade-name">כיתה ג'</div><div class="grade-desc">עברית, מתמטיקה ואנגלית</div></div></div>
 </div>
-
-<!-- Parent Dashboard -->
-<div class="screen" id="screen-parent">
-  <button class="back-btn" onclick="goHome()">←</button>
-  <div class="app-header"><div class="app-title" style="font-size:1.6rem;">📊 דוח התקדמות</div></div>
-  <div class="parent-dashboard" id="parent-dashboard"></div>
+<button class="btn-back" onclick="goScreen('screen-welcome')">← חזור</button>
 </div>
-
-<!-- DC Popup -->
-<div class="dc-popup" id="dc-popup">
-  <div class="dc-emoji">🎉🏆🎉</div>
-  <div class="dc-msg">סיימת את האתגר היומי!</div>
-  <div class="dc-amount">+10 ₪</div>
-  <div class="dc-total" id="dc-total-text">סה"כ בקופסה: 0 ₪</div>
-  <button onclick="closeDcPopup()">כל הכבוד! 🌟</button>
+<div class="screen" id="screen-subject">
+<div class="app-title">באיזה נושא נשחק? 🎯</div>
+<div class="game-header" style="max-width:420px">
+<div class="player-info"><span class="player-emoji" id="subjEmoji">⭐</span><span class="player-name" id="subjName">שחקן</span></div>
+<div class="stars-display"><span class="star-icon">⭐</span><span class="star-count" id="subjStars">0</span></div>
 </div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
+<div class="subject-grid">
+<div class="subject-btn hebrew" data-subject="hebrew"><div class="subject-emoji">📚</div><div class="subject-name">עברית</div></div>
+<div class="subject-btn math" data-subject="math"><div class="subject-emoji">🔢</div><div class="subject-name">מתמטיקה</div></div>
+<div class="subject-btn english" data-subject="english" id="btnEnglish"><div class="subject-emoji">🇬🇧</div><div class="subject-name">English</div></div>
+</div>
+<button class="btn-back" onclick="goScreen('screen-grade')">← חזור</button>
+</div>
+<div class="screen" id="screen-question">
+<div class="game-header">
+<div class="player-info"><span class="player-emoji" id="qEmoji">⭐</span><span class="player-name" id="qName">שחקן</span></div>
+<div style="display:flex;gap:12px;align-items:center"><div class="timer-badge">⏱️ <span id="timer">0:00</span></div><div class="stars-display"><span class="star-icon">⭐</span><span class="star-count" id="qStars">0</span></div></div>
+</div>
+<div class="progress-section"><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div><div class="progress-text" id="progressText">שאלה 1 מתוך 10</div></div>
+<div class="question-card"><div class="question-prompt" id="qPrompt">בחר את התשובה הנכונה</div><div class="question-text" id="qText">שאלה</div><div class="answers-grid" id="answersGrid"></div></div>
+<button class="btn-back" onclick="goScreen('screen-subject')">← חזור לנושאים</button>
+</div>
+<div class="screen" id="screen-reward" style="justify-content:center">
+<div class="star-reward"><div class="star-big">⭐</div><div class="reward-text">כוכב חדש! 🎉</div><div class="reward-sub" id="rewardSubText">יפה מאוד! המשך כך!</div><div style="margin-top:20px"><span id="rewardStars" style="font-size:28px;letter-spacing:4px">⭐</span></div><div style="margin-top:16px;font-size:18px;color:#888" id="rewardCount">1 מתוך 10 כוכבים</div><button class="btn-primary" style="margin-top:24px" onclick="continueGame()">ממשיכים לשחק! 🎮</button></div>
+</div>
+<div class="screen" id="screen-prize" style="justify-content:center">
+<div class="prize-screen"><div class="prize-emoji">🏆</div><div class="prize-title">כל הכבוד!</div><div class="prize-msg" id="prizeMsg">אספת 10 כוכבים! 🌟</div><div class="prize-stars">⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐</div><div class="prize-msg" id="prizeName">שחקן מדהים</div><div style="margin-top:24px"><button class="btn-primary" style="background:linear-gradient(135deg,#fff,#FFE5B4);color:#FF8C00" onclick="resetStars()">עוד סבב! 🔄</button></div></div>
+</div>
+</div>
 <script>
-const STORAGE_KEY = "summer_learning_data";
-const PARENT_PASS = "1234";
-const DAILY_GOAL_MIN = 30;
-const DAILY_REWARD = 10;
-const API_URL = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/reportSummerChallenge";
-
-let state = {
-  coins:0, stars:0, streak:0,
-  dailyChallenge:{lastCompletedDate:null,todayTimeMs:0,todayDate:null,totalEarned:0,completedDays:[],active:false},
-  subjectStats:{english:{gamesPlayed:0,score:0},math:{gamesPlayed:0,score:0},hebrew:{gamesPlayed:0,score:0}},
-  childName:"ילד",
-  avatar:"🦁"
-};
-
-function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);if(s){Object.assign(state,JSON.parse(s))}}catch(e){}}
-function saveState(){const s={...state};localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}
-
-function getTodayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-
-function checkDailyReset(){
-  const today=getTodayStr();
-  if(state.dailyChallenge.todayDate!==today){
-    state.dailyChallenge.todayDate=today;
-    state.dailyChallenge.todayTimeMs=0;
-    state.dailyChallenge.active=false;
-    saveState();
-  }
-}
-
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
-
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-
-function goHome(){
-  showScreen('screen-home');
-  updateHomeStats();
-  updateDcUI();
-  updateSubjectProgress();
-  // Show child name in header
-  const nameEl = document.getElementById('home-child-name');
-  if(nameEl && state.childName && state.childName !== 'ילד'){
-    nameEl.innerHTML = (state.avatar || '') + ' ' + state.childName + ' — שלך לשחק וללמוד!';
-  }
-}
-
-function updateHomeStats(){
-  document.getElementById('home-coins').textContent=state.coins;
-  document.getElementById('home-stars').textContent=state.stars;
-  document.getElementById('home-shekels').textContent=state.dailyChallenge.totalEarned||0;
-}
-
-function updateSubjectProgress(){
-  ['english','math','hebrew'].forEach(sub=>{
-    const el=document.getElementById('prog-'+sub);
-    if(el&&state.subjectStats[sub]){
-      el.textContent=state.subjectStats[sub].gamesPlayed+' משחקים | '+state.subjectStats[sub].score+' כוכבים';
-    }
-  });
-}
-
-function openSubject(subject){
-  saveState();
-  // Store which subject in sessionStorage for the subject page to pick up
-  sessionStorage.setItem('summer_subject',subject);
-  const v='?v=20260721';
-  const url = subject==='english'?'english.html'+v:subject==='math'?'math.html'+v:'hebrew.html'+v;
-  window.location.href=url;
-}
-
-// Daily Challenge
-function startDailyChallenge(){
-  checkDailyReset();
-  const today=getTodayStr();
-  if(state.dailyChallenge.lastCompletedDate===today){showToast('סיימת היום את האתגר! כל הכבוד! 🎉');return}
-  if(state.dailyChallenge.active){showToast('האתגר כבר פעיל! המשך לשחק 🎮');return}
-  state.dailyChallenge.active=true;
-  saveState();
-  updateDcUI();
-  showToast('האתגר התחיל! שחק 30 דקות 🎯');
-}
-
-function updateDcUI(){
-  checkDailyReset();
-  const today=getTodayStr();
-  const completed=state.dailyChallenge.lastCompletedDate===today;
-  const dc=document.getElementById('dc-banner');
-  if(!dc)return;
-  if(completed){
-    dc.classList.add('completed');
-    document.getElementById('dc-icon').textContent='✅';
-    document.getElementById('dc-title').textContent='אתגר יומי הושלם!';
-    document.getElementById('dc-sub').textContent='כל הכבוד! מחר נזכה שוב 🌟';
-    document.getElementById('dc-fill').style.width='100%';
-    document.getElementById('dc-reward').textContent='💰 '+state.dailyChallenge.totalEarned+' ₪ בקופסה';
-  }else{
-    dc.classList.remove('completed');
-    document.getElementById('dc-icon').textContent='🎯';
-    document.getElementById('dc-title').textContent='אתגר יומי';
-    const min=Math.floor(state.dailyChallenge.todayTimeMs/60000);
-    if(state.dailyChallenge.active){
-      document.getElementById('dc-sub').textContent=min+' / '+DAILY_GOAL_MIN+' דקות';
-      document.getElementById('dc-fill').style.width=Math.min(100,(min/DAILY_GOAL_MIN)*100)+'%';
-    }else{
-      document.getElementById('dc-sub').textContent=DAILY_GOAL_MIN+' דקות לימוד היום';
-      document.getElementById('dc-fill').style.width='0%';
-    }
-    document.getElementById('dc-reward').textContent='🎁 10 ₪ לקופסה!';
-  }
-}
-
-function completeDailyChallenge(subject){
-  stopDcTimer();
-  const today=getTodayStr();
-  if(state.dailyChallenge.lastCompletedDate===today)return;
-  state.dailyChallenge.lastCompletedDate=today;
-  state.dailyChallenge.totalEarned+=DAILY_REWARD;
-  if(!state.dailyChallenge.completedDays.includes(today))state.dailyChallenge.completedDays.push(today);
-  state.dailyChallenge.active=false;
-  saveState();
-  
-  // Show popup
-  document.getElementById('dc-total-text').textContent='סה"כ בקופסה: '+state.dailyChallenge.totalEarned+' ₪';
-  document.getElementById('dc-popup').classList.add('show');
-  
-  // Send notification to parent via backend
-  notifyParent(subject);
-  
-  updateDcUI();
-}
-
-function closeDcPopup(){document.getElementById('dc-popup').classList.remove('show')}
-
-function notifyParent(subject){
-  try{
-    fetch(API_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        child_name:state.childName||"ילד",
-        subject:subject||"כללי",
-        date:getTodayStr(),
-        time_spent_minutes:Math.round(state.dailyChallenge.todayTimeMs/60000),
-        reward_amount:DAILY_REWARD,
-        total_earned:state.dailyChallenge.totalEarned
-      })
-    }).catch(e=>console.log('Notification pending'));
-  }catch(e){console.log('Notification pending')}
-}
-
-// Timer that runs in background on subject pages too
-let dcTimer=null;
-function startDcTimer(){
-  stopDcTimer();
-  dcTimer=setInterval(()=>{
-    if(state.dailyChallenge.active){
-      state.dailyChallenge.todayTimeMs+=5000;
-      saveState();
-      const min=state.dailyChallenge.todayTimeMs/60000;
-      if(min>=DAILY_GOAL_MIN){
-        const subj=sessionStorage.getItem('summer_subject')||'כללי';
-        completeDailyChallenge(subj);
-      }
-    }
-  },5000);
-}
-function stopDcTimer(){if(dcTimer){clearInterval(dcTimer);dcTimer=null}}
-
-// Parent Dashboard
-function showParentLock(){showScreen('screen-parent-lock');document.getElementById('parent-pass').value=''}
-function checkParentPass(){
-  if(document.getElementById('parent-pass').value===PARENT_PASS){renderParentDashboard();showScreen('screen-parent')}
-  else{showToast('סיסמה שגויה');document.getElementById('parent-pass').value=''}
-}
-
-function renderParentDashboard(){
-  const gamesTotal=Object.values(state.subjectStats).reduce((s,v)=>s+v.gamesPlayed,0);
-  const starsTotal=Object.values(state.subjectStats).reduce((s,v)=>s+v.score,0);
-  let html=`
-    <div class="stat-grid">
-      <div class="stat-card"><div class="label">💰 כסף בקופסה</div><div class="value" style="color:#6BCB77;">${state.dailyChallenge.totalEarned||0} ₪</div></div>
-      <div class="stat-card"><div class="label">📅 ימים הושלמו</div><div class="value" style="color:#FFA45B;">${(state.dailyChallenge.completedDays||[]).length}</div></div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="label">🎮 משחקים</div><div class="value" style="color:#C7A6FF;">${gamesTotal}</div></div>
-      <div class="stat-card"><div class="label">⭐ כוכבים</div><div class="value" style="color:#FFD700;">${starsTotal}</div></div>
-    </div>
-    <div class="stat-card">
-      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">🎯 אתגר יומי</div>
-      <div style="margin-top:8px;">
-        <b>היום:</b> ${(state.dailyChallenge.lastCompletedDate===getTodayStr())?'✅ הושלם!':'טרם הושלם'}
-      </div>
-      <div style="margin-top:4px;font-size:.85rem;color:#888;">ימים: ${(state.dailyChallenge.completedDays||[]).join(', ')||'אין עדיין'}</div>
-    </div>
-    <div class="stat-card">
-      <div class="label" style="font-weight:700;font-size:1rem;margin-bottom:8px;">📊 התקדמות לפי נושא</div>`;
-  [{id:'english',name:'אנגלית',icon:'🔤'},{id:'math',name:'חשבון',icon:'🔢'},{id:'hebrew',name:'עברית',icon:'📖'}].forEach(s=>{
-    const st=state.subjectStats[s.id]||{gamesPlayed:0,score:0};
-    html+=`<div class="cat-progress-item"><span class="cat-name">${s.icon} ${s.name}</span><span class="cat-val">${st.gamesPlayed} משחקים | ${st.score} ⭐</span></div>`;
-  });
-  html+=`</div>
-    <div style="text-align:center;margin-top:20px;">
-      <button onclick="resetProgress()" style="padding:10px 24px;border-radius:20px;border:2px solid #FF6B6B;background:#fff;color:#FF6B6B;font-weight:700;cursor:pointer;">🗑️ אפס התקדמות</button>
-    </div>`;
-  document.getElementById('parent-dashboard').innerHTML=html;
-}
-
-function resetProgress(){
-  if(confirm('אפס את כל ההתקדמות?')){
-    localStorage.removeItem(STORAGE_KEY);
-    state={coins:0,stars:0,streak:0,dailyChallenge:{lastCompletedDate:null,todayTimeMs:0,todayDate:null,totalEarned:0,completedDays:[],active:false},subjectStats:{english:{gamesPlayed:0,score:0},math:{gamesPlayed:0,score:0},hebrew:{gamesPlayed:0,score:0}},childName:"ילד",avatar:"🦁"};
-    document.getElementById('welcome-name').value='';
-    showScreen('screen-welcome');
-    initWelcomeScreen();
-    renderParentDashboard();showToast('ההתקדמות אופסה');
-  }
-}
-
-// Bubbles
-function createBubbles(){
-  const c=document.getElementById('bubbles');
-  const colors=['#FF6B6B','#4ECDC4','#FFE66D','#C7A6FF','#6BCB77','#FFA45B','#95E1D3','#FFB7B2'];
-  for(let i=0;i<15;i++){
-    const s=document.createElement('span');
-    const size=20+Math.random()*60;
-    s.style.width=size+'px';s.style.height=size+'px';
-    s.style.left=Math.random()*100+'%';
-    s.style.background=colors[Math.floor(Math.random()*colors.length)];
-    s.style.opacity='0.15';
-    s.style.animationDuration=(15+Math.random()*20)+'s';
-    s.style.animationDelay=(Math.random()*20)+'s';
-    c.appendChild(s);
-  }
-}
-
-// Welcome screen
-const AVATARS = ['🦁','🐼','🦄','🐸','🐙','🦊','🐯','🐧','🚀','⚽'];
-let selectedAvatar = '🦁';
-
-function initWelcomeScreen(){
-  const av = document.getElementById('welcome-avatar');
-  av.innerHTML = '';
-  AVATARS.forEach(emoji => {
-    const div = document.createElement('div');
-    div.className = 'avatar-pick' + (emoji === selectedAvatar ? ' selected' : '');
-    div.textContent = emoji;
-    div.onclick = () => {
-      selectedAvatar = emoji;
-      document.querySelectorAll('.avatar-pick').forEach(p => p.classList.remove('selected'));
-      div.classList.add('selected');
-    };
-    av.appendChild(div);
-  });
-  // Pre-fill name if already registered
-  if(state.childName && state.childName !== 'ילד'){
-    document.getElementById('welcome-name').value = state.childName;
-  }
-}
-
-function enterApp(){
-  const name = document.getElementById('welcome-name').value.trim();
-  if(!name){
-    const inp = document.getElementById('welcome-name');
-    inp.style.borderColor = '#FF6B6B';
-    inp.placeholder = 'רגע, איך קוראים לך? 🤔';
-    inp.focus();
-    return;
-  }
-  state.childName = name;
-  state.avatar = selectedAvatar;
-  saveState();
-  goHome();
-}
-
-// Init
-loadState();
-checkDailyReset();
-createBubbles();
-initWelcomeScreen();
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').then(function(reg) {
-      console.log('SW registered:', reg.scope);
-    }).catch(function(err) {
-      console.log('SW registration failed:', err);
-    });
-  });
-}
+const state={name:'',emoji:'',grade:'',subject:'',stars:0,totalStars:0,questionNum:0,correctInRow:0,startTime:0,questionsAnswered:0,currentQ:null,timerInterval:null};
+const EMOJIS=['🦸','🦸‍♀️','🦁','🐱','🐶','🦊','🐼','🐸','🐵','🦄','🐝','🦋','🐙','🚀','🌈','⚡','🔥','⚽','🏀','🎮','🤖','👽','👸','🧙','🧚','🦖','🦕','🦈','🐢','🦔'];
+try{const s=JSON.parse(localStorage.getItem('summerLearn')||'{}');if(s.name)state.name=s.name;if(s.emoji)state.emoji=s.emoji;if(s.grade)state.grade=s.grade;if(s.stars)state.stars=s.stars;if(s.totalStars)state.totalStars=s.totalStars}catch(e){}
+function saveState(){localStorage.setItem('summerLearn',JSON.stringify({name:state.name,emoji:state.emoji,grade:state.grade,stars:state.stars,totalStars:state.totalStars}))}
+function goScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='screen-subject')updateSubjectScreen();if(id==='screen-welcome')checkExistingPlayer()}
+const emojiGrid=document.getElementById('emojiGrid');
+EMOJIS.forEach((e,i)=>{const btn=document.createElement('div');btn.className='emoji-btn';btn.textContent=e;if(state.emoji===e)btn.classList.add('selected');btn.onclick=()=>{document.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.emoji=e;checkStartReady()};emojiGrid.appendChild(btn)});
+const nameInput=document.getElementById('playerName');if(state.name)nameInput.value=state.name;nameInput.oninput=()=>{state.name=nameInput.value.trim();checkStartReady()};
+function checkStartReady(){document.getElementById('btnStart').disabled=!(state.name&&state.emoji)}
+function checkExistingPlayer(){if(state.name)nameInput.value=state.name;document.querySelectorAll('.emoji-btn').forEach((b,i)=>{b.classList.toggle('selected',EMOJIS[i]===state.emoji)});checkStartReady()}
+document.getElementById('btnStart').onclick=()=>{if(!state.name||!state.emoji)return;saveState();goScreen('screen-grade')};
+document.querySelectorAll('.grade-card').forEach(card=>{card.onclick=()=>{state.grade=card.dataset.grade;saveState();goScreen('screen-subject')}});
+function updateSubjectScreen(){document.getElementById('subjEmoji').textContent=state.emoji;document.getElementById('subjName').textContent=state.name;document.getElementById('subjStars').textContent=state.stars;document.getElementById('btnEnglish').classList.toggle('disabled',state.grade==='gan')}
+document.querySelectorAll('.subject-btn').forEach(btn=>{btn.onclick=()=>{if(btn.classList.contains('disabled'))return;state.subject=btn.dataset.subject;startQuestions()}});
+const QUESTIONS={gan:{hebrew:[{prompt:'איזו אות זו?',text:'א',answers:['א','ב','ג','ד']},{prompt:'איזו אות זו?',text:'ב',answers:['ב','א','ג','ה']},{prompt:'איזו אות זו?',text:'ג',answers:['ג','ב','ד','ה']},{prompt:'איזו אות זו?',text:'ד',answers:['ד','ג','ה','ו']},{prompt:'איזו אות זו?',text:'ה',answers:['ה','ד','ו','ז']},{prompt:'איזו אות זו?',text:'ו',answers:['ו','ה','ז','ח']},{prompt:'איזו אות זו?',text:'ז',answers:['ז','ו','ח','ט']},{prompt:'איזו אות זו?',text:'ח',answers:['ח','ז','ט','י']},{prompt:'איזו אות זו?',text:'ט',answers:['ט','ח','י','כ']},{prompt:'איזו אות זו?',text:'י',answers:['י','ט','כ','ל']},{prompt:'איזו אות זו?',text:'ל',answers:['ל','כ','מ','נ']},{prompt:'איזו אות זו?',text:'מ',answers:['מ','ל','נ','ס']},{prompt:'איזו אות זו?',text:'נ',answers:['נ','מ','ס','ע']},{prompt:'איזו אות זו?',text:'ס',answers:['ס','נ','ע','פ']},{prompt:'איזו אות זו?',text:'פ',answers:['פ','ס','צ','ק']},{prompt:'איזו אות זו?',text:'צ',answers:['צ','פ','ק','ר']},{prompt:'איזו אות זו?',text:'ק',answers:['ק','צ','ר','ש']},{prompt:'איזו אות זו?',text:'ר',answers:['ר','ק','ש','ת']},{prompt:'איזו אות זו?',text:'ש',answers:['ש','ר','ת','ק']},{prompt:'איזו אות זו?',text:'ת',answers:['ת','ש','ר','ק']},{prompt:'מה האות הראשונה?',text:'🐱 חתול',answers:['ח','ת','ל','ב']},{prompt:'מה האות הראשונה?',text:'🐶 כלב',answers:['כ','ל','ב','ג']},{prompt:'מה האות הראשונה?',text:'🍎 תפוח',answers:['ת','פ','ח','ו']},{prompt:'מה האות הראשונה?',text:'🏠 בית',answers:['ב','י','ת','ה']},{prompt:'מה האות הראשונה?',text:'🌊 ים',answers:['י','ם','מ','ה']}],math:[{prompt:'כמה חיות?',text:'🐱🐱🐱',answers:['3','2','4','5']},{prompt:'כמה כדורים?',text:'⚽⚽⚽⚽⚽',answers:['5','3','4','6']},{prompt:'כמה פרחים?',text:'🌸🌸',answers:['2','3','1','4']},{prompt:'כמה תפוחים?',text:'🍎🍎🍎🍎',answers:['4','3','5','2']},{prompt:'כמה כוכבים?',text:'⭐⭐⭐⭐⭐⭐',answers:['6','4','5','7']},{prompt:'כמה בלונים?',text:'🎈🎈🎈🎈🎈🎈🎈',answers:['7','6','8','5']},{prompt:'מה המספר הבא?',text:'1, 2, 3, ?',answers:['4','5','6','3']},{prompt:'מה המספר הבא?',text:'2, 4, 6, ?',answers:['8','7','9','6']},{prompt:'מה המספר הבא?',text:'5, 10, 15, ?',answers:['20','15','25','10']},{prompt:'מה המספר הבא?',text:'1, 3, 5, ?',answers:['7','6','8','4']},{prompt:'איזה מספר גדול יותר?',text:'3 או 7',answers:['7','3','שווה','אינסוף']},{prompt:'איזה מספר גדול יותר?',text:'8 או 4',answers:['8','4','שווה','0']},{prompt:'איזה מספר קטן יותר?',text:'2 או 9',answers:['2','9','שווה','5']},{prompt:'כמה אצבעות?',text:'✋ (יד אחת)',answers:['5','4','10','3']},{prompt:'כמה אצבעות?',text:'✋✋ (שתי ידיים)',answers:['10','5','15','8']},{prompt:'ספר את הנקודות',text:'• • • • • • • •',answers:['8','7','9','6']},{prompt:'מה המספר?',text:'🔟',answers:['10','5','1','100']},{prompt:'מה המספר?',text:'5️⃣',answers:['5','3','7','9']},{prompt:'כמה עיניים יש לחתול?',text:'🐱',answers:['2','1','3','4']}]},aleph:{hebrew:[{prompt:'איך קוראים?',text:'אַבָּא',answers:['אבא','אמא','סבא','אח']},{prompt:'איך קוראים?',text:'אִמָּא',answers:['אמא','אבא','דוד','סבתא']},{prompt:'איך קוראים?',text:'שָׁמַיִם',answers:['שמיים','ארץ','מים','אש']},{prompt:'איך קוראים?',text:'כֶּלֶב',answers:['כלב','חתול','סוס','דג']},{prompt:'איך קוראים?',text:'בַּיִת',answers:['בית','גן','דלת','חלון']},{prompt:'איך קוראים?',text:'סֵפֶר',answers:['ספר','מחברת','עיפרון','דף']},{prompt:'איך קוראים?',text:'מַיִם',answers:['מים','אש','אויר','אדמה']},{prompt:'איך קוראים?',text:'יָם',answers:['ים','נהר','אגם','באר']},{prompt:'איך קוראים?',text:'אֶרֶץ',answers:['ארץ','שמיים','מדינה','עיר']},{prompt:'איך קוראים?',text:'עֵץ',answers:['עץ','פרח','שיח','דשא']},{prompt:'מה האות הראשונה?',text:'☀️ שמש',answers:['ש','מ','ס','ה']},{prompt:'מה האות הראשונה?',text:'🌙 ירח',answers:['י','ר','ח','ה']},{prompt:'מה האות הראשונה?',text:'🐟 דג',answers:['ד','ג','ב','ה']},{prompt:'מה האות הראשונה?',text:'🍞 לחם',answers:['ל','ח','ם','ב']},{prompt:'מה האות האחרונה?',text:'🐱 חתול',answers:['ל','ח','ת','ו']},{prompt:'מה האות האחרונה?',text:'🦁 אריה',answers:['ה','א','ר','י']},{prompt:'כמה אותיות?',text:'אבא',answers:['2','3','4','1']},{prompt:'כמה אותיות?',text:'שמיים',answers:['4','3','5','6']},{prompt:'כמה אותיות?',text:'בית',answers:['3','2','4','1']},{prompt:'סדר את המילה',text:'ת + ב + א = ?',answers:['אבת','באת','תאב','אתב']}],math:[{prompt:'כמה זה?',text:'3 + 2',answers:['5','4','6','3']},{prompt:'כמה זה?',text:'4 + 3',answers:['7','6','8','5']},{prompt:'כמה זה?',text:'5 + 5',answers:['10','9','11','8']},{prompt:'כמה זה?',text:'7 + 2',answers:['9','8','10','7']},{prompt:'כמה זה?',text:'6 + 4',answers:['10','9','8','11']},{prompt:'כמה זה?',text:'8 - 3',answers:['5','6','4','3']},{prompt:'כמה זה?',text:'10 - 4',answers:['6','7','5','8']},{prompt:'כמה זה?',text:'9 - 5',answers:['4','5','3','6']},{prompt:'כמה זה?',text:'7 - 2',answers:['5','4','6','3']},{prompt:'כמה זה?',text:'10 - 7',answers:['3','2','4','5']},{prompt:'מה המספר הבא?',text:'3, 6, 9, ?',answers:['12','10','11','15']},{prompt:'מה המספר הבא?',text:'2, 4, 6, 8, ?',answers:['10','9','11','12']},{prompt:'מה המספר החסר?',text:'4, ?, 6, 7',answers:['5','3','8','4']},{prompt:'איזה מספר גדול יותר?',text:'12 או 8',answers:['12','8','שווה','0']},{prompt:'איזה מספר קטן יותר?',text:'7 או 15',answers:['7','15','שווה','10']},{prompt:'כמה זה?',text:'5 + 0',answers:['5','0','10','50']},{prompt:'כמה זה?',text:'3 + 3 + 3',answers:['9','6','8','12']},{prompt:'יש לנו 4 בלונים, הוספנו עוד 3',text:'כמה בלונים?',answers:['7','6','8','5']},{prompt:'היו 10 עוגיות, אכלנו 4',text:'כמה נשאר?',answers:['6','7','5','8']}],english:[{prompt:'Which letter?',text:'A',answers:['A','B','C','D']},{prompt:'Which letter?',text:'B',answers:['B','A','C','D']},{prompt:'Which letter?',text:'C',answers:['C','B','D','A']},{prompt:'Which letter?',text:'D',answers:['D','C','E','B']},{prompt:'Which letter?',text:'E',answers:['E','D','F','C']},{prompt:'What animal?',text:'🐱 cat',answers:['cat','dog','bat','hat']},{prompt:'What animal?',text:'🐶 dog',answers:['dog','cat','log','fog']},{prompt:'What animal?',text:'🐟 fish',answers:['fish','dish','cat','dog']},{prompt:'What color?',text:'🔴 red',answers:['red','bed','led','fed']},{prompt:'What color?',text:'🔵 blue',answers:['blue','glue','two','shoe']},{prompt:'What number?',text:'one (1)',answers:['1','2','3','10']},{prompt:'What number?',text:'three (3)',answers:['3','2','4','1']},{prompt:'What number?',text:'five (5)',answers:['5','4','6','3']},{prompt:'What number?',text:'ten (10)',answers:['10','5','1','8']},{prompt:'What is this?',text:'☀️ sun',answers:['sun','bun','run','fun']},{prompt:'What is this?',text:'🌙 moon',answers:['moon','soon','noon','boom']},{prompt:'What is this?',text:'⭐ star',answers:['star','car','bar','far']},{prompt:'What is this?',text:'🏠 house',answers:['house','mouse','horse','cloud']},{prompt:'What is this?',text:'🍎 apple',answers:['apple','apply','maple','purple']},{prompt:'What is this?',text:'🌳 tree',answers:['tree','three','free','bee']}]},gimel:{hebrew:[{prompt:'איך קוראים?',text:'בֵּית סֵפֶר',answers:['בית ספר','בית שפר','בט ספר','בית ספר']},{prompt:'איך קוראים?',text:'יְלָדִים',answers:['ילדים','ילד','לדים','יולדים']},{prompt:'איך קוראים?',text:'גַּן יְלָדִים',answers:['גן ילדים','גני לדים','גן ילד','גן יולדים']},{prompt:'איך קוראים?',text:'מוֹרָה',answers:['מורה','מראה','מורא','נמרה']},{prompt:'איך קוראים?',text:'חֲבֵרִים',answers:['חברים','חבר','חברות','חבירים']},{prompt:'איך קוראים?',text:'סְפָרִיָּה',answers:['ספרייה','ספריה','ספרי','ספריה']},{prompt:'איך קוראים?',text:'מְחַבֶּרֶת',answers:['מחברת','מחבר','מחברות','מחברת']},{prompt:'איך קוראים?',text:'לִמְעָלָה',answers:['למעלה','למטה','מעלה','למעל']},{prompt:'איך קוראים?',text:'לִמְטָּה',answers:['למטה','למעלה','מטה','למט']},{prompt:'איך קוראים?',text:'בֹּקֶר טוֹב',answers:['בוקר טוב','ערב טוב','בקר טוב','בוקר טוב']},{prompt:'מה המילה ההפוכה?',text:'כלב ←→ ?',answers:['בלכ','בכל','לכב','כלב']},{prompt:'מה המילה ההפוכה?',text:'תפוח ←→ ?',answers:['חופת','פוחת','חופת','חותפ']},{prompt:'השלם את המשפט',text:'השמש זורחת ב...',answers:['בוקר','ערב','לילה','חורף']},{prompt:'השלם את המשפט',text:'הירח מאיר ב...',answers:['לילה','בוקר','צהריים','אפריל']},{prompt:'כמה אותיות?',text:'מחברת',answers:['5','4','6','7']},{prompt:'כמה אותיות?',text:'ספרייה',answers:['6','5','7','4']}],math:[{prompt:'כמה זה?',text:'15 + 12',answers:['27','25','28','30']},{prompt:'כמה זה?',text:'24 + 18',answers:['42','44','40','38']},{prompt:'כמה זה?',text:'35 + 25',answers:['60','55','50','65']},{prompt:'כמה זה?',text:'52 - 18',answers:['34','36','44','30']},{prompt:'כמה זה?',text:'63 - 27',answers:['36','34','46','40']},{prompt:'כמה זה?',text:'50 - 23',answers:['27','25','30','33']},{prompt:'כמה זה?',text:'3 × 4',answers:['12','8','16','7']},{prompt:'כמה זה?',text:'5 × 6',answers:['30','25','35','20']},{prompt:'כמה זה?',text:'7 × 3',answers:['21','24','18','28']},{prompt:'כמה זה?',text:'8 × 4',answers:['32','28','36','24']},{prompt:'כמה זה?',text:'9 × 5',answers:['45','40','50','35']},{prompt:'כמה זה?',text:'6 × 7',answers:['42','36','48','49']},{prompt:'כמה זה?',text:'24 ÷ 4',answers:['6','8','4','5']},{prompt:'כמה זה?',text:'36 ÷ 6',answers:['6','5','7','4']},{prompt:'כמה זה?',text:'45 ÷ 9',answers:['5','4','6','3']},{prompt:'מה המספר הבא?',text:'5, 10, 15, 20, ?',answers:['25','30','20','22']},{prompt:'מה המספר הבא?',text:'2, 4, 8, 16, ?',answers:['32','24','20','64']},{prompt:'בעיה',text:'3 קופסאות עם 8 עטים כל אחת',answers:['24','18','11','32']},{prompt:'בעיה',text:'יש 56 שקלים, קניתי 3 דברים ב-12 ש"ח',answers:['20','18','22','16']}],english:[{prompt:'What is this?',text:'🍎 apple',answers:['apple','apply','ample','maple']},{prompt:'What is this?',text:'🚗 car',answers:['car','cat','bar','far']},{prompt:'What is this?',text:'✈️ airplane',answers:['airplane','airport','airline','airdrop']},{prompt:'What is this?',text:'🦁 lion',answers:['lion','liar','lying','lava']},{prompt:'Translate',text:'כלב in English:',answers:['dog','cat','log','fog']},{prompt:'Translate',text:'חתול in English:',answers:['cat','bat','hat','mat']},{prompt:'Translate',text:'בית in English:',answers:['house','mouse','horse','hose']},{prompt:'Translate',text:'ספר in English:',answers:['book','look','cook','hook']},{prompt:'Translate',text:'שמש in English:',answers:['sun','run','fun','bun']},{prompt:'Translate',text:'מים in English:',answers:['water','waiter','winter','wait']},{prompt:'Translate',text:'אוכל in English:',answers:['food','foot','good','wood']},{prompt:'Complete',text:'I ___ a student.',answers:['am','is','are','be']},{prompt:'Complete',text:'She ___ a teacher.',answers:['is','am','are','be']},{prompt:'Complete',text:'They ___ friends.',answers:['are','is','am','be']},{prompt:'Complete',text:'He ___ to school.',answers:['goes','go','going','gone']},{prompt:'What color?',text:'The sky is ___',answers:['blue','red','green','pink']},{prompt:'How many?',text:'seven = ?',answers:['7','6','8','9']},{prompt:'How many?',text:'twelve = ?',answers:['12','2','10','20']}]}};let questionPool=[],questionIndex=0;
+function startQuestions(){state.questionNum=0;state.correctInRow=0;state.questionsAnswered=0;state.startTime=Date.now();questionPool=[...QUESTIONS[state.grade][state.subject]];for(let i=questionPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questionPool[i],questionPool[j]]=[questionPool[j],questionPool[i]]}questionIndex=0;if(state.timerInterval)clearInterval(state.timerInterval);state.timerInterval=setInterval(updateTimer,1000);goScreen('screen-question');document.getElementById('qEmoji').textContent=state.emoji;document.getElementById('qName').textContent=state.name;document.getElementById('qStars').textContent=state.stars;showQuestion()}
+function updateTimer(){const e=Math.floor((Date.now()-state.startTime)/1000);document.getElementById('timer').textContent=`${Math.floor(e/60)}:${(e%60).toString().padStart(2,'0')}`}
+function showQuestion(){if(questionIndex>=questionPool.length){questionPool=[...QUESTIONS[state.grade][state.subject]];for(let i=questionPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[questionPool[i],questionPool[j]]=[questionPool[j],questionPool[i]]}questionIndex=0}state.currentQ=questionPool[questionIndex];state.questionNum++;document.getElementById('qPrompt').textContent=state.currentQ.prompt;document.getElementById('qText').textContent=state.currentQ.text;document.getElementById('progressText').textContent=`שאלה ${state.questionsAnswered+1} מתוך 10`;document.getElementById('progressBar').style.width=`${(state.questionsAnswered/10)*100}%`;let a=[...state.currentQ.answers];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}const g=document.getElementById('answersGrid');g.innerHTML='';a.forEach(ans=>{const b=document.createElement('button');b.className='answer-btn';b.textContent=ans;b.onclick=()=>handleAnswer(b,ans,state.currentQ.answers[0]);g.appendChild(b)})}
+function handleAnswer(btn,answer,correct){document.querySelectorAll('.answer-btn').forEach(b=>b.classList.add('disabled'));if(answer===correct){btn.classList.add('correct');state.correctInRow++;showFeedback('🎉');state.questionsAnswered++;setTimeout(()=>{if(state.questionsAnswered>=10){state.questionsAnswered=0;awardStar()}else{questionIndex++;showQuestion()}},800)}else{btn.classList.add('wrong');state.correctInRow=0;showFeedback('💪');document.querySelectorAll('.answer-btn').forEach(b=>{if(b.textContent===correct)b.classList.add('correct')});setTimeout(()=>{questionIndex++;showQuestion()},1500)}}
+function showFeedback(e){const f=document.createElement('div');f.className='feedback';f.textContent=e;document.body.appendChild(f);setTimeout(()=>f.remove(),1000)}
+function awardStar(){state.stars++;state.totalStars++;saveState();document.getElementById('qStars').textContent=state.stars;if(state.stars>=10){if(state.timerInterval)clearInterval(state.timerInterval);showPrize()}else showStarReward()}
+function showStarReward(){goScreen('screen-reward');let h='';for(let i=0;i<state.stars;i++)h+='⭐';for(let i=state.stars;i<10;i++)h+='☆';document.getElementById('rewardStars').textContent=h;document.getElementById('rewardCount').textContent=`${state.stars} מתוך 10 כוכבים`;const m=['יפה מאוד! המשך כך!','איזה כוכב! 🌟','מתקדם מעולה! 🚀','אלוף! 💪','כל הכבוד! 🎉','אתה מדהים! ⭐','עוד כוכב! 🎯','עוד אחד עד הפרס! 🏆','עוד אחד וסיימנו! 🔥'];document.getElementById('rewardSubText').textContent=m[Math.min(state.stars-1,m.length-1)];for(let i=0;i<15;i++)setTimeout(()=>createConfetti(),i*50)}
+function createConfetti(){const e=['⭐','🎉','🎊','✨','💫','🌟'];const c=document.createElement('div');c.className='confetti';c.textContent=e[Math.floor(Math.random()*e.length)];c.style.left=Math.random()*100+'%';c.style.animationDuration=(2+Math.random()*2)+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4000)}
+function continueGame(){goScreen('screen-question');questionIndex++;showQuestion()}
+function showPrize(){goScreen('screen-prize');document.getElementById('prizeName').textContent=`${state.emoji} ${state.name} - אלוף הקיץ! 🌟`;for(let i=0;i<40;i++)setTimeout(()=>createConfetti(),i*50)}
+function resetStars(){state.stars=0;saveState();goScreen('screen-subject');updateSubjectScreen()}
+checkExistingPlayer();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 </script>
 </body>
 </html>
