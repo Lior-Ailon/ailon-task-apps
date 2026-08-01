@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="2026-08-01-v1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>חינוך ילדים — Mentor-IT</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d9488">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #f0fdf4, #ecfdf5, #ffffff); color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 600px; margin: 0 auto; padding: 24px 20px 80px; }
+    .header { text-align: center; margin-bottom: 28px; }
+    .header .icon { font-size: 48px; margin-bottom: 8px; }
+    .header h1 { font-size: 26px; font-weight: 800; color: #16a34a; margin-bottom: 6px; }
+    .header p { font-size: 14px; color: #64748b; }
+    .card { background: #fff; border: 1px solid #bbf7d0; border-radius: 18px; padding: 24px; box-shadow: 0 6px 28px rgba(22, 163, 74, 0.1); margin-bottom: 18px; }
+    .card h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .card p, .card li { font-size: 14.5px; line-height: 1.7; color: #475569; }
+    .card ul { list-style: none; padding: 0; }
+    .card li { margin-bottom: 12px; padding-right: 28px; position: relative; }
+    .card li::before { content: "🌱"; position: absolute; right: 0; top: 2px; font-size: 12px; }
+    .principle { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; padding: 14px; border-radius: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .principle-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: #16a34a; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; }
+    .principle-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: #1e293b; }
+    .principle-content p { font-size: 13.5px; line-height: 1.6; color: #475569; }
+    .scenario { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .scenario-q { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: #16a34a; }
+    .scenario-situation { font-size: 14px; color: #475569; margin-bottom: 12px; line-height: 1.6; }
+    .scenario-toggle { font-size: 13px; color: #0d9488; cursor: pointer; font-weight: 600; }
+    .scenario-answer { display: none; margin-top: 10px; padding: 12px; background: #fff; border-radius: 10px; border: 1px dashed #16a34a; font-size: 13.5px; line-height: 1.7; color: #1e293b; }
+    .scenario-answer.show { display: block; }
+    .nav-back { position: fixed; bottom: 16px; left: 16px; z-index: 9999; }
+    .nav-back a { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; padding: 10px 16px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 13px; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="icon">👨‍👧</div>
+    <h1>חינוך ילדים</h1>
+    <p>הורות מיטבית — כלים לחיבור, גבולות ויצירת ילדים מאושרים</p>
+  </div>
+
+  <div class="card">
+    <h2>🌟 6 עקרונות יסוד להורות מיטבית</h2>
+    <div class="principle">
+      <div class="principle-num">1</div>
+      <div class="principle-content">
+        <h3>חיבור לפני תיקון</h3>
+        <p>לפני שמתקנים התנהגות — מחברים. ילד שמרגיש נראה ונשמע ישתף פעולה. "אני רואה שקשה לך" לפני "אסור ל..."</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">2</div>
+      <div class="principle-content">
+        <h3>דוגמה אישית</h3>
+        <p>הילד לומד ממה שהוא רואה, לא ממה שאתה אומר. אתה המודל הראשון. E+R=O: הוא רואה איך אתה מגיב לאירועים.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">3</div>
+      <div class="principle-content">
+        <h3>גבולות בחום</h3>
+        <p>גבולות ברורים עם אמפתיה. "אני מבין שאתה רוצה, אבל עכשיו זה לא אפשרי." גבול בלי חום = קרירות. חום בלי גבול = כאוס.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">4</div>
+      <div class="principle-content">
+        <h3>אחריות > אשמה</h3>
+        <p>במקום "מה עשית?!" שאל "מה אתה יכול לעשות אחרת בפעם הבאה?" הפוך טעות לשיעור. הרב זקס: אחריות מול אשמה — מה עושים עכשיו.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">5</div>
+      <div class="principle-content">
+        <h3>מאמץ > תוצאה</h3>
+        <p>סינק: "אני גאה בך כי השקעת" עדיף על "אני גאה בך כי ניצחת." תרבות של מאמץ מייצרת חוסן.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">6</div>
+      <div class="principle-content">
+        <h3>השפעה לא כוח</h3>
+        <p>כוח = סכום אפס. השפעה = אש שמתרבה. המנהיג אוכל אחרון — ההורה נותן קודם. השפעה ארוכת טווח נבנית באמון.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎮 תרחישים — איך מגיבים?</h2>
+    <p style="margin-bottom:14px;">לחץ על כל תרחיש כדי לראות את ההמלצה:</p>
+    
+    <div class="scenario">
+      <div class="scenario-q">💭 תרחיש 1: הילד לא רוצה ללכת לישון</div>
+      <div class="scenario-situation">הילד מתפרץ, בוכה, מסרב לישון. אתה עייף ומתוח.</div>
+      <div class="scenario-toggle" onclick="this.nextElementSibling.classList.toggle('show')">הצג המלצה ↓</div>
+      <div class="scenario-answer">
+        1. <strong>עצור ונשום</strong> — התגובה שלך מלמדת אותו ויסות רגשי.<br>
+        2. <strong>אמפתיה:</strong> "אני רואה שאתה לא רוצה לישון. זה קשה."<br>
+        3. <strong>גבול בחום:</strong> "אבל עכשיו זה זמן שינה. מה תרצה לעשות — שאקריא לך סיפור או שתקשיב למוזיקה?"<br>
+        4. <strong>בחירה מוגבלת</strong> — נותן תחושת שליטה בתוך גבול.
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-q">💭 תרחיש 2: הילד חוזר עם ציון נמוך</div>
+      <div class="scenario-situation">הילד עצוב ומפוחד להראות לך תעודה עם ציון נמוך.</div>
+      <div class="scenario-toggle" onclick="this.nextElementSibling.classList.toggle('show')">הצג המלצה ↓</div>
+      <div class="scenario-answer">
+        1. <strong>חיבור קודם:</strong> "אני רואה שאתה עצוב. זה בסדר להרגיש כך."<br>
+        2. <strong>אחריות > אשמה:</strong> "מה למדת מהמבחן הזה?" במקום "למה לא למדת?"<br>
+        3. <strong>מאמץ > תוצאה:</strong> "אני גאה בך כי ניסית. בוא נראה יחד איך להתכונן בפעם הבאה."<br>
+        4. <strong>תהליך:</strong> תכנן יחד תוכנית למידה — פותר בעיה במקום להעניש.
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-q">💭 תרחיש 3: הילד רב עם אח/ות</div>
+      <div class="scenario-situation">שני הילדים רבים וצועקים. כל אחד מאשים את השני.</div>
+      <div class="scenario-toggle" onclick="this.nextElementSibling.classList.toggle('show')">הצג המלצה ↓</div>
+      <div class="scenario-answer">
+        1. <strong>הפרדה:</strong> "עצרו. כל אחד יושב בחדר שלו ל-5 דקות."<br>
+        2. <strong>לא שופט:</strong> לא "מי התחיל?" אלא "מה קרה? ספר לי בלי להאשים."<br>
+        3. <strong>אחריות משותפת:</strong> "מה כל אחד מכם יכול היה לעשות אחרת?"<br>
+        4. <strong>פתרון:</strong> "איך תוכלו לפתור את זה ביחד?" — לא אתה פותר, אתה מנחה.<br>
+        5. <strong>ברית:</strong> "אנחנו משפחה. פותרים בעיות ביחד."
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-q">💭 תרחיש 4: ילד מפחד / חרדתי</div>
+      <div class="scenario-situation">הילד מפחד ממשהו (חושך, מעלית, אזעקות). מסרב להתקדם.</div>
+      <div class="scenario-toggle" onclick="this.nextElementSibling.classList.toggle('show')">הצג המלצה ↓</div>
+      <div class="scenario-answer">
+        1. <strong>לא מבטל את הפחד:</strong> "אני רואה שמפחיד אותך. הפחד שלך אמיתי."<br>
+        2. <strong>לא כופה:</strong> לא "אל תהיה תינוק." לא "זה כלום." — זה מבטל את הרגש.<br>
+        3. <strong>חשיפה הדרגתית:</strong> צעד קטן אחד. "ננסה רק לעמוד ליד המעלית היום."<br>
+        4. <strong>שבח על האומץ:</strong> "אתה אמיץ שאתה מנסה למרות הפחד." — אומץ = פעולה למרות פחד.<br>
+        5. <strong>מודל:</strong> הילד רואה איך אתה מתמודד עם הפחדים שלך. E+R=O.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📐 E+R=O בהורות</h2>
+    <ul>
+      <li><strong>Event</strong> — הילד שפך מים על הרצפה. (נתון, לא בשליטתך)</li>
+      <li><strong>Response</strong> — צעקה = הילד לומד שטעויות = סכנה. / אמפתיה = הילד לומד שטעויות = הזדמנות לתקן.</li>
+      <li><strong>Outcome</strong> — ילד עם חרדה מטעויות / ילד עם ביטחון ואחריות.</li>
+      <li style="margin-top:8px;"><strong>התגובה שלך היא השיעור החשוב ביותר.</strong></li>
+    </ul>
+  </div>
+</div>
+
+<div class="nav-back"><a href="dashboard.html">← Mentor-IT</a></div>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>

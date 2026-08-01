@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="2026-08-01-v1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>חשיבה חיובית — Mentor-IT</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d9488">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #fdf2f8, #fff7ed, #ffffff); color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 600px; margin: 0 auto; padding: 24px 20px 80px; }
+    .header { text-align: center; margin-bottom: 28px; }
+    .header .icon { font-size: 48px; margin-bottom: 8px; }
+    .header h1 { font-size: 26px; font-weight: 800; color: #db2777; margin-bottom: 6px; }
+    .header p { font-size: 14px; color: #64748b; }
+    .card { background: #ffffff; border: 1px solid #fce7f3; border-radius: 18px; padding: 24px; box-shadow: 0 6px 28px rgba(219, 39, 119, 0.1); margin-bottom: 18px; }
+    .card h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: #1e293b; }
+    .card p, .card li { font-size: 14.5px; line-height: 1.7; color: #475569; }
+    .card ul { list-style: none; padding: 0; }
+    .card li { margin-bottom: 10px; padding-right: 24px; position: relative; }
+    .card li::before { content: "✨"; position: absolute; right: 0; top: 2px; }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #334155; }
+    .input-group textarea { width: 100%; min-height: 80px; padding: 12px 14px; border-radius: 10px; border: 1px solid #fce7f3; background: #fff; font-size: 14px; font-family: inherit; resize: vertical; }
+    .input-group textarea:focus { outline: none; border-color: #db2777; }
+    .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #db2777, #f472b6); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .btn:active { transform: scale(0.97); }
+    .result { display: none; margin-top: 16px; padding: 16px; border-radius: 12px; background: #fdf2f8; border: 1px solid #fce7f3; }
+    .result h3 { font-size: 16px; color: #db2777; margin-bottom: 10px; }
+    .result p { font-size: 14px; line-height: 1.7; color: #475569; }
+    .reframe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .reframe-card { background: #fff; border: 1px solid #fce7f3; border-radius: 12px; padding: 14px; text-align: center; }
+    .reframe-card .neg { font-size: 13px; color: #ef4444; margin-bottom: 8px; }
+    .reframe-card .arrow { font-size: 18px; margin-bottom: 6px; }
+    .reframe-card .pos { font-size: 13px; color: #22c55e; font-weight: 600; }
+    .progress { height: 8px; border-radius: 4px; background: #fce7f3; margin: 10px 0; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #db2777, #f472b6); transition: width .5s; }
+    .nav-back { position: fixed; bottom: 16px; left: 16px; z-index: 9999; }
+    .nav-back a { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; padding: 10px 16px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 13px; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="icon">💭</div>
+    <h1>חשיבה חיובית</h1>
+    <p>שנה את הדפוסים, שנה את החיים</p>
+  </div>
+
+  <div class="card">
+    <h2>🧠 מהי חשיבה חיובית?</h2>
+    <p>חשיבה חיובית אינה התעלמות מהמציאות — היא בחירה מודעת להתמקד בפתרונות, הזדמנויות ומשאבים במקום בבעיות ומגבלות. מחקרים מראים שחשיבה אופטימית מפחיתה מתח, משפרת בריאות ומגבירה יצירתיות.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔄 כלי התמרת מחשבה</h2>
+    <p style="margin-bottom:14px;">כתוב מחשבה שלילית שחוזרת לך, והכלי יעזור לך להפוך אותה למחשבה מועילה:</p>
+    <div class="input-group">
+      <label>המחשבה השלילית שלך</label>
+      <textarea id="negThought" placeholder="לדוגמה: אני לעולם לא אצליח בזה..."></textarea>
+    </div>
+    <button class="btn" onclick="reframe()">הפוך למחשבה חיובית</button>
+    <div class="result" id="result">
+      <h3>✨ המחשבה החדשה</h3>
+      <p id="reframed"></p>
+      <div class="reframe-grid" id="alternatives"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 מד החשיבה החיובית שלך</h2>
+    <p>בכל יום, דרג כמה מחשבות חיוביות היו לך (1-10):</p>
+    <div class="input-group" style="margin-top:12px;">
+      <input type="range" min="1" max="10" value="5" id="positivityScore" style="width:100%;" oninput="document.getElementById('scoreDisplay').textContent=this.value">
+      <div style="text-align:center;font-size:24px;font-weight:800;color:#db2777;margin-top:8px;" id="scoreDisplay">5</div>
+    </div>
+    <button class="btn" onclick="saveScore()">שמור תוצאה יומית</button>
+    <div id="scoreHistory" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>💡 7 עקרונות לחשיבה חיובית</h2>
+    <ul>
+      <li><strong>התמקד במה שבשליטתך</strong> — E+R=O: האירוע נתון, התגובה שלך, התוצאה שלך</li>
+      <li><strong>הפרד עובדות מפרשנות</strong> — שאל: "זו עובדה או הסיפור שאני מספר לעצמי?"</li>
+      <li><strong>חפש את הטוב בכל מצב</strong> — גם בקושי יש הזדמנות לצמיחה</li>
+      <li><strong>דבר אל עצמך כמו לחבר</strong> — רחמים עצמיים לפני ביקורת</li>
+      <li><strong>תרגל כנות</strong> — לא חשיבה חיובית מזויפת, אלא מציאותית ומקווה</li>
+      <li><strong>הקף עצמך בחיוביות</strong> — אנשים, תוכן וסביבה משפיעים על המוח</li>
+      <li><strong>פעל, אל תחשוב יתר על המידה</strong> — פעולה קטנה מנצחת דאגה גדולה</li>
+    </ul>
+  </div>
+</div>
+
+<div class="nav-back"><a href="dashboard.html">← Mentor-IT</a></div>
+
+<script>
+const REFRAMES = [
+  { trigger: ['לעולם', 'אף פעם', 'אני לא מצליח'], reframe: 'עדיין לא הצלחתי — כל מומחה היה פעם מתחיל' },
+  { trigger: ['אני גרוע', 'אני כישלון', 'לא מסוגל'], reframe: 'אני לומד ומשתפר — כל ניסיון מקרב אותי למטרה' },
+  { trigger: ['לא אפשרי', 'לא ילך', 'חסר'], reframe: 'מה אני כן יכול לעשות עכשיו עם מה שיש לי?' },
+  { trigger: ['כולם', 'אף אחד', 'תמיד'], reframe: 'האם זה באמת נכון לכל מקרה? או שזו הכללה מוגזמת?' },
+  { trigger: ['אמור', 'צריך', 'חייב'], reframe: 'אני בוחר — מה חשוב לי באמת עכשיו?' },
+];
+
+function reframe() {
+  const thought = document.getElementById('negThought').value.trim();
+  if (!thought) { alert('כתוב מחשבה תחילה'); return; }
+  const result = document.getElementById('result');
+  const reframed = document.getElementById('reframed');
+  const alts = document.getElementById('alternatives');
+  
+  let match = null;
+  for (const r of REFRAMES) {
+    if (r.trigger.some(t => thought.includes(t))) { match = r; break; }
+  }
+  
+  if (match) {
+    reframed.textContent = match.reframe;
+  } else {
+    reframed.textContent = 'שאל את עצמך: מה אוכל ללמוד מזה? מה ההזדמנות כאן? מה אני כן שולט בו?';
+  }
+  
+  alts.innerHTML = `
+    <div class="reframe-card"><div class="neg">"${thought.substring(0,40)}..."</div><div class="arrow">⬇</div><div class="pos">מה העובדות?</div></div>
+    <div class="reframe-card"><div class="neg">"${thought.substring(0,40)}..."</div><div class="arrow">⬇</div><div class="pos">מה בשליטתי?</div></div>
+    <div class="reframe-card"><div class="neg">"${thought.substring(0,40)}..."</div><div class="arrow">⬇</div><div class="pos">מה ההזדמנות?</div></div>
+    <div class="reframe-card"><div class="neg">"${thought.substring(0,40)}..."</div><div class="arrow">⬇</div><div class="pos">מה הייתי אומר לחבר?</div></div>
+  `;
+  
+  result.style.display = 'block';
+}
+
+function saveScore() {
+  const score = document.getElementById('positivityScore').value;
+  const date = new Date().toLocaleDateString('he-IL');
+  const history = JSON.parse(localStorage.getItem('positive_thinking_scores') || '[]');
+  history.push({ date, score: parseInt(score) });
+  localStorage.setItem('positive_thinking_scores', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem('positive_thinking_scores') || '[]');
+  const el = document.getElementById('scoreHistory');
+  if (history.length === 0) { el.innerHTML = ''; return; }
+  const avg = (history.reduce((a,b) => a + b.score, 0) / history.length).toFixed(1);
+  el.innerHTML = `
+    <div style="font-size:13px;color:#64748b;margin-bottom:8px;">ממוצע: <strong style="color:#db2777;">${avg}/10</strong> | סה"כ: ${history.length} ימים</div>
+    <div class="progress"><div class="progress-bar" style="width:${avg*10}%;"></div></div>
+    <div style="font-size:12px;color:#94a3b8;margin-top:8px;">${history.slice(-5).map(h => `${h.date}: ${h.score}`).join(' • ')}</div>
+  `;
+}
+
+renderHistory();
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>

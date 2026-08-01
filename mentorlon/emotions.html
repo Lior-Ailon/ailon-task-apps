@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="2026-08-01-v1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ניהול רגשות — Mentor-IT</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d9488">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #fff7ed, #fef3c7, #ffffff); color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 600px; margin: 0 auto; padding: 24px 20px 80px; }
+    .header { text-align: center; margin-bottom: 28px; }
+    .header .icon { font-size: 48px; margin-bottom: 8px; }
+    .header h1 { font-size: 26px; font-weight: 800; color: #ea580c; margin-bottom: 6px; }
+    .header p { font-size: 14px; color: #64748b; }
+    .card { background: #ffffff; border: 1px solid #fed7aa; border-radius: 18px; padding: 24px; box-shadow: 0 6px 28px rgba(234, 88, 12, 0.1); margin-bottom: 18px; }
+    .card h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: #1e293b; }
+    .card p, .card li { font-size: 14.5px; line-height: 1.7; color: #475569; }
+    .card ul { list-style: none; padding: 0; }
+    .card li { margin-bottom: 10px; padding-right: 28px; position: relative; }
+    .card li::before { content: "🟠"; position: absolute; right: 0; top: 2px; font-size: 10px; }
+    .emotion-btn { display: inline-block; padding: 14px 20px; margin: 6px; border-radius: 12px; border: 2px solid; cursor: pointer; font-size: 15px; font-weight: 600; font-family: inherit; transition: all .2s; background: #fff; }
+    .emotion-btn:hover { transform: scale(1.05); }
+    .emotion-btn.active { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .e-anger { border-color: #ef4444; color: #ef4444; }
+    .e-anger.active { background: #ef4444; color: #fff; }
+    .e-sadness { border-color: #3b82f6; color: #3b82f6; }
+    .e-sadness.active { background: #3b82f6; color: #fff; }
+    .e-fear { border-color: #8b5cf6; color: #8b5cf6; }
+    .e-fear.active { background: #8b5cf6; color: #fff; }
+    .e-joy { border-color: #22c55e; color: #22c55e; }
+    .e-joy.active { background: #22c55e; color: #fff; }
+    .e-shame { border-color: #64748b; color: #64748b; }
+    .e-shame.active { background: #64748b; color: #fff; }
+    .e-guilt { border-color: #a855f7; color: #a855f7; }
+    .e-guilt.active { background: #a855f7; color: #fff; }
+    .e-envy { border-color: #14b8a6; color: #14b8a6; }
+    .e-envy.active { background: #14b8a6; color: #fff; }
+    .e-love { border-color: #ec4899; color: #ec4899; }
+    .e-love.active { background: #ec4899; color: #fff; }
+    .intensity { margin: 16px 0; }
+    .intensity label { font-size: 14px; font-weight: 600; display: block; margin-bottom: 8px; }
+    .intensity input[type=range] { width: 100%; }
+    .intensity-val { text-align: center; font-size: 22px; font-weight: 800; }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .input-group textarea { width: 100%; min-height: 70px; padding: 12px 14px; border-radius: 10px; border: 1px solid #fed7aa; font-size: 14px; font-family: inherit; resize: vertical; }
+    .input-group textarea:focus { outline: none; border-color: #ea580c; }
+    .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #ea580c, #f97316); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .btn:active { transform: scale(0.97); }
+    .guidance { display: none; margin-top: 16px; padding: 16px; border-radius: 12px; background: #fff7ed; border: 1px solid #fed7aa; }
+    .guidance h3 { font-size: 16px; color: #ea580c; margin-bottom: 10px; }
+    .guidance p { font-size: 14px; line-height: 1.7; color: #475569; margin-bottom: 8px; }
+    .step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #ea580c; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+    .step-content { font-size: 14px; line-height: 1.6; color: #475569; }
+    .step-content strong { color: #1e293b; }
+    .nav-back { position: fixed; bottom: 16px; left: 16px; z-index: 9999; }
+    .nav-back a { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; padding: 10px 16px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 13px; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="icon">😊</div>
+    <h1>ניהול רגשות</h1>
+    <p>זיהוי, הבנה וויסות רגשי — מבוסס CBT ומיינדפולנס</p>
+  </div>
+
+  <div class="card">
+    <h2>1️⃣ מה אתה מרגיש עכשיו?</h2>
+    <div style="text-align:center;">
+      <button class="emotion-btn e-anger" onclick="selectEmotion(this,'כעס')">😠 כעס</button>
+      <button class="emotion-btn e-sadness" onclick="selectEmotion(this,'עצב')">😢 עצב</button>
+      <button class="emotion-btn e-fear" onclick="selectEmotion(this,'פחד')">😨 פחד</button>
+      <button class="emotion-btn e-joy" onclick="selectEmotion(this,'שמחה')">😊 שמחה</button>
+      <button class="emotion-btn e-shame" onclick="selectEmotion(this,'בושה')">😳 בושה</button>
+      <button class="emotion-btn e-guilt" onclick="selectEmotion(this,'אשמה')">😔 אשמה</button>
+      <button class="emotion-btn e-envy" onclick="selectEmotion(this,'קנאה')">😒 קנאה</button>
+      <button class="emotion-btn e-love" onclick="selectEmotion(this,'אהבה')">❤️ אהבה</button>
+    </div>
+    <div class="intensity">
+      <label>עוצמה (1-10):</label>
+      <input type="range" min="1" max="10" value="5" id="intensity" oninput="document.getElementById('intensityVal').textContent=this.value">
+      <div class="intensity-val" id="intensityVal">5</div>
+    </div>
+    <div class="input-group">
+      <label>מה קרה שעורר את הרגש?</label>
+      <textarea id="trigger" placeholder="תאר את האירוע או המחשבה..."></textarea>
+    </div>
+    <button class="btn" onclick="getGuidance()">קבל הכוונה</button>
+  </div>
+
+  <div class="guidance" id="guidance">
+    <h3 id="gTitle"></h3>
+    <div id="gContent"></div>
+  </div>
+
+  <div class="card">
+    <h2>🧘 5 שלבים לוויסות רגשי</h2>
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>עצור ונשום</strong> — 3 נשימות עמוקות. מוריד את האמיגדלה מ"איום" ל"בטוח".</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>זהה את הרגש</strong> — תן שם למה שאתה מרגיש. שם = שליטה.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>בדוק את המחשבה</strong> — האם זו עובדה או פרשנות? (CBT)</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><strong>בחר תגובה</strong> — E+R=O: האירוע נתון, התגובה שלך, התוצאה שלך.</div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content"><strong>פעל או הנח</strong> — האם יש פעולה מועילה? עשה. אם לא? הנח לזה.</div></div>
+  </div>
+
+  <div class="card">
+    <h2>📖 עקרונות מנטליים</h2>
+    <ul>
+      <li><strong>רגש אין מציאות</strong> — רגש הוא איתות, לא עובדה. הוא מספר לך משהו עליך, לא על העולם.</li>
+      <li><strong>מחשבה יוצרת רגש</strong> — לא האירוע אלא הפרשנות שלך יוצרת את הרגש.</li>
+      <li><strong>התנגדות מגבירה</strong> — "אל תחשוב על פיל ורוד" — התנגדות לרגש מגבירה אותו. קבלה מקלה.</li>
+      <li><strong>90 שניות</strong> — גל רגשי נמשך 90 שניות. מה שנשאר זה הסיפור שאתה מספר.</li>
+      <li><strong>גוף ונפש</strong> — שינה, תזונה ותנועה משפיעים ישירות על יכולת ויסות רגשי.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="nav-back"><a href="dashboard.html">← Mentor-IT</a></div>
+
+<script>
+let selectedEmotion = null;
+
+function selectEmotion(btn, emotion) {
+  document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedEmotion = emotion;
+}
+
+const GUIDES = {
+  'כעס': { title: '😤 הכוונה לכעס', content: `
+    <p><strong>הרגש הזה אומר:</strong> חצית גבול או ערך חשוב לך הופר. זה איתות לפעולה.</p>
+    <p><strong>שאל את עצמך:</strong> מה הגבול שנחצה? האם התגובה שלי מידתית? מה הפעולה האפקטיבית?</p>
+    <p><strong>תרגול:</strong> לפני שמגיבים — 3 נשימות. "בין האירוע לתגובה יש מרחב — במרחב הזה נמצא החופש שלי" (פרנקל).</p>
+    <p><strong>פעולה:</strong> הבע את הצורך שלך בלי לתקוף: "אני צריך ש..." במקום "אתה תמיד..."</p>
+  `},
+  'עצב': { title: '😢 הכוונה לעצב', content: `
+    <p><strong>הרגש הזה אומר:</strong> משהו חשוב לך אבד או חסר. העצב הוא תהליך ריפוי.</p>
+    <p><strong>שאל את עצמך:</strong> מה אבדתי? מה אני זקוק לו עכשיו? מי יכול לתמוך בי?</p>
+    <p><strong>תרגול:</strong> אפשר לעצב להיות. אל תדחיס. דיבור, כתיבה או יצירה משחררים. דמעות מכילות קורטיזול.</p>
+    <p><strong>פעולה:</strong> פנה לאדם קרוב. חיבוק. הליכה בטבע. אם נמשך מעל שבועיים — פנה לעזרה.</p>
+  `},
+  'פחד': { title: '😨 הכוונה לפחד', content: `
+    <p><strong>הרגש הזה אומר:</strong> המוח שלך זיהה סכנה — אמיתית או מדומיינת.</p>
+    <p><strong>שאל את עצמך:</strong> האם הסכנה אמיתית כרגע? מה הסיכוי המציאותי? מה הכי גרוע שיכול לקרות?</p>
+    <p><strong>תרגול:</strong> נשימת 4-7-8 (נשוף 8 שניות, עצור 7, פנים 4). מוריד את מערכת העצבים.</p>
+    <p><strong>פעולה:</strong> פעל למרות הפחד — אומץ אינו היעדר פחד, אלא פעולה למרותו. צעד קטן אחד.</p>
+  `},
+  'שמחה': { title: '😊 הכוונה לשמחה', content: `
+    <p><strong>הרגש הזה אומר:</strong> משהו טוב קרה. המוח מתגמל אותך בדופמין וסרוטונין.</p>
+    <p><strong>שאל את עצמך:</strong> מה יצר את השמחה? איך אוכל ליצור עוד מזה?</p>
+    <p><strong>תרגול:</strong> תרגל הכרת תודה — כתוב 3 דברים טובים שקרו היום. זה מגדיל הארכת השמחה.</p>
+    <p><strong>פעולה:</strong> שתף את השמחה עם מישהו. שיתוף מכפיל שמחה.</p>
+  `},
+  'בושה': { title: '😳 הכוונה לבושה', content: `
+    <p><strong>הרגש הזה אומר:</strong> אתה מרגיש חשוף או לא מספיק טוב. הפנימיות שלך נחשפה.</p>
+    <p><strong>שאל את עצמך:</strong> האם מישהו באמת שופט אותי, או שאני שופט את עצמי? מה הסטנדרט שלי?</p>
+    <p><strong>תרגול:</strong> רחמים עצמיים. "אני אנושי, אני לומד, זה בסדר לטעות." דבר אל עצמך כמו לחבר.</p>
+    <p><strong>פעולה:</strong> חשיפה הדרגתית. הסתרה מגבירה בושה. שיתוף בסביבה בטוחה מקטין אותה.</p>
+  `},
+  'אשמה': { title: '😔 הכוונה לאשמה', content: `
+    <p><strong>הרגש הזה אומר:</strong> עשית משהו שלא תואם את הערכים שלך. זה איתות לתיקון.</p>
+    <p><strong>שאל את עצמך:</strong> מה אני יכול לתקן? ממי אני צריך לבקש סליחה? כולל מעצמי?</p>
+    <p><strong>תרגול:</strong> הבחן בין אשמה לחרטה. חרטה = "עשיתי טעות". אשמה = "אני טעות". בחר חרטה.</p>
+    <p><strong>פעולה:</strong> בקש סליחה אם רלוונטי. תקן את מה שאפשר. וותר על מה שלא.</p>
+  `},
+  'קנאה': { title: '😒 הכוונה לקנאה', content: `
+    <p><strong>הרגש הזה אומר:</strong> מישהו יש לו משהו שאתה רוצה. זה מצפן לרצון שלך.</p>
+    <p><strong>שאל את עצמך:</strong> מה אני באמת רוצה? האם זה הדבר עצמו או התחושה שמאחוריו?</p>
+    <p><strong>תרגול:</strong> הפוך קנאה להשראה. במקום "למה לו ולא לי?" שאל "מה אני יכול ללמוד ממנו?"</p>
+    <p><strong>פעולה:</strong> הגדר מטרה. פעל. הפוך את האנרגיה של הקנאה לדלק לפעולה.</p>
+  `},
+  'אהבה': { title: '❤️ הכוונה לאהבה', content: `
+    <p><strong>הרגש הזה אומר:</strong> חיבור עמוק. המוח משחרר אוקסיטוצין — הורמון הברית.</p>
+    <p><strong>שאל את עצמך:</strong> איך אני יכול לטפח את החיבור הזה? מה האדם הזה צריך ממני?</p>
+    <p><strong>תרגול:</strong> ברית לעומת חוזה. ברית = מחויבות לנשמה של האחר. חוזה = תנאים. בחר ברית.</p>
+    <p><strong>פעולה:</strong> הבע את האהבה. לא במילים אלא במעשים. הקשבה עמוקה = פעולת אהבה.</p>
+  `},
+};
+
+function getGuidance() {
+  if (!selectedEmotion) { alert('בחר רגש תחילה'); return; }
+  const g = GUIDES[selectedEmotion] || { title: selectedEmotion, content: '<p>תן לרגש הזה להיות. שאל: מה הוא מנסה להגיד לי?</p>' };
+  document.getElementById('gTitle').textContent = g.title;
+  document.getElementById('gContent').innerHTML = g.content;
+  document.getElementById('guidance').style.display = 'block';
+  document.getElementById('guidance').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>

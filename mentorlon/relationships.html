@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="2026-08-01-v1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ניהול זוגיות — Mentor-IT</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d9488">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #fdf2f8, #fff1f2, #ffffff); color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 600px; margin: 0 auto; padding: 24px 20px 80px; }
+    .header { text-align: center; margin-bottom: 28px; }
+    .header .icon { font-size: 48px; margin-bottom: 8px; }
+    .header h1 { font-size: 26px; font-weight: 800; color: #e11d48; margin-bottom: 6px; }
+    .header p { font-size: 14px; color: #64748b; }
+    .card { background: #fff; border: 1px solid #fecdd3; border-radius: 18px; padding: 24px; box-shadow: 0 6px 28px rgba(225, 29, 72, 0.1); margin-bottom: 18px; }
+    .card h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .card p, .card li { font-size: 14.5px; line-height: 1.7; color: #475569; }
+    .card ul { list-style: none; padding: 0; }
+    .card li { margin-bottom: 12px; padding-right: 28px; position: relative; }
+    .card li::before { content: "💖"; position: absolute; right: 0; top: 2px; font-size: 12px; }
+    .assessment { margin-bottom: 14px; }
+    .assessment-q { font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #1e293b; }
+    .scale { display: flex; gap: 4px; justify-content: center; }
+    .scale-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fecdd3; background: #fff; cursor: pointer; font-weight: 700; font-size: 14px; color: #64748b; }
+    .scale-btn.active { background: #e11d48; color: #fff; border-color: #e11d48; }
+    .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #e11d48, #f43f5e); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .btn:active { transform: scale(0.97); }
+    .result { display: none; margin-top: 16px; padding: 16px; border-radius: 12px; background: #fdf2f8; border: 1px solid #fecdd3; }
+    .result h3 { font-size: 18px; margin-bottom: 10px; }
+    .score-circle { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; margin: 0 auto 14px; border: 4px solid; }
+    .nav-back { position: fixed; bottom: 16px; left: 16px; z-index: 9999; }
+    .nav-back a { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; padding: 10px 16px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 13px; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35); }
+    .pillar { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+    .pillar-icon { font-size: 28px; flex-shrink: 0; }
+    .pillar-content h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .pillar-content p { font-size: 13.5px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="icon">❤️</div>
+    <h1>ניהול זוגיות</h1>
+    <p>כלים מעשיים לתקשורת, חיבור רגשי ובניית קשר עמוק</p>
+  </div>
+
+  <div class="card">
+    <h2>🏗️ 4 עמודי תווך של זוגיות חזקה</h2>
+    <div class="pillar">
+      <div class="pillar-icon">🤝</div>
+      <div class="pillar-content">
+        <h3>1. ברית — לא חוזה</h3>
+        <p>ברית = מחויבות לנשמה של האחר. חוזה = תנאים ("אם תעשי X, אעשה Y"). ברית אומרת: אני כאן גם כשקשה. השפעה, לא כוח. (הרב זקס)</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🗣️</div>
+      <div class="pillar-content">
+        <h3>2. תקשורת מקרבת (NVC)</h3>
+        <p>4 שלבים: תצפית → רגש → צורך → בקשה. "ראיתי ש..." (לא "אתה תמיד...") → "הרגשתי..." → "אני צריך..." → "האם אתה יכול..."</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🎯</div>
+      <div class="pillar-content">
+        <h3>3. מטרה משותפת</h3>
+        <p>זוגיות חזקה צריכה "למה" משותף. סינק: "מה הסיבה שלנו להיות יחד? מה אנחנו בונים?" Start with Why גם בזוגיות.</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">⏳</div>
+      <div class="pillar-content">
+        <h3>4. זמן איכות = השקעה</h3>
+        <p>Love Gap: מה שאתה נותן ולא מקבל בחזרה עכשיו — זו השקעה. התשואה מגיעה. אבל צריך גם למלא את המאגר שלך.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 מד הזוגיות — כמה אתה מרגיש עכשיו?</h2>
+    <div class="assessment">
+      <div class="assessment-q">אני מרגיש/ה שהקשר שלנו בטוח ויציב</div>
+      <div class="scale" data-q="1">
+        <button class="scale-btn" onclick="rate(this,1)">1</button>
+        <button class="scale-btn" onclick="rate(this,2)">2</button>
+        <button class="scale-btn" onclick="rate(this,3)">3</button>
+        <button class="scale-btn" onclick="rate(this,4)">4</button>
+        <button class="scale-btn" onclick="rate(this,5)">5</button>
+      </div>
+    </div>
+    <div class="assessment">
+      <div class="assessment-q">אנחנו מתקשרים בפתיחות ובכנות</div>
+      <div class="scale" data-q="2">
+        <button class="scale-btn" onclick="rate(this,1)">1</button>
+        <button class="scale-btn" onclick="rate(this,2)">2</button>
+        <button class="scale-btn" onclick="rate(this,3)">3</button>
+        <button class="scale-btn" onclick="rate(this,4)">4</button>
+        <button class="scale-btn" onclick="rate(this,5)">5</button>
+      </div>
+    </div>
+    <div class="assessment">
+      <div class="assessment-q">אני מרגיש/ה שמכבדים אותי ומעריכים אותי</div>
+      <div class="scale" data-q="3">
+        <button class="scale-btn" onclick="rate(this,1)">1</button>
+        <button class="scale-btn" onclick="rate(this,2)">2</button>
+        <button class="scale-btn" onclick="rate(this,3)">3</button>
+        <button class="scale-btn" onclick="rate(this,4)">4</button>
+        <button class="scale-btn" onclick="rate(this,5)">5</button>
+      </div>
+    </div>
+    <div class="assessment">
+      <div class="assessment-q">אנחנו פותרים קונפליקטים ביחד</div>
+      <div class="scale" data-q="4">
+        <button class="scale-btn" onclick="rate(this,1)">1</button>
+        <button class="scale-btn" onclick="rate(this,2)">2</button>
+        <button class="scale-btn" onclick="rate(this,3)">3</button>
+        <button class="scale-btn" onclick="rate(this,4)">4</button>
+        <button class="scale-btn" onclick="rate(this,5)">5</button>
+      </div>
+    </div>
+    <button class="btn" onclick="showResult()">סכום תוצאה</button>
+    <div class="result" id="result">
+      <div class="score-circle" id="scoreCircle"></div>
+      <h3 id="scoreTitle" style="text-align:center;margin-bottom:10px;"></h3>
+      <p id="scoreText" style="text-align:center;"></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💡 כללי זהב לזוגיות</h2>
+    <ul>
+      <li><strong>אהבה → אמון → כבוד</strong> — הסדר חשוב. כבוד בלי אמון ריק. אמון בלי אהבה קר.</li>
+      <li><strong>הקשבה עמוקה</strong> — לא לתקן, לא לייעץ, לא לפתור. פשוט להיות שם ולשמוע.</li>
+      <li><strong>"מזוזה בין האנשים"</strong> — מה שעומד בינך לבן/בת הזוג שלך מגן על הבית ועל הקשר.</li>
+      <li><strong>E+R=O גם בזוגיות</strong> — האירוע נתון (מה שהוא/היא עשה/ה). התגובה שלך = התוצאה שלך.</li>
+      <li><strong>מילוי המאגר</strong> — אי אפשר לתת מריק. מלא את עצמך כדי שתוכל לתת.</li>
+      <li><strong>אחריות > אשמה</strong> — במקום "את/ה אשמ/ה" שאל "מה אני יכול/ה לעשות אחרת?"</li>
+    </ul>
+  </div>
+</div>
+
+<div class="nav-back"><a href="dashboard.html">← Mentor-IT</a></div>
+
+<script>
+const scores = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+function rate(btn, q) {
+  const val = parseInt(btn.textContent);
+  scores[q] = val;
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function showResult() {
+  const total = scores[1] + scores[2] + scores[3] + scores[4];
+  const max = 20;
+  const pct = Math.round((total / max) * 100);
+  const circle = document.getElementById('scoreCircle');
+  const title = document.getElementById('scoreTitle');
+  const text = document.getElementById('scoreText');
+  
+  circle.textContent = pct + '%';
+  
+  if (pct >= 80) {
+    circle.style.borderColor = '#22c55e';
+    circle.style.color = '#22c55e';
+    title.textContent = '🌸 זוגיות משגשגת';
+    text.textContent = 'יש בסיס חזק. תחזק/י את מה שעובד והמשיכ/י להשקיע.';
+  } else if (pct >= 60) {
+    circle.style.borderColor = '#f59e0b';
+    circle.style.color = '#f59e0b';
+    title.textContent = '🔄 זוגיות בצמיחה';
+    text.textContent = 'יש חיבור טוב עם נקודות לשיפור. זה הזמן לשיחה פתוחה על מה שחסר.';
+  } else if (pct >= 40) {
+    circle.style.borderColor = '#f97316';
+    circle.style.color = '#f97316';
+    title.textContent = '⚠️ זוגיות דורשת תשומת לב';
+    text.textContent = 'יש קשיים שלא כדאי להתעלם מהם. כדאי לפנות לייעוץ זוגי או להתחיל שיחה כנה.';
+  } else {
+    circle.style.borderColor = '#ef4444';
+    circle.style.color = '#ef4444';
+    title.textContent = '🆘 זוגיות במשבר';
+    text.textContent = 'המצב דורש התערבות. אל תמתינ/י. פנ/י לעזרה מקצועית.';
+  }
+  
+  document.getElementById('result').style.display = 'block';
+}
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>
