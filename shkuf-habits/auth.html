@@ -195,5 +195,6 @@ if (localStorage.getItem('shkuf_token')) {
   window.location.href = 'index.html';
 }
 </script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
 </body>
 </html>

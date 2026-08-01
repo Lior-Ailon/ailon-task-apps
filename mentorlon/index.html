@@ -7,6 +7,8 @@
   <meta name="version" content="2026-08-01-v1">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0d9488">
 <title>Mentor-IT — פלטפורמת המנטורינג של AILON Task</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -183,5 +185,6 @@ function checkPwdStrength(v) {
 }
 
 </script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
 </body>
 </html>

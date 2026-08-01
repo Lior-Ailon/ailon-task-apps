@@ -1,0 +1,26 @@
+{
+  "name": "Mentor-IT — AILON Task",
+  "short_name": "Mentor-IT",
+  "description": "פלטפורמת המנטורינג של AILON Task",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0fdfa",
+  "theme_color": "#0d9488",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

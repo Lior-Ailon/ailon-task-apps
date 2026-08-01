@@ -7,6 +7,8 @@
   <meta name="version" content="2026-08-01-v1">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0d9488">
 <title>Mentor-IT — דשבורד מאמן</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -264,6 +266,11 @@ const TOOLS = [
   { key:'decision_making', icon:'⚖️', name:'Exit Strategy AI', desc:'כלי AI לניתוח החלטות — הבן את העבר, תכנן את העתיד', url:'../exit-strategy/', live:true, color:'#6366f1,#8b5cf6', bg:'exit' },
   { key:'lecture_effortless', icon:'🎤', name:'מניהול בעיות לפתרון נטול מאמץ', desc:'מערך הרצאה — 11 עקרונות מתוך "ליהנות" (מקאון) ו"כנות רדיקלית" (סקוט). 4 חלקים, 18 שקפים — הבנת הבעיה, כלים לפתרון, מערכות ואמון, כוח הבחירה', url:'./lecture-effortless.html', live:true, color:'#0d9488,#14b8a6', bg:'lecture' },
   { key:'solution_engine', icon:'⚙️', name:'מנוע הפתרונות', desc:'כלי אינטראקטיבי — הזן בעיה, עבור 7 שלבים וקבל תוכנית פעולה ברורה. מבוסס על 11 עקרונות הפתרון הנטול מאמץ', url:'./solution-engine.html', live:true, color:'#f59e0b,#0d9488', bg:'engine' },
+  { key:'english_quest', icon:'📖', name:'English Quest', desc:'משחק לימוד אנגלית — שלבים, ניקוד ומעקב התקדמות', url:'../english-quest/', live:true, color:'#3b82f6,#06b6d4', bg:'english' },
+  { key:'summer_learning', icon:'☀️', name:'למידת קיץ', desc:'אפליקציית למידה לילדים — גן, כיתה א' ו-ב' עם משחקיות ותגמול', url:'../summer-learning/', live:true, color:'#f59e0b,#fbbf24', bg:'summer' },
+  { key:'couple_survey', icon:'💑', name:'סקר זוגי', desc:'14 שאלות להערכת מערכת יחסים — שמירת נתונים בענן', url:'../couple-survey/', live:true, color:'#ec4899,#f43f5e', bg:'couple' },
+  { key:'sefri_board', icon:'📚', name:'לוח ספרים', desc:'לוח ניהול ספרים אינטראקטיבי', url:'../sefri-board/', live:true, color:'#8b5cf6,#6366f1', bg:'sefri' },
+  { key:'exam_tiuuch', icon:'📝', name:'מבחן רישוי תיווך', desc:'25 שאלות אקראיות, ציון אוטומטי והסברים משפטיים', url:'../exam-tiuuch/', live:true, color:'#0d9488,#14b8a6', bg:'exam' },
   { key:'positive_thinking', icon:'💭', name:'חשיבה חיובית', desc:'שנה את הדפוסים, שנה את החיים — כלים מבוססי מדע לחשיבה חיובית', url:'#', live:false, color:'#f472b6,#fb923c', bg:'think' },
   { key:'relationships', icon:'❤️', name:'ניהול זוגיות', desc:'כלים מעשיים לתקשורת, חיבור רגשי ובניית קשר עמוק', url:'#', live:false, color:'#f43f5e,#ec4899', bg:'love' },
   { key:'emotions', icon:'😊', name:'ניהול רגשות', desc:'זיהוי, הבנה וויסות רגשי — מבוסס CBT ומיינדפולנס', url:'#', live:false, color:'#f97316,#facc15', bg:'emotion' },
@@ -416,5 +423,6 @@ function updateGreeting(displayName, trainees) {
 }
 
 </script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
 </body>
 </html>
