@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-02-v1">
+  <meta name="version" content="2026-08-02-v2">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puratos — בקשות הדרכה</title>
@@ -32,7 +32,6 @@
     .form-group textarea { resize: vertical; min-height: 60px; }
     .form-row { display: flex; gap: 10px; }
     .form-row .form-group { flex: 1; }
-
     .required { color: #ef4444; }
 
     .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
@@ -50,10 +49,12 @@
     .req-meta { font-size: 12px; color: #64748b; margin-top: 2px; }
     .req-dept { display: inline-block; padding: 2px 8px; background: #f1f5f9; border-radius: 6px; font-size: 11px; font-weight: 600; color: #475569; margin-left: 6px; }
     .req-cost { font-size: 14px; font-weight: 700; color: #0d9488; }
-    .req-row { display: flex; gap: 8px; margin-top: 8px; font-size: 12px; color: #64748b; }
-    .req-row span { flex: 1; }
+    .req-row { display: flex; gap: 8px; margin-top: 6px; font-size: 12px; color: #64748b; flex-wrap: wrap; }
+    .req-row span { flex: 1; min-width: 0; }
 
-    .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .req-employees { margin-top: 6px; padding: 8px 10px; background: #f0fdfa; border-right: 3px solid #14b8a6; border-radius: 8px; font-size: 12px; color: #0f766e; line-height: 1.5; }
+
+    .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer; }
     .status-pending { background: #fef3c7; color: #92400e; }
     .status-approved { background: #d1fae5; color: #065f46; }
     .status-rejected { background: #fee2e2; color: #991b1b; }
@@ -69,18 +70,25 @@
     .admin-btn:hover { border-color: #0d9488; }
     .admin-btn.export { background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; border: none; }
 
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .filter-bar select { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-family: inherit; background: #fff; }
+
     .stats { display: flex; gap: 8px; margin-bottom: 14px; }
     .stat-box { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; }
     .stat-num { font-size: 20px; font-weight: 800; color: #0d9488; }
     .stat-label { font-size: 11px; color: #64748b; margin-top: 2px; }
 
     .empty { text-align: center; padding: 30px; color: #94a3b8; font-size: 14px; }
-
     .loading { text-align: center; padding: 20px; color: #94a3b8; }
 
     .select-wrapper { position: relative; }
     .select-wrapper select { appearance: none; -webkit-appearance: none; padding-left: 32px; }
     .select-wrapper::after { content: "▼"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 10px; color: #94a3b8; pointer-events: none; }
+
+    /* Login */
+    .login-card { max-width: 360px; margin: 40px auto; }
+    .login-card h2 { text-align: center; font-size: 18px; font-weight: 800; color: #0d9488; margin-bottom: 16px; }
+    .login-error { color: #ef4444; font-size: 13px; text-align: center; margin-top: 8px; display: none; }
 
     .footer { text-align: center; padding: 16px 0; }
     .footer .brand { font-size: 13px; font-weight: 700; color: #0d9488; }
@@ -136,6 +144,11 @@
       </div>
 
       <div class="form-group">
+        <label>עבור אילו עובדים מיועד הקורס? <span class="required">*</span></label>
+        <textarea id="targetEmployees" placeholder="שמות העובדים או קבוצת היעד, לדוגמה: כל עובדי המעבדה / יוסי לוי, רונית כהן, דנה אברהם" required></textarea>
+      </div>
+
+      <div class="form-group">
         <label>ספק הקורס / גוף מארגן</label>
         <input type="text" id="courseProvider" placeholder="לדוגמה: John Bryce, האוניברסיטה הפתוחה, פנימי">
       </div>
@@ -184,19 +197,51 @@
 
   <!-- ADMIN TAB -->
   <div id="adminView" style="display:none;">
-    <div class="stats" id="statsBar">
-      <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">סה"כ בקשות</div></div>
-      <div class="stat-box"><div class="stat-num" id="statPending">0</div><div class="stat-label">ממתינות</div></div>
-      <div class="stat-box"><div class="stat-num" id="statCost">₪0</div><div class="stat-label">עלות כוללת</div></div>
+    <!-- Login -->
+    <div id="loginPanel" class="card login-card">
+      <h2>🔐 כניסת מנהל</h2>
+      <div class="form-group">
+        <label>סיסמת מנהל</label>
+        <input type="password" id="adminPass" placeholder="הכנס סיסמה" onkeypress="if(event.key==='Enter') adminLogin()">
+      </div>
+      <button class="submit-btn" onclick="adminLogin()">כניסה</button>
+      <div class="login-error" id="loginError">סיסמה שגויה</div>
     </div>
 
-    <div class="admin-bar">
-      <button class="admin-btn export" onclick="exportExcel()">📥 ייצוא לאקסל</button>
-      <button class="admin-btn" onclick="loadRequests()">🔄 רענן</button>
-    </div>
+    <!-- Dashboard -->
+    <div id="dashboardPanel" style="display:none;">
+      <div class="stats" id="statsBar">
+        <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">סה"כ בקשות</div></div>
+        <div class="stat-box"><div class="stat-num" id="statPending">0</div><div class="stat-label">ממתינות</div></div>
+        <div class="stat-box"><div class="stat-num" id="statCost">₪0</div><div class="stat-label">עלות כוללת</div></div>
+      </div>
 
-    <div id="requestsList">
-      <div class="loading">טוען נתונים...</div>
+      <div class="filter-bar">
+        <div class="select-wrapper" style="flex:1;">
+          <select id="filterDept" onchange="renderRequests()">
+            <option value="">כל המחלקות</option>
+          </select>
+        </div>
+        <div class="select-wrapper" style="flex:1;">
+          <select id="filterStatus" onchange="renderRequests()">
+            <option value="">כל הסטטוסים</option>
+            <option value="ממתין לאישור">ממתין לאישור</option>
+            <option value="מאושר">מאושר</option>
+            <option value="נדחה">נדחה</option>
+            <option value="הושלם">הושלם</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-bar">
+        <button class="admin-btn export" onclick="exportExcel()">📥 ייצוא לאקסל</button>
+        <button class="admin-btn" onclick="loadRequests()">🔄 רענן</button>
+        <button class="admin-btn" onclick="adminLogout()">🚪 יציאה</button>
+      </div>
+
+      <div id="requestsList">
+        <div class="loading">טוען נתונים...</div>
+      </div>
     </div>
   </div>
 
@@ -208,23 +253,26 @@
 
 <script>
 const API = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/puratos_training";
+const ADMIN_PASS = "Puratos@2026!";
 let allRequests = [];
+let isAdmin = false;
 
 function switchTab(tab) {
   document.getElementById("tabForm").classList.toggle("active", tab === "form");
   document.getElementById("tabAdmin").classList.toggle("active", tab === "admin");
   document.getElementById("formView").style.display = tab === "form" ? "block" : "none";
   document.getElementById("adminView").style.display = tab === "admin" ? "block" : "none";
-  if (tab === "admin") loadRequests();
+  if (tab === "admin" && isAdmin) loadRequests();
 }
 
 async function submitRequest() {
   const dept = document.getElementById("department").value;
   const name = document.getElementById("requesterName").value;
   const course = document.getElementById("courseName").value;
+  const targetEmp = document.getElementById("targetEmployees").value;
 
-  if (!dept || !name || !course) {
-    alert("נא למלא את כל השדות החובה (מחלקה, שם, שם קורס)");
+  if (!dept || !name || !course || !targetEmp) {
+    alert("נא למלא את כל השדות החובה (מחלקה, שם, שם קורס, עובדי יעד)");
     return;
   }
 
@@ -236,6 +284,7 @@ async function submitRequest() {
     department: dept,
     requester_name: name,
     course_name: course,
+    target_employees: targetEmp,
     course_provider: document.getElementById("courseProvider").value,
     cost_estimate: parseFloat(document.getElementById("costEstimate").value) || 0,
     num_participants: parseInt(document.getElementById("numParticipants").value) || 1,
@@ -258,7 +307,7 @@ async function submitRequest() {
           <div class="success-msg">
             <div class="icon">✅</div>
             <h2>הבקשה נשלחה בהצלחה!</h2>
-            <p>בקשת ההדרכה נקלטה במערכת.<br>ליאור יקבל הודעה ויטפל בבקשה.</p>
+            <p>בקשת ההדרכה נקלטה במערכת.<br>המנהל יקבל הודעה ויטפל בבקשה.</p>
             <button class="submit-btn" onclick="location.reload()">הגשת בקשה נוספת</button>
           </div>
         </div>
@@ -273,6 +322,27 @@ async function submitRequest() {
   }
 }
 
+function adminLogin() {
+  const pass = document.getElementById("adminPass").value;
+  if (pass === ADMIN_PASS) {
+    isAdmin = true;
+    document.getElementById("loginPanel").style.display = "none";
+    document.getElementById("dashboardPanel").style.display = "block";
+    loadRequests();
+  } else {
+    document.getElementById("loginError").style.display = "block";
+    document.getElementById("adminPass").value = "";
+  }
+}
+
+function adminLogout() {
+  isAdmin = false;
+  document.getElementById("loginPanel").style.display = "block";
+  document.getElementById("dashboardPanel").style.display = "none";
+  document.getElementById("adminPass").value = "";
+  document.getElementById("loginError").style.display = "none";
+}
+
 async function loadRequests() {
   document.getElementById("requestsList").innerHTML = '<div class="loading">טוען נתונים...</div>';
   try {
@@ -284,39 +354,64 @@ async function loadRequests() {
     const result = await res.json();
     if (result.success) {
       allRequests = result.records || [];
+      populateFilters();
       renderRequests();
       renderStats();
     } else {
       throw new Error(result.error);
     }
   } catch (err) {
-    document.getElementById("requestsList").innerHTML = `<div class="empty">שגיאה בטעינת נתונים: ${err.message}</div>`;
+    document.getElementById("requestsList").innerHTML = `<div class="empty">שגיאה: ${err.message}</div>`;
   }
 }
 
+function populateFilters() {
+  const depts = [...new Set(allRequests.map(r => r.department).filter(Boolean))];
+  const filter = document.getElementById("filterDept");
+  filter.innerHTML = '<option value="">כל המחלקות</option>';
+  depts.forEach(d => {
+    filter.innerHTML += `<option value="${d}">${d}</option>`;
+  });
+}
+
+function getFiltered() {
+  const deptFilter = document.getElementById("filterDept").value;
+  const statusFilter = document.getElementById("filterStatus").value;
+  return allRequests.filter(r => {
+    if (deptFilter && r.department !== deptFilter) return false;
+    if (statusFilter && r.status !== statusFilter) return false;
+    return true;
+  });
+}
+
 function renderStats() {
-  const total = allRequests.length;
-  const pending = allRequests.filter(r => r.status === "ממתין לאישור").length;
-  const totalCost = allRequests.reduce((sum, r) => sum + (r.cost_estimate || 0), 0);
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const pending = filtered.filter(r => r.status === "ממתין לאישור").length;
+  const totalCost = filtered.reduce((sum, r) => sum + (r.cost_estimate || 0), 0);
   document.getElementById("statTotal").textContent = total;
   document.getElementById("statPending").textContent = pending;
   document.getElementById("statCost").textContent = "₪" + totalCost.toLocaleString();
 }
 
 function renderRequests() {
+  renderStats();
+  const filtered = getFiltered();
   const container = document.getElementById("requestsList");
-  if (allRequests.length === 0) {
-    container.innerHTML = '<div class="empty">אין בקשות עדיין 📭</div>';
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty">אין בקשות להצגה 📭</div>';
     return;
   }
 
-  container.innerHTML = allRequests.map(r => {
+  container.innerHTML = filtered.map(r => {
     const statusClass = r.status === "ממתין לאישור" ? "status-pending" :
                         r.status === "מאושר" ? "status-approved" :
                         r.status === "נדחה" ? "status-rejected" : "status-done";
     const prioClass = r.priority === "גבוהה" ? "priority-high" :
                       r.priority === "בינונית" ? "priority-mid" : "priority-low";
     const date = r.target_date ? new Date(r.target_date).toLocaleDateString("he-IL") : "—";
+    const created = r.created_date ? new Date(r.created_date).toLocaleDateString("he-IL") : "";
 
     return `
       <div class="req-card">
@@ -330,9 +425,10 @@ function renderRequests() {
           </div>
           <div style="text-align:left;">
             <div class="req-cost">₪${(r.cost_estimate || 0).toLocaleString()}</div>
-            <span class="status-badge ${statusClass}" style="margin-top:4px;display:inline-block;">${r.status}</span>
+            <span class="status-badge ${statusClass}" onclick="cycleStatus('${r.id}','${r.status}')" style="margin-top:4px;display:inline-block;" title="לחץ לשינוי סטטוס">${r.status}</span>
           </div>
         </div>
+        ${r.target_employees ? `<div class="req-employees">👥 <strong>עובדי יעד:</strong> ${r.target_employees}</div>` : ""}
         <div class="req-row">
           <span>📅 יעד: ${date}</span>
           <span class="priority-badge ${prioClass}">${r.priority || "בינונית"}</span>
@@ -340,25 +436,47 @@ function renderRequests() {
         </div>
         ${r.justification ? `<div style="margin-top:6px;font-size:12px;color:#64748b;line-height:1.5;">📝 ${r.justification}</div>` : ""}
         ${r.course_link ? `<div style="margin-top:4px;"><a href="${r.course_link}" target="_blank" style="font-size:12px;color:#0d9488;">🔗 קישור לקורס</a></div>` : ""}
+        <div style="margin-top:6px;font-size:11px;color:#94a3b8;">נשלח: ${created}</div>
       </div>
     `;
   }).join("");
 }
 
+async function cycleStatus(id, currentStatus) {
+  const statuses = ["ממתין לאישור", "מאושר", "נדחה", "הושלם"];
+  const currentIdx = statuses.indexOf(currentStatus);
+  const nextStatus = statuses[(currentIdx + 1) % statuses.length];
+
+  try {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update_status", id, data: { status: nextStatus } })
+    });
+    const record = allRequests.find(r => r.id === id);
+    if (record) record.status = nextStatus;
+    renderRequests();
+  } catch (err) {
+    alert("שגיאה בעדכון סטטוס");
+  }
+}
+
 function exportExcel() {
-  if (allRequests.length === 0) {
+  const filtered = getFiltered();
+  if (filtered.length === 0) {
     alert("אין נתונים לייצוא");
     return;
   }
 
-  let csv = "\uFEFF"; // BOM for Hebrew Excel
-  csv += "מחלקה,שם המבקש,שם הקורס,ספק,עלות (₪),משתתפים,עדיפות,תאריך יעד,סטטוס,צידוק,קישור,תאריך הגשה\n";
+  let csv = "\uFEFF";
+  csv += "מחלקה,שם המבקש,שם הקורס,עובדי יעד,ספק,עלות (₪),משתתפים,עדיפות,תאריך יעד,סטטוס,צידוק,קישור,תאריך הגשה\n";
 
-  allRequests.forEach(r => {
+  filtered.forEach(r => {
     const row = [
       r.department || "",
       r.requester_name || "",
       r.course_name || "",
+      (r.target_employees || "").replace(/[\n,]/g, " "),
       r.course_provider || "",
       r.cost_estimate || 0,
       r.num_participants || 1,
@@ -376,7 +494,7 @@ function exportExcel() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `puratos_training_requests_${new Date().toISOString().split("T")[0]}.csv`;
+  link.download = `puratos_training_${new Date().toISOString().split("T")[0]}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
