@@ -1,0 +1,12 @@
+{
+  "name": "שמרית - הזמנת אוכל",
+  "short_name": "שמרית",
+  "description": "אפליקציית הזמנת אוכל לעובדי שמרית",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1e40af",
+  "dir": "rtl",
+  "lang": "he",
+  "icons": []
+}

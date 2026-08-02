@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="2026-08-02-v1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>שמרית — הזמנת אוכל</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#1e40af">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 500px; margin: 0 auto; padding: 16px 14px 80px; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 20px; padding: 20px 0; }
+    .header .logo { width: 80px; height: 80px; margin: 0 auto 10px; background: linear-gradient(135deg, #1e40af, #3b82f6); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; box-shadow: 0 4px 20px rgba(30, 64, 175, 0.3); }
+    .header h1 { font-size: 24px; font-weight: 800; color: #1e40af; margin-bottom: 4px; }
+    .header p { font-size: 14px; color: #64748b; }
+
+    /* Date & Name */
+    .order-info { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #475569; }
+    .form-group input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 15px; font-family: inherit; background: #fff; }
+    .form-group input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+    /* Category */
+    .category { margin-bottom: 16px; }
+    .category-title { font-size: 16px; font-weight: 700; color: #1e40af; margin-bottom: 10px; padding: 8px 12px; background: #eff6ff; border-radius: 10px; border-right: 3px solid #3b82f6; }
+
+    /* Menu Item */
+    .menu-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); }
+    .menu-item-info { flex: 1; }
+    .menu-item-name { font-size: 14px; font-weight: 600; color: #1e293b; }
+    .menu-item-price { font-size: 13px; color: #64748b; margin-top: 2px; }
+    .qty-control { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { width: 32px; height: 32px; border-radius: 8px; border: none; background: #eff6ff; color: #1e40af; font-size: 20px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .qty-btn:active { transform: scale(0.9); }
+    .qty-btn.remove { background: #fef2f2; color: #ef4444; }
+    .qty-display { width: 28px; text-align: center; font-size: 15px; font-weight: 700; color: #1e293b; }
+
+    /* Summary */
+    .summary { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e2e8f0; padding: 12px 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 100; max-width: 500px; margin: 0 auto; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .summary-total { font-size: 18px; font-weight: 800; color: #1e293b; }
+    .summary-count { font-size: 13px; color: #64748b; }
+    .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #1e40af, #3b82f6); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+    /* Confirmation */
+    .confirm-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .confirm-overlay.show { display: flex; }
+    .confirm-card { background: #fff; border-radius: 20px; max-width: 360px; width: 100%; padding: 28px 22px; text-align: center; }
+    .confirm-icon { font-size: 48px; margin-bottom: 12px; }
+    .confirm-card h2 { font-size: 20px; font-weight: 800; color: #1e40af; margin-bottom: 8px; }
+    .confirm-card p { font-size: 14px; color: #64748b; margin-bottom: 16px; line-height: 1.6; }
+    .confirm-details { text-align: right; background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 13px; line-height: 1.8; }
+    .confirm-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #1e40af; color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit; }
+
+    /* Success */
+    .success-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .success-overlay.show { display: flex; }
+    .success-card { background: #fff; border-radius: 20px; max-width: 340px; width: 100%; padding: 30px 22px; text-align: center; }
+    .success-icon { font-size: 56px; margin-bottom: 12px; }
+    .success-card h2 { font-size: 20px; font-weight: 800; color: #22c55e; margin-bottom: 8px; }
+    .success-card p { font-size: 14px; color: #64748b; margin-bottom: 18px; }
+    .success-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #22c55e; color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; font-family: inherit; }
+
+    /* Toggle Buttons */
+    .send-toggle { display: flex; gap: 8px; margin-top: 8px; }
+    .toggle-btn { flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; font-family: inherit; color: #64748b; }
+    .toggle-btn.active { border-color: #1e40af; background: #eff6ff; color: #1e40af; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">🍽️</div>
+    <h1>שמרית — הזמנת אוכל</h1>
+    <p>ברוכים הבאים! בחרו את המנות ושלחו את ההזמנה</p>
+  </div>
+
+  <div class="order-info">
+    <div class="form-group">
+      <label>שם המזמין</label>
+      <input type="text" id="orderName" placeholder="הכנס את שמך" required>
+    </div>
+    <div class="form-group">
+      <label>תאריך</label>
+      <input type="date" id="orderDate" required>
+    </div>
+    <div class="form-group">
+      <label>שליחה אל</label>
+      <div class="send-toggle">
+        <button class="toggle-btn active" id="sendEmail" onclick="toggleSend('email')">📧 אימייל</button>
+        <button class="toggle-btn" id="sendWhatsapp" onclick="toggleSend('whatsapp')">💬 וואטסאפ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menuContainer"></div>
+
+  <div class="summary">
+    <div class="summary-row">
+      <div>
+        <div class="summary-total" id="totalDisplay">₪0</div>
+        <div class="summary-count" id="countDisplay">0 פריטים</div>
+      </div>
+      <div style="flex:1;margin:0 12px;"></div>
+      <button class="submit-btn" id="submitBtn" onclick="openConfirm()" disabled>שלח הזמנה</button>
+    </div>
+  </div>
+
+  <!-- Confirmation -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-card">
+      <div class="confirm-icon">📋</div>
+      <h2>אישור הזמנה</h2>
+      <p>ודא את הפרטים לפני שליחה</p>
+      <div class="confirm-details" id="confirmDetails"></div>
+      <button class="confirm-btn" onclick="submitOrder()">אשר ושלח ✓</button>
+      <div style="margin-top:10px;"><span onclick="closeConfirm()" style="font-size:13px;color:#94a3b8;cursor:pointer;">ביטול</span></div>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <div class="success-icon">✅</div>
+      <h2>ההזמנה נשלחה!</h2>
+      <p>ההזמנה נשלחה לשיר בהצלחה 🎉</p>
+      <button class="success-btn" onclick="resetOrder()">הזמנה חדשה</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MENU = [
+  {
+    category: "שתייה",
+    items: [
+      { name: "מים / סודה", price: 5 },
+      { name: "מיץ טבעי (תפוזים / גזר)", price: 12 },
+      { name: "שייק פירות (מים / חלב)", price: 16 },
+      { name: "קפה / תה", price: 7 },
+    ]
+  },
+  {
+    category: "ארוחות בוקר",
+    items: [
+      { name: "בוקר ישראלי (ביצים, לחם, סלט, מטבלים)", price: 38 },
+      { name: "שקשוקה קלאסית", price: 34 },
+      { name: "פנקייק (3 יחידות)", price: 32 },
+      { name: "מוזלי (יוגורט, גרנולה, פירות)", price: 28 },
+    ]
+  },
+  {
+    category: "סלטים וכריכים",
+    items: [
+      { name: "סלט יווני", price: 32 },
+      { name: "סלט קיסר", price: 34 },
+      { name: "כריך חביתה", price: 22 },
+      { name: "טוסט גבינה צהובה", price: 18 },
+    ]
+  },
+  {
+    category: "תוספות",
+    items: [
+      { name: "תוספת גבינת פטה", price: 6 },
+      { name: "תוספת טונה", price: 8 },
+      { name: "תוספת פטריות", price: 6 },
+    ]
+  },
+];
+
+const orders = {};
+let sendMethod = "email";
+const SHIR_PHONE = ""; // Will be set
+const SHIR_EMAIL = ""; // Will be set via backend
+const ORDER_API = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/shemrit_order";
+
+function renderMenu() {
+  const container = document.getElementById("menuContainer");
+  let html = "";
+  MENU.forEach((cat, ci) => {
+    html += `<div class="category"><div class="category-title">${cat.category}</div>`;
+    cat.items.forEach((item, ii) => {
+      const key = `${ci}_${ii}`;
+      orders[key] = 0;
+      html += `
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <div class="menu-item-name">${item.name}</div>
+            <div class="menu-item-price">₪${item.price}</div>
+          </div>
+          <div class="qty-control">
+            <button class="qty-btn remove" onclick="changeQty('${key}',-1)">−</button>
+            <span class="qty-display" id="qty_${key}">0</span>
+            <button class="qty-btn" onclick="changeQty('${key}',1)">+</button>
+          </div>
+        </div>`;
+    });
+    html += "</div>";
+  });
+  container.innerHTML = html;
+}
+
+function changeQty(key, delta) {
+  orders[key] = Math.max(0, (orders[key] || 0) + delta);
+  document.getElementById("qty_" + key).textContent = orders[key];
+  updateSummary();
+}
+
+function getSelectedItems() {
+  const items = [];
+  let total = 0;
+  let count = 0;
+  MENU.forEach((cat, ci) => {
+    cat.items.forEach((item, ii) => {
+      const key = `${ci}_${ii}`;
+      const qty = orders[key] || 0;
+      if (qty > 0) {
+        items.push({ name: item.name, price: item.price, qty: qty, subtotal: item.price * qty });
+        total += item.price * qty;
+        count += qty;
+      }
+    });
+  });
+  return { items, total, count };
+}
+
+function updateSummary() {
+  const { total, count } = getSelectedItems();
+  document.getElementById("totalDisplay").textContent = "₪" + total;
+  document.getElementById("countDisplay").textContent = count + " פריטים";
+  document.getElementById("submitBtn").disabled = count === 0 || !document.getElementById("orderName").value || !document.getElementById("orderDate").value;
+}
+
+function toggleSend(method) {
+  sendMethod = method;
+  document.getElementById("sendEmail").classList.toggle("active", method === "email");
+  document.getElementById("sendWhatsapp").classList.toggle("active", method === "whatsapp");
+}
+
+function openConfirm() {
+  const name = document.getElementById("orderName").value;
+  const date = document.getElementById("orderDate").value;
+  if (!name || !date) { alert("נא למלא שם ותאריך"); return; }
+  const { items, total, count } = getSelectedItems();
+  if (count === 0) { alert("נא לבחור לפחות פריט אחד"); return; }
+
+  let dateStr = new Date(date).toLocaleDateString("he-IL", { weekday: "long", day: "numeric", month: "long" });
+  let details = `<strong>שם:</strong> ${name}<br><strong>תאריך:</strong> ${dateStr}<br><strong>שליחה:</strong> ${sendMethod === "email" ? "אימייל" : "ואטסאפ"}<br><hr style="margin:8px 0;border:none;border-top:1px solid #e2e8f0;">`;
+  items.forEach(i => {
+    details += `${i.qty}× ${i.name} — ₪${i.subtotal}<br>`;
+  });
+  details += `<hr style="margin:8px 0;border:none;border-top:1px solid #e2e8f0;"><strong>סה"כ: ₪${total}</strong>`;
+  document.getElementById("confirmDetails").innerHTML = details;
+  document.getElementById("confirmOverlay").classList.add("show");
+}
+
+function closeConfirm() {
+  document.getElementById("confirmOverlay").classList.remove("show");
+}
+
+async function submitOrder() {
+  const name = document.getElementById("orderName").value;
+  const date = document.getElementById("orderDate").value;
+  const { items, total, count } = getSelectedItems();
+
+  closeConfirm();
+  document.getElementById("submitBtn").textContent = "שולח...";
+  document.getElementById("submitBtn").disabled = true;
+
+  try {
+    const res = await fetch(ORDER_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name, date, items, total, count, sendMethod
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById("successOverlay").classList.add("show");
+    } else {
+      throw new Error(data.error || "שגיאה");
+    }
+  } catch (err) {
+    alert("שגיאה בשליחה: " + err.message + "\nנא לנסות שוב");
+    document.getElementById("submitBtn").textContent = "שלח הזמנה";
+    document.getElementById("submitBtn").disabled = false;
+  }
+}
+
+function resetOrder() {
+  Object.keys(orders).forEach(k => orders[k] = 0);
+  document.querySelectorAll(".qty-display").forEach(el => el.textContent = "0");
+  document.getElementById("orderName").value = "";
+  document.getElementById("orderDate").value = "";
+  document.getElementById("successOverlay").classList.remove("show");
+  updateSummary();
+}
+
+// Init
+const today = new Date().toISOString().split("T")[0];
+document.getElementById("orderDate").value = today;
+document.getElementById("orderName").addEventListener("input", updateSummary);
+document.getElementById("orderDate").addEventListener("input", updateSummary);
+renderMenu();
+updateSummary();
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+</body>
+</html>
