@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta name="version" content="2026-08-02-v1">
+  <title>כרטיס כלי — מסגרת MATCH</title>
+  <meta name="theme-color" content="#0d9488">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0fdfa; color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 480px; margin: 0 auto; padding: 16px 14px 40px; }
+
+    .header { text-align: center; margin-bottom: 20px; padding: 24px 0 16px; }
+    .header .logo { width: 64px; height: 64px; margin: 0 auto 10px; background: linear-gradient(135deg, #0d9488, #14b8a6); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3); }
+    .header h1 { font-size: 22px; font-weight: 800; color: #0d9488; margin-bottom: 4px; }
+    .header p { font-size: 13px; color: #64748b; }
+    .header .tag { display: inline-block; margin-top: 8px; padding: 4px 12px; background: #ccfbf1; border-radius: 20px; font-size: 12px; font-weight: 600; color: #0d9488; }
+
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+
+    .card-title { font-size: 16px; font-weight: 700; color: #0d9488; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .card-title .icon { width: 32px; height: 32px; background: #ccfbf1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+
+    .big-idea { background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; border-radius: 16px; padding: 20px; margin-bottom: 14px; text-align: center; }
+    .big-idea h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .big-idea p { font-size: 14px; line-height: 1.7; opacity: 0.95; }
+    .big-idea .quote { font-size: 13px; margin-top: 10px; font-style: italic; opacity: 0.85; }
+
+    .mistake-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .mistake-box .label { font-size: 12px; font-weight: 700; color: #ef4444; margin-bottom: 6px; }
+    .mistake-box p { font-size: 13px; color: #991b1b; line-height: 1.6; }
+
+    .step { display: flex; gap: 12px; margin-bottom: 14px; }
+    .step-letter { width: 40px; height: 40px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0; }
+    .step-content { flex: 1; }
+    .step-content h3 { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .step-content p { font-size: 13px; color: #475569; line-height: 1.6; }
+    .step-content .example { margin-top: 6px; padding: 8px 10px; background: #f0fdfa; border-right: 3px solid #14b8a6; border-radius: 8px; font-size: 12px; color: #0f766e; line-height: 1.6; }
+
+    .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .p-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; }
+    .p-item .p-icon { font-size: 20px; margin-bottom: 4px; }
+    .p-item .p-name { font-size: 13px; font-weight: 700; color: #0d9488; }
+    .p-item .p-desc { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    .principle-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .principle-box .label { font-size: 12px; font-weight: 700; color: #92400e; margin-bottom: 6px; }
+    .principle-box p { font-size: 13px; color: #78350f; line-height: 1.6; }
+
+    .tennis-metaphor { text-align: center; padding: 16px; background: #f0fdfa; border-radius: 12px; margin-bottom: 14px; }
+    .tennis-metaphor .emoji { font-size: 32px; margin-bottom: 8px; }
+    .tennis-metaphor p { font-size: 13px; color: #0f766e; line-height: 1.6; font-weight: 600; }
+
+    .footer { text-align: center; padding: 16px 0; }
+    .footer .brand { font-size: 14px; font-weight: 700; color: #0d9488; }
+    .footer .slogan { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+    .divider { height: 1px; background: #e2e8f0; margin: 16px 0; border: none; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">🗣️</div>
+    <h1>כרטיס כלי — MATCH</h1>
+    <p>איך לדבר עם כל אחד ולמצוא קרקע משותפת</p>
+    <div class="tag">כלי לקואצ'ינג ותקשורת</div>
+  </div>
+
+  <div class="big-idea">
+    <h2>הרעיון המרכזי 💡</h2>
+    <p>אל תחפש את *הדבר* המשותף — חפש את *הערך* שמאחוריו. מישהו אוהב דיג? לא דיג — אלא שקט, טבע, עצמאות. שם נמצאת הקרקע המשותפת.</p>
+    <div class="quote">"אתה מגיש — הם מחזירים"</div>
+  </div>
+
+  <div class="mistake-box">
+    <div class="label">⚠️ הטעות הגדולה</div>
+    <p>מחפשים קרקע משותפת בקו ישר: "אני אוהב X → הוא לא אוהב X → אין לנו מה לדבר." זה שטחי. 90% מהשיחות נתקעות פה.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> המסגרת — MATCH</div>
+
+    <div class="step">
+      <div class="step-letter">M</div>
+      <div class="step-content">
+        <h3>Make an Offer — תן קודם</h3>
+        <p>לפני שאתה שואל — שתף משהו עליך. זה מוריד את הגארד ומראה את עומק השיחה שאתה מזמין.</p>
+        <div class="example">"אחת הסיבות שעזבתי את העבודה הקודמת היא שאני מאמין במה שאנחנו עושים פה..."</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-letter">A</div>
+      <div class="step-content">
+        <h3>Ask — שאל ב-6 תחומי P</h3>
+        <p>לא "מה עשית בסופ"ש" — אלא שאלות שחושפות מי האדם באמת:</p>
+      </div>
+    </div>
+
+    <div class="p-grid">
+      <div class="p-item"><div class="p-icon">👶</div><div class="p-name">Past</div><div class="p-desc">ילדות, בית ספר, חלומים ישנים</div></div>
+      <div class="p-item"><div class="p-icon">🔄</div><div class="p-name">Patterns</div><div class="p-desc">הרגלים, שגרה יומית</div></div>
+      <div class="p-item"><div class="p-icon">❤️</div><div class="p-name">Preferences</div><div class="p-desc">אהבות, שנאות, דעות לא פופולריות</div></div>
+      <div class="p-item"><div class="p-icon">😤</div><div class="p-name">Pet Peeves</div><div class="p-desc">הדברים הקטנים שמרגיזים</div></div>
+      <div class="p-item"><div class="p-icon">✨</div><div class="p-name">Possibilities</div><div class="p-desc">מה רוצה לנסות / ללמוד / לחוות</div></div>
+      <div class="p-item"><div class="p-icon">🌙</div><div class="p-name">Preams</div><div class="p-desc">חלומות — מה הוא חולם עליו</div></div>
+    </div>
+  </div>
+
+  <div class="tennis-metaphor">
+    <div class="emoji">🎾</div>
+    <p>אי אפשר לשחק טניס בלי שמישהו יגיש ראשון.<br>תהיה המגיש.</p>
+  </div>
+
+  <div class="principle-box">
+    <div class="label">💎 עקרון מנחה</div>
+    <p>אתה הולך שטחי — הם הולכים שטחי. אתה הולך עמוק — הם הולכים עמוק. העומק שאתה מזמין קובע את העומק שתקבל.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> איך להשתמש בסשן</div>
+    <p style="font-size: 13px; color: #475569; line-height: 1.8;">
+      1. פתח עם M — שתף משהו אישי קצר<br>
+      2. בחר P אחד שמתחבר לשיחה (לא את כולם!)<br>
+      3. שאל והקשב — אל תתכנן תגובה<br>
+      4. כשהם עונים — חפש את הערך מאחורי התוכן<br>
+      5. שתף חיבור מהעולם שלך לאותו ערך<br>
+      6. המשך להעמיק — לא לקפוץ נושא
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="footer">
+    <div class="brand">AILON Task</div>
+    <div class="slogan">Dream it. Plan it. Achieve it.</div>
+  </div>
+</div>
+</body>
+</html>
