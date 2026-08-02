@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="version" content="2026-08-02-v1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puratos — בקשות הדרכה</title>
+  <meta name="theme-color" content="#0d9488">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0fdfa; color: #1e293b; direction: rtl; min-height: 100vh; }
+    .container { max-width: 520px; margin: 0 auto; padding: 16px 14px 40px; }
+
+    .header { text-align: center; margin-bottom: 20px; padding: 20px 0; }
+    .header .logo { width: 60px; height: 60px; margin: 0 auto 8px; background: linear-gradient(135deg, #0d9488, #14b8a6); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3); }
+    .header h1 { font-size: 20px; font-weight: 800; color: #0d9488; margin-bottom: 4px; }
+    .header p { font-size: 13px; color: #64748b; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tab { flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; font-family: inherit; color: #64748b; }
+    .tab.active { border-color: #0d9488; background: #ccfbf1; color: #0d9488; }
+
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #475569; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; font-family: inherit; background: #fff; color: #1e293b; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #14b8a6; box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1); }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .form-row { display: flex; gap: 10px; }
+    .form-row .form-group { flex: 1; }
+
+    .required { color: #ef4444; }
+
+    .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+    .success-msg { text-align: center; padding: 20px; }
+    .success-msg .icon { font-size: 48px; margin-bottom: 10px; }
+    .success-msg h2 { font-size: 18px; font-weight: 800; color: #0d9488; margin-bottom: 6px; }
+    .success-msg p { font-size: 14px; color: #64748b; margin-bottom: 16px; }
+
+    .req-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .req-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
+    .req-course { font-size: 15px; font-weight: 700; color: #1e293b; }
+    .req-meta { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .req-dept { display: inline-block; padding: 2px 8px; background: #f1f5f9; border-radius: 6px; font-size: 11px; font-weight: 600; color: #475569; margin-left: 6px; }
+    .req-cost { font-size: 14px; font-weight: 700; color: #0d9488; }
+    .req-row { display: flex; gap: 8px; margin-top: 8px; font-size: 12px; color: #64748b; }
+    .req-row span { flex: 1; }
+
+    .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-approved { background: #d1fae5; color: #065f46; }
+    .status-rejected { background: #fee2e2; color: #991b1b; }
+    .status-done { background: #dbeafe; color: #1e40af; }
+
+    .priority-badge { padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+    .priority-high { background: #fee2e2; color: #991b1b; }
+    .priority-mid { background: #fef3c7; color: #92400e; }
+    .priority-low { background: #d1fae5; color: #065f46; }
+
+    .admin-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+    .admin-btn { padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; color: #475569; }
+    .admin-btn:hover { border-color: #0d9488; }
+    .admin-btn.export { background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; border: none; }
+
+    .stats { display: flex; gap: 8px; margin-bottom: 14px; }
+    .stat-box { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; text-align: center; }
+    .stat-num { font-size: 20px; font-weight: 800; color: #0d9488; }
+    .stat-label { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    .empty { text-align: center; padding: 30px; color: #94a3b8; font-size: 14px; }
+
+    .loading { text-align: center; padding: 20px; color: #94a3b8; }
+
+    .select-wrapper { position: relative; }
+    .select-wrapper select { appearance: none; -webkit-appearance: none; padding-left: 32px; }
+    .select-wrapper::after { content: "▼"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 10px; color: #94a3b8; pointer-events: none; }
+
+    .footer { text-align: center; padding: 16px 0; }
+    .footer .brand { font-size: 13px; font-weight: 700; color: #0d9488; }
+    .footer .slogan { font-size: 11px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">📚</div>
+    <h1>Puratos — בקשות הדרכה</h1>
+    <p>ריכוז צרכי הדרכה וקורסים לעובדים</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabForm" onclick="switchTab('form')">📝 הגשת בקשה</button>
+    <button class="tab" id="tabAdmin" onclick="switchTab('admin')">📊 לוח ניהול</button>
+  </div>
+
+  <!-- FORM TAB -->
+  <div id="formView">
+    <div class="card">
+      <div class="form-group">
+        <label>שם המחלקה <span class="required">*</span></label>
+        <div class="select-wrapper">
+          <select id="department" required>
+            <option value="">— בחר מחלקה —</option>
+            <option value="ייצור">ייצור</option>
+            <option value="איכות">איכות (QA)</option>
+            <option value="מעבדה">מעבדה</option>
+            <option value="תפ"י">תפ"י / הנדסה</option>
+            <option value="שיווק">שיווק ומכירות</option>
+            <option value="לוגיסטיקה">לוגיסטיקה ומחסן</option>
+            <option value="כספים">כספים</option>
+            <option value="משאבי אנוש">משאבי אנוש</option>
+            <option value="רכש">רכש</option>
+            <option value="שירות לקוחות">שירות לקוחות</option>
+            <option value="IT">IT / מערכות מידע</option>
+            <option value="ניהול">ניהול</option>
+            <option value="אחר">אחר</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>שם המבקש <span class="required">*</span></label>
+        <input type="text" id="requesterName" placeholder="שם מלא" required>
+      </div>
+
+      <div class="form-group">
+        <label>שם הקורס / ההדרכה <span class="required">*</span></label>
+        <input type="text" id="courseName" placeholder="לדוגמה: קורס Excel מתקדם" required>
+      </div>
+
+      <div class="form-group">
+        <label>ספק הקורס / גוף מארגן</label>
+        <input type="text" id="courseProvider" placeholder="לדוגמה: John Bryce, האוניברסיטה הפתוחה, פנימי">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>הערכת עלות (₪)</label>
+          <input type="number" id="costEstimate" placeholder="0" min="0" step="50">
+        </div>
+        <div class="form-group">
+          <label>מספר משתתפים</label>
+          <input type="number" id="numParticipants" value="1" min="1" max="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>עדיפות</label>
+          <div class="select-wrapper">
+            <select id="priority">
+              <option value="גבוהה">🔴 גבוהה — דחוף</option>
+              <option value="בינונית" selected>🟡 בינונית</option>
+              <option value="נמוכה">🟢 נמוכה — כדאי</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>תאריך יעד</label>
+          <input type="date" id="targetDate">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>קישור לקורס / אתר הספק</label>
+        <input type="url" id="courseLink" placeholder="https://...">
+      </div>
+
+      <div class="form-group">
+        <label>צידוק ותועלת מהקורס</label>
+        <textarea id="justification" placeholder="מה הצורך? איך זה יתרום לעבודה / למחלקה?"></textarea>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitRequest()">שלח בקשת הדרכה</button>
+    </div>
+  </div>
+
+  <!-- ADMIN TAB -->
+  <div id="adminView" style="display:none;">
+    <div class="stats" id="statsBar">
+      <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">סה"כ בקשות</div></div>
+      <div class="stat-box"><div class="stat-num" id="statPending">0</div><div class="stat-label">ממתינות</div></div>
+      <div class="stat-box"><div class="stat-num" id="statCost">₪0</div><div class="stat-label">עלות כוללת</div></div>
+    </div>
+
+    <div class="admin-bar">
+      <button class="admin-btn export" onclick="exportExcel()">📥 ייצוא לאקסל</button>
+      <button class="admin-btn" onclick="loadRequests()">🔄 רענן</button>
+    </div>
+
+    <div id="requestsList">
+      <div class="loading">טוען נתונים...</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="brand">Puratos Israel × AILON Task</div>
+    <div class="slogan">Dream it. Plan it. Achieve it.</div>
+  </div>
+</div>
+
+<script>
+const API = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/puratos_training";
+let allRequests = [];
+
+function switchTab(tab) {
+  document.getElementById("tabForm").classList.toggle("active", tab === "form");
+  document.getElementById("tabAdmin").classList.toggle("active", tab === "admin");
+  document.getElementById("formView").style.display = tab === "form" ? "block" : "none";
+  document.getElementById("adminView").style.display = tab === "admin" ? "block" : "none";
+  if (tab === "admin") loadRequests();
+}
+
+async function submitRequest() {
+  const dept = document.getElementById("department").value;
+  const name = document.getElementById("requesterName").value;
+  const course = document.getElementById("courseName").value;
+
+  if (!dept || !name || !course) {
+    alert("נא למלא את כל השדות החובה (מחלקה, שם, שם קורס)");
+    return;
+  }
+
+  const btn = document.getElementById("submitBtn");
+  btn.textContent = "שולח...";
+  btn.disabled = true;
+
+  const data = {
+    department: dept,
+    requester_name: name,
+    course_name: course,
+    course_provider: document.getElementById("courseProvider").value,
+    cost_estimate: parseFloat(document.getElementById("costEstimate").value) || 0,
+    num_participants: parseInt(document.getElementById("numParticipants").value) || 1,
+    priority: document.getElementById("priority").value,
+    target_date: document.getElementById("targetDate").value,
+    course_link: document.getElementById("courseLink").value,
+    justification: document.getElementById("justification").value,
+  };
+
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "submit", data })
+    });
+    const result = await res.json();
+    if (result.success) {
+      document.getElementById("formView").innerHTML = `
+        <div class="card">
+          <div class="success-msg">
+            <div class="icon">✅</div>
+            <h2>הבקשה נשלחה בהצלחה!</h2>
+            <p>בקשת ההדרכה נקלטה במערכת.<br>ליאור יקבל הודעה ויטפל בבקשה.</p>
+            <button class="submit-btn" onclick="location.reload()">הגשת בקשה נוספת</button>
+          </div>
+        </div>
+      `;
+    } else {
+      throw new Error(result.error || "שגיאה");
+    }
+  } catch (err) {
+    alert("שגיאה: " + err.message);
+    btn.textContent = "שלח בקשת הדרכה";
+    btn.disabled = false;
+  }
+}
+
+async function loadRequests() {
+  document.getElementById("requestsList").innerHTML = '<div class="loading">טוען נתונים...</div>';
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "list" })
+    });
+    const result = await res.json();
+    if (result.success) {
+      allRequests = result.records || [];
+      renderRequests();
+      renderStats();
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (err) {
+    document.getElementById("requestsList").innerHTML = `<div class="empty">שגיאה בטעינת נתונים: ${err.message}</div>`;
+  }
+}
+
+function renderStats() {
+  const total = allRequests.length;
+  const pending = allRequests.filter(r => r.status === "ממתין לאישור").length;
+  const totalCost = allRequests.reduce((sum, r) => sum + (r.cost_estimate || 0), 0);
+  document.getElementById("statTotal").textContent = total;
+  document.getElementById("statPending").textContent = pending;
+  document.getElementById("statCost").textContent = "₪" + totalCost.toLocaleString();
+}
+
+function renderRequests() {
+  const container = document.getElementById("requestsList");
+  if (allRequests.length === 0) {
+    container.innerHTML = '<div class="empty">אין בקשות עדיין 📭</div>';
+    return;
+  }
+
+  container.innerHTML = allRequests.map(r => {
+    const statusClass = r.status === "ממתין לאישור" ? "status-pending" :
+                        r.status === "מאושר" ? "status-approved" :
+                        r.status === "נדחה" ? "status-rejected" : "status-done";
+    const prioClass = r.priority === "גבוהה" ? "priority-high" :
+                      r.priority === "בינונית" ? "priority-mid" : "priority-low";
+    const date = r.target_date ? new Date(r.target_date).toLocaleDateString("he-IL") : "—";
+
+    return `
+      <div class="req-card">
+        <div class="req-header">
+          <div>
+            <div class="req-course">${r.course_name}</div>
+            <div class="req-meta">
+              <span class="req-dept">${r.department}</span>
+              ${r.requester_name} · ${r.num_participants || 1} משתתפים
+            </div>
+          </div>
+          <div style="text-align:left;">
+            <div class="req-cost">₪${(r.cost_estimate || 0).toLocaleString()}</div>
+            <span class="status-badge ${statusClass}" style="margin-top:4px;display:inline-block;">${r.status}</span>
+          </div>
+        </div>
+        <div class="req-row">
+          <span>📅 יעד: ${date}</span>
+          <span class="priority-badge ${prioClass}">${r.priority || "בינונית"}</span>
+          ${r.course_provider ? `<span>🏢 ${r.course_provider}</span>` : ""}
+        </div>
+        ${r.justification ? `<div style="margin-top:6px;font-size:12px;color:#64748b;line-height:1.5;">📝 ${r.justification}</div>` : ""}
+        ${r.course_link ? `<div style="margin-top:4px;"><a href="${r.course_link}" target="_blank" style="font-size:12px;color:#0d9488;">🔗 קישור לקורס</a></div>` : ""}
+      </div>
+    `;
+  }).join("");
+}
+
+function exportExcel() {
+  if (allRequests.length === 0) {
+    alert("אין נתונים לייצוא");
+    return;
+  }
+
+  let csv = "\uFEFF"; // BOM for Hebrew Excel
+  csv += "מחלקה,שם המבקש,שם הקורס,ספק,עלות (₪),משתתפים,עדיפות,תאריך יעד,סטטוס,צידוק,קישור,תאריך הגשה\n";
+
+  allRequests.forEach(r => {
+    const row = [
+      r.department || "",
+      r.requester_name || "",
+      r.course_name || "",
+      r.course_provider || "",
+      r.cost_estimate || 0,
+      r.num_participants || 1,
+      r.priority || "",
+      r.target_date || "",
+      r.status || "",
+      (r.justification || "").replace(/[\n,]/g, " "),
+      r.course_link || "",
+      r.created_date ? new Date(r.created_date).toLocaleDateString("he-IL") : ""
+    ];
+    csv += row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(",") + "\n";
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `puratos_training_requests_${new Date().toISOString().split("T")[0]}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
