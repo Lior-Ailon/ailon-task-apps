@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-02-v2">
+  <meta name="version" content="2026-08-02-v3">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puratos — בקשות הדרכה</title>
@@ -51,7 +51,6 @@
     .req-cost { font-size: 14px; font-weight: 700; color: #0d9488; }
     .req-row { display: flex; gap: 8px; margin-top: 6px; font-size: 12px; color: #64748b; flex-wrap: wrap; }
     .req-row span { flex: 1; min-width: 0; }
-
     .req-employees { margin-top: 6px; padding: 8px 10px; background: #f0fdfa; border-right: 3px solid #14b8a6; border-radius: 8px; font-size: 12px; color: #0f766e; line-height: 1.5; }
 
     .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer; }
@@ -85,10 +84,11 @@
     .select-wrapper select { appearance: none; -webkit-appearance: none; padding-left: 32px; }
     .select-wrapper::after { content: "▼"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 10px; color: #94a3b8; pointer-events: none; }
 
-    /* Login */
-    .login-card { max-width: 360px; margin: 40px auto; }
-    .login-card h2 { text-align: center; font-size: 18px; font-weight: 800; color: #0d9488; margin-bottom: 16px; }
+    .login-card { max-width: 360px; margin: 30px auto; }
+    .login-card h2 { text-align: center; font-size: 18px; font-weight: 800; color: #0d9488; margin-bottom: 4px; }
+    .login-card .subtitle { text-align: center; font-size: 13px; color: #64748b; margin-bottom: 16px; }
     .login-error { color: #ef4444; font-size: 13px; text-align: center; margin-top: 8px; display: none; }
+    .admin-user-display { font-size: 12px; color: #0d9488; font-weight: 600; margin-right: 8px; }
 
     .footer { text-align: center; padding: 16px 0; }
     .footer .brand { font-size: 13px; font-weight: 700; color: #0d9488; }
@@ -108,7 +108,7 @@
     <button class="tab" id="tabAdmin" onclick="switchTab('admin')">📊 לוח ניהול</button>
   </div>
 
-  <!-- FORM TAB -->
+  <!-- FORM TAB — no login needed -->
   <div id="formView">
     <div class="card">
       <div class="form-group">
@@ -116,7 +116,7 @@
         <div class="select-wrapper">
           <select id="department" required>
             <option value="">— בחר מחלקה —</option>
-            <option value="ייצור">ייצור</option>
+            <option value="ייצור">ייצוא</option>
             <option value="איכות">איכות (QA)</option>
             <option value="מעבדה">מעבדה</option>
             <option value="תפ"י">תפ"י / הנדסה</option>
@@ -195,17 +195,22 @@
     </div>
   </div>
 
-  <!-- ADMIN TAB -->
+  <!-- ADMIN TAB — login required -->
   <div id="adminView" style="display:none;">
     <!-- Login -->
     <div id="loginPanel" class="card login-card">
       <h2>🔐 כניסת מנהל</h2>
+      <p class="subtitle">הכנס שם משתמש וסיסמה</p>
       <div class="form-group">
-        <label>סיסמת מנהל</label>
-        <input type="password" id="adminPass" placeholder="הכנס סיסמה" onkeypress="if(event.key==='Enter') adminLogin()">
+        <label>שם משתמש</label>
+        <input type="text" id="adminUser" placeholder="שם משתמש" onkeypress="if(event.key==='Enter') document.getElementById('adminPass').focus()">
+      </div>
+      <div class="form-group">
+        <label>סיסמה</label>
+        <input type="password" id="adminPass" placeholder="סיסמה" onkeypress="if(event.key==='Enter') adminLogin()">
       </div>
       <button class="submit-btn" onclick="adminLogin()">כניסה</button>
-      <div class="login-error" id="loginError">סיסמה שגויה</div>
+      <div class="login-error" id="loginError">שם משתמש או סיסמה שגויים</div>
     </div>
 
     <!-- Dashboard -->
@@ -236,7 +241,8 @@
       <div class="admin-bar">
         <button class="admin-btn export" onclick="exportExcel()">📥 ייצוא לאקסל</button>
         <button class="admin-btn" onclick="loadRequests()">🔄 רענן</button>
-        <button class="admin-btn" onclick="adminLogout()">🚪 יציאה</button>
+        <span class="admin-user-display" id="userDisplay"></span>
+        <button class="admin-btn" onclick="adminLogout()" style="margin-right:auto;">🚪 יציאה</button>
       </div>
 
       <div id="requestsList">
@@ -253,9 +259,16 @@
 
 <script>
 const API = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/puratos_training";
-const ADMIN_PASS = "Puratos@2026!";
+
+// Admin users — two accounts with shared generic password
+const ADMIN_USERS = {
+  "amir": "Training@2026",
+  "lior": "Training@2026"
+};
+
 let allRequests = [];
 let isAdmin = false;
+let currentAdminUser = "";
 
 function switchTab(tab) {
   document.getElementById("tabForm").classList.toggle("active", tab === "form");
@@ -323,11 +336,15 @@ async function submitRequest() {
 }
 
 function adminLogin() {
+  const user = document.getElementById("adminUser").value.trim().toLowerCase();
   const pass = document.getElementById("adminPass").value;
-  if (pass === ADMIN_PASS) {
+
+  if (ADMIN_USERS[user] && ADMIN_USERS[user] === pass) {
     isAdmin = true;
+    currentAdminUser = user;
     document.getElementById("loginPanel").style.display = "none";
     document.getElementById("dashboardPanel").style.display = "block";
+    document.getElementById("userDisplay").textContent = "👤 מחובר: " + user;
     loadRequests();
   } else {
     document.getElementById("loginError").style.display = "block";
@@ -337,8 +354,10 @@ function adminLogin() {
 
 function adminLogout() {
   isAdmin = false;
+  currentAdminUser = "";
   document.getElementById("loginPanel").style.display = "block";
   document.getElementById("dashboardPanel").style.display = "none";
+  document.getElementById("adminUser").value = "";
   document.getElementById("adminPass").value = "";
   document.getElementById("loginError").style.display = "none";
 }
