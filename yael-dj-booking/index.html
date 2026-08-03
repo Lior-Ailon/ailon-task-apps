@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ יעל כהן | הזמנת פגישה</title>
+    <meta name="description" content="הזמינו פגישה עם DJ יעל כהן">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5849c4;
+            --primary-light: #a29bfe;
+            --accent: #fd79a8;
+            --accent-2: #00cec9;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --light: #f5f6fa;
+            --white: #ffffff;
+            --success: #00b894;
+            --error: #d63031;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 50%, #0c0c1d 100%);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .hero {
+            position: relative;
+            padding: 40px 20px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(108,92,231,0.3), rgba(253,121,168,0.2));
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.2), transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(253,121,168,0.15), transparent 50%);
+            pointer-events: none;
+        }
+        .logo-circle {
+            width: 100px; height: 100px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 42px;
+            box-shadow: 0 0 40px rgba(108,92,231,0.5);
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 6px;
+            position: relative; z-index: 1;
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+            position: relative; z-index: 1;
+        }
+        .badge-row {
+            display: flex; justify-content: center; gap: 12px;
+            flex-wrap: wrap; margin-top: 14px;
+            position: relative; z-index: 1;
+        }
+        .badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+        }
+        .container {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 24px 16px 60px;
+        }
+        .step-indicator {
+            display: flex; justify-content: center; gap: 8px;
+            margin-bottom: 24px;
+        }
+        .step-dot {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            transition: all 0.3s;
+        }
+        .step-dot.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            box-shadow: 0 0 20px rgba(108,92,231,0.4);
+        }
+        .step-dot.done {
+            background: var(--success);
+            color: var(--white);
+        }
+        .step-line {
+            width: 24px; height: 2px;
+            background: rgba(255,255,255,0.15);
+            margin: auto 0;
+        }
+        .step-line.done { background: var(--success); }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+        .card-title {
+            font-size: 18px; font-weight: 700;
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-title .icon { font-size: 22px; }
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .date-slot {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 8px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .date-slot:hover { background: rgba(108,92,231,0.2); }
+        .date-slot.selected {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--primary-light);
+            box-shadow: 0 0 15px rgba(108,92,231,0.4);
+        }
+        .date-slot .day-name { font-size: 9px; opacity: 0.6; margin-bottom: 1px; }
+        .date-slot .day-num { font-size: 16px; font-weight: 700; }
+        .date-slot.past { opacity: 0.25; cursor: not-allowed; }
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .time-slot {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .time-slot:hover { background: rgba(108,92,231,0.2); }
+        .time-slot.selected {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 0 15px rgba(108,92,231,0.4);
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: rgba(255,255,255,0.8);
+        }
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--white);
+            font-size: 15px;
+            font-family: 'Heebo', sans-serif;
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: rgba(108,92,231,0.1);
+        }
+        .form-input::placeholder { color: rgba(255,255,255,0.3); }
+        .event-types {
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .event-type-chip {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .event-type-chip:hover { background: rgba(108,92,231,0.2); }
+        .event-type-chip.selected {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--primary-light);
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(108,92,231,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(108,92,231,0.4); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--white);
+        }
+        .success-screen {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .success-icon {
+            width: 80px; height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success), var(--accent-2));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            animation: pop 0.5s ease;
+        }
+        @keyframes pop {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .success-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .success-subtitle { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 24px; }
+        .booking-summary {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .summary-row {
+            display: flex; justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-label { color: rgba(255,255,255,0.5); }
+        .summary-value { font-weight: 500; }
+        .hidden { display: none !important; }
+        .error-msg {
+            color: var(--error);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+        }
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .month-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px;
+        }
+        .month-nav button {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--white);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        .month-nav button:hover { background: rgba(108,92,231,0.3); }
+        .month-label { font-size: 15px; font-weight: 500; }
+        .whatsapp-notice {
+            background: rgba(0,200,136,0.1);
+            border: 1px solid rgba(0,200,136,0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .weekdays-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        .weekday-label {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="logo-circle">🎧</div>
+        <h1>DJ יעל כהן</h1>
+        <p>הזמינו פגישת ייעוץ בקליק</p>
+        <div class="badge-row">
+            <span class="badge">🎵 אירועים</span>
+            <span class="badge">🎤 בר/בת מצווה</span>
+            <span class="badge">💍 חתונות</span>
+            <span class="badge">🎉 מסיבות</span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="step-indicator">
+            <div class="step-dot active" id="dot1">1</div>
+            <div class="step-line" id="line1"></div>
+            <div class="step-dot" id="dot2">2</div>
+            <div class="step-line" id="line2"></div>
+            <div class="step-dot" id="dot3">3</div>
+        </div>
+        <div id="step1" class="card">
+            <div class="card-title"><span class="icon">📅</span> בחרו תאריך ושעה</div>
+            <div class="month-nav">
+                <button onclick="prevMonth()">›</button>
+                <span class="month-label" id="monthLabel"></span>
+                <button onclick="nextMonth()">‹</button>
+            </div>
+            <div class="weekdays-row">
+                <div class="weekday-label">א</div>
+                <div class="weekday-label">ב</div>
+                <div class="weekday-label">ג</div>
+                <div class="weekday-label">ד</div>
+                <div class="weekday-label">ה</div>
+                <div class="weekday-label">ו</div>
+                <div class="weekday-label">ש</div>
+            </div>
+            <div class="date-grid" id="dateGrid"></div>
+            <div id="timeSection" class="hidden">
+                <div style="margin-top: 20px; margin-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.6);">
+                    ⏰ שעות פנויות:
+                </div>
+                <div class="time-grid" id="timeGrid"></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top: 20px;" id="nextBtn1" onclick="goToStep2()" disabled>
+                המשך ←
+            </button>
+        </div>
+        <div id="step2" class="card hidden">
+            <div class="card-title"><span class="icon">📝</span> פרטים אישיים</div>
+            <div class="form-group">
+                <label class="form-label">שם מלא *</label>
+                <input type="text" class="form-input" id="clientName" placeholder="ישראל ישראלי">
+            </div>
+            <div class="form-group">
+                <label class="form-label">טלפון (וואטסאפ) *</label>
+                <input type="tel" class="form-input" id="clientPhone" placeholder="050-1234567" maxlength="11">
+            </div>
+            <div class="form-group">
+                <label class="form-label">סוג אירוע</label>
+                <div class="event-types" id="eventTypes">
+                    <span class="event-type-chip" onclick="selectEventType(this)">💍 חתונה</span>
+                    <span class="event-type-chip" onclick="selectEventType(this)">🎵 בר/בת מצווה</span>
+                    <span class="event-type-chip" onclick="selectEventType(this)">🎉 מסיבה</span>
+                    <span class="event-type-chip" onclick="selectEventType(this)">🎂 יום הולדת</span>
+                    <span class="event-type-chip" onclick="selectEventType(this)">🏢 אירוע עסקי</span>
+                    <span class="event-type-chip" onclick="selectEventType(this)">📞 ייעוץ טלפוני</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">הערות (אופציונלי)</label>
+                <textarea class="form-input" id="notes" rows="3" placeholder="פרטים נוספים על האירוע..."></textarea>
+            </div>
+            <div class="whatsapp-notice">
+                <span>💬</span>
+                <span>תקבלו תזכורת בוואטסאפ 24 שעות לפני הפגישה</span>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="goToStep(1)">← חזור</button>
+                <button class="btn btn-primary" onclick="goToStep3()">המשך ←</button>
+            </div>
+        </div>
+        <div id="step3" class="card hidden">
+            <div class="card-title"><span class="icon">✅</span> אישור הזמנה</div>
+            <div style="margin-bottom: 16px; color: rgba(255,255,255,0.7); font-size: 14px;">
+                אנא ודאו את פרטי הפגישה:
+            </div>
+            <div class="booking-summary" id="summaryPreview"></div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="goToStep(2)">← חזור</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()">
+                    אישור וקביעת פגישה 🎉
+                </button>
+            </div>
+            <div class="error-msg hidden" id="errorMsg"></div>
+        </div>
+        <div id="successScreen" class="hidden">
+            <div class="success-screen">
+                <div class="success-icon">✓</div>
+                <div class="success-title">הפגישה נקבעה!</div>
+                <div class="success-subtitle">קיבלנו את ההזמנה שלכם 🎉<br>תזכורת בוואטסאפ תגיע 24 שעות לפני הפגישה</div>
+                <div class="booking-summary" id="bookingDetails"></div>
+                <button class="btn btn-primary" onclick="resetApp()">קביעת פגישה נוספת</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        DJ יעל כהן • מערכת הזמנת פגישות<br>
+        פותח על ידי AILON Task
+    </div>
+    <script>
+        const API_URL = 'https://app.base44.com/api/apps/69f63b4536d7a2c6688403df/backend-functions/createYaelBooking';
+        const HE_MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+        const HE_DAYS = ['א','ב','ג','ד','ה','ו','ש'];
+        const TIME_SLOTS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
+        
+        let currentMonth = new Date();
+        let selectedDate = null;
+        let selectedTime = null;
+        let selectedEventType = '';
+
+        function initDates() { renderMonth(); }
+
+        function renderMonth() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            document.getElementById('monthLabel').textContent = HE_MONTHS[month] + ' ' + year;
+            const grid = document.getElementById('dateGrid');
+            grid.innerHTML = '';
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            let startWeekday = firstDay.getDay();
+            for (let i = 0; i < startWeekday; i++) {
+                const empty = document.createElement('div');
+                grid.appendChild(empty);
+            }
+            for (let d = 1; d <= lastDay.getDate(); d++) {
+                const date = new Date(year, month, d);
+                const slot = document.createElement('div');
+                slot.className = 'date-slot';
+                if (date < today) {
+                    slot.classList.add('past');
+                } else {
+                    slot.onclick = function() { selectDate(date, slot); };
+                }
+                if (selectedDate && selectedDate.toDateString() === date.toDateString()) {
+                    slot.classList.add('selected');
+                }
+                slot.innerHTML = '<div class="day-num">' + d + '</div>';
+                grid.appendChild(slot);
+            }
+        }
+
+        function selectDate(date, el) {
+            selectedDate = date;
+            document.querySelectorAll('.date-slot').forEach(function(s) { s.classList.remove('selected'); });
+            el.classList.add('selected');
+            selectedTime = null;
+            loadTimeSlots();
+            document.getElementById('timeSection').classList.remove('hidden');
+            document.getElementById('nextBtn1').disabled = true;
+        }
+
+        function loadTimeSlots() {
+            const grid = document.getElementById('timeGrid');
+            grid.innerHTML = '';
+            TIME_SLOTS.forEach(function(time) {
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.textContent = time;
+                slot.onclick = function() { selectTime(time, slot); };
+                grid.appendChild(slot);
+            });
+        }
+
+        function selectTime(time, el) {
+            selectedTime = time;
+            document.querySelectorAll('.time-slot').forEach(function(s) { s.classList.remove('selected'); });
+            el.classList.add('selected');
+            document.getElementById('nextBtn1').disabled = false;
+        }
+
+        function formatDate(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + dd;
+        }
+
+        function formatDateHebrew(d) {
+            return d.getDate() + ' ' + HE_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+        }
+
+        function prevMonth() { currentMonth.setMonth(currentMonth.getMonth() - 1); renderMonth(); }
+        function nextMonth() { currentMonth.setMonth(currentMonth.getMonth() + 1); renderMonth(); }
+
+        function selectEventType(el) {
+            document.querySelectorAll('.event-type-chip').forEach(function(c) { c.classList.remove('selected'); });
+            el.classList.add('selected');
+            selectedEventType = el.textContent;
+        }
+
+        function goToStep(n) {
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById('step' + i).classList.add('hidden');
+                document.getElementById('dot' + i).classList.remove('active', 'done');
+                if (i < n) document.getElementById('line' + i).classList.remove('done');
+            }
+            document.getElementById('step' + n).classList.remove('hidden');
+            document.getElementById('dot' + n).classList.add('active');
+            for (let i = 1; i < n; i++) {
+                document.getElementById('dot' + i).classList.remove('active');
+                document.getElementById('dot' + i).classList.add('done');
+                document.getElementById('line' + i).classList.add('done');
+            }
+            if (n === 3) updateSummary();
+        }
+
+        function goToStep2() {
+            if (!selectedDate || !selectedTime) return;
+            goToStep(2);
+        }
+
+        function goToStep3() {
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            if (!name) { alert('אנא הזינו שם'); return; }
+            if (!phone || phone.length < 9) { alert('אנא הזינו מספר טלפון תקין'); return; }
+            goToStep(3);
+        }
+
+        function updateSummary() {
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            let html = '';
+            html += '<div class="summary-row"><span class="summary-label">שם:</span><span class="summary-value">' + escapeHtml(name) + '</span></div>';
+            html += '<div class="summary-row"><span class="summary-label">טלפון:</span><span class="summary-value">' + escapeHtml(phone) + '</span></div>';
+            html += '<div class="summary-row"><span class="summary-label">תאריך:</span><span class="summary-value">' + formatDateHebrew(selectedDate) + '</span></div>';
+            html += '<div class="summary-row"><span class="summary-label">שעה:</span><span class="summary-value">' + selectedTime + '</span></div>';
+            html += '<div class="summary-row"><span class="summary-label">סוג אירוע:</span><span class="summary-value">' + (selectedEventType || 'לא צוין') + '</span></div>';
+            if (notes) html += '<div class="summary-row"><span class="summary-label">הערות:</span><span class="summary-value">' + escapeHtml(notes) + '</span></div>';
+            document.getElementById('summaryPreview').innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function submitBooking() {
+            const btn = document.getElementById('submitBtn');
+            const errMsg = document.getElementById('errorMsg');
+            errMsg.classList.add('hidden');
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            btn.innerHTML = '<div class="spinner"></div> שולח...';
+            btn.disabled = true;
+            try {
+                const resp = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        client_name: name,
+                        phone: phone,
+                        event_date: formatDate(selectedDate),
+                        event_time: selectedTime,
+                        event_type: selectedEventType,
+                        notes: notes,
+                        status: 'confirmed'
+                    })
+                });
+                if (resp.ok) {
+                    document.getElementById('step3').classList.add('hidden');
+                    document.getElementById('successScreen').classList.remove('hidden');
+                    let detailsHtml = '';
+                    detailsHtml += '<div class="summary-row"><span class="summary-label">לקוח:</span><span class="summary-value">' + escapeHtml(name) + '</span></div>';
+                    detailsHtml += '<div class="summary-row"><span class="summary-label">תאריך:</span><span class="summary-value">' + formatDateHebrew(selectedDate) + '</span></div>';
+                    detailsHtml += '<div class="summary-row"><span class="summary-label">שעה:</span><span class="summary-value">' + selectedTime + '</span></div>';
+                    detailsHtml += '<div class="summary-row"><span class="summary-label">סוג:</span><span class="summary-value">' + (selectedEventType || 'לא צוין') + '</span></div>';
+                    document.getElementById('bookingDetails').innerHTML = detailsHtml;
+                } else {
+                    throw new Error('שגיאה');
+                }
+            } catch(e) {
+                errMsg.textContent = 'אירעה שגיאה. אנא נסו שוב.';
+                errMsg.classList.remove('hidden');
+                btn.innerHTML = 'אישור וקביעת פגישה 🎉';
+                btn.disabled = false;
+            }
+        }
+
+        function resetApp() {
+            selectedDate = null;
+            selectedTime = null;
+            selectedEventType = '';
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientPhone').value = '';
+            document.getElementById('notes').value = '';
+            document.querySelectorAll('.event-type-chip').forEach(function(c) { c.classList.remove('selected'); });
+            document.getElementById('timeSection').classList.add('hidden');
+            document.getElementById('successScreen').classList.add('hidden');
+            document.getElementById('nextBtn1').disabled = true;
+            goToStep(1);
+            renderMonth();
+        }
+
+        initDates();
+    </script>
+</body>
+</html>
