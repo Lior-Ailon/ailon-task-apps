@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>מעבדת הפתרונות | AILON Task</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --teal-dark: #0f766e;
+  --navy: #1e3a5f;
+  --bg: #f0fdfa;
+  --white: #ffffff;
+  --gray: #64748b;
+  --light-gray: #e2e8f0;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --green: #22c55e;
+  --shadow: 0 4px 24px rgba(13, 148, 136, 0.12);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+.header {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: white;
+  padding: 24px 20px 20px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(13, 148, 136, 0.3);
+}
+.header h1 { font-size: 1.6rem; font-weight: 900; margin-bottom: 4px; }
+.header p { font-size: 0.85rem; opacity: 0.85; font-weight: 300; }
+.nav-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  background: white;
+  position: sticky;
+  top: 88px;
+  z-index: 99;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--bg);
+  color: var(--gray);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+  min-width: 72px;
+}
+.nav-tab .tab-icon { font-size: 1.4rem; }
+.nav-tab.active {
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: white;
+  box-shadow: 0 2px 12px rgba(13, 148, 136, 0.4);
+}
+.tab-content { display: none; padding: 20px 16px; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.card h2 { font-size: 1.1rem; font-weight: 700; color: var(--teal-dark); margin-bottom: 8px; }
+.card h3 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.card p { font-size: 0.85rem; line-height: 1.6; color: var(--gray); margin-bottom: 8px; }
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+.form-label .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; margin-right: 6px; }
+textarea, input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--light-gray);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  resize: vertical;
+  transition: border-color 0.3s;
+  background: var(--bg);
+  color: var(--navy);
+}
+textarea:focus, input:focus { outline: none; border-color: var(--teal); }
+textarea { min-height: 70px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-primary { background: linear-gradient(135deg, var(--teal), var(--teal-light)); color: white; box-shadow: 0 2px 12px rgba(13, 148, 136, 0.3); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(13, 148, 136, 0.4); }
+.btn-secondary { background: var(--light-gray); color: var(--navy); }
+.btn-full { width: 100%; justify-content: center; }
+
+/* E+R=O Section */
+.eq-display {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+.eq-formula { font-size: 2rem; font-weight: 900; color: var(--teal-dark); letter-spacing: 2px; }
+.eq-formula span { color: var(--teal-light); }
+.eq-formula .op { color: var(--gray); margin: 0 4px; }
+.eq-desc { font-size: 0.8rem; color: var(--gray); margin-top: 8px; }
+.eq-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.eq-col { flex: 1; }
+.eq-col .eq-letter { font-size: 1.8rem; font-weight: 900; text-align: center; margin-bottom: 4px; }
+.eq-col .eq-letter.e { color: var(--red); }
+.eq-col .eq-letter.r { color: var(--amber); }
+.eq-col .eq-letter.o { color: var(--green); }
+.eq-col .eq-label { text-align: center; font-size: 0.7rem; color: var(--gray); font-weight: 600; }
+
+.result-box {
+  background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+  border: 2px solid var(--teal);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.result-box h3 { color: var(--teal-dark); margin-bottom: 8px; }
+
+/* Clown Effect */
+.clown-visual { text-align: center; padding: 20px 0; }
+.clown-scene { font-size: 3rem; margin: 8px 0; }
+.clown-quote { font-size: 0.9rem; font-style: italic; color: var(--navy); max-width: 320px; margin: 0 auto 16px; line-height: 1.6; }
+.clown-quote strong { color: var(--red); font-style: normal; }
+.clown-check { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 10px; margin-bottom: 6px; background: var(--bg); }
+.clown-check input[type="checkbox"] { min-width: 20px; width: 20px; height: 20px; accent-color: var(--teal); margin-top: 2px; }
+.clown-check label { font-size: 0.82rem; line-height: 1.5; color: var(--navy); }
+
+/* Three Circles */
+.circles-container { position: relative; width: 100%; max-width: 360px; margin: 0 auto; aspect-ratio: 1; padding: 10px; }
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+}
+.circle-pz {
+  width: 100%; height: 100%;
+  background: rgba(239, 68, 68, 0.15);
+  border: 2px dashed var(--red);
+  top: 0; left: 0;
+}
+.circle-sz {
+  width: 66%; height: 66%;
+  background: rgba(245, 158, 11, 0.18);
+  border: 2px solid var(--amber);
+  top: 17%; left: 17%;
+}
+.circle-cz {
+  width: 33%; height: 33%;
+  background: rgba(34, 197, 94, 0.2);
+  border: 2px solid var(--green);
+  top: 33.5%; left: 33.5%;
+}
+.circle-label { font-size: 0.75rem; font-weight: 700; }
+.circle-desc { font-size: 0.6rem; margin-top: 2px; }
+.zone-selector { display: flex; gap: 8px; margin: 16px 0; }
+.zone-btn { flex: 1; padding: 12px 8px; border-radius: 12px; border: 2px solid var(--light-gray); background: white; cursor: pointer; font-family: inherit; font-size: 0.75rem; font-weight: 600; text-align: center; transition: all 0.3s; }
+.zone-btn.active { border-color: var(--teal); background: var(--bg); color: var(--teal-dark); }
+.zone-btn small { display: block; font-size: 0.6rem; font-weight: 400; color: var(--gray); margin-top: 2px; }
+
+/* Knowledge */
+.knowledge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.k-card { background: white; border-radius: 14px; padding: 16px 12px; text-align: center; box-shadow: var(--shadow); border-top: 4px solid var(--teal); transition: transform 0.3s; }
+.k-card:hover { transform: translateY(-3px); }
+.k-icon { font-size: 2rem; margin-bottom: 6px; }
+.k-title { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.k-desc { font-size: 0.65rem; color: var(--gray); line-height: 1.4; }
+.k-bar { height: 6px; background: var(--light-gray); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.k-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+
+/* Risk Map */
+.risk-grid { display: grid; grid-template-columns: 50px 1fr; grid-template-rows: 50px 1fr; gap: 4px; margin: 16px auto; max-width: 400px; }
+.risk-y-label { display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600; color: var(--gray); writing-mode: vertical-rl; transform: rotate(180deg); }
+.risk-x-label { display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600; color: var(--gray); }
+.risk-cells { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 4px; min-height: 240px; }
+.risk-cell { border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 600; text-align: center; padding: 4px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+.risk-cell:hover { border-color: var(--teal); transform: scale(1.05); }
+.r-green { background: rgba(34, 197, 94, 0.2); color: #15803d; }
+.r-amber { background: rgba(245, 158, 11, 0.2); color: #b45309; }
+.r-red { background: rgba(239, 68, 68, 0.2); color: #b91c1c; }
+.risk-info { background: white; border-radius: 14px; padding: 16px; margin-top: 12px; box-shadow: var(--shadow); }
+.risk-info h3 { font-size: 0.9rem; margin-bottom: 6px; }
+.risk-info p { font-size: 0.78rem; line-height: 1.5; color: var(--gray); }
+
+/* Summary / Export */
+.summary-item { padding: 12px; background: var(--bg); border-radius: 10px; margin-bottom: 8px; border-right: 4px solid var(--teal); }
+.summary-item h4 { font-size: 0.82rem; color: var(--teal-dark); margin-bottom: 4px; }
+.summary-item p { font-size: 0.78rem; color: var(--gray); white-space: pre-wrap; }
+
+.tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; margin: 2px; }
+.tag-e { background: rgba(239, 68, 68, 0.15); color: #b91c1c; }
+.tag-r { background: rgba(245, 158, 11, 0.15); color: #b45309; }
+.tag-o { background: rgba(34, 197, 94, 0.15); color: #15803d; }
+
+.empty-state { text-align: center; padding: 30px; color: var(--gray); font-size: 0.85rem; }
+.empty-state .emoji { font-size: 2.5rem; margin-bottom: 10px; }
+
+.footer { text-align: center; padding: 20px; font-size: 0.7rem; color: var(--gray); }
+.footer a { color: var(--teal); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>🧪 מעבדת הפתרונות</h1>
+<p>AILON Task — 5 מודלים לפתרון בעיות וצמיחה</p>
+</div>
+
+<div class="nav-tabs">
+<button class="nav-tab active" onclick="switchTab('ero')"><span class="tab-icon">➗</span>E+R=O</button>
+<button class="nav-tab" onclick="switchTab('clown')"><span class="tab-icon">🤡</span>אפקט הליצן</button>
+<button class="nav-tab" onclick="switchTab('zones')"><span class="tab-icon">🎯</span>3 מעגלים</button>
+<button class="nav-tab" onclick="switchTab('knowledge')"><span class="tab-icon">📚</span>צבירת ידע</button>
+<button class="nav-tab" onclick="switchTab('risk')"><span class="tab-icon">🗺️</span>מפת סיכונים</button>
+<button class="nav-tab" onclick="switchTab('summary')"><span class="tab-icon">📋</span>סיכום</button>
+</div>
+
+<!-- E+R=O Tab -->
+<div id="ero" class="tab-content active">
+<div class="eq-display">
+<div class="eq-formula">E <span class="op">+</span> R <span class="op">=</span> O</div>
+<div class="eq-desc">כל בעיה ניתנת לפתרון כמו משוואה מתמטית</div>
+</div>
+
+<div class="eq-row">
+<div class="eq-col"><div class="eq-letter e">E</div><div class="eq-label">אירוע / בעיה</div></div>
+<div class="eq-col"><div class="eq-letter r">R</div><div class="eq-label">תגובה</div></div>
+<div class="eq-col"><div class="eq-letter o">O</div><div class="eq-label">תוצאה</div></div>
+</div>
+
+<div class="card">
+<h2>🧩 תורת הבעיות — משוואת פתרון</h2>
+<p>כל בעיה שמישהו מביא לפתחנו — אנחנו פותחים משוואה מתמטית. מזהים נתונים, נעלמים, אילוצים ותוצאה רצויה.</p>
+
+<div class="form-group">
+<label class="form-label"><span class="tag tag-e">E</span> מה האירוע / הבעיה?</label>
+<textarea id="ero_event" placeholder="תאר את הבעיה שהונחה לפתחך..."></textarea>
+</div>
+
+<div class="form-group">
+<label class="form-label">📊 מה הנתונים שיש לנו?</label>
+<textarea id="ero_data" placeholder="רשום את כל הנתונים הידועים..."></textarea>
+</div>
+
+<div class="form-group">
+<label class="form-label">❓ מה הנעלמים?</label>
+<textarea id="ero_unknowns" placeholder="מה אנחנו לא יודעים? מה חסר?"></textarea>
+</div>
+
+<div class="form-group">
+<label class="form-label">🔒 מה האילוצים?</label>
+<textarea id="ero_constraints" placeholder="מגבלות, תקציב, זמן, משאבים, חוקים..."></textarea>
+</div>
+
+<div class="form-group">
+<label class="form-label"><span class="tag tag-o">O</span> מה התוצאה הרצויה?</label>
+<textarea id="ero_outcome" placeholder="מה אנחנו רוצים להשיג?"></textarea>
+</div>
+
+<button class="btn btn-primary btn-full" onclick="solveERO()">⚖️ פתור את המשוואה</button>
+</div>
+
+<div id="ero_result" style="display:none;">
+<div class="result-box">
+<h3>🧮 ניתוח הבעיה</h3>
+<div id="ero_analysis"></div>
+</div>
+</div>
+</div>
+
+<!-- Clown Effect Tab -->
+<div id="clown" class="tab-content">
+<div class="card">
+<h2>🤡 אפקט הליצן — בחינת סביבה</h2>
+<div class="clown-visual">
+<div class="clown-scene">🤡 ➡️ 🏰</div>
+<div class="clown-quote">
+"כשליצן נכנס לארמון — הארמון לא הופך לקרקס, והליצן לא הופך למלך.<br>
+<strong>הארמון הופך לקרקס.</strong>"
+</div>
+<p style="font-size: 0.78rem; color: var(--gray);">הסביבה שלך יכולה בקלות להפוך אותך לאדם רעיל ולהרוס את כל מה שבנית בשנייה אחת.</p>
+</div>
+</div>
+
+<div class="card">
+<h3>📋 בדיקת סביבה אישית</h3>
+<p>סמן את המשפטים הנכונים לגבי הסביבה שלך כרגע:</p>
+<div id="clown_checks"></div>
+<button class="btn btn-primary btn-full" onclick="checkClown()">🔍 בדוק את הסביבה שלי</button>
+</div>
+
+<div id="clown_result" style="display:none;">
+<div class="result-box">
+<h3>🤡 ניתוח הסביבה</h3>
+<div id="clown_analysis"></div>
+</div>
+</div>
+</div>
+
+<!-- Three Circles Tab -->
+<div id="zones" class="tab-content">
+<div class="card">
+<h2>🎯 שלושת המעגלים — יציאה מאזור הנוחות</h2>
+<p>כדי להתקדם, צריך ליצור מעגל ביניים (Stretch Zone) שמקרב אותך לפאניק זון ומקצר את הפער.</p>
+
+<div class="circles-container">
+<div class="circle circle-pz"><div class="circle-label" style="color:#b91c1c;">PZ</div><div class="circle-desc" style="color:#b91c1c;">פאניק זון</div></div>
+<div class="circle circle-sz"><div class="circle-label" style="color:#b45309;">Stretch</div><div class="circle-desc" style="color:#b45309;">אזור המתיחה</div></div>
+<div class="circle circle-cz"><div class="circle-label" style="color:#15803d;">CZ</div><div class="circle-desc" style="color:#15803d;">אזור נוחות</div></div>
+</div>
+</div>
+
+<div class="card">
+<h3>מה המטרה שלך?</h3>
+<div class="form-group">
+<label class="form-label">יעד שאתה רוצה להתקדם אליו</label>
+<input type="text" id="zone_goal" placeholder="לדוגמה: דיבור מול קהל, שינוי קריירה, פתיחת עסק...">
+</div>
+
+<div class="form-group">
+<label class="form-label">איפה אתה עכשיו?</label>
+<div class="zone-selector">
+<button class="zone-btn" onclick="selectZone('cz', this)"><div>CZ</div><small>אזור הנוחות</small><small>נשאר במקום</small></button>
+<button class="zone-btn" onclick="selectZone('sz', this)"><div>Stretch</div><small>מתיחה</small><small>מתקדם בהדרגה</small></button>
+<button class="zone-btn" onclick="selectZone('pz', this)"><div>PZ</div><small>פאניקה</small><small>קפיצה דרסטית</small></button>
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label">תכנית פעולה — צעד קטן (Stretch)</label>
+<textarea id="zone_action" placeholder="מה צעד קטן שאתה יכול לעשות השבוע שמקרב אותך ליעד בלי לקפוץ לפאניקה?"></textarea>
+</div>
+
+<button class="btn btn-primary btn-full" onclick="saveZonePlan()">📋 צור תכנית</button>
+</div>
+
+<div id="zone_result" style="display:none;">
+<div class="result-box">
+<h3>🎯 תכנית המתיחה שלך</h3>
+<div id="zone_analysis"></div>
+</div>
+</div>
+</div>
+
+<!-- Knowledge Tab -->
+<div id="knowledge" class="tab-content">
+<div class="card">
+<h2>📚 איך צוברים הכי הרבה ידע?</h2>
+<p>ארבע דרכים לצבירת ידע — מסודרות מהפחות יעילה ליעילה ביותר. <strong>Doing = הכי יעיל.</strong></p>
+</div>
+
+<div class="knowledge-grid">
+<div class="k-card" style="border-top-color: #94a3b8;">
+<div class="k-icon">💭</div>
+<div class="k-title">Thinking</div>
+<div class="k-desc">חשיבה — תיאוריה, רעיונות, הבנה מנטלית</div>
+<div class="k-bar"><div class="k-fill" style="width:25%; background:#94a3b8;"></div></div>
+</div>
+<div class="k-card" style="border-top-color: #3b82f6;">
+<div class="k-icon">📖</div>
+<div class="k-title">Reading</div>
+<div class="k-desc">קריאה — ספרים, מאמרים, מחקר</div>
+<div class="k-bar"><div class="k-fill" style="width:50%; background:#3b82f6;"></div></div>
+</div>
+<div class="k-card" style="border-top-color: #f59e0b;">
+<div class="k-icon">💬</div>
+<div class="k-title">Talking</div>
+<div class="k-desc">דיבור — שיחות, הסבר, למידה מאחרים</div>
+<div class="k-bar"><div class="k-fill" style="width:75%; background:#f59e0b;"></div></div>
+</div>
+<div class="k-card" style="border-top-color: var(--green);">
+<div class="k-icon">🛠️</div>
+<div class="k-title">Doing</div>
+<div class="k-desc">פעולה — הלכה למעשה, הכי יעיל!</div>
+<div class="k-bar"><div class="k-fill" style="width:100%; background:var(--green);"></div></div>
+</div>
+</div>
+
+<div class="card">
+<h3> מה אתה עושה השבוע?</h3>
+<p>תעד איך אתה צובר ידע בנושא שלך:</p>
+
+<div class="form-group">
+<label class="form-label">נושא למידה</label>
+<input type="text" id="know_topic" placeholder="מה אתה לומד עכשיו?">
+</div>
+
+<div class="form-group">
+<label class="form-label">💭 Thinking — כמה זמן חשבת על זה השבוע?</label>
+<input type="text" id="know_think" placeholder="לדוגמה: שעה ביום">
+</div>
+
+<div class="form-group">
+<label class="form-label">📖 Reading — כמה קראת?</label>
+<input type="text" id="know_read" placeholder="לדוגמה: פרק אחד">
+</div>
+
+<div class="form-group">
+<label class="form-label">💬 Talking — עם מי דיברת על זה?</label>
+<input type="text" id="know_talk" placeholder="לדוגמה: עם עמית בעבודה">
+</div>
+
+<div class="form-group">
+<label class="form-label">🛠️ Doing — מה עשית בפועל?</label>
+<textarea id="know_do" placeholder="הפעולה המעשית שעשית השבוע"></textarea>
+</div>
+
+<button class="btn btn-primary btn-full" onclick="saveKnowledge()">📊 נתח את הלמידה שלי</button>
+</div>
+
+<div id="knowledge_result" style="display:none;">
+<div class="result-box">
+<h3>📊 ניתוח צבירת ידע</h3>
+<div id="knowledge_analysis"></div>
+</div>
+</div>
+</div>
+
+<!-- Risk Map Tab -->
+<div id="risk" class="tab-content">
+<div class="card">
+<h2>🗺️ מפת סיכונים — ניהול סיכונים בהחלטות</h2>
+<p>מפה עם שני צירים: חומרה (כמה חמור) × הסתברות (כמה סביר). לחץ על תא לקריאת האסטרטגיה.</p>
+
+<div class="risk-grid">
+<div></div>
+<div class="risk-x-label">הסתברות — נמוך ←────────────→ גבוה</div>
+<div class="risk-y-label">חומרה — גבוה ↑<br>נמוך ↓</div>
+<div class="risk-cells" id="risk_cells"></div>
+</div>
+
+<div id="risk_detail" class="risk-info" style="display:none;">
+<h3 id="risk_title"></h3>
+<p id="risk_desc"></p>
+<p id="risk_strategy" style="margin-top: 8px; font-weight: 600; color: var(--teal-dark);"></p>
+</div>
+</div>
+
+<div class="card">
+<h3>רשימת סיכונים שלי</h3>
+<div class="form-group">
+<label class="form-label">תאר סיכון שאתה מתמודד איתו</label>
+<input type="text" id="risk_name" placeholder="לדוגמה: אובדן לקוח עיקרי">
+</div>
+<div class="form-group">
+<label class="form-label">חומרה (1-3)</label>
+<input type="number" id="risk_severity" min="1" max="3" placeholder="3 = חמור מאוד">
+</div>
+<div class="form-group">
+<label class="form-label">הסתברות (1-3)</label>
+<input type="number" id="risk_probability" min="1" max="3" placeholder="3 = סביר מאוד">
+</div>
+<div class="form-group">
+<label class="form-label">פעולת מיטיגציה אפשרית</label>
+<textarea id="risk_mitigation" placeholder="איזו פעולה קטנה יכולה לצמצם את הסיכון?"></textarea>
+</div>
+<button class="btn btn-primary btn-full" onclick="addRisk()">➕ הוסף סיכון</button>
+</div>
+
+<div id="risk_list"></div>
+</div>
+
+<!-- Summary Tab -->
+<div id="summary" class="tab-content">
+<div class="card">
+<h2>📋 סיכום אישי — מעבדת הפתרונות</h2>
+<p>כל מה שתיעדת בכל המודלים — במקום אחד.</p>
+<button class="btn btn-primary btn-full" onclick="exportSummary()">📥 ייצא סיכום</button>
+</div>
+<div id="summary_content">
+<div class="empty-state">
+<div class="emoji">🧪</div>
+<p>עדיין לא תיעדת כלום. חזור למודלים ומלא את הפרטים.</p>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<p>AILON Task — Dream it. Plan it. Achieve it.</p>
+<p>פותח על ידי ליאור סופר • <a href="https://ailon-task.com">ailon-task.com</a></p>
+</div>
+
+<script>
+const clownItems = [
+  'יש אדם בסביבה הקרובה שלי שמביא אנרגיה שלילית',
+  'יש מישהו שלעיתים קרובות מוריד אותי או את הרעיונות שלי',
+  'אני מרגיש שהסביבה שלי לא דוחפת אותי קדימה',
+  'יש מישהו שגורם לי להרגיש שאני לא מספיק טוב',
+  'אני חושש שאני מאבד את האנרגיה הטובה שלי בגלל הסביבה',
+  'הייתי רוצה להיות בסביבה אחרת אבל אני נשאר כי נוח לי'
+];
+
+const riskData = [
+  // Row 0 (high severity)
+  [{type:'amber', name:'נוהל טייס', desc:'חומרה גבוהה, הסתברות נמוכה. כמו חיל האוויר — טייס ונווט, אחד מבקר את השני. דאבל צ\'ק = סיכון יורד.', strategy:'נוהל טייס: הכנס בודק שני. מישהו שמבקר ובודק את ההחלטה לפני ביצוע.'}],
+  [{type:'amber', name:'נוהל טייס+', desc:'חומרה גבוהה, הסתברות בינונית. כאן דאבל צ\'ק לא מספיק — צריך גם תכנית גיבוי.', strategy:'נוהל טייס + תכנית B: דאבל צ\'ק וגם סיטואציית חלופה מוכנה.'}],
+  [{type:'red', name:'ברבור שחור', desc:'חומרה גבוהה, הסתברות גבוהה. דברים שלא ידעת שהם קיימים משלילו. כמו 7/10, 9/11, הקורונה.', strategy:'ברבור שחור: תכין למקרה שלא תכננת לו. חשיבה מחוץ לקופסה. מיטיגציה מלאה.'}],
+  // Row 1 (medium severity)
+  [{type:'amber', name:'אזור תשומת לב', desc:'חומרה בינונית, הסתברות נמוכה. ניטור ומעקב.', strategy:'ניטור: עקוב, אל תתערב. נהל בעיניים פקוחות.'}],
+  [{type:'amber', name:'אזור ניהול', desc:'חומרה בינונית, הסתברות בינונית. נהל באופן פעיל.', strategy:'ניהול פעיל: פעולות קטנות לצמצום הסיכון.'}],
+  [{type:'amber', name:'אזור פעולה', desc:'חומרה בינונית, הסתברות גבוהה. פעל עכשיו לצמצום.', strategy:'פעולה מיידית: מיטיגציה דרסטית. אל תחכה.'}],
+  // Row 2 (low severity)
+  [{type:'green', name:'אזור בטוח', desc:'חומרה נמוכה, הסתברות נמוכה. לא צריך לקחת סיכון. ניתן לעשות בביטחה.', strategy:'אפשר להמשיך. אין צורך בפעולה מיוחדת.'}],
+  [{type:'green', name:'מעקב קל', desc:'חומרה נמוכה, הסתברות בינונית. שמור עין פקוחה.', strategy:'מעקב קל: בדוק מדי פעם, אין צורך בפעולה.'}],
+  [{type:'green', name:'אזור שגרה', desc:'חומרה נמוכה, הסתברות גבוהה. נהל בשגרה.', strategy:'שגרה: הכל תחת שליטה, המשך כרגיל.'}]
+];
+
+let myRisks = [];
+let selectedZone = '';
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.closest('.nav-tab').classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// E+R=O
+function solveERO() {
+  const e = document.getElementById('ero_event').value.trim();
+  const d = document.getElementById('ero_data').value.trim();
+  const u = document.getElementById('ero_unknowns').value.trim();
+  const c = document.getElementById('ero_constraints').value.trim();
+  const o = document.getElementById('ero_outcome').value.trim();
+
+  if (!e || !o) {
+    alert('מלא לפחות את האירוע (E) והתוצאה הרצויה (O)');
+    return;
+  }
+
+  let html = '<div style="font-size: 0.85rem; line-height: 1.8;">';
+  html += `<p><strong>E — הבעיה:</strong> ${e}</p>`;
+  html += `<p><strong>נתונים:</strong> ${d || '—'}</p>`;
+  html += `<p><strong>נעלמים:</strong> ${u || '—'}</p>`;
+  html += `<p><strong>אילוצים:</strong> ${c || '—'}</p>`;
+  html += `<p><strong>O — תוצאה רצויה:</strong> ${o}</p>`;
+  html += '<hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">';
+
+  // Generate insight
+  let insight = '';
+  if (u && !d) insight += '⚠️ יש נעלמים אבל לא תיעדת נתונים. כדאי לאסוף נתונים לפני פתרון.\n';
+  if (c) insight += '🔒 האילוצים שלך דורשים יצירתיות — איך יוצרים מרחב פעולה בתוך המגבלות?\n';
+  if (d && u) insight += '📊 יש נתונים ויש נעלמים — נסה לבודד את הנעלם ולחשב אותו מתוך הנתונים.\n';
+  if (insight === '') insight = '✅ המשוואה מלאה. עכשיו — מה ה-R (התגובה) שתוביל מ-E ל-O?';
+
+  html += `<p style="color: var(--teal-dark); font-weight: 600;">${insight}</p>`;
+  html += '</div>';
+
+  document.getElementById('ero_analysis').innerHTML = html;
+  document.getElementById('ero_result').style.display = 'block';
+  document.getElementById('ero_result').scrollIntoView({behavior: 'smooth'});
+}
+
+// Clown
+function initClown() {
+  const container = document.getElementById('clown_checks');
+  clownItems.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'clown-check';
+    div.innerHTML = `<input type="checkbox" id="clown_${i}"><label for="clown_${i}">${item}</label>`;
+    container.appendChild(div);
+  });
+}
+
+function checkClown() {
+  let count = 0;
+  clownItems.forEach((_, i) => {
+    if (document.getElementById(`clown_${i}`).checked) count++;
+  });
+
+  let analysis = '';
+  let level = '';
+  if (count === 0) {
+    level = '✅ סביבה בריאה';
+    analysis = 'הסביבה שלך נקייה מהשפעות רעילות. תשמור עליה!';
+  } else if (count <= 2) {
+    level = '⚠️ נקודות לתשומת לב';
+    analysis = `זיהית ${count} נקודות בסביבה שלך שדורשות תשומת לב. שקול לעשות שיחה עם האדם/אנשים המדוברים או לצמצם מגע.`;
+  } else {
+    level = '🔴 הארמון הופך לקרקס';
+    analysis = `${count} דגלים אדומים! הסביבה שלך משפיעה עליך לרעה. זה הזמן לשנות סביבה — לפני שהנזק יהפוך לבלתי הפיך.`;
+  }
+
+  document.getElementById('clown_analysis').innerHTML = `<h3 style="color: var(--teal-dark);">${level}</h3><p style="font-size: 0.85rem; line-height: 1.6; margin-top: 8px;">${analysis}</p>`;
+  document.getElementById('clown_result').style.display = 'block';
+  document.getElementById('clown_result').scrollIntoView({behavior: 'smooth'});
+}
+
+// Zones
+function selectZone(zone, btn) {
+  document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedZone = zone;
+}
+
+function saveZonePlan() {
+  const goal = document.getElementById('zone_goal').value.trim();
+  const action = document.getElementById('zone_action').value.trim();
+
+  if (!goal || !action || !selectedZone) {
+    alert('מלא יעד, בחר אזור, וכתוב צעד פעולה');
+    return;
+  }
+
+  const zoneNames = {cz: 'CZ — אזור נוחות', sz: 'Stretch Zone — אזור מתיחה', pz: 'PZ — פאניק זון'};
+  let advice = '';
+  if (selectedZone === 'cz') advice = 'אתה עדיין באזור הנוחות. הצעד שכתבת הוא התחלה — בצע אותו השבוע. המטרה היא לא לקפוץ ל-PZ אלא לזוז ל-Stretch.';
+  else if (selectedZone === 'sz') advice = 'אתה ב-Stretch Zone — מצוין! המשך להתקדם בצעדים קטנים. כל צעד מקצר את הפער ל-PZ.';
+  else advice = 'אתה ב-PZ — וודא שהקפיצה לא גדולה מדי. חזור ל-Stretch אם אתה מרגיש שיתוק.';
+
+  let html = `<div style="font-size: 0.85rem; line-height: 1.8;">
+  <p><strong>יעד:</strong> ${goal}</p>
+  <p><strong>מיקום נוכחי:</strong> ${zoneNames[selectedZone]}</p>
+  <p><strong>צעד פעולה:</strong> ${action}</p>
+  <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+  <p style="color: var(--teal-dark); font-weight: 600;">${advice}</p>
+  </div>`;
+
+  document.getElementById('zone_analysis').innerHTML = html;
+  document.getElementById('zone_result').style.display = 'block';
+  document.getElementById('zone_result').scrollIntoView({behavior: 'smooth'});
+}
+
+// Knowledge
+function saveKnowledge() {
+  const topic = document.getElementById('know_topic').value.trim();
+  const think = document.getElementById('know_think').value.trim();
+  const read = document.getElementById('know_read').value.trim();
+  const talk = document.getElementById('know_talk').value.trim();
+  const do_ = document.getElementById('know_do').value.trim();
+
+  if (!topic) { alert('מלא נושא למידה'); return; }
+
+  const has = [think, read, talk, do_].filter(x => x.trim());
+  let advice = '';
+  if (!do_) advice = '🔴 חסר Doing! הפעולה היא הכי חשובה. בלי לעשות — הידע לא מתגבש.';
+  else if (has.length <= 2) advice = '⚠️ אתה משתמש ב-2 ערוצים בלבד. נסה לשלב יותר — ככל שמשלבים יותר, הידע נצרב עמוק יותר.';
+  else advice = '✅ מצוין! אתה משלב כמה ערוצי למידה כולל Doing. ככה ידע הופך לתוצאות.';
+
+  let html = `<div style="font-size: 0.85rem; line-height: 1.8;">
+  <p><strong>נושא:</strong> ${topic}</p>
+  <p>💭 Thinking: ${think || '—'}</p>
+  <p>📖 Reading: ${read || '—'}</p>
+  <p>💬 Talking: ${talk || '—'}</p>
+  <p>🛠️ Doing: ${do_ || '—'}</p>
+  <hr style="margin: 10px 0; border: none; border-top: 1px solid #e2e8f0;">
+  <p style="color: var(--teal-dark); font-weight: 600;">${advice}</p>
+  </div>`;
+
+  document.getElementById('knowledge_analysis').innerHTML = html;
+  document.getElementById('knowledge_result').style.display = 'block';
+  document.getElementById('knowledge_result').scrollIntoView({behavior: 'smooth'});
+}
+
+// Risk Map
+function initRiskGrid() {
+  const container = document.getElementById('risk_cells');
+  // 3x3 grid, severity high to low (top to bottom), probability low to high (left to right)
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 3; col++) {
+      const idx = row * 3 + col;
+      const cell = riskData[idx][0];
+      const div = document.createElement('div');
+      div.className = `risk-cell r-${cell.type}`;
+      div.textContent = cell.name;
+      div.onclick = () => showRiskDetail(idx);
+      container.appendChild(div);
+    }
+  }
+}
+
+function showRiskDetail(idx) {
+  const cell = riskData[idx][0];
+  document.getElementById('risk_title').textContent = cell.name;
+  document.getElementById('risk_desc').textContent = cell.desc;
+  document.getElementById('risk_strategy').textContent = '💡 אסטרטגיה: ' + cell.strategy;
+  document.getElementById('risk_detail').style.display = 'block';
+  document.getElementById('risk_detail').scrollIntoView({behavior: 'smooth'});
+}
+
+function addRisk() {
+  const name = document.getElementById('risk_name').value.trim();
+  const sev = parseInt(document.getElementById('risk_severity').value);
+  const prob = parseInt(document.getElementById('risk_probability').value);
+  const mit = document.getElementById('risk_mitigation').value.trim();
+
+  if (!name || !sev || !prob) { alert('מלא שם סיכון, חומרה והסתברות'); return; }
+
+  const idx = (3 - sev) * 3 + (prob - 1);
+  const cell = riskData[idx][0];
+  myRisks.push({name, sev, prob, mit, zone: cell.name});
+
+  renderRisks();
+  document.getElementById('risk_name').value = '';
+  document.getElementById('risk_severity').value = '';
+  document.getElementById('risk_probability').value = '';
+  document.getElementById('risk_mitigation').value = '';
+}
+
+function renderRisks() {
+  const container = document.getElementById('risk_list');
+  if (myRisks.length === 0) { container.innerHTML = ''; return; }
+
+  let html = '<div class="card"><h3>הסיכונים שלי</h3>';
+  myRisks.forEach((r, i) => {
+    html += `<div class="summary-item">
+    <h4>⚠️ ${r.name}</h4>
+    <p>חומרה: ${r.sev}/3 | הסתברות: ${r.prob}/3 | אזור: ${r.zone}</p>
+    ${r.mit ? `<p style="margin-top:4px;">מיטיגציה: ${r.mit}</p>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// Summary / Export
+function exportSummary() {
+  const ero = document.getElementById('ero_event').value.trim();
+  const clownCount = clownItems.filter((_, i) => document.getElementById(`clown_${i}`).checked).length;
+  const zoneGoal = document.getElementById('zone_goal').value.trim();
+  const knowTopic = document.getElementById('know_topic').value.trim();
+  const knowDo = document.getElementById('know_do').value.trim();
+
+  let items = [];
+  if (ero) items.push({title: '➗ E+R=O — תורת הבעיות', content: `בעיה: ${ero}\nנתונים: ${document.getElementById('ero_data').value || '—'}\nנעלמים: ${document.getElementById('ero_unknowns').value || '—'}\nאילוצים: ${document.getElementById('ero_constraints').value || '—'}\nתוצאה: ${document.getElementById('ero_outcome').value || '—'}`});
+  if (clownCount >= 0) items.push({title: '🤡 אפקט הליצן — בדיקת סביבה', content: `${clownCount} דגלים אדומים בסביבה.\n${clownCount === 0 ? 'סביבה בריאה.' : clownCount <= 2 ? 'נקודות לתשומת לב.' : 'הארמון הופך לקרקס — פעל עכשיו.'}`});
+  if (zoneGoal) items.push({title: '🎯 3 מעגלים — תכנית מתיחה', content: `יעד: ${zoneGoal}\nאזור: ${selectedZone || '—'}\nצעד: ${document.getElementById('zone_action').value || '—'}`});
+  if (knowTopic) items.push({title: '📚 צבירת ידע', content: `נושא: ${knowTopic}\nThink: ${document.getElementById('know_think').value || '—'}\nRead: ${document.getElementById('know_read').value || '—'}\nTalk: ${document.getElementById('know_talk').value || '—'}\nDo: ${knowDo || '—'}`});
+  if (myRisks.length > 0) items.push({title: '🗺️ מפת סיכונים', content: myRisks.map(r => `• ${r.name} (חומרה ${r.sev}/3, הסתברות ${r.prob}/3) — ${r.zone}${r.mit ? '\n  מיטיגציה: ' + r.mit : ''}`).join('\n')});
+
+  if (items.length === 0) {
+    document.getElementById('summary_content').innerHTML = '<div class="empty-state"><div class="emoji">🧪</div><p>עדיין לא תיעדת כלום. חזור למודלים ומלא את הפרטים.</p></div>';
+    return;
+  }
+
+  let html = '';
+  items.forEach(item => {
+    html += `<div class="summary-item"><h4>${item.title}</h4><p>${item.content}</p></div>`;
+  });
+
+  // Export button
+  const exportText = items.map(i => `${i.title}\n${i.content}`).join('\n\n---\n\n');
+  const blob = new Blob([exportText], {type: 'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  html += `<br><a href="${url}" download="solution-lab-summary.txt" class="btn btn-secondary btn-full" style="text-decoration:none; display:flex; justify-content:center;">💾 הורד קובץ טקסט</a>`;
+
+  document.getElementById('summary_content').innerHTML = html;
+}
+
+// Init
+initClown();
+initRiskGrid();
+</script>
+</body>
+</html>
