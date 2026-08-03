@@ -306,12 +306,20 @@ textarea { min-height: 70px; }
 </div>
 
 <button class="btn btn-primary btn-full" onclick="solveERO()">⚖️ פתור את המשוואה</button>
+<button class="btn btn-full" style="margin-top:8px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;font-weight:700;" onclick="generateInsights()">🧠 נתח והמלץ (AI)</button>
 </div>
 
 <div id="ero_result" style="display:none;">
 <div class="result-box">
 <h3>🧮 ניתוח הבעיה</h3>
 <div id="ero_analysis"></div>
+</div>
+</div>
+
+<div id="insights_result" style="display:none;">
+<div class="result-box" style="border-color:var(--teal);background:linear-gradient(135deg,#f0fdfa,#ccfbf1);">
+<h3 style="color:var(--teal-dark);">🧠 תובנות והמלצות AI</h3>
+<div id="insights_content"></div>
 </div>
 </div>
 </div>
@@ -599,6 +607,238 @@ function solveERO() {
   document.getElementById('ero_result').style.display = 'block';
   document.getElementById('ero_result').scrollIntoView({behavior: 'smooth'});
 }
+
+// AI Insights Generator for E+R=O
+function generateInsights() {
+  const e = document.getElementById('ero_event').value.trim();
+  const d = document.getElementById('ero_data').value.trim();
+  const u = document.getElementById('ero_unknowns').value.trim();
+  const c = document.getElementById('ero_constraints').value.trim();
+  const o = document.getElementById('ero_outcome').value.trim();
+
+  if (!e) {
+    alert('נא למלא לפחות את שדה האירוע/הבעיה לפני ניתוח');
+    return;
+  }
+
+  const container = document.getElementById('insights_content');
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.textContent = '🧠 מנתח...';
+  btn.disabled = true;
+
+  // Build context for analysis
+  const allText = [e, d, u, c, o].join(' ').toLowerCase();
+  const wordCount = allText.split(/\s+/).filter(w => w.length > 1).length;
+
+  // === INSIGHT GENERATION ENGINE ===
+  const insights = [];
+  const recommendations = [];
+  const riskFlags = [];
+
+  // 1. Control Analysis (E+R=O core)
+  const controlWords = ['אני', 'שלי', 'שלי', 'יכול', 'אפשר', 'בשליטה', 'בידי', 'אחריות'];
+  const noControlWords = ['לא יכול', 'אי אפשר', 'לא בשליטה', 'כפוי', 'חיצוני', 'אחרים', 'הם', 'היא'];
+  let controlScore = 0;
+  let noControlScore = 0;
+  controlWords.forEach(w => { if (allText.includes(w)) controlScore++; });
+  noControlWords.forEach(w => { if (allText.includes(w)) noControlScore++; });
+
+  if (noControlScore > controlScore) {
+    insights.push({
+      icon: '🎯',
+      title: 'מיקוד שליטה (E+R=O)',
+      text: 'הבעיה כתובה בשפה שמעידה על חוסר שליטה. זכור: אתה לא שולט ב-E (האירוע), אבל R (התגובה) תמיד בידך. התוצאה (O) נקבעת רק על ידי R, לא על ידי E.'
+    });
+    recommendations.push('הפרד בין מה שלא בשליטתך (האירוע) לבין מה שכן (התגובה). כתוב מחדש את הבעיה מנקודת מבט של "מה אני כן יכול לעשות עכשיו".');
+  } else if (controlScore > 0) {
+    insights.push({
+      icon: '🎯',
+      title: 'מיקוד שליטה (E+R=O)',
+      text: 'יש בכתיבה שלך מודעות לשליטה — מצוין. השאלה הבאה: האם התגובה (R) שלך מכוונת לתוצאה (O) שרצויה, או שהיא ריאקטיבית?'
+    });
+  }
+
+  // 2. Data completeness check
+  if (!d) {
+    insights.push({
+      icon: '📊',
+      title: 'חסר ניתוח נתונים',
+      text: 'לא תיעדת נתונים ידועים. במשוואה מתמטית, בלי נתונים אי אפשר לפתור. מה אתה כבר יודע כעובדה?'
+    });
+    recommendations.push('רשום לפחות 3 עובדות ידועות על הבעיה. עובדות, לא הנחות.');
+  }
+  if (!u) {
+    insights.push({
+      icon: '❓',
+      title: 'נעלמים לא מוגדרים',
+      text: 'לא זיהית נעלמים. כדי לפתור משוואה, צריך לדעת מה לא ידוע. מה המשתנה שאתה מחפש?'
+    });
+    recommendations.push('שאל: "מה אני לא יודע שאם הייתי יודע — הפתרון היה ברור?" רשום את התשובה.');
+  }
+  if (!c) {
+    insights.push({
+      icon: '🔒',
+      title: 'אילוצים לא מוגדרים',
+      text: 'לא תיעדת אילוצים. אילוצים לא תמיד מגבילים — לפעמים הם מכוונים את הפתרון. מגבלות תקציב, זמן, אנשים, חוק.'
+    });
+  }
+
+  // 3. Three Circles Analysis (CZ/SZ/PZ)
+  const fearWords = ['פחד', 'קשה', 'לא מסוגל', 'אי אפשר', 'גדול מדי', 'מעולם לא', 'מפחיד', 'חרדה'];
+  const growthWords = ['רוצה', 'אבקיע', 'אשתדל', 'צעד', 'הדרגתי', 'למד', 'מתקדם'];
+  let fearScore = 0, growthScore = 0;
+  fearWords.forEach(w => { if (allText.includes(w)) fearScore++; });
+  growthWords.forEach(w => { if (allText.includes(w)) growthScore++; });
+
+  if (fearScore > growthScore) {
+    insights.push({
+      icon: '🔴',
+      title: 'מפת המעגלים — מצב פאניק (PZ)',
+      text: 'שפת הבעיה מצביעה על אזור פאניק. כשאתה ב-PZ, המוח קופא. המטרה היא לא לקפוץ מ-CZ ל-PZ, אלא לבנות אזור ביניים (SZ — Stretch Zone) של צעדים הדרגתיים.'
+    });
+    recommendations.push('פרק את הבעיה ל-3 צעדים קטנים. הצעד הראשון צריך להיות כל כך קטן שכמעט אי אפשר להיכשל בו.');
+  } else if (growthScore > 0) {
+    insights.push({
+      icon: '🟡',
+      title: 'מפת המעגלים — אזור מתיחה (SZ)',
+      text: 'יש בכתיבה שלך שפה של צמיחה. אתה כנראה באזור המתיחה (Stretch Zone) — זה המקום הנכון לצמיחה. ודא שהצעדים אכן הדרגתיים ולא קפיצה דרסטית לפאניק.'
+    });
+  } else {
+    insights.push({
+      icon: '🟢',
+      title: 'מפת המעגלים — אזור נוחות (CZ)',
+      text: 'הבעיה מנוסחת באופן ניטרלי. בדוק: האם אתה באזור הנוחות (CZ)? אם כן, הפתרון אולי נראה לך נוח אבל לא מייצר שינוי אמיתי. צא מאזור הנוחות בצעד אחד קטן.'
+    });
+  }
+
+  // 4. Risk Map Analysis
+  const urgencyWords = ['דחוף', 'מיד', 'עכשיו', 'מחר', 'זמן אוזל', 'חרום', 'קריטי'];
+  const complexWords = ['מורכב', 'מערכת', 'גדול', 'רב', 'מספר', 'גורמים', 'מקושר'];
+  let urgencyScore = 0, complexityScore = 0;
+  urgencyWords.forEach(w => { if (allText.includes(w)) urgencyScore++; });
+  complexWords.forEach(w => { if (allText.includes(w)) complexityScore++; });
+
+  if (urgencyScore > 0 && complexityScore > 0) {
+    riskFlags.push({
+      icon: '⚠️',
+      level: 'ברבור שחור',
+      text: 'סיכון גבוה: הבעיה מתוארת כדחופה ומורכבת. כשהחומרה וההסתברות גבוהות — זה אזור ה"ברבור השחור". פעל לפי נוהל חירום: בודד את הגורם הקריטי ביותר וטפל בו ראשון.'
+    });
+  } else if (complexityScore > 0) {
+    riskFlags.push({
+      icon: '🟡',
+      level: 'נוהל טייס',
+      text: 'חומרה גבוהה, הסתברות נמוכה: זה אזור "נוהל הטייס" — בדיקה כפולה לפני פעולה. תכנן תרחיש, בצע ניסוי קטן, ורק אחריו יישם במלוא.'
+    });
+  }
+
+  // 5. Clown Effect check
+  const toxicWords = ['אחרים', 'הם', 'מנהל', 'חבר', 'קולגה', 'משפחה', 'סביבה', 'לחץ', 'ביקורת', 'שיפוט'];
+  let toxicScore = 0;
+  toxicWords.forEach(w => { if (allText.includes(w)) toxicScore++; });
+
+  if (toxicScore >= 2) {
+    insights.push({
+      icon: '🤡',
+      title: 'אפקט הליצן — בחינת סביבה',
+      text: 'הבעיה מערבת גורמים חיצוניים (אנשים, סביבה). זכור: "כשליצן נכנס לארמון — הארמון הופך לקרקס." הסביבה שלך משפיעה עליך יותר ממה שאתה חושב. בדוק: האם הסביבה תומכת בפתרון או מושכת אותך לאחור?'
+    });
+    recommendations.push('זהה אדם אחד בסביבה שלך שיכול לתמוך בפתרון ופנה אליו. השפעה טובה אחת עדיפה על ניסיון לשנות את כל הסביבה.');
+  }
+
+  // 6. Knowledge Acquisition (Think/Read/Talk/Do)
+  if (wordCount > 50) {
+    insights.push({
+      icon: '📚',
+      title: 'צבירת ידע — שלב החשיבה',
+      text: 'התיאור מפורט (מעל 50 מילים) — אתה בשלב "חשיבה" (Thinking). זה השלב הראשון. כדי להתקדם: עבור ל"קריאה" (חקר הנושא), אחר כך "דיבור" (שיחה עם מומחה/אדם שעבר את זה), ולבסוף "עשייה" — השלב שבו 90% מהלמידה מתרחשת.'
+    });
+  } else if (wordCount > 0 && wordCount <= 50) {
+    insights.push({
+      icon: '📚',
+      title: 'צבירת ידע — העמקת החשיבה',
+      text: 'התיאור קצר. כדאי להעמיק בחשיבה לפני מעבר לפעולה. שאל: "למה זה קורה?" שלוש פעמים (שיטת 5 הלמות) כדי להגיע לשורש הבעיה, לא לסימפטום.'
+    });
+    recommendations.push('כתוב עוד 2-3 משפטים על הבעיה. ככל שהתיאור מדויק יותר, הפתרון ברור יותר.');
+  }
+
+  // 7. Purpose/Why check (Sinek)
+  if (o) {
+    insights.push({
+      icon: '🌟',
+      title: 'התוצאה הרצויה — ה"למה" שלך',
+      text: 'התוצאה שרצית היא: "' + o + '". שאל את עצמך: האם זו התוצאה האמיתית שאתה רוצה, או הפתרון שנראה לך נכון עכשיו? לפעמים ה-O האמיתי שונה ממה שחשבנו בהתחלה.'
+    });
+  }
+
+  // 8. General recommendation
+  if (!d || !u || !c) {
+    recommendations.push('השלם את כל שדות המשוואה (נתונים, נעלמים, אילוצים). משוואה חלקית = פתרון חלקי.');
+  }
+
+  // Build output HTML
+  let html = '<div style="font-size: 0.85rem; line-height: 1.8;">';
+
+  // Insights section
+  html += '<div style="margin-bottom: 16px;">';
+  html += '<h4 style="color:var(--teal-dark);margin-bottom:10px;font-size:0.95rem;">💡 תובנות</h4>';
+  insights.forEach((ins, i) => {
+    html += `<div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #e2e8f0;">`;
+    html += `<div style="font-weight:700;color:var(--navy);margin-bottom:4px;">${ins.icon} ${ins.title}</div>`;
+    html += `<div style="color:var(--gray);font-size:0.82rem;line-height:1.6;">${ins.text}</div>`;
+    html += `</div>`;
+  });
+  html += '</div>';
+
+  // Risk flags
+  if (riskFlags.length > 0) {
+    html += '<div style="margin-bottom: 16px;">';
+    html += '<h4 style="color:#b91c1c;margin-bottom:10px;font-size:0.95rem;">⚠️ דגלי סיכון</h4>';
+    riskFlags.forEach(rf => {
+      html += `<div style="background:#fef2f2;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #fecaca;">`;
+      html += `<div style="font-weight:700;color:#991b1b;margin-bottom:4px;">${rf.icon} ${rf.level}</div>`;
+      html += `<div style="color:#7f1d1d;font-size:0.82rem;line-height:1.6;">${rf.text}</div>`;
+      html += `</div>`;
+    });
+    html += '</div>';
+  }
+
+  // Recommendations section
+  html += '<div style="margin-bottom: 16px;">';
+  html += '<h4 style="color:var(--teal-dark);margin-bottom:10px;font-size:0.95rem;">✅ המלצות לפתרון</h4>';
+  recommendations.forEach((rec, i) => {
+    html += `<div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;border-right:3px solid var(--teal);">`;
+    html += `<div style="display:flex;gap:8px;align-items:start;">`;
+    html += `<span style="background:var(--teal);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;">${i+1}</span>`;
+    html += `<div style="color:var(--navy);font-size:0.82rem;line-height:1.6;">${rec}</div>`;
+    html += `</div>`;
+    html += `</div>`;
+  });
+  html += '</div>';
+
+  // Summary
+  html += '<div style="background:var(--bg);border-radius:10px;padding:12px;margin-top:12px;border:1px solid var(--teal);">';
+  html += '<div style="font-weight:700;color:var(--teal-dark);font-size:0.85rem;margin-bottom:4px;">📋 סיכום ניתוח</div>';
+  html += `<div style="font-size:0.78rem;color:var(--gray);line-height:1.6;">`;
+  html += `זוהו ${insights.length} תובנות, ${riskFlags.length} דגלי סיכון, ו-${recommendations.length} המלצות. `;
+  html += `הדגש המרכזי: ${noControlScore > controlScore ? 'עבור מתגובה ריאקטיבית לתגובה מכוונת (R)' : 'וודא שהפעולה מכוונת לתוצאה (O)'}. `;
+  html += `השלב הבא: בחר המלצה אחת והתחיל בה היום.`;
+  html += '</div></div>';
+
+  html += '</div>';
+
+  container.innerHTML = html;
+  document.getElementById('insights_result').style.display = 'block';
+
+  // Auto-solve too
+  solveERO();
+
+  btn.textContent = '🔄 נתח שוב';
+  btn.disabled = false;
+  document.getElementById('insights_result').scrollIntoView({behavior: 'smooth'});
+}
+
 
 // Clown
 function initClown() {
