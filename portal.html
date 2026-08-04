@@ -382,5 +382,74 @@ window.addEventListener("beforeinstallprompt", (e) => {
   }, 3000);
 });
 
-<div class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</div><script>function toggleDark(){var b=document.body;b.classList.toggle("dark-active");var t=document.getElementById("darkToggle");if(b.classList.contains("dark-active")){t.textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}else{t.textContent="🌙";document.documentElement.style.setProperty("color-scheme","light")}try{localStorage.setItem("ailon_dark",b.classList.contains("dark-active")?"1":"0")}catch(e){}}try{if(localStorage.getItem("ailon_dark")==="1"){document.body.classList.add("dark-active");document.getElementById("darkToggle").textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}}catch(e){}</script></body>
+<div class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</div><script>function toggleDark(){var b=document.body;b.classList.toggle("dark-active");var t=document.getElementById("darkToggle");if(b.classList.contains("dark-active")){t.textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}else{t.textContent="🌙";document.documentElement.style.setProperty("color-scheme","light")}try{localStorage.setItem("ailon_dark",b.classList.contains("dark-active")?"1":"0")}catch(e){}}try{if(localStorage.getItem("ailon_dark")==="1"){document.body.classList.add("dark-active");document.getElementById("darkToggle").textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}}catch(e){}</script><!-- AILON Task Feedback Widget -->
+<!-- Include this before </body> on any app page -->
+<style>
+.ailon-fab{position:fixed;bottom:16px;left:16px;width:48px;height:48px;background:#0d9488;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(13,148,136,0.4);z-index:9998;transition:all .2s}
+.ailon-fab:hover{transform:scale(1.1)}
+.ailon-fab svg{width:24px;height:24px;color:#fff}
+.ailon-feedback-modal{position:fixed;bottom:72px;left:16px;width:320px;max-width:calc(100vw - 32px);background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.15);z-index:9999;overflow:hidden;display:none;font-family:Heebo,sans-serif}
+.ailon-feedback-modal.active{display:block}
+.ailon-feedback-modal .header{padding:16px 20px;background:#0d9488;color:#fff;font-weight:700;font-size:15px}
+.ailon-feedback-modal .body{padding:16px 20px}
+.ailon-feedback-modal textarea{width:100%;min-height:80px;border:1px solid #e2e8f0;border-radius:10px;padding:10px;font-family:inherit;font-size:14px;resize:vertical;outline:none}
+.ailon-feedback-modal textarea:focus{border-color:#0d9488}
+.ailon-feedback-modal .rating{display:flex;gap:6px;margin-bottom:12px}
+.ailon-feedback-modal .rating button{width:36px;height:36px;border:2px solid #e2e8f0;border-radius:50%;background:#fff;cursor:pointer;font-size:16px;transition:all .15s}
+.ailon-feedback-modal .rating button.active{border-color:#0d9488;background:#f0fdfa}
+.ailon-feedback-modal .rating button:hover{border-color:#14b8a6}
+.ailon-feedback-modal .submit{width:100%;padding:12px;background:#0d9488;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:15px;margin-top:12px}
+.ailon-feedback-modal .submit:hover{background:#0f766e}
+.ailon-feedback-modal .close{float:left;cursor:pointer;font-size:18px;opacity:0.8}
+.ailon-feedback-modal .close:hover{opacity:1}
+.ailon-feedback-toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d9488;color:#fff;padding:10px 20px;border-radius:10px;font-family:Heebo,sans-serif;font-size:14px;font-weight:600;z-index:99999;opacity:0;transition:opacity .3s}
+.ailon-feedback-toast.show{opacity:1}
+</style>
+<div class="ailon-fab" id="ailonFab" onclick="document.getElementById('ailonFeedbackModal').classList.toggle('active')">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</div>
+<div class="ailon-feedback-modal" id="ailonFeedbackModal">
+  <div class="header">דעתך חשובה לנו <span class="close" onclick="document.getElementById('ailonFeedbackModal').classList.remove('active')">×</span></div>
+  <div class="body">
+    <div class="rating" id="ailonRating">
+      <button onclick="ailonSetRating(1)">😞</button>
+      <button onclick="ailonSetRating(2)">😐</button>
+      <button onclick="ailonSetRating(3)">🙂</button>
+      <button onclick="ailonSetRating(4)">😊</button>
+      <button onclick="ailonSetRating(5)">😍</button>
+    </div>
+    <textarea id="ailonFeedbackText" placeholder="מה היית משפר? איך היה החוויה?"></textarea>
+    <button class="submit" onclick="ailonSubmitFeedback()">שלח משוב</button>
+  </div>
+</div>
+<script>
+var ailonRatingValue=0;
+function ailonSetRating(v){
+  ailonRatingValue=v;
+  var btns=document.getElementById('ailonRating').querySelectorAll('button');
+  btns.forEach(function(b,i){b.classList.toggle('active',i<v-1)});
+}
+function ailonSubmitFeedback(){
+  var text=document.getElementById('ailonFeedbackText').value;
+  if(ailonRatingValue===0</body></body>!text){alert('בחר דירוג או כתוב משוב');return}
+  var appName=document.title.split('·')[0].trim()||'Unknown';
+  try{
+    // Store feedback locally (can be sent to backend later)
+    var feedbacks=JSON.parse(localStorage.getItem('ailon_feedbacks')||'[]');
+    feedbacks.push({app:appName,rating:ailonRatingValue,text:text,date:new Date().toISOString()});
+    localStorage.setItem('ailon_feedbacks',JSON.stringify(feedbacks));
+  }catch(e){}
+  document.getElementById('ailonFeedbackModal').classList.remove('active');
+  var toast=document.createElement('div');
+  toast.className='ailon-feedback-toast';
+  toast.textContent='תודה על המשוב! 🙏';
+  document.body.appendChild(toast);
+  setTimeout(function(){toast.classList.add('show')},10);
+  setTimeout(function(){toast.classList.remove('show');setTimeout(function(){toast.remove()},300)},2500);
+  document.getElementById('ailonFeedbackText').value='';
+  ailonRatingValue=0;
+  document.getElementById('ailonRating').querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
+}
+</script>
+</body>
 </html>
