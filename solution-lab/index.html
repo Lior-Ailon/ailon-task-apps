@@ -1041,7 +1041,8 @@ initClown();
 initRiskGrid();
 </script>
 <!-- AILON Task Feedback Widget -->
-<!-- Include this before </body> on any app page -->
+<!-- Include this before <style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
+</body> on any app page -->
 <style>
 .ailon-fab{position:fixed;bottom:16px;left:16px;width:48px;height:48px;background:#0d9488;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(13,148,136,0.4);z-index:9998;transition:all .2s}
 .ailon-fab:hover{transform:scale(1.1)}
@@ -1089,7 +1090,8 @@ function ailonSetRating(v){
 }
 function ailonSubmitFeedback(){
   var text=document.getElementById('ailonFeedbackText').value;
-  if(ailonRatingValue===0</body></body>!text){alert('בחר דירוג או כתוב משוב');return}
+  if(ailonRatingValue===0<style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
+</body></body>!text){alert('בחר דירוג או כתוב משוב');return}
   var appName=document.title.split('·')[0].trim()||'Unknown';
   try{
     // Store feedback locally (can be sent to backend later)
@@ -1109,5 +1111,6 @@ function ailonSubmitFeedback(){
   document.getElementById('ailonRating').querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
 }
 </script>
+<style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
 </body>
 </html>
