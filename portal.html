@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d9488">
+  <title>AILON Task · פורטל הכלים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Heebo', sans-serif; background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 50%, #f0fdfa 100%); color: #1e293b; min-height: 100vh; }
+    .header { background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; padding: 32px 20px; text-align: center; box-shadow: 0 4px 24px rgba(13,148,136,0.25); }
+    .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .header p { font-size: 15px; opacity: 0.9; }
+    .header .slogan { margin-top: 8px; font-size: 13px; opacity: 0.8; font-style: italic; }
+    .search-bar { max-width: 600px; margin: -20px auto 0; padding: 0 20px; position: relative; z-index: 10; }
+    .search-bar input { width: 100%; padding: 14px 20px; border: 2px solid #0d9488; border-radius: 14px; font-size: 16px; font-family: inherit; box-shadow: 0 4px 20px rgba(0,0,0,0.08); outline: none; background: #fff; }
+    .search-bar input:focus { border-color: #14b8a6; box-shadow: 0 4px 20px rgba(20,184,166,0.2); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
+    .category { margin-bottom: 32px; }
+    .category-title { font-size: 18px; font-weight: 700; color: #0d9488; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 2px solid #ccfbf1; }
+    .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .app-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.25s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; }
+    .app-card:hover { border-color: #14b8a6; box-shadow: 0 8px 28px rgba(13,148,136,0.12); transform: translateY(-2px); }
+    .app-card .icon { font-size: 32px; }
+    .app-card .name { font-size: 16px; font-weight: 700; color: #1e293b; }
+    .app-card .desc { font-size: 13px; color: #64748b; line-height: 1.5; }
+    .app-card .status { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; margin-top: 4px; }
+    .status-live { background: #d1fae5; color: #059669; }
+    .status-beta { background: #fef3c7; color: #d97706; }
+    .status-dev { background: #f1f5f9; color: #64748b; }
+    .footer { text-align: center; padding: 24px 20px; color: #94a3b8; font-size: 13px; }
+    .footer a { color: #0d9488; text-decoration: none; }
+    .no-results { text-align: center; padding: 40px; color: #94a3b8; font-size: 16px; display: none; }
+    @media (max-width: 640px) {
+      .apps-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>AILON Task</h1>
+    <p>פורטל הכלים המלא</p>
+    <div class="slogan">Dream it. Plan it. Achieve it.</div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="חיפוש כלי..." oninput="filterApps()">
+  </div>
+
+  <div class="container" id="appsContainer">
+    
+    <div class="category" data-cat="mentoring">
+      <div class="category-title">🎯 פלטפורמת מנטורינג</div>
+      <div class="apps-grid">
+        <a class="app-card" href="mentorlon/index.html">
+          <div class="icon">🧭</div>
+          <div class="name">Mentor-IT</div>
+          <div class="desc">פלטפורמת המנטורינג המרכזית — התחברות, ניהול מתאמנים, קטלוג כלים</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/admin-dashboard.html">
+          <div class="icon">📊</div>
+          <div class="name">דשבורד מנהל</div>
+          <div class="desc">צפייה בכל המאמנים והמתאמנים, ניהול מערכת</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/trainee-login.html">
+          <div class="icon">🎓</div>
+          <div class="name">כניסת מתאמן</div>
+          <div class="desc">כניסה אישית למתאמנים — כלים ומעקב</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="coaching">
+      <div class="category-title">🧠 כלי אימון</div>
+      <div class="apps-grid">
+        <a class="app-card" href="mentorlon/coaching-session.html">
+          <div class="icon">🎙️</div>
+          <div class="name">שיחת אימון</div>
+          <div class="desc">9 שלבי אימון מקצועיים מפתיחה עד סיכום</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/wheel-of-life.html">
+          <div class="icon">☸️</div>
+          <div class="name">גלגל החיים</div>
+          <div class="desc">10 תחומי חיים, הערכה ויזואלית ותוכנית פעולה</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/strengths-finder.html">
+          <div class="icon">💪</div>
+          <div class="name">מצא את החוזקות</div>
+          <div class="desc">זיהוי חוזקות אישיות ותחומי צמיחה</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/equation-solver.html">
+          <div class="icon">➗</div>
+          <div class="name">פותר משוואות</div>
+          <div class="desc">ניתוח מצבים באמצעות E+R=O</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/solution-engine.html">
+          <div class="icon">⚙️</div>
+          <div class="name">מנוע הפתרונות</div>
+          <div class="desc">7 שלבים — מבעיה לתוכנית פעולה מותאמת</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="solution-lab/index.html">
+          <div class="icon">🧪</div>
+          <div class="name">מעבדת הפתרונות</div>
+          <div class="desc">11 עקרונות לפתרון נטול מאמץ — אינטראקטיבי</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="exit-strategy/index.html">
+          <div class="icon">♟️</div>
+          <div class="name">אסטרטגיית יציאה</div>
+          <div class="desc">ניתוח החלטות עם מטריצת אייזנהאור ו-E+R=O</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/emotions.html">
+          <div class="icon">😢</div>
+          <div class="name">ניהול רגשות</div>
+          <div class="desc">זיהוי והתמרת רגשות — כלים מעשיים</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/positive-thinking.html">
+          <div class="icon">☀️</div>
+          <div class="name">חשיבה חיובית</div>
+          <div class="desc">מיסגור מחדש של מחשבות שליליות</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/relationships.html">
+          <div class="icon">❤️</div>
+          <div class="name">ניהול זוגיות</div>
+          <div class="desc">הערכת מערכת יחסים וכלים לשיפור</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/parenting.html">
+          <div class="icon">👨‍👩‍👧‍👦</div>
+          <div class="name">חינוך ילדים</div>
+          <div class="desc">כלים להורות משמעותית ומכוונת</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mentorlon/lecture-effortless.html">
+          <div class="icon">📖</div>
+          <div class="name">מערך הרצאה — פתרון נטול מאמץ</div>
+          <div class="desc">18 שקפים, 11 עקרונות, 4 חלקים</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="habits">
+      <div class="category-title">🔄 הרגלים ושגרה</div>
+      <div class="apps-grid">
+        <a class="app-card" href="shkuf-habits/index.html">
+          <div class="icon">📋</div>
+          <div class="name">ש.ק.ו.פ — הטמעת הרגלים</div>
+          <div class="desc">21 ימים להרגל חדש, מבוסס Atomic Habits</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="shkuf-habits/formulas.html">
+          <div class="icon">📝</div>
+          <div class="name">נוסחאות הטמעה</div>
+          <div class="desc">דף נוסחאות להדפסה — 4 חוקי הרגל</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="loaz-shavuai/index.html">
+          <div class="icon">📅</div>
+          <div class="name">לוז שבועי</div>
+          <div class="desc">ניהול לו"ז שבועי עם דירוג מוטיבציה</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="career">
+      <div class="category-title">💼 קריירה וכיוון</div>
+      <div class="apps-grid">
+        <a class="app-card" href="matpen-kariera/index.html">
+          <div class="icon">🧭</div>
+          <div class="name">מצפן הקריירה</div>
+          <div class="desc">התאמה מקצועית עם לוגיקת Yes/No/Maybe</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="match-card/index.html">
+          <div class="icon">🗂️</div>
+          <div class="name">כרטיס התאמה</div>
+          <div class="desc">כלי התאמה מקצועית מהיר</div>
+          <span class="status status-beta">בטא</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="capsule">
+      <div class="category-title">📦 קפסולת אימון</div>
+      <div class="apps-grid">
+        <a class="app-card" href="capsule/index.html">
+          <div class="icon">📦</div>
+          <div class="name">AILON Capsule</div>
+          <div class="desc">הצטרפות מתאמן עם בחירת כלים ואישור פרטיות</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="capsule/dashboard.html">
+          <div class="icon">👁️</div>
+          <div class="name">דשבורד מאמן</div>
+          <div class="desc">צפייה במתאמנים רשומים ושיתוף</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="mindtrack/index.html">
+          <div class="icon">🧠</div>
+          <div class="name">MindTrack</div>
+          <div class="desc">מעקב בריאותי חכם — מצב רוח ותובנות</div>
+          <span class="status status-dev">זקוק לבקאנד</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="kids">
+      <div class="category-title">👶 כלים לילדים</div>
+      <div class="apps-grid">
+        <a class="app-card" href="summer-learning/index.html">
+          <div class="icon">☀️</div>
+          <div class="name">אתגר קיץ</div>
+          <div class="desc">למידת קיץ עם גמיפיקציה ופרסים — PWA</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="english-quest/index.html">
+          <div class="icon">🔤</div>
+          <div class="name">English Quest</div>
+          <div class="desc">משחק לימוד אנגלית לילדים</div>
+          <span class="status status-beta">בטא</span>
+        </a>
+        <a class="app-card" href="sefri-board/index.html">
+          <div class="icon">🏆</div>
+          <div class="name">לוח ספרים</div>
+          <div class="desc">מעקב קריאת ספרים עם ניקוד</div>
+          <span class="status status-beta">בטא</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="couple">
+      <div class="category-title">💑 זוגיות</div>
+      <div class="apps-grid">
+        <a class="app-card" href="couple-survey/index.html">
+          <div class="icon">💌</div>
+          <div class="name">סקר זוגיות</div>
+          <div class="desc">14 שאלות להערכת מערכת יחסים</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="business">
+      <div class="category-title">🏢 כלים עסקיים</div>
+      <div class="apps-grid">
+        <a class="app-card" href="crm/index.html">
+          <div class="icon">💼</div>
+          <div class="name">מערכת CRM</div>
+          <div class="desc">ניהול לידים, לקוחות, פרויקטים ומשימות</div>
+          <span class="status status-beta">בטא</span>
+        </a>
+        <a class="app-card" href="yael-dj-booking/index.html">
+          <div class="icon">🎵</div>
+          <div class="name">הזמנת DJ יעל</div>
+          <div class="desc">טופס הזמנת אירועים עם תזכורות</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="shemrit-order/index.html">
+          <div class="icon">🛡️</div>
+          <div class="name">הזמנת שמירה</div>
+          <div class="desc">טופס הזמנת שירותי שמירה</div>
+          <span class="status status-beta">בטא</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="puratos">
+      <div class="category-title">🏭 Puratos Israel</div>
+      <div class="apps-grid">
+        <a class="app-card" href="puratos-data-mapping/index.html">
+          <div class="icon">🗺️</div>
+          <div class="name">מיפוי נתונים</div>
+          <div class="desc">מיפוי פערי נתונים ובקשות פלטפורמה</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="puratos-lab/index.html">
+          <div class="icon">🧫</div>
+          <div class="name">טופס מעבדה</div>
+          <div class="desc">טופס בקשות מעבדה</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="puratos-training/index.html">
+          <div class="icon">📚</div>
+          <div class="name">בקשת הכשרה</div>
+          <div class="desc">טופס בקשת קורסים והכשרות</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="category" data-cat="clients">
+      <div class="category-title">📋 לקוחות</div>
+      <div class="apps-grid">
+        <a class="app-card" href="aviad-questionnaire/index.html">
+          <div class="icon">🏗️</div>
+          <div class="name">שאלון ויגן</div>
+          <div class="desc">שאלון אפיון לניהול נדל"ן — Aviad/Wigan</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+        <a class="app-card" href="exam-tiuuch/index.html">
+          <div class="icon">📜</div>
+          <div class="name">מבחן רישוי תיווך</div>
+          <div class="desc">25 שאלות אקראיות עם הסברים משפטיים</div>
+          <span class="status status-live">פעיל</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="no-results" id="noResults">לא נמצאו תוצאות עבור החיפוש 🔍</div>
+
+  <div class="footer">
+    <p>AILON Task · Dream it. Plan it. Achieve it.</p>
+    <p style="margin-top:4px;">כל הכלים במקום אחד · 24 אפליקציות פעילות</p>
+  </div>
+
+  <script>
+    function filterApps() {
+      var query = document.getElementById('searchInput').value.toLowerCase().trim();
+      var categories = document.querySelectorAll('.category');
+      var found = false;
+      categories.forEach(function(cat) {
+        var cards = cat.querySelectorAll('.app-card');
+        var visibleCount = 0;
+        cards.forEach(function(card) {
+          var name = card.querySelector('.name').textContent.toLowerCase();
+          var desc = card.querySelector('.desc').textContent.toLowerCase();
+          if (query === '' || name.includes(query) || desc.includes(query)) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        if (visibleCount > 0) {
+          cat.style.display = '';
+          found = true;
+        } else {
+          cat.style.display = 'none';
+        }
+      });
+      document.getElementById('noResults').style.display = found ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>

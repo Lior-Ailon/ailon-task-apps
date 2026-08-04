@@ -4,27 +4,62 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-01-v1">
+  <meta name="version" content="2026-08-05-v1">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#E6F7F2" />
+  <meta name="theme-color" content="#0d9488" />
   <title>AILON TASK · מערכת CRM</title>
   <meta name="description" content="מערכת מיני CRM של איילון טאסק - ניהול לידים, לקוחות, פרויקטים ומשימות בעיצוב מודרני." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" />
   <script>
-    // Inject Supabase environment variables for the client
     window.__ENV__ = {
       VITE_SUPABASE_URL: "https://nmpwsahwalmxplxudndv.supabase.co",
       VITE_SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tcHdzYWh3YWxteHBseHVkbmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjcxNzIsImV4cCI6MjA5NzkwMzE3Mn0.QvQoCxmSz66dEPx7NWj6OcftgtjhViAytfkgRDL2q9c"
     };
-    // Make import.meta.env work without Vite
     window.process = window.process || { env: { ...window.__ENV__ } };
+    try {
+      if (!import.meta.env) {
+        Object.defineProperty(import.meta, 'env', {
+          value: { ...window.__ENV__, MODE: 'production', DEV: false, PROD: true, SSR: false },
+          writable: false, configurable: true
+        });
+      }
+    } catch(e) {
+      window.__importMetaEnv = { ...window.__ENV__, MODE: 'production', DEV: false, PROD: true, SSR: false };
+    }
   </script>
   <script type="module" async src="./assets/index-CSxuYVg1.js"></script>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div id="crm-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#f0fdfa,#ffffff);font-family:Heebo,sans-serif;">
+      <div style="width:50px;height:50px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;"></div>
+      <p style="color:#0d9488;font-size:18px;font-weight:700;">טוען מערכת CRM...</p>
+      <p style="color:#64748b;font-size:14px;margin-top:8px;">AILON Task</p>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+    <noscript>
+      <div style="text-align:center;padding:40px;font-family:sans-serif;">
+        <h2 style="color:#0d9488;">דפדפן ללא JavaScript</h2>
+        <p>נא להפעיל JavaScript כדי להשתמש ב-CRM.</p>
+      </div>
+    </noscript>
+    <script>
+      setTimeout(function() {
+        var root = document.getElementById('root');
+        if (root && root.children.length <= 2) {
+          root.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#f0fdfa,#ffffff);font-family:Heebo,sans-serif;padding:20px;text-align:center;">' +
+            '<div style="font-size:48px;margin-bottom:16px;">⚠️</div>' +
+            '<h2 style="color:#0d9488;font-size:22px;margin-bottom:12px;">בעיית טעינה</h2>' +
+            '<p style="color:#64748b;font-size:16px;max-width:400px;line-height:1.6;">לא הצלחנו לטעון את ה-CRM. ייתכן שיש בעיית תאימות עם הדפדפן.</p>' +
+            '<p style="color:#94a3b8;font-size:14px;margin-top:16px;">נסה לרענן את הדף, או פנה לתמיכה: liors@ailon-task.com</p>' +
+            '<button onclick="location.reload()" style="margin-top:24px;padding:12px 32px;background:#0d9488;color:#fff;border:none;border-radius:12px;font-size:16px;cursor:pointer;font-family:inherit;">רענן דף</button>' +
+            '</div>';
+        }
+      }, 8000);
+    </script>
+  </div>
 </body>
 </html>

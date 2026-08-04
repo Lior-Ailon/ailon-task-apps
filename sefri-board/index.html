@@ -13,7 +13,7 @@
 <style>
 :root{
   --primary:#1a5276;--primary-light:#2980b9;--accent:#e67e22;--accent-light:#f39c12;
-  --bg:#f4f1ea;--card:#ffffff;--text:#2c3e50;--muted:#7f8c8d;
+  --bg:#f4f1ea;--card:#ffffff;--text:#1e293b;--muted:#7f8c8d;
   --border:#e0dcd3;--success:#27ae60;--danger:#e74c3c;--warning:#f39c12;
   --shadow:0 4px 20px rgba(0,0,0,0.06);--shadow-lg:0 8px 32px rgba(0,0,0,0.12);
   --radius:16px;--radius-sm:10px;
@@ -108,7 +108,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 
 /* ===== LIVE PREVIEW ===== */
 .preview-panel{position:sticky;top:24px}
-.preview-box{background:linear-gradient(135deg,#1a5276 0%,#2c3e50 50%,#1a5276 100%);border-radius:var(--radius);padding:20px;min-height:280px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.preview-box{background:linear-gradient(135deg,#1a5276 0%,#1e293b 50%,#1a5276 100%);border-radius:var(--radius);padding:20px;min-height:280px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
 .preview-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
 .preview-content{text-align:center;color:white;max-width:100%}
 .preview-content .pv-icon{font-size:48px;margin-bottom:12px}
@@ -513,9 +513,9 @@ const STORE_KEY='sefri_board_v2';
 const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 const months=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const themes=[
-  {name:'כחול ספרייה',from:'#1a5276',to:'#2c3e50'},
+  {name:'כחול ספרייה',from:'#1a5276',to:'#1e293b'},
   {name:'ירוק',from:'#1e8449',to:'#145a32'},
-  {name:'סגול',from:'#6c3483',to:'#2c3e50'},
+  {name:'סגול',from:'#6c3483',to:'#1e293b'},
   {name:'חום חם',from:'#8e5a2b',to:'#4a2c10'},
   {name:'כחול כהה',from:'#1b2631',to:'#0d1b2a'},
   {name:'בורדו',from:'#922b21',to:'#4a1c16'},

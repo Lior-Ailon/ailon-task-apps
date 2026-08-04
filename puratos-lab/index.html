@@ -287,5 +287,5 @@ function clearForm(){
 function printReport(){window.print();}
 init();
 </script>
-</body>
+<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
 </html>
