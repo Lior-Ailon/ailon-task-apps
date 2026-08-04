@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d9488">
+  <link rel="manifest" href="manifest.json">
   <title>AILON Task · פורטל הכלים</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +39,7 @@
       .apps-grid { grid-template-columns: 1fr; }
       .header h1 { font-size: 22px; }
     }
-  </style>
+  @media (prefers-color-scheme: dark){body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#e2e8f0}.header{background:linear-gradient(135deg,#0d9488,#0f766e)}.app-card{background:#1e293b;border-color:#334155}.app-card:hover{border-color:#14b8a6}.app-card .name{color:#f1f5f9}.app-card .desc{color:#94a3b8}.category-title{color:#14b8a6;border-bottom-color:#334155}.search-bar input{background:#1e293b;color:#e2e8f0;border-color:#0d9488}.status-dev{background:#334155;color:#94a3b8}.status-beta{background:#422006;color:#fbbf24}.status-live{background:#052e1b;color:#34d399}.footer{color:#475569}}.dark-toggle{position:fixed;top:16px;left:16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:100;color:#fff;}.dark-toggle:hover{background:rgba(255,255,255,0.3)}body.dark-active{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)!important;color:#e2e8f0!important}body.dark-active .header{background:linear-gradient(135deg,#0d9488,#0f766e)!important}body.dark-active .app-card{background:#1e293b!important;border-color:#334155!important}body.dark-active .app-card:hover{border-color:#14b8a6!important}body.dark-active .app-card .name{color:#f1f5f9!important}body.dark-active .app-card .desc{color:#94a3b8!important}body.dark-active .category-title{color:#14b8a6!important;border-bottom-color:#334155!important}body.dark-active .search-bar input{background:#1e293b!important;color:#e2e8f0!important}body.dark-active .status-dev{background:#334155!important;color:#94a3b8!important}body.dark-active .status-beta{background:#422006!important;color:#fbbf24!important}body.dark-active .status-live{background:#052e1b!important;color:#34d399!important}body.dark-active .footer{color:#475569!important}</style>
 </head>
 <body>
   <div class="header">
@@ -360,5 +361,26 @@
       document.getElementById('noResults').style.display = found ? 'none' : 'block';
     }
   </script>
-</body>
+<script>
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(function() {
+    if (deferredPrompt && !window.matchMedia("(display-mode: standalone)").matches) {
+      var banner = document.createElement("div");
+      banner.style.cssText = "position:fixed;bottom:0;left:0;right:0;background:#0d9488;color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;z-index:9999;font-family:Heebo,sans-serif;box-shadow:0 -4px 20px rgba(0,0,0,0.15);";
+      banner.innerHTML = "<div style=font-size:14px;font-weight:600;>📱 התקן את AILON Task כאפליקציה</div><div><button id=installBtn style=background:#fff;color:#0d9488;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-family:inherit;cursor:pointer;font-size:13px;margin-left:8px;>התקן</button><button id=dismissBtn style=background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:8px 12px;border-radius:8px;font-family:inherit;cursor:pointer;font-size:13px;>אחר כך</button></div>";
+      document.body.appendChild(banner);
+      document.getElementById("installBtn").onclick = function() {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+        banner.remove();
+      };
+      document.getElementById("dismissBtn").onclick = function() { banner.remove(); };
+    }
+  }, 3000);
+});
+
+<div class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</div><script>function toggleDark(){var b=document.body;b.classList.toggle("dark-active");var t=document.getElementById("darkToggle");if(b.classList.contains("dark-active")){t.textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}else{t.textContent="🌙";document.documentElement.style.setProperty("color-scheme","light")}try{localStorage.setItem("ailon_dark",b.classList.contains("dark-active")?"1":"0")}catch(e){}}try{if(localStorage.getItem("ailon_dark")==="1"){document.body.classList.add("dark-active");document.getElementById("darkToggle").textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}}catch(e){}</script></body>
 </html>

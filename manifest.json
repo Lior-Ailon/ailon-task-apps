@@ -1,0 +1,25 @@
+{
+  "name": "AILON Task — פורטל הכלים",
+  "short_name": "AILON Task",
+  "description": "Dream it. Plan it. Achieve it.",
+  "start_url": "portal.html",
+  "display": "standalone",
+  "background_color": "#f0fdfa",
+  "theme_color": "#0d9488",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
