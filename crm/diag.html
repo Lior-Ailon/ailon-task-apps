@@ -9,17 +9,14 @@ window.addEventListener('error', function(e) {
   window.__errors.push({
     type: 'error',
     message: e.message,
-    filename: e.filename,
+    filename: e.filename ? e.filename.split('/').pop() : '',
     line: e.lineno,
     col: e.colno,
-    stack: e.error ? e.error.stack : ''
+    stack: e.error ? e.error.stack.substring(0, 500) : ''
   });
 });
 window.addEventListener('unhandledrejection', function(e) {
-  window.__errors.push({
-    type: 'rejection',
-    message: e.reason ? (e.reason.message || JSON.stringify(e.reason)) : 'unknown'
-  });
+  window.__errors.push({ type: 'rejection', message: e.reason ? (e.reason.message || JSON.stringify(e.reason)) : 'unknown' });
 });
 window.__ENV__ = {
   VITE_SUPABASE_URL: "https://nmpwsahwalmxplxudndv.supabase.co",
@@ -28,11 +25,11 @@ window.__ENV__ = {
 window.process = { env: { ...window.__ENV__ } };
 </script>
 <link rel="stylesheet" href="./assets/styles-DPgLTBkH.css" />
-<script type="module" src="./assets/index-CSxuYVg1.js"></script>
+<script type="module" async src="./assets/index-CSxuYVg1.js?v=orig20260805"></script>
 </head>
 <body>
 <div id="root"></div>
-<div id="diag" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border:2px solid red;padding:10px;font-family:monospace;font-size:12px;max-height:300px;overflow:auto;z-index:99999;"></div>
+<div id="diag" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border:2px solid red;padding:10px;font-family:monospace;font-size:12px;max-height:400px;overflow:auto;z-index:99999;"></div>
 <script>
 setInterval(function() {
   var d = document.getElementById('diag');
