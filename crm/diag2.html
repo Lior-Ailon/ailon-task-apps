@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CRM Diagnostic v2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+window.__errors = [];
+window.addEventListener('error', function(e) {
+  window.__errors.push({
+    type: 'error',
+    message: e.message,
+    filename: e.filename ? e.filename.split('/').pop() : '',
+    line: e.lineno,
+    col: e.colno,
+    stack: e.error ? e.error.stack.substring(0, 500) : ''
+  });
+});
+window.addEventListener('unhandledrejection', function(e) {
+  window.__errors.push({ type: 'rejection', message: e.reason ? (e.reason.message || JSON.stringify(e.reason)) : 'unknown' });
+});
+window.__ENV__ = {
+  VITE_SUPABASE_URL: "https://nmpwsahwalmxplxudndv.supabase.co",
+  VITE_SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tcHdzYWh3YWxteHBseHVkbmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjcxNzIsImV4cCI6MjA5NzkwMzE3Mn0.QvQoCxmSz66dEPx7NWj6OcftgtjhViAytfkgRDL2q9c"
+};
+window.process = { env: { ...window.__ENV__ } };
+</script>
+<link rel="stylesheet" href="./assets/styles-DPgLTBkH.css?v=20260805" />
+</head>
+<body>
+<div id="root"></div>
+<div id="diag" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border:2px solid red;padding:10px;font-family:monospace;font-size:12px;max-height:400px;overflow:auto;z-index:99999;"></div>
+<script>
+// Use a dynamic import with cache-busting to test the module
+async function testModule() {
+  var d = document.getElementById('diag');
+  d.innerHTML = '<b>Testing original JS module...</b><br>';
+  
+  try {
+    // Dynamic import with cache-busting
+    const mod = await import('./assets/index-CSxuYVg1.js?v=20260805orig');
+    d.innerHTML += '<b style="color:green">SUCCESS: Module loaded!</b><br>';
+    d.innerHTML += 'Exports: ' + Object.keys(mod).join(', ') + '<br>';
+  } catch(e) {
+    d.innerHTML += '<b style="color:red">IMPORT FAILED: ' + e.message + '</b><br>';
+    if (e.stack) d.innerHTML += '<pre>' + e.stack.substring(0, 300) + '</pre><br>';
+  }
+  
+  d.innerHTML += '<b>Errors captured: ' + window.__errors.length + '</b><br>';
+  window.__errors.forEach(function(err, i) {
+    d.innerHTML += '[' + i + '] ' + err.type + ': ' + err.message;
+    if (err.filename) d.innerHTML += ' (' + err.filename + ':' + err.line + ')';
+    d.innerHTML += '<br>';
+    if (err.stack) d.innerHTML += '<pre>' + err.stack.substring(0, 200) + '</pre><br>';
+  });
+}
+testModule();
+</script>
+</body>
+</html>
