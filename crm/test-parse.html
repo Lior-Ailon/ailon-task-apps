@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Parse Test</title></head>
+<body>
+<div id="result" style="font-family:monospace;padding:20px;background:#fff;border:2px solid blue;font-size:14px;">Loading...</div>
+<script>
+window.__ENV__ = {
+  VITE_SUPABASE_URL: "https://nmpwsahwalmxplxudndv.supabase.co",
+  VITE_SUPABASE_PUBLISHABLE_KEY: "test"
+};
+window.process = { env: { ...window.__ENV__ } };
+
+var results = [];
+window.addEventListener('error', function(e) {
+  results.push('ERROR: ' + e.message + ' (' + (e.filename||'').split('/').pop() + ':' + e.lineno + ')');
+  document.getElementById('result').innerHTML = results.join('<br>');
+});
+window.addEventListener('unhandledrejection', function(e) {
+  results.push('REJECTION: ' + (e.reason ? e.reason.message || String(e.reason) : 'unknown'));
+  document.getElementById('result').innerHTML = results.join('<br>');
+});
+
+// Try to load the ORIGINAL file as a module
+results.push('Loading original JS as module...');
+document.getElementById('result').innerHTML = results.join('<br>');
+</script>
+<script type="module">
+  try {
+    // Dynamic import to catch errors
+    await import('./assets/index-original.js');
+    results.push('SUCCESS: Original JS loaded without syntax errors');
+    document.getElementById('result').innerHTML = results.join('<br>');
+  } catch(e) {
+    results.push('IMPORT FAILED: ' + e.message);
+    document.getElementById('result').innerHTML = results.join('<br>');
+  }
+</script>
+<script>
+// Also try the patched version
+setTimeout(async function() {
+  results.push('--- Now testing patched JS ---');
+  document.getElementById('result').innerHTML = results.join('<br>');
+  try {
+    // We can't easily dynamically import the patched one since it's the same filename
+    // But we know the patched one has createRoot
+    results.push('Patched JS test skipped (same filename conflict)');
+    document.getElementById('result').innerHTML = results.join('<br>');
+  } catch(e) {
+    results.push('PATCHED FAILED: ' + e.message);
+    document.getElementById('result').innerHTML = results.join('<br>');
+  }
+}, 3000);
+</script>
+</body>
+</html>
