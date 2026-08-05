@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d9488">
+<title>AILON TASK · CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#0d9488;--teal-light:#14b8a6;--teal-bg:#E6F7F2;--teal-border:#5eead4;--navy:#1e3a5f;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--gray-900:#0f172a;--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-lg:0 4px 24px rgba(0,0,0,0.12)}
+body{font-family:'Heebo',sans-serif;background:var(--gray-100);color:var(--gray-800);-webkit-tap-highlight-color:transparent}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,textarea,select{font-family:inherit;outline:none}
+
+/* Login */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--teal-bg),#fff)}
+.login-card{background:#fff;border-radius:20px;padding:40px 32px;max-width:380px;width:90%;box-shadow:var(--shadow-lg);text-align:center}
+.login-card h1{color:var(--teal);font-size:24px;font-weight:800;margin-bottom:4px}
+.login-card p{color:var(--gray-400);font-size:14px;margin-bottom:24px}
+.login-card input{width:100%;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:15px;margin-bottom:12px;transition:border .2s}
+.login-card input:focus{border-color:var(--teal)}
+.login-card button{width:100%;padding:12px;background:var(--teal);color:#fff;border-radius:10px;font-size:16px;font-weight:600;transition:opacity .2s}
+.login-card button:hover{opacity:.9}
+.login-card .logo{width:64px;height:64px;margin:0 auto 16px;background:var(--teal-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.login-error{color:var(--red);font-size:13px;margin-top:8px}
+
+/* App Layout */
+#app{display:none;flex-direction:column;min-height:100vh}
+#app.active{display:flex}
+
+/* Header */
+.app-header{background:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.app-header .brand{display:flex;align-items:center;gap:10px}
+.app-header .brand-icon{width:36px;height:36px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800}
+.app-header .brand-text{font-size:18px;font-weight:700;color:var(--navy)}
+.app-header .brand-text span{color:var(--teal)}
+.header-actions{display:flex;align-items:center;gap:8px}
+.btn-logout{background:var(--gray-100);color:var(--gray-600);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500}
+.btn-logout:hover{background:var(--gray-200)}
+
+/* Nav */
+.app-nav{display:flex;gap:0;padding:0 12px;background:#fff;border-bottom:1px solid var(--gray-200);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-item{padding:12px 16px;font-size:14px;font-weight:500;color:var(--gray-500);white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;cursor:pointer;background:none}
+.nav-item:hover{color:var(--teal)}
+.nav-item.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+/* Content */
+.app-content{flex:1;padding:20px;max-width:1200px;margin:0 auto;width:100%}
+
+/* Cards */
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:17px;font-weight:700;color:var(--navy)}
+
+/* Stats Grid */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stat-icon.teal{background:var(--teal-bg);color:var(--teal)}
+.stat-icon.blue{background:#dbeafe;color:var(--blue)}
+.stat-icon.amber{background:#fef3c7;color:var(--amber)}
+.stat-icon.green{background:#dcfce7;color:var(--green)}
+.stat-icon.red{background:#fee2e2;color:var(--red)}
+.stat-info h3{font-size:24px;font-weight:700;color:var(--navy)}
+.stat-info p{font-size:13px;color:var(--gray-400)}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:right;padding:10px 12px;color:var(--gray-500);font-weight:600;border-bottom:1px solid var(--gray-200);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+tr:hover td{background:var(--gray-50)}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge.teal{background:var(--teal-bg);color:var(--teal)}
+.badge.blue{background:#dbeafe;color:var(--blue)}
+.badge.amber{background:#fef3c7;color:var(--amber)}
+.badge.green{background:#dcfce7;color:var(--green)}
+.badge.red{background:#fee2e2;color:var(--red)}
+.badge.gray{background:var(--gray-100);color:var(--gray-500)}
+
+/* Buttons */
+.btn{padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;transition:all .2s}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-light)}
+.btn-outline{background:#fff;border:1.5px solid var(--gray-200);color:var(--gray-600)}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{background:#fee2e2;color:var(--red)}
+.btn-danger:hover{background:#fecaca}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center}
+.modal-header h2{font-size:18px;font-weight:700;color:var(--navy)}
+.modal-close{background:none;font-size:24px;color:var(--gray-400);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+.modal-close:hover{background:var(--gray-100)}
+.modal-body{padding:20px}
+.modal-footer{padding:16px 20px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:8px}
+
+/* Form */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:14px;transition:border .2s}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--teal)}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Kanban */
+.kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px}
+.kanban-col{min-width:260px;flex:1}
+.kanban-col-header{padding:8px 12px;border-radius:8px 8px 0 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.kanban-col-body{padding:8px;min-height:100px}
+.kanban-card{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s}
+.kanban-card:hover{transform:translateY(-2px)}
+.kanban-card h4{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.kanban-card p{font-size:12px;color:var(--gray-400)}
+
+/* Loading */
+.spinner{width:40px;height:40px;border:3px solid var(--teal-bg);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;margin:40px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-center{display:flex;align-items:center;justify-content:center;padding:40px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:300;box-shadow:var(--shadow-lg);opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+
+/* Empty */
+.empty{text-align:center;padding:40px;color:var(--gray-400)}
+.empty-icon{font-size:48px;margin-bottom:8px;opacity:0.3}
+
+/* Responsive */
+@media(max-width:640px){
+.stats-grid{grid-template-columns:1fr 1fr}
+.stat-card{padding:14px}
+.stat-icon{width:40px;height:40px;font-size:18px}
+.stat-info h3{font-size:18px}
+.app-content{padding:12px}
+.form-row{grid-template-columns:1fr}
+.kanban{padding-bottom:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="loginScreen">
+<div class="login-card">
+<div class="logo">📋</div>
+<h1>AILON TASK CRM</h1>
+<p>מערכת ניהול לקוחות ופרויקטים</p>
+<input type="email" id="loginEmail" placeholder="אימייל" value="lior@ailon-task.com">
+<input type="password" id="loginPassword" placeholder="סיסמה">
+<button onclick="doLogin()">התחבר</button>
+<div class="login-error hidden" id="loginError"></div>
+</div>
+</div>
+
+<!-- App -->
+<div id="app">
+<!-- Header -->
+<div class="app-header">
+<div class="brand">
+<div class="brand-icon">A</div>
+<div class="brand-text">AILON <span>TASK</span></div>
+</div>
+<div class="header-actions">
+<span id="userName" style="font-size:13px;color:var(--gray-400);margin-left:8px"></span>
+<button class="btn-logout" onclick="doLogout()">יציאה</button>
+</div>
+</div>
+
+<!-- Nav -->
+<div class="app-nav" id="nav">
+<button class="nav-item active" data-page="dashboard">📊 דשבורד</button>
+<button class="nav-item" data-page="leads">🎯 לידים</button>
+<button class="nav-item" data-page="tasks">✅ משימות</button>
+<button class="nav-item" data-page="customers">👥 לקוחות</button>
+<button class="nav-item" data-page="projects">📁 פרויקטים</button>
+<button class="nav-item" data-page="expenses">💸 הוצאות</button>
+<button class="nav-item" data-page="incomes">💰 הכנסות</button>
+</div>
+
+<!-- Content -->
+<div class="app-content" id="content">
+<div class="loading-center"><div class="spinner"></div></div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+<div class="modal" id="modal">
+<div class="modal-header">
+<h2 id="modalTitle">כותרת</h2>
+<button class="modal-close" onclick="closeModal()">×</button>
+</div>
+<div class="modal-body" id="modalBody"></div>
+<div class="modal-footer" id="modalFooter"></div>
+</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://nmpwsahwalmxplxudndv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tcHdzYWh3YWxteHBseHVkbmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjcxNzIsImV4cCI6MjA5NzkwMzE3Mn0.QvQoCxmSz66dEPx7NWj6OcftgtjhViAytfkgRDL2q9c';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentPage = 'dashboard';
+
+// ============ AUTH ============
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.classList.add('hidden');
+  
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    errEl.textContent = 'שגיאה: ' + error.message;
+    errEl.classList.remove('hidden');
+    return;
+  }
+  currentUser = data.user;
+  showApp();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPassword').value = '';
+}
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    showApp();
+    return true;
+  }
+  return false;
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').classList.add('active');
+  document.getElementById('userName').textContent = currentUser?.email || '';
+  loadPage('dashboard');
+}
+
+// ============ NAV ============
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    loadPage(item.dataset.page);
+  });
+});
+
+async function loadPage(page) {
+  currentPage = page;
+  const content = document.getElementById('content');
+  content.innerHTML = '<div class="loading-center"><div class="spinner"></div></div>';
+  
+  try {
+    switch(page) {
+      case 'dashboard': await renderDashboard(); break;
+      case 'leads': await renderLeads(); break;
+      case 'tasks': await renderTasks(); break;
+      case 'customers': await renderCustomers(); break;
+      case 'projects': await renderProjects(); break;
+      case 'expenses': await renderExpenses(); break;
+      case 'incomes': await renderIncomes(); break;
+    }
+  } catch(e) {
+    content.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>שגיאה בטעינת נתונים</p><p style="font-size:12px;margin-top:4px">${e.message}</p></div>`;
+  }
+}
+
+// ============ DASHBOARD ============
+async function renderDashboard() {
+  const [leads, tasks, customers, projects, expenses, incomes] = await Promise.all([
+    sb.from('leads').select('*').then(r => r.data || []),
+    sb.from('tasks').select('*').then(r => r.data || []),
+    sb.from('customers').select('*').then(r => r.data || []),
+    sb.from('projects').select('*').then(r => r.data || []),
+    sb.from('expenses').select('*').then(r => r.data || []),
+    sb.from('incomes').select('*').then(r => r.data || []),
+  ]);
+
+  const openLeads = leads.filter(l => l.status === 'lead' || l.status === 'new' || !l.status).length;
+  const activeTasks = tasks.filter(t => t.status !== 'done' && t.status !== 'completed').length;
+  const totalExpenses = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  const totalIncomes = incomes.reduce((s, i) => s + (i.amount || 0), 0);
+  const balance = totalIncomes - totalExpenses;
+
+  document.getElementById('content').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon teal">🎯</div>
+        <div class="stat-info"><h3>${leads.length}</h3><p>סה"כ לידים (${openLeads} פתוחים)</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">👥</div>
+        <div class="stat-info"><h3>${customers.length}</h3><p>לקוחות</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber">✅</div>
+        <div class="stat-info"><h3>${tasks.length}</h3><p>משימות (${activeTasks} פעילות)</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">📁</div>
+        <div class="stat-info"><h3>${projects.length}</h3><p>פרויקטים</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">💰</div>
+        <div class="stat-info"><h3>₪${totalIncomes.toLocaleString()}</h3><p>הכנסות</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">💸</div>
+        <div class="stat-info"><h3>₪${totalExpenses.toLocaleString()}</h3><p>הוצאות</p></div>
+      </div>
+      <div class="stat-card" style="grid-column:1/-1">
+        <div class="stat-icon ${balance >= 0 ? 'green' : 'red'}">${balance >= 0 ? '📈' : '📉'}</div>
+        <div class="stat-info"><h3>₪${balance.toLocaleString()}</h3><p>מאזן</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">משימות אחרונות</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>כותרת</th><th>סטטוס</th><th>עדיפות</th><th>תאריך</th></tr></thead>
+          <tbody>
+            ${tasks.slice(0, 5).map(t => `
+              <tr>
+                <td>${t.title || t.name || '-'}</td>
+                <td><span class="badge ${statusColor(t.status)}">${statusLabel(t.status)}</span></td>
+                <td><span class="badge ${priorityColor(t.priority)}">${t.priority || '-'}</span></td>
+                <td>${formatDate(t.due_date || t.created_at)}</td>
+              </tr>
+            `).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--gray-400)">אין משימות</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">לידים אחרונים</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>עסק</th><th>איש קשר</th><th>סטטוס</th><th>תאריך</th></tr></thead>
+          <tbody>
+            ${leads.slice(0, 5).map(l => `
+              <tr>
+                <td>${l.business_name || l.name || '-'}</td>
+                <td>${l.contact_name || '-'}</td>
+                <td><span class="badge ${leadStatusColor(l.status)}">${leadStatusLabel(l.status)}</span></td>
+                <td>${formatDate(l.created_at)}</td>
+              </tr>
+            `).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--gray-400)">אין לידים</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ============ LEADS ============
+async function renderLeads() {
+  const { data: leads } = await sb.from('leads').select('*').order('created_at', { ascending: false });
+  
+  const statuses = [
+    { key: 'new', label: 'חדש', color: 'blue' },
+    { key: 'lead', label: 'ליד', color: 'teal' },
+    { key: 'contacted', label: 'נוצר קשר', color: 'amber' },
+    { key: 'meeting', label: 'פגישה', color: 'teal' },
+    { key: 'won', label: 'זכייה', color: 'green' },
+    { key: 'lost', label: 'הפסד', color: 'red' },
+  ];
+
+  let html = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">ניהול לידים</div>
+        <button class="btn btn-primary btn-sm" onclick="openLeadModal()">+ ליד חדש</button>
+      </div>
+    </div>
+    <div class="kanban">
+  `;
+
+  for (const s of statuses) {
+    const colLeads = (leads || []).filter(l => l.status === s.key);
+    html += `
+      <div class="kanban-col">
+        <div class="kanban-col-header badge ${s.color}" style="border-radius:8px">${s.label} (${colLeads.length})</div>
+        <div class="kanban-col-body">
+          ${colLeads.map(l => `
+            <div class="kanban-card" onclick="openLeadModal('${l.id}')">
+              <h4>${l.business_name || l.name || '-'}</h4>
+              <p>${l.contact_name || ''} ${l.phone || ''}</p>
+              ${l.field ? `<p style="color:var(--teal);margin-top:4px">${l.field}</p>` : ''}
+            </div>
+          `).join('') || '<div style="text-align:center;padding:20px;color:var(--gray-300)">אין</div>'}
+        </div>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+  document.getElementById('content').innerHTML = html;
+}
+
+function openLeadModal(id) {
+  const isEdit = !!id;
+  openModal(isEdit ? 'עריכת ליד' : 'ליד חדש', `
+    <div class="form-group"><label>שם עסק</label><input id="ld_business" placeholder="שם העסק"></div>
+    <div class="form-row">
+      <div class="form-group"><label>איש קשר</label><input id="ld_contact" placeholder="שם"></div>
+      <div class="form-group"><label>טלפון</label><input id="ld_phone" placeholder="טלפון"></div>
+    </div>
+    <div class="form-group"><label>תחום</label><input id="ld_field" placeholder="תחום פעילות"></div>
+    <div class="form-group"><label>סטטוס</label>
+      <select id="ld_status">
+        <option value="new">חדש</option>
+        <option value="lead">ליד</option>
+        <option value="contacted">נוצר קשר</option>
+        <option value="meeting">פגישה</option>
+        <option value="won">זכייה</option>
+        <option value="lost">הפסד</option>
+      </select>
+    </div>
+    <div class="form-group"><label>כאבים / הערות</label><textarea id="ld_notes" placeholder="נקודות כאב, הערות..."></textarea></div>
+  `, isEdit ? 'עדכן' : 'צור', async () => {
+    const data = {
+      business_name: val('ld_business'),
+      contact_name: val('ld_contact'),
+      phone: val('ld_phone'),
+      field: val('ld_field'),
+      status: val('ld_status'),
+      notes: val('ld_notes'),
+    };
+    if (isEdit) {
+      await sb.from('leads').update(data).eq('id', id);
+      toast('ליד עודכן');
+    } else {
+      await sb.from('leads').insert(data);
+      toast('ליד נוצר');
+    }
+    closeModal();
+    renderLeads();
+  });
+
+  if (id) {
+    sb.from('leads').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) {
+        setVal('ld_business', data.business_name);
+        setVal('ld_contact', data.contact_name);
+        setVal('ld_phone', data.phone);
+        setVal('ld_field', data.field);
+        setVal('ld_status', data.status);
+        setVal('ld_notes', data.notes);
+      }
+    });
+  }
+}
+
+// ============ TASKS ============
+async function renderTasks() {
+  const { data: tasks } = await sb.from('tasks').select('*').order('created_at', { ascending: false });
+  
+  document.getElementById('content').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">משימות</div>
+        <button class="btn btn-primary btn-sm" onclick="openTaskModal()">+ משימה</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>כותרת</th><th>סטטוס</th><th>עדיפות</th><th>אחראי</th><th>תאריך יעד</th><th>פעולות</th></tr></thead>
+          <tbody>
+            ${(tasks || []).map(t => `
+              <tr>
+                <td>${t.title || t.name || '-'}</td>
+                <td><span class="badge ${statusColor(t.status)}">${statusLabel(t.status)}</span></td>
+                <td><span class="badge ${priorityColor(t.priority)}">${t.priority || '-'}</span></td>
+                <td>${t.assigned_to || '-'}</td>
+                <td>${formatDate(t.due_date)}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm" onclick="openTaskModal('${t.id}')">עריכה</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteTask('${t.id}')">מחק</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--gray-400)">אין משימות</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function openTaskModal(id) {
+  const isEdit = !!id;
+  openModal(isEdit ? 'עריכת משימה' : 'משימה חדשה', `
+    <div class="form-group"><label>כותרת</label><input id="tk_title" placeholder="כותרת המשימה"></div>
+    <div class="form-group"><label>תיאור</label><textarea id="tk_desc" placeholder="תיאור..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>סטטוס</label>
+        <select id="tk_status"><option value="todo">לעשות</option><option value="in_progress">בעבודה</option><option value="done">הושלם</option></select>
+      </div>
+      <div class="form-group"><label>עדיפות</label>
+        <select id="tk_priority"><option value="low">נמוכה</option><option value="medium">בינונית</option><option value="high">גבוהה</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>אחראי</label><input id="tk_assignee" placeholder="שם"></div>
+      <div class="form-group"><label>תאריך יעד</label><input type="date" id="tk_due"></div>
+    </div>
+  `, isEdit ? 'עדכן' : 'צור', async () => {
+    const data = {
+      title: val('tk_title'),
+      description: val('tk_desc'),
+      status: val('tk_status'),
+      priority: val('tk_priority'),
+      assigned_to: val('tk_assignee'),
+      due_date: val('tk_due') || null,
+    };
+    if (isEdit) {
+      await sb.from('tasks').update(data).eq('id', id);
+      toast('משימה עודכנה');
+    } else {
+      await sb.from('tasks').insert(data);
+      toast('משימה נוצרה');
+    }
+    closeModal();
+    renderTasks();
+  });
+
+  if (id) {
+    sb.from('tasks').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) {
+        setVal('tk_title', data.title || data.name);
+        setVal('tk_desc', data.description);
+        setVal('tk_status', data.status);
+        setVal('tk_priority', data.priority);
+        setVal('tk_assignee', data.assigned_to);
+        setVal('tk_due', data.due_date);
+      }
+    });
+  }
+}
+
+async function deleteTask(id) {
+  if (!confirm('למחוק משימה?')) return;
+  await sb.from('tasks').delete().eq('id', id);
+  toast('משימה נמחקה');
+  renderTasks();
+}
+
+// ============ CUSTOMERS ============
+async function renderCustomers() {
+  const { data: customers } = await sb.from('customers').select('*').order('created_at', { ascending: false });
+  
+  document.getElementById('content').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">לקוחות</div>
+        <button class="btn btn-primary btn-sm" onclick="openCustomerModal()">+ לקוח</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>שם</th><th>איש קשר</th><th>טלפון</th><th>אימייל</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+          <tbody>
+            ${(customers || []).map(c => `
+              <tr>
+                <td>${c.name || c.business_name || '-'}</td>
+                <td>${c.contact_name || c.contact_person || '-'}</td>
+                <td>${c.phone || '-'}</td>
+                <td>${c.email || '-'}</td>
+                <td><span class="badge ${c.status === 'active' ? 'green' : 'gray'}">${c.status || '-'}</span></td>
+                <td>
+                  <button class="btn btn-outline btn-sm" onclick="openCustomerModal('${c.id}')">עריכה</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteCustomer('${c.id}')">מחק</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--gray-400)">אין לקוחות</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function openCustomerModal(id) {
+  const isEdit = !!id;
+  openModal(isEdit ? 'עריכת לקוח' : 'לקוח חדש', `
+    <div class="form-group"><label>שם עסק</label><input id="cu_name" placeholder="שם העסק"></div>
+    <div class="form-row">
+      <div class="form-group"><label>איש קשר</label><input id="cu_contact" placeholder="שם"></div>
+      <div class="form-group"><label>טלפון</label><input id="cu_phone" placeholder="טלפון"></div>
+    </div>
+    <div class="form-group"><label>אימייל</label><input id="cu_email" placeholder="אימייל"></div>
+    <div class="form-group"><label>סטטוס</label>
+      <select id="cu_status"><option value="active">פעיל</option><option value="inactive">לא פעיל</option></select>
+    </div>
+  `, isEdit ? 'עדכן' : 'צור', async () => {
+    const data = {
+      name: val('cu_name'),
+      contact_name: val('cu_contact'),
+      phone: val('cu_phone'),
+      email: val('cu_email'),
+      status: val('cu_status'),
+    };
+    if (isEdit) {
+      await sb.from('customers').update(data).eq('id', id);
+      toast('לקוח עודכן');
+    } else {
+      await sb.from('customers').insert(data);
+      toast('לקוח נוצר');
+    }
+    closeModal();
+    renderCustomers();
+  });
+
+  if (id) {
+    sb.from('customers').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) {
+        setVal('cu_name', data.name || data.business_name);
+        setVal('cu_contact', data.contact_name || data.contact_person);
+        setVal('cu_phone', data.phone);
+        setVal('cu_email', data.email);
+        setVal('cu_status', data.status);
+      }
+    });
+  }
+}
+
+async function deleteCustomer(id) {
+  if (!confirm('למחוק לקוח?')) return;
+  await sb.from('customers').delete().eq('id', id);
+  toast('לקוח נמחק');
+  renderCustomers();
+}
+
+// ============ PROJECTS ============
+async function renderProjects() {
+  const { data: projects } = await sb.from('projects').select('*').order('created_at', { ascending: false });
+  
+  document.getElementById('content').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">פרויקטים</div>
+        <button class="btn btn-primary btn-sm" onclick="openProjectModal()">+ פרויקט</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>שם</th><th>לקוח</th><th>סטטוס</th><th>תאריך יעד</th><th>פעולות</th></tr></thead>
+          <tbody>
+            ${(projects || []).map(p => `
+              <tr>
+                <td>${p.name || p.title || '-'}</td>
+                <td>${p.customer_id || '-'}</td>
+                <td><span class="badge ${projectStatusColor(p.status)}">${projectStatusLabel(p.status)}</span></td>
+                <td>${formatDate(p.due_date || p.end_date)}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm" onclick="openProjectModal('${p.id}')">עריכה</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')">מחק</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--gray-400)">אין פרויקטים</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function openProjectModal(id) {
+  const isEdit = !!id;
+  openModal(isEdit ? 'עריכת פרויקט' : 'פרויקט חדש', `
+    <div class="form-group"><label>שם פרויקט</label><input id="pr_name" placeholder="שם"></div>
+    <div class="form-group"><label>תיאור</label><textarea id="pr_desc" placeholder="תיאור..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>סטטוס</label>
+        <select id="pr_status"><option value="planning">תכנון</option><option value="active">פעיל</option><option value="completed">הושלם</option><option value="on_hold">מושהה</option></select>
+      </div>
+      <div class="form-group"><label>תאריך יעד</label><input type="date" id="pr_due"></div>
+    </div>
+  `, isEdit ? 'עדכן' : 'צור', async () => {
+    const data = {
+      name: val('pr_name'),
+      description: val('pr_desc'),
+      status: val('pr_status'),
+      due_date: val('pr_due') || null,
+    };
+    if (isEdit) {
+      await sb.from('projects').update(data).eq('id', id);
+      toast('פרויקט עודכן');
+    } else {
+      await sb.from('projects').insert(data);
+      toast('פרויקט נוצר');
+    }
+    closeModal();
+    renderProjects();
+  });
+
+  if (id) {
+    sb.from('projects').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) {
+        setVal('pr_name', data.name || data.title);
+        setVal('pr_desc', data.description);
+        setVal('pr_status', data.status);
+        setVal('pr_due', data.due_date || data.end_date);
+      }
+    });
+  }
+}
+
+async function deleteProject(id) {
+  if (!confirm('למחוק פרויקט?')) return;
+  await sb.from('projects').delete().eq('id', id);
+  toast('פרויקט נמחק');
+  renderProjects();
+}
+
+// ============ EXPENSES ============
+async function renderExpenses() {
+  const { data: expenses } = await sb.from('expenses').select('*').order('created_at', { ascending: false });
+  const total = (expenses || []).reduce((s, e) => s + (e.amount || 0), 0);
+  
+  document.getElementById('content').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon red">💸</div>
+        <div class="stat-info"><h3>₪${total.toLocaleString()}</h3><p>סה"כ הוצאות</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">הוצאות</div>
+        <button class="btn btn-primary btn-sm" onclick="openExpenseModal()">+ הוצאה</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>תיאור</th><th>סכום</th><th>קטגוריה</th><th>תאריך</th><th>פעולות</th></tr></thead>
+          <tbody>
+            ${(expenses || []).map(e => `
+              <tr>
+                <td>${e.description || e.name || '-'}</td>
+                <td>₪${(e.amount || 0).toLocaleString()}</td>
+                <td><span class="badge gray">${e.category || e.type || '-'}</span></td>
+                <td>${formatDate(e.created_at || e.date)}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm" onclick="openExpenseModal('${e.id}')">עריכה</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteExpense('${e.id}')">מחק</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--gray-400)">אין הוצאות</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function openExpenseModal(id) {
+  const isEdit = !!id;
+  openModal(isEdit ? 'עריכת הוצאה' : 'הוצאה חדשה', `
+    <div class="form-group"><label>תיאור</label><input id="ex_desc" placeholder="תיאור הוצאה"></div>
+    <div class="form-row">
+      <div class="form-group"><label>סכום (₪)</label><input type="number" id="ex_amount" placeholder="0"></div>
+      <div class="form-group"><label>קטגוריה</label><input id="ex_category" placeholder="קטגוריה"></div>
+    </div>
+    <div class="form-group"><label>תאריך</label><input type="date" id="ex_date"></div>
+  `, isEdit ? 'עדכן' : 'צור', async () => {
+    const data = {
+      description: val('ex_desc'),
+      amount: parseFloat(val('ex_amount')) || 0,
+      category: val('ex_category'),
+      date: val('ex_date') || null,
+    };
+    if (isEdit) {
+      await sb.from('expenses').update(data).eq('id', id);
+      toast('הוצאה עודכנה');
+    } else {
+      await sb.from('expenses').insert(data);
+      toast('הוצאה נוצרה');
+    }
+    closeModal();
+    renderExpenses();
+  });
+
+  if (id) {
+    sb.from('expenses').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) {
+        setVal('ex_desc', data.description || data.name);
+        setVal('ex_amount', data.amount);
+        setVal('ex_category', data.category || data.type);
+        setVal('ex_date', data.date);
+      }
+    });
+  }
+}
+
+async function deleteExpense(id) {
+  if (!confirm('למחוק הוצאה?')) return;
+  await sb.from('expenses').delete().eq('id', id);
+  toast('הוצאה נמחקה');
+  renderExpenses();
+}
+
+// ============ INCOMES ============
+async function renderIncomes() {
+  const { data: incomes } = await sb.from('incomes').select('*').order('created_at', { ascending: false });
+  const total = (incomes || []).reduce((s, i) => s + (i.amount || 0), 0);
+  
+  document.getElementById('content').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon green">💰</div>
+        <div class="stat-info"><h3>₪${total.toLocaleString()}</h3><p>סה"כ הכנסות</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">הכנסות</div>
+        <button class="btn btn-primary btn-sm" onclick="openIncomeModal()">+ הכנסה</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>תיאור</th><th>סכום</th><th>לקוח</th><th>תאריך</th><th>פעולות</th></tr></thead>
+          <tbody>
+            ${(incomes || []).map(i => `
+              <tr>
+                <td>${i.description || i.name || '-'}</td>
+                <td>₪${(i.amount || 0).toLocaleString()}</td>
+                <td>${i.customer_id || '-'}</td>
+                <td>${formatDate(i.created_at || i.date)}</td>
+                <td>
+                  <button class="btn btn-outline btn-sm" onclick="openIncomeModal('${i.id}')">עריכה</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteIncome('${i.id}')">מחק</button>
+                </td>
+              </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--gray-400)">אין הכנסות</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function openIncomeModal(id) {
+  const isEdit = !!id;
+  openModal(isEdit ? 'עריכת הכנסה' : 'הכנסה חדשה', `
+    <div class="form-group"><label>תיאור</label><input id="in_desc" placeholder="תיאור הכנסה"></div>
+    <div class="form-row">
+      <div class="form-group"><label>סכום (₪)</label><input type="number" id="in_amount" placeholder="0"></div>
+      <div class="form-group"><label>תאריך</label><input type="date" id="in_date"></div>
+    </div>
+  `, isEdit ? 'עדכן' : 'צור', async () => {
+    const data = {
+      description: val('in_desc'),
+      amount: parseFloat(val('in_amount')) || 0,
+      date: val('in_date') || null,
+    };
+    if (isEdit) {
+      await sb.from('incomes').update(data).eq('id', id);
+      toast('הכנסה עודכנה');
+    } else {
+      await sb.from('incomes').insert(data);
+      toast('הכנסה נוצרה');
+    }
+    closeModal();
+    renderIncomes();
+  });
+
+  if (id) {
+    sb.from('incomes').select('*').eq('id', id).single().then(({ data }) => {
+      if (data) {
+        setVal('in_desc', data.description || data.name);
+        setVal('in_amount', data.amount);
+        setVal('in_date', data.date);
+      }
+    });
+  }
+}
+
+async function deleteIncome(id) {
+  if (!confirm('למחוק הכנסה?')) return;
+  await sb.from('incomes').delete().eq('id', id);
+  toast('הכנסה נמחקה');
+  renderIncomes();
+}
+
+// ============ HELPERS ============
+function openModal(title, body, btnText, onSave) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalFooter').innerHTML = `<button class="btn btn-outline" onclick="closeModal()">ביטול</button><button class="btn btn-primary" id="modalSave">${btnText}</button>`;
+  document.getElementById('modalOverlay').classList.remove('hidden');
+  document.getElementById('modalSave').onclick = onSave;
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.add('hidden');
+}
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function setVal(id, v) {
+  const el = document.getElementById(id);
+  if (el && v !== null && v !== undefined) el.value = v;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function formatDate(d) {
+  if (!d) return '-';
+  try { return new Date(d).toLocaleDateString('he-IL'); } catch { return d; }
+}
+
+function statusColor(s) {
+  const m = { todo: 'gray', in_progress: 'amber', done: 'green', completed: 'green', open: 'blue', closed: 'gray' };
+  return m[s] || 'gray';
+}
+
+function statusLabel(s) {
+  const m = { todo: 'לעשות', in_progress: 'בעבודה', done: 'הושלם', completed: 'הושלם', open: 'פתוח', closed: 'סגור' };
+  return m[s] || s || '-';
+}
+
+function priorityColor(p) {
+  const m = { low: 'gray', medium: 'amber', high: 'red', 'גבוהה': 'red', 'בינונית': 'amber', 'נמוכה': 'gray' };
+  return m[p] || 'gray';
+}
+
+function leadStatusColor(s) {
+  const m = { new: 'blue', lead: 'teal', contacted: 'amber', meeting: 'teal', won: 'green', lost: 'red' };
+  return m[s] || 'gray';
+}
+
+function leadStatusLabel(s) {
+  const m = { new: 'חדש', lead: 'ליד', contacted: 'נוצר קשר', meeting: 'פגישה', won: 'זכייה', lost: 'הפסד' };
+  return m[s] || s || '-';
+}
+
+function projectStatusColor(s) {
+  const m = { planning: 'blue', active: 'teal', completed: 'green', on_hold: 'amber' };
+  return m[s] || 'gray';
+}
+
+function projectStatusLabel(s) {
+  const m = { planning: 'תכנון', active: 'פעיל', completed: 'הושלם', on_hold: 'מושהה' };
+  return m[s] || s || '-';
+}
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// Enter key on login
+document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// Init
+checkSession();
+</script>
+</body>
+</html>
