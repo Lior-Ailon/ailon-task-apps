@@ -9,22 +9,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0d9488;
-            --primary-dark: #0f766e;
-            --primary-light: #14b8a6;
-            --accent: #14b8a6;
-            --accent-2: #5eead4;
+            --primary: #6c5ce7;
+            --primary-dark: #5849c4;
+            --primary-light: #a29bfe;
+            --accent: #fd79a8;
+            --accent-2: #00cec9;
             --dark: #2d3436;
             --gray: #636e72;
             --light: #f5f6fa;
             --white: #ffffff;
-            --success: #22c55e;
+            --success: #00b894;
             --error: #d63031;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Heebo', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #134e4a 50%, #0f172a 100%);
+            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 50%, #0c0c1d 100%);
             color: var(--white);
             min-height: 100vh;
             overflow-x: hidden;
@@ -33,14 +33,14 @@
             position: relative;
             padding: 40px 20px 30px;
             text-align: center;
-            background: linear-gradient(135deg, rgba(13,148,136,0.3), rgba(20,184,166,0.2));
+            background: linear-gradient(135deg, rgba(108,92,231,0.3), rgba(253,121,168,0.2));
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .hero::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 30% 50%, rgba(13,148,136,0.2), transparent 50%),
+            background: radial-gradient(circle at 30% 50%, rgba(108,92,231,0.2), transparent 50%),
                         radial-gradient(circle at 70% 30%, rgba(253,121,168,0.15), transparent 50%);
             pointer-events: none;
         }
@@ -68,19 +68,6 @@
             color: rgba(255,255,255,0.7);
             font-size: 16px;
             position: relative; z-index: 1;
-        }
-        .badge-row {
-            display: flex; justify-content: center; gap: 12px;
-            flex-wrap: wrap; margin-top: 14px;
-            position: relative; z-index: 1;
-        }
-        .badge {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.8);
         }
         .container {
             max-width: 560px;
@@ -129,6 +116,59 @@
             display: flex; align-items: center; gap: 8px;
         }
         .card-title .icon { font-size: 22px; }
+
+        .event-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .event-card {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .event-card:hover {
+            background: rgba(108,92,231,0.15);
+            border-color: rgba(108,92,231,0.4);
+            transform: translateY(-2px);
+        }
+        .event-card.selected {
+            background: linear-gradient(135deg, rgba(108,92,231,0.3), rgba(253,121,168,0.2));
+            border-color: var(--primary-light);
+            box-shadow: 0 0 20px rgba(108,92,231,0.3);
+        }
+        .event-card .event-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .event-card .event-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+        }
+        .event-card .event-check {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: var(--success);
+            display: none;
+            align-items: center; justify-content: center;
+            font-size: 14px;
+            color: white;
+        }
+        .event-card.selected .event-check {
+            display: flex;
+        }
+
         .date-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -144,7 +184,7 @@
             transition: all 0.2s;
             font-size: 13px;
         }
-        .date-slot:hover { background: rgba(13,148,136,0.2); }
+        .date-slot:hover { background: rgba(108,92,231,0.2); }
         .date-slot.selected {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             border-color: var(--primary-light);
@@ -170,7 +210,7 @@
             font-size: 14px;
             font-weight: 500;
         }
-        .time-slot:hover { background: rgba(13,148,136,0.2); }
+        .time-slot:hover { background: rgba(108,92,231,0.2); }
         .time-slot.selected {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             box-shadow: 0 0 15px rgba(108,92,231,0.4);
@@ -199,23 +239,6 @@
             background: rgba(108,92,231,0.1);
         }
         .form-input::placeholder { color: rgba(255,255,255,0.3); }
-        .event-types {
-            display: flex; gap: 8px; flex-wrap: wrap;
-        }
-        .event-type-chip {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .event-type-chip:hover { background: rgba(13,148,136,0.2); }
-        .event-type-chip.selected {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-color: var(--primary-light);
-        }
         .btn {
             width: 100%;
             padding: 16px;
@@ -231,7 +254,7 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: var(--white);
-            box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+            box-shadow: 0 4px 20px rgba(108,92,231,0.3);
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(108,92,231,0.4); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -240,6 +263,13 @@
             border: 1px solid rgba(255,255,255,0.2);
             color: var(--white);
         }
+        .btn-whatsapp {
+            background: #25D366;
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+            text-decoration: none;
+        }
+        .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(37,211,102,0.4); }
         .success-screen {
             text-align: center;
             padding: 30px 20px;
@@ -271,34 +301,45 @@
             display: flex; justify-content: space-between;
             padding: 6px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 14px;
+            font-size: 15px;
         }
         .summary-row:last-child { border-bottom: none; }
-        .summary-label { color: rgba(255,255,255,0.5); }
-        .summary-value { font-weight: 500; }
+        .summary-label { color: rgba(255,255,255,0.6); font-weight: 400; }
+        .summary-value { color: var(--white); font-weight: 600; }
         .hidden { display: none !important; }
         .error-msg {
-            color: var(--error);
-            font-size: 13px;
+            background: rgba(214,48,49,0.15);
+            border: 1px solid rgba(214,48,49,0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #fab1a0;
+            font-size: 14px;
             text-align: center;
-            margin-top: 8px;
         }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255,255,255,0.3);
-            font-size: 12px;
+        .whatsapp-notice {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(37,211,102,0.1);
+            border: 1px solid rgba(37,211,102,0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
         }
         .spinner {
             width: 20px; height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 3px solid rgba(255,255,255,0.2);
             border-top-color: var(--white);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
+            display: inline-block;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .month-nav {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 12px;
         }
         .month-nav button {
@@ -306,23 +347,13 @@
             border: none;
             color: var(--white);
             width: 36px; height: 36px;
-            border-radius: 50%;
+            border-radius: 10px;
+            font-size: 20px;
             cursor: pointer;
-            font-size: 18px;
             transition: all 0.2s;
         }
-        .month-nav button:hover { background: rgba(13,148,136,0.3); }
-        .month-label { font-size: 15px; font-weight: 500; }
-        .whatsapp-notice {
-            background: rgba(0,200,136,0.1);
-            border: 1px solid rgba(0,200,136,0.2);
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-top: 16px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.8);
-            display: flex; align-items: center; gap: 8px;
-        }
+        .month-nav button:hover { background: rgba(108,92,231,0.3); }
+        .month-label { font-size: 16px; font-weight: 600; }
         .weekdays-row {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -335,19 +366,19 @@
             color: rgba(255,255,255,0.4);
             font-weight: 500;
         }
-    input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style>
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+        }
+    </style>
 </head>
 <body>
     <div class="hero">
         <div class="logo-circle">🎧</div>
         <h1>DJ יהל כהן</h1>
         <p>הזמינו פגישת ייעוץ בקליק</p>
-        <div class="badge-row">
-            <span class="badge">🎵 אירועים</span>
-            <span class="badge">🎤 בר/בת מצווה</span>
-            <span class="badge">💍 חתונות</span>
-            <span class="badge">🎉 מסיבות</span>
-        </div>
     </div>
     <div class="container">
         <div class="step-indicator">
@@ -357,7 +388,47 @@
             <div class="step-line" id="line2"></div>
             <div class="step-dot" id="dot3">3</div>
         </div>
+
         <div id="step1" class="card">
+            <div class="card-title"><span class="icon">🎶</span> בחרו סוג אירוע</div>
+            <div class="event-cards" id="eventCards">
+                <div class="event-card" onclick="selectEventCard(this, 'חתונה')">
+                    <div class="event-check">✓</div>
+                    <span class="event-icon">💍</span>
+                    <span class="event-label">חתונה</span>
+                </div>
+                <div class="event-card" onclick="selectEventCard(this, 'בר/בת מצווה')">
+                    <div class="event-check">✓</div>
+                    <span class="event-icon">🎤</span>
+                    <span class="event-label">בר/בת מצווה</span>
+                </div>
+                <div class="event-card" onclick="selectEventCard(this, 'ברית')">
+                    <div class="event-check">✓</div>
+                    <span class="event-icon">👶</span>
+                    <span class="event-label">ברית</span>
+                </div>
+                <div class="event-card" onclick="selectEventCard(this, 'מסיבה')">
+                    <div class="event-check">✓</div>
+                    <span class="event-icon">🎉</span>
+                    <span class="event-label">מסיבה</span>
+                </div>
+                <div class="event-card" onclick="selectEventCard(this, 'יום הולדת')">
+                    <div class="event-check">✓</div>
+                    <span class="event-icon">🎂</span>
+                    <span class="event-label">יום הולדת</span>
+                </div>
+                <div class="event-card" onclick="selectEventCard(this, 'אירוע עסקי')">
+                    <div class="event-check">✓</div>
+                    <span class="event-icon">🏢</span>
+                    <span class="event-label">אירוע עסקי</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="margin-top: 20px;" id="nextBtn1" onclick="goToStep2()" disabled>
+                המשך ←
+            </button>
+        </div>
+
+        <div id="step2" class="card hidden">
             <div class="card-title"><span class="icon">📅</span> בחרו תאריך ושעה</div>
             <div class="month-nav">
                 <button onclick="prevMonth()">›</button>
@@ -380,11 +451,15 @@
                 </div>
                 <div class="time-grid" id="timeGrid"></div>
             </div>
-            <button class="btn btn-primary" style="margin-top: 20px;" id="nextBtn1" onclick="goToStep2()" disabled>
-                המשך ←
-            </button>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="goToStep(1)">← חזור</button>
+                <button class="btn btn-primary" id="nextBtn2" onclick="goToStep3()" disabled>
+                    המשך ←
+                </button>
+            </div>
         </div>
-        <div id="step2" class="card hidden">
+
+        <div id="step3" class="card hidden">
             <div class="card-title"><span class="icon">📝</span> פרטים אישיים</div>
             <div class="form-group">
                 <label class="form-label">שם מלא *</label>
@@ -395,17 +470,6 @@
                 <input type="tel" class="form-input" id="clientPhone" placeholder="050-1234567" maxlength="11">
             </div>
             <div class="form-group">
-                <label class="form-label">סוג אירוע</label>
-                <div class="event-types" id="eventTypes">
-                    <span class="event-type-chip" onclick="selectEventType(this)">💍 חתונה</span>
-                    <span class="event-type-chip" onclick="selectEventType(this)">🎵 בר/בת מצווה</span>
-                    <span class="event-type-chip" onclick="selectEventType(this)">🎉 מסיבה</span>
-                    <span class="event-type-chip" onclick="selectEventType(this)">🎂 יום הולדת</span>
-                    <span class="event-type-chip" onclick="selectEventType(this)">🏢 אירוע עסקי</span>
-                    <span class="event-type-chip" onclick="selectEventType(this)">📞 ייעוץ טלפוני</span>
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="form-label">הערות (אופציונלי)</label>
                 <textarea class="form-input" id="notes" rows="3" placeholder="פרטים נוספים על האירוע..."></textarea>
             </div>
@@ -414,34 +478,36 @@
                 <span>תקבלו תזכורת בוואטסאפ 24 שעות לפני הפגישה</span>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-outline" onclick="goToStep(1)">← חזור</button>
-                <button class="btn btn-primary" onclick="goToStep3()">המשך ←</button>
+                <button class="btn btn-outline" onclick="goToStep(2)">← חזור</button>
+                <button class="btn btn-primary" onclick="goToStep4()">המשך ←</button>
             </div>
         </div>
-        <div id="step3" class="card hidden">
+
+        <div id="step4" class="card hidden">
             <div class="card-title"><span class="icon">✅</span> אישור הזמנה</div>
             <div style="margin-bottom: 16px; color: rgba(255,255,255,0.7); font-size: 14px;">
                 אנא ודאו את פרטי הפגישה:
             </div>
             <div class="booking-summary" id="summaryPreview"></div>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-outline" onclick="goToStep(2)">← חזור</button>
+                <button class="btn btn-outline" onclick="goToStep(3)">← חזור</button>
                 <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()">
                     אישור וקביעת פגישה 🎉
                 </button>
             </div>
             <div class="error-msg hidden" id="errorMsg"></div>
         </div>
+
         <div id="successScreen" class="hidden">
             <div class="success-screen">
                 <div class="success-icon">✓</div>
                 <div class="success-title">הפגישה נקבעה!</div>
                 <div class="success-subtitle">קיבלנו את ההזמנה שלכם 🎉<br>תזכורת בוואטסאפ תגיע 24 שעות לפני הפגישה</div>
                 <div class="booking-summary" id="bookingDetails"></div>
-                <a id="whatsappYaelBtn" href="#" target="_blank" style="display:none;text-decoration:none;margin-bottom:12px;width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;text-align:center;background:linear-gradient(135deg,#25D366,#128C7E);color:white;box-shadow:0 4px 20px rgba(37,211,102,0.3);">
-                    📲 שלח ליעל ב-WhatsApp
+                <a href="#" id="whatsappBtn" class="btn btn-whatsapp" target="_blank" style="margin-bottom: 10px;">
+                    📱 שלח ליהל ב-WhatsApp
                 </a>
-                <button class="btn btn-primary" onclick="resetApp()">קביעת פגישה נוספת</button>
+                <button class="btn btn-outline" onclick="resetApp()">קביעת פגישה נוספת</button>
             </div>
         </div>
     </div>
@@ -451,10 +517,11 @@
     </div>
     <script>
         const API_URL = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/createYaelBooking';
+        const YAEL_PHONE = '972536754971';
         const HE_MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
         const HE_DAYS = ['א','ב','ג','ד','ה','ו','ש'];
         const TIME_SLOTS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
-        
+
         let currentMonth = new Date();
         let selectedDate = null;
         let selectedTime = null;
@@ -501,7 +568,7 @@
             selectedTime = null;
             loadTimeSlots();
             document.getElementById('timeSection').classList.remove('hidden');
-            document.getElementById('nextBtn1').disabled = true;
+            document.getElementById('nextBtn2').disabled = true;
         }
 
         function loadTimeSlots() {
@@ -520,7 +587,7 @@
             selectedTime = time;
             document.querySelectorAll('.time-slot').forEach(function(s) { s.classList.remove('selected'); });
             el.classList.add('selected');
-            document.getElementById('nextBtn1').disabled = false;
+            document.getElementById('nextBtn2').disabled = false;
         }
 
         function formatDate(d) {
@@ -537,39 +604,58 @@
         function prevMonth() { currentMonth.setMonth(currentMonth.getMonth() - 1); renderMonth(); }
         function nextMonth() { currentMonth.setMonth(currentMonth.getMonth() + 1); renderMonth(); }
 
-        function selectEventType(el) {
-            document.querySelectorAll('.event-type-chip').forEach(function(c) { c.classList.remove('selected'); });
+        function selectEventCard(el, type) {
+            document.querySelectorAll('.event-card').forEach(function(c) { c.classList.remove('selected'); });
             el.classList.add('selected');
-            selectedEventType = el.textContent;
+            selectedEventType = type;
+            document.getElementById('nextBtn1').disabled = false;
         }
 
         function goToStep(n) {
+            for (let i = 1; i <= 4; i++) {
+                var el = document.getElementById('step' + i);
+                if (el) el.classList.add('hidden');
+            }
             for (let i = 1; i <= 3; i++) {
-                document.getElementById('step' + i).classList.add('hidden');
                 document.getElementById('dot' + i).classList.remove('active', 'done');
-                if (i < n) document.getElementById('line' + i).classList.remove('done');
+                if (i < 3) document.getElementById('line' + i).classList.remove('done');
             }
-            document.getElementById('step' + n).classList.remove('hidden');
-            document.getElementById('dot' + n).classList.add('active');
-            for (let i = 1; i < n; i++) {
-                document.getElementById('dot' + i).classList.remove('active');
-                document.getElementById('dot' + i).classList.add('done');
-                document.getElementById('line' + i).classList.add('done');
+            if (n <= 3) {
+                document.getElementById('step' + n).classList.remove('hidden');
+                document.getElementById('dot' + n).classList.add('active');
+                for (let i = 1; i < n; i++) {
+                    document.getElementById('dot' + i).classList.remove('active');
+                    document.getElementById('dot' + i).classList.add('done');
+                    document.getElementById('line' + i).classList.add('done');
+                }
+            } else {
+                document.getElementById('step4').classList.remove('hidden');
+                document.getElementById('dot3').classList.add('active');
+                document.getElementById('dot1').classList.add('done');
+                document.getElementById('dot2').classList.add('done');
+                document.getElementById('line1').classList.add('done');
+                document.getElementById('line2').classList.add('done');
             }
-            if (n === 3) updateSummary();
+            if (n === 4) updateSummary();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function goToStep2() {
-            if (!selectedDate || !selectedTime) return;
+            if (!selectedEventType) return;
             goToStep(2);
         }
 
         function goToStep3() {
+            if (!selectedDate || !selectedTime) return;
+            goToStep(3);
+        }
+
+        function goToStep4() {
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
             if (!name) { alert('אנא הזינו שם'); return; }
             if (!phone || phone.length < 9) { alert('אנא הזינו מספר טלפון תקין'); return; }
-            goToStep(3);
+            goToStep(4);
         }
 
         function updateSummary() {
@@ -579,9 +665,9 @@
             let html = '';
             html += '<div class="summary-row"><span class="summary-label">שם:</span><span class="summary-value">' + escapeHtml(name) + '</span></div>';
             html += '<div class="summary-row"><span class="summary-label">טלפון:</span><span class="summary-value">' + escapeHtml(phone) + '</span></div>';
+            html += '<div class="summary-row"><span class="summary-label">סוג אירוע:</span><span class="summary-value">' + escapeHtml(selectedEventType) + '</span></div>';
             html += '<div class="summary-row"><span class="summary-label">תאריך:</span><span class="summary-value">' + formatDateHebrew(selectedDate) + '</span></div>';
             html += '<div class="summary-row"><span class="summary-label">שעה:</span><span class="summary-value">' + selectedTime + '</span></div>';
-            html += '<div class="summary-row"><span class="summary-label">סוג אירוע:</span><span class="summary-value">' + (selectedEventType || 'לא צוין') + '</span></div>';
             if (notes) html += '<div class="summary-row"><span class="summary-label">הערות:</span><span class="summary-value">' + escapeHtml(notes) + '</span></div>';
             document.getElementById('summaryPreview').innerHTML = html;
         }
@@ -616,20 +702,24 @@
                     })
                 });
                 if (resp.ok) {
-                    document.getElementById('step3').classList.add('hidden');
+                    document.getElementById('step4').classList.add('hidden');
                     document.getElementById('successScreen').classList.remove('hidden');
                     let detailsHtml = '';
                     detailsHtml += '<div class="summary-row"><span class="summary-label">לקוח:</span><span class="summary-value">' + escapeHtml(name) + '</span></div>';
+                    detailsHtml += '<div class="summary-row"><span class="summary-label">סוג:</span><span class="summary-value">' + escapeHtml(selectedEventType) + '</span></div>';
                     detailsHtml += '<div class="summary-row"><span class="summary-label">תאריך:</span><span class="summary-value">' + formatDateHebrew(selectedDate) + '</span></div>';
                     detailsHtml += '<div class="summary-row"><span class="summary-label">שעה:</span><span class="summary-value">' + selectedTime + '</span></div>';
-                    detailsHtml += '<div class="summary-row"><span class="summary-label">סוג:</span><span class="summary-value">' + (selectedEventType || 'לא צוין') + '</span></div>';
                     document.getElementById('bookingDetails').innerHTML = detailsHtml;
-                    
-                    // Add WhatsApp button to notify Yael
-                    const waMsg = encodeURIComponent('🎉 הזמנה חדשה!\n\n👤 לקוח: ' + name + '\n📞 טלפון: ' + phone + '\n📅 תאריך: ' + formatDateHebrew(selectedDate) + '\n⏰ שעה: ' + selectedTime + '\n🎵 סוג: ' + (selectedEventType || 'לא צוין') + '\n📝 הערות: ' + (notes || 'אין'));
-                    const waLink = 'https://wa.me/972536754971?text=' + waMsg;
-                    const waBtn = document.getElementById('whatsappYaelBtn');
-                    if (waBtn) { waBtn.href = waLink; waBtn.style.display = 'flex'; waBtn.style.alignItems = 'center'; waBtn.style.justifyContent = 'center'; waBtn.style.gap = '8px'; }
+
+                    let waMsg = 'היי יהל, הזמנה חדשה:\n';
+                    waMsg += 'שם: ' + name + '\n';
+                    waMsg += 'טלפון: ' + phone + '\n';
+                    waMsg += 'סוג אירוע: ' + selectedEventType + '\n';
+                    waMsg += 'תאריך: ' + formatDateHebrew(selectedDate) + '\n';
+                    waMsg += 'שעה: ' + selectedTime;
+                    if (notes) waMsg += '\nהערות: ' + notes;
+                    const waLink = 'https://wa.me/' + YAEL_PHONE + '?text=' + encodeURIComponent(waMsg);
+                    document.getElementById('whatsappBtn').href = waLink;
                 } else {
                     throw new Error('שגיאה');
                 }
@@ -648,15 +738,16 @@
             document.getElementById('clientName').value = '';
             document.getElementById('clientPhone').value = '';
             document.getElementById('notes').value = '';
-            document.querySelectorAll('.event-type-chip').forEach(function(c) { c.classList.remove('selected'); });
+            document.querySelectorAll('.event-card').forEach(function(c) { c.classList.remove('selected'); });
             document.getElementById('timeSection').classList.add('hidden');
-            document.getElementById('successScreen').classList.add('hidden');
             document.getElementById('nextBtn1').disabled = true;
+            document.getElementById('nextBtn2').disabled = true;
+            document.getElementById('successScreen').classList.add('hidden');
             goToStep(1);
             renderMonth();
         }
 
         initDates();
     </script>
-<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
+</body>
 </html>
