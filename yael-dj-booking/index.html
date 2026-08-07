@@ -438,6 +438,9 @@
                 <div class="success-title">הפגישה נקבעה!</div>
                 <div class="success-subtitle">קיבלנו את ההזמנה שלכם 🎉<br>תזכורת בוואטסאפ תגיע 24 שעות לפני הפגישה</div>
                 <div class="booking-summary" id="bookingDetails"></div>
+                <a id="whatsappYaelBtn" href="#" target="_blank" style="display:none;text-decoration:none;margin-bottom:12px;width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:Heebo,sans-serif;cursor:pointer;text-align:center;background:linear-gradient(135deg,#25D366,#128C7E);color:white;box-shadow:0 4px 20px rgba(37,211,102,0.3);">
+                    📲 שלח ליעל ב-WhatsApp
+                </a>
                 <button class="btn btn-primary" onclick="resetApp()">קביעת פגישה נוספת</button>
             </div>
         </div>
@@ -621,6 +624,12 @@
                     detailsHtml += '<div class="summary-row"><span class="summary-label">שעה:</span><span class="summary-value">' + selectedTime + '</span></div>';
                     detailsHtml += '<div class="summary-row"><span class="summary-label">סוג:</span><span class="summary-value">' + (selectedEventType || 'לא צוין') + '</span></div>';
                     document.getElementById('bookingDetails').innerHTML = detailsHtml;
+                    
+                    // Add WhatsApp button to notify Yael
+                    const waMsg = encodeURIComponent('🎉 הזמנה חדשה!\n\n👤 לקוח: ' + name + '\n📞 טלפון: ' + phone + '\n📅 תאריך: ' + formatDateHebrew(selectedDate) + '\n⏰ שעה: ' + selectedTime + '\n🎵 סוג: ' + (selectedEventType || 'לא צוין') + '\n📝 הערות: ' + (notes || 'אין'));
+                    const waLink = 'https://wa.me/972536754971?text=' + waMsg;
+                    const waBtn = document.getElementById('whatsappYaelBtn');
+                    if (waBtn) { waBtn.href = waLink; waBtn.style.display = 'flex'; waBtn.style.alignItems = 'center'; waBtn.style.justifyContent = 'center'; waBtn.style.gap = '8px'; }
                 } else {
                     throw new Error('שגיאה');
                 }
