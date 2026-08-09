@@ -8,75 +8,498 @@
 <meta http-equiv="Expires" content="0">
 <meta name="version" content="2026-08-01-v1">
 <title>מיפוי פערי דאטא | Puratos Israel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+:root {
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --secondary: #14b8a6;
+  --dark: #1e3a5f;
+  --bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #cbd5e1;
+  --border-light: #e2e8f0;
+  --radius-card: 12px;
+  --radius-btn: 10px;
+  --radius-input: 8px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #ecfeff 100%); color: #1e293b; min-height: 100vh; padding: 16px; }
-.header { text-align: center; padding: 28px 20px; background: linear-gradient(135deg, #0369a1, #0284c7); color: white; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(3,105,161,0.2); }
-.header h1 { font-size: 22px; margin-bottom: 6px; }
-.header p { font-size: 14px; opacity: 0.9; }
-.container { max-width: 850px; margin: 0 auto; }
-.info-banner { background: #fff; border-right: 4px solid #0284c7; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.info-banner h3 { font-size: 15px; color: #0369a1; margin-bottom: 6px; }
-.info-banner p { font-size: 13px; color: #475569; line-height: 1.6; }
-.section { background: white; border-radius: 14px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-.section-title { font-size: 18px; font-weight: 700; color: #0369a1; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
-.section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; }
-.section-desc { font-size: 13px; color: #64748b; margin-bottom: 20px; }
-.form-group { margin-bottom: 16px; }
-.form-group label { font-size: 14px; font-weight: 600; display: block; margin-bottom: 6px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: inherit; background: #fafbfc; transition: border-color 0.2s, box-shadow 0.2s; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); background: white; }
-.form-row { display: flex; gap: 12px; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 20px 16px 40px 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 32px 24px;
+  background: linear-gradient(135deg, var(--dark) 0%, #0f766e 60%, var(--primary) 100%);
+  color: white;
+  border-radius: var(--radius-card);
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(30, 58, 95, 0.18);
+}
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.header p {
+  font-size: 14px;
+  opacity: 0.92;
+  font-weight: 400;
+}
+
+/* Info Banner */
+.info-banner {
+  background: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  border-right: 5px solid var(--primary);
+  padding: 16px 20px;
+  border-radius: var(--radius-card);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.info-banner h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.info-banner p {
+  font-size: 13.5px;
+  color: #334155;
+  line-height: 1.6;
+}
+
+/* Progress Bar */
+.progress-bar {
+  position: sticky;
+  top: 12px;
+  z-index: 100;
+  background: var(--card-bg);
+  padding: 12px 20px;
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--border-light);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.progress-track {
+  flex: 1;
+  height: 10px;
+  background: var(--border-light);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 5px;
+  transition: width 0.35s ease;
+}
+.progress-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* Section Card */
+.section {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
+}
+.section-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dark);
+  display: block;
+  margin-bottom: 6px;
+}
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-input);
+  font-size: 14px;
+  font-family: inherit;
+  background: #ffffff;
+  color: var(--text-main);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3.5px rgba(13, 148, 136, 0.15);
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
 .form-row > div { flex: 1; }
-.required { color: #dc2626; }
-.option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
-.option-card { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 14px; transition: all 0.2s; background: #fafbfc; }
-.option-card:hover { border-color: #38bdf8; background: #f0f9ff; }
-.option-card.selected { border-color: #0284c7; background: #e0f2fe; }
-.option-card input { width: 18px; height: 18px; accent-color: #0284c7; }
-.scale-options { display: flex; gap: 8px; flex-wrap: wrap; }
-.scale-btn { padding: 10px 18px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; background: #fafbfc; }
-.scale-btn:hover { border-color: #38bdf8; }
-.scale-btn.selected { background: #0284c7; color: white; border-color: #0284c7; }
-.data-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; }
-.data-table th { background: #0369a1; color: white; padding: 10px 8px; text-align: right; font-weight: 600; font-size: 12px; border: 1px solid #0369a1; }
-.data-table td { padding: 8px; border: 1px solid #e2e8f0; vertical-align: top; }
-.data-table tr:nth-child(even) { background: #f8fafc; }
-.data-table input, .data-table select, .data-table textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: inherit; background: white; }
-.data-table input:focus, .data-table select:focus, .data-table textarea:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 2px rgba(2,132,199,0.1); }
-.data-table textarea { min-height: 40px; resize: vertical; }
-.btn-remove { background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; }
-.btn-remove:hover { background: #fecaca; }
-.btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.2s; }
-.btn-add:hover { background: #0369a1; }
-.btn-add.green { background: #16a34a; }
-.btn-add.green:hover { background: #15803d; }
-.progress-bar { position: sticky; top: 0; z-index: 100; background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-.progress-track { flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #0284c7, #38bdf8); border-radius: 4px; transition: width 0.3s; }
-.progress-text { font-size: 13px; font-weight: 600; color: #64748b; white-space: nowrap; }
-.submit-section { text-align: center; padding: 28px 20px; background: white; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-.btn-submit { padding: 14px 40px; background: linear-gradient(135deg, #0369a1, #0284c7); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 6px 20px rgba(3,105,161,0.3); }
-.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(3,105,161,0.4); }
-.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-.success-msg { display: none; background: #dcfce7; border: 2px solid #16a34a; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
-.success-msg h3 { color: #15803d; font-size: 18px; margin-bottom: 8px; }
+
+.required { color: #dc2626; font-weight: bold; }
+
+/* Option Grid */
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+  color: var(--text-main);
+  user-select: none;
+}
+.option-card:hover {
+  border-color: var(--secondary);
+  background: #f0fdfa;
+}
+.option-card:has(input:checked),
+.option-card.selected {
+  border-color: var(--primary);
+  background: #f0fdfa;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.12);
+}
+.option-card input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* Scale Options */
+.scale-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.scale-btn {
+  padding: 10px 18px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  color: var(--text-main);
+}
+.scale-btn:hover {
+  border-color: var(--primary);
+  background: #f0fdfa;
+}
+.scale-btn.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
+}
+
+/* Data Table */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 14px;
+  font-size: 13px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+.data-table th {
+  background: var(--dark);
+  color: white;
+  padding: 12px 10px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 1px solid var(--dark);
+}
+.data-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-light);
+  border-left: 1px solid var(--border-light);
+  background: #ffffff;
+  vertical-align: middle;
+}
+.data-table td:last-child {
+  border-left: none;
+}
+.data-table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+.data-table input,
+.data-table select,
+.data-table textarea {
+  width: 100%;
+  border: 1.5px solid var(--border-light);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  background: white;
+  color: var(--text-main);
+  transition: border-color 0.2s;
+}
+.data-table input:focus,
+.data-table select:focus,
+.data-table textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2.5px rgba(13, 148, 136, 0.15);
+}
+.data-table textarea {
+  min-height: 42px;
+  resize: vertical;
+}
+
+.btn-remove {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.btn-remove:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.2);
+}
+.btn-add:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+.btn-add.green {
+  background: #16a34a;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
+}
+.btn-add.green:hover {
+  background: #15803d;
+}
+
+/* Submit Section */
+.submit-section {
+  text-align: center;
+  padding: 32px 24px;
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+.btn-submit {
+  padding: 14px 44px;
+  background: linear-gradient(135deg, var(--dark), var(--primary));
+  color: white;
+  border: none;
+  border-radius: var(--radius-card);
+  font-size: 18px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.3);
+}
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+}
+.btn-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.success-msg {
+  display: none;
+  background: #dcfce7;
+  border: 2px solid #16a34a;
+  border-radius: var(--radius-card);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.success-msg h3 { color: #15803d; font-size: 18px; margin-bottom: 6px; font-weight: 700; }
 .success-msg p { color: #16a34a; font-size: 14px; }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 10px; font-size: 14px; z-index: 9999; opacity: 0; transition: opacity 0.3s; }
-.toast.show { opacity: 1; }
-.btn-export { padding: 12px 28px; background: #16a34a; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; margin: 8px; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dark);
+  color: white;
+  padding: 12px 28px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Export & Submissions */
+.btn-export {
+  padding: 10px 22px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  margin: 4px;
+  transition: background 0.2s;
+}
 .btn-export:hover { background: #15803d; }
 .btn-export.gray { background: #475569; }
 .btn-export.gray:hover { background: #334155; }
-.submission-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
-.submission-card h4 { font-size: 15px; color: #0369a1; margin-bottom: 4px; }
-.submission-card .meta { font-size: 12px; color: #64748b; margin-bottom: 8px; }
-.submission-card .stats { font-size: 13px; color: #475569; }
-.badge { display: inline-block; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
-.badge.blue { background: #dbeafe; color: #1d4ed8; }
+
+.submission-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-btn);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.submission-card h4 { font-size: 15px; color: var(--dark); margin-bottom: 4px; font-weight: 700; }
+.submission-card .meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.submission-card .stats { font-size: 13.5px; color: #334155; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge.blue { background: #ccfbf1; color: #0d9488; }
 .badge.green { background: #dcfce7; color: #16a34a; }
-@media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } .option-grid { grid-template-columns: 1fr; } .data-table { font-size: 11px; } .data-table th, .data-table td { padding: 4px; } }
-input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style>
+
+/* Focus outline for accessibility */
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  body { padding: 12px 10px 30px 10px; }
+  .header { padding: 24px 16px; }
+  .header h1 { font-size: 20px; }
+  .section { padding: 18px 14px; }
+  .form-row { flex-direction: column; gap: 0; }
+  .option-grid { grid-template-columns: 1fr; }
+  .data-table { font-size: 12px; }
+  .data-table th, .data-table td { padding: 6px 4px; }
+  .btn-submit { width: 100%; padding: 14px 20px; }
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -84,11 +507,16 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <h1>📊 מיפוי פערי דאטא ופלטפורמות דיגיטליות</h1>
 <p>Puratos Israel — הטמעת AI | יעד: SharePoint Learning Center</p>
 </div>
+
 <div class="info-banner">
 <h3>📍 הנחיות</h3>
 <p>אנא מלאו את השאלון. מטרה: למפות היכן המידע מאוחסן היום ולתכנן העברה ל-SharePoint. התוצאות נשלחות אוטומטית ל-IT.</p>
 </div>
-<div class="progress-bar"><div class="progress-track"><div class="progress-fill" id="progress" style="width:0%"></div></div><span class="progress-text" id="progressText">0% הושלם</span></div>
+
+<div class="progress-bar">
+<div class="progress-track"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+<span class="progress-text" id="progressText">0% הושלם</span>
+</div>
 
 <div class="section">
 <div class="section-title"><div class="section-icon">👤</div> פרטי המנהל/ת</div>
@@ -106,7 +534,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <div class="question" data-q="q1">
 <div class="form-group">
 <label>1. היכן המידע שאתם עובדים איתו נשמר בדרך כלל? <span class="required">*</span></label>
-<p style="font-size:12px;color:#64748b;margin-bottom:8px;">סמנו את כל המקומות הרלוונטיים</p>
+<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">סמנו את כל המקומות הרלוונטיים</p>
 <div class="option-grid">
 <label class="option-card"><input type="checkbox" name="q1" value="sharepoint"> SharePoint / OneDrive</label>
 <label class="option-card"><input type="checkbox" name="q1" value="z_drive"> כונן Z (Network Drive)</label>
@@ -195,10 +623,22 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <div class="section">
 <div class="section-title"><div class="section-icon">📋</div> 2. מיפוי מפורט — פערי דאטא</div>
 <div class="section-desc">פרטו כל סוג דאטא, היכן מאוחסן, רגישות, ויעד. הוסיפו שורות לפי הצורך.</div>
-<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;"><p style="font-size:11px;color:#94a3b8;margin-bottom:4px;">← גלול ימה לצפייה בכל העמודות →</p>
-<table class="data-table" id="dataTable"><thead><tr>
-<th style="width:18%">סוג דאטא</th><th style="width:15%">אחסון היום</th><th style="width:10%">רגיש?</th><th style="width:17%">פלטפורמת יעד</th><th style="width:22%">משאבים נדרשים</th><th style="width:10%">הערות</th><th style="width:8%"></th>
-</tr></thead><tbody id="dataRows"></tbody></table>
+<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;">
+<p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">← גלול ימינה/שמאלה לצפייה בכל העמודות →</p>
+<table class="data-table" id="dataTable">
+<thead>
+<tr>
+<th style="width:18%">סוג דאטא</th>
+<th style="width:15%">אחסון היום</th>
+<th style="width:12%">רגיש?</th>
+<th style="width:18%">פלטפורמת יעד</th>
+<th style="width:22%">משאבים נדרשים</th>
+<th style="width:10%">הערות</th>
+<th style="width:5%"></th>
+</tr>
+</thead>
+<tbody id="dataRows"></tbody>
+</table>
 </div>
 <button class="btn-add" onclick="addDataRow()">➕ הוסף שורה</button>
 </div>
@@ -206,17 +646,28 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <div class="section">
 <div class="section-title"><div class="section-icon">💻</div> 3. בקשות שדרוג דיגיטלי</div>
 <div class="section-desc">פרויקטים שהייתם רוצים לקדם</div>
-<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;"><p style="font-size:11px;color:#94a3b8;margin-bottom:4px;">← גלול ימה לצפייה בכל העמודות →</p>
-<table class="data-table" id="platformTable"><thead><tr>
-<th style="width:17%">שם פרויקט</th><th style="width:24%">תיאור בעיה</th><th style="width:26%">תיאור פתרון</th><th style="width:14%">עלות</th><th style="width:11%">עדיפות</th><th style="width:8%"></th>
-</tr></thead><tbody id="platformRows"></tbody></table>
+<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;">
+<p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">← גלול ימינה/שמאלה לצפייה בכל העמודות →</p>
+<table class="data-table" id="platformTable">
+<thead>
+<tr>
+<th style="width:18%">שם פרויקט</th>
+<th style="width:24%">תיאור בעיה</th>
+<th style="width:26%">תיאור פתרון</th>
+<th style="width:13%">עלות</th>
+<th style="width:14%">עדיפות</th>
+<th style="width:5%"></th>
+</tr>
+</thead>
+<tbody id="platformRows"></tbody>
+</table>
 </div>
 <button class="btn-add green" onclick="addPlatformRow()">➕ הוסף פרויקט</button>
 </div>
 
 <div class="submit-section">
 <button class="btn-submit" id="submitBtn" onclick="submitForm()">שמור ושלח 📤</button>
-<p style="margin-top:10px;color:#64748b;font-size:13px;">הנתונים נשמרים + נשלחים אוטומטית ל-IT</p>
+<p style="margin-top:12px;color:var(--text-muted);font-size:13.5px;">הנתונים נשמרים + נשלחים אוטומטית ל-IT</p>
 </div>
 <div class="success-msg" id="successMsg"><h3>✅ נשמר ונשלח!</h3><p>תודה! הנתונים התקבלו.</p></div>
 
@@ -227,7 +678,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <div id="submissionsList" style="margin-top:16px;"></div>
 </div>
 
-<div style="text-align:center;padding:20px;color:#94a3b8;font-size:12px;">Puratos Israel — AI Adoption | 2026</div>
+<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Puratos Israel — AI Adoption | 2026</div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -239,33 +690,77 @@ const priorityOptions=['גבוה — דחוף','בינוני','נמוך','עתי
 let rc=0;
 
 function addDataRow(d={}){
-  const tb=document.getElementById('dataRows');const r=document.createElement('tr');const id=`d_${rc++}`;r.id=id;
+  const tb=document.getElementById('dataRows');
+  if(!tb) return;
+  const r=document.createElement('tr');
+  const id=`d_${rc++}`;
+  r.id=id;
   const s=storageOptions.map(o=>`<option ${d.storage===o?'selected':''}>${o}</option>`).join('');
   const p=platformOptions.map(o=>`<option ${d.platform===o?'selected':''}>${o}</option>`).join('');
   const se=sensitivityOptions.map(o=>`<option ${d.sensitivity===o?'selected':''}>${o}</option>`).join('');
-  r.innerHTML=`<td><input type="text" placeholder="סוג דאטא" value="${d.type||''}"></td><td><select>${s}</select></td><td><select>${se}</select></td><td><select>${p}</select></td><td><textarea placeholder="משאבים...">${d.resources||''}</textarea></td><td><input type="text" placeholder="הערות" value="${d.notes||''}"></td><td><button class="btn-remove" onclick="document.getElementById('${id}')?.remove();updateProgress();">✕</button></td>`;
-  tb.appendChild(r);updateProgress();
+  r.innerHTML=`<td><input type="text" placeholder="סוג דאטא" value="${d.type||''}"></td><td><select>${s}</select></td><td><select>${se}</select></td><td><select>${p}</select></td><td><textarea placeholder="משאבים...">${d.resources||''}</textarea></td><td><input type="text" placeholder="הערות" value="${d.notes||''}"></td><td style="text-align:center;"><button class="btn-remove" onclick="document.getElementById('${id}')?.remove();updateProgress();" title="הסר שורה">✕</button></td>`;
+  tb.appendChild(r);
+  updateProgress();
+  attachInputListeners();
 }
 
 function addPlatformRow(d={}){
-  const tb=document.getElementById('platformRows');const r=document.createElement('tr');const id=`p_${rc++}`;r.id=id;
+  const tb=document.getElementById('platformRows');
+  if(!tb) return;
+  const r=document.createElement('tr');
+  const id=`p_${rc++}`;
+  r.id=id;
   const pr=priorityOptions.map(o=>`<option ${d.priority===o?'selected':''}>${o}</option>`).join('');
-  r.innerHTML=`<td><input type="text" placeholder="שם פרויקט" value="${d.name||''}"></td><td><textarea placeholder="בעיה / אתגר">${d.problem||''}</textarea></td><td><textarea placeholder="פתרון">${d.solution||''}</textarea></td><td><input type="text" placeholder="עלות" value="${d.cost||''}"></td><td><select>${pr}</select></td><td><button class="btn-remove" onclick="document.getElementById('${id}')?.remove();updateProgress();">✕</button></td>`;
-  tb.appendChild(r);updateProgress();
+  r.innerHTML=`<td><input type="text" placeholder="שם פרויקט" value="${d.name||''}"></td><td><textarea placeholder="בעיה / אתגר">${d.problem||''}</textarea></td><td><textarea placeholder="פתרון">${d.solution||''}</textarea></td><td><input type="text" placeholder="עלות" value="${d.cost||''}"></td><td><select>${pr}</select></td><td style="text-align:center;"><button class="btn-remove" onclick="document.getElementById('${id}')?.remove();updateProgress();" title="הסר פרויקט">✕</button></td>`;
+  tb.appendChild(r);
+  updateProgress();
+  attachInputListeners();
 }
 
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function showToast(m){
+  const t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=m;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
 
-document.querySelectorAll('.scale-options').forEach(g=>{g.querySelectorAll('.scale-btn').forEach(b=>{b.addEventListener('click',()=>{g.querySelectorAll('.scale-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');updateProgress();});});});
+document.querySelectorAll('.scale-options').forEach(g=>{
+  g.querySelectorAll('.scale-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      g.querySelectorAll('.scale-btn').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected');
+      updateProgress();
+    });
+  });
+});
 
 function updateProgress(){
-  let a=0;if(document.getElementById('manager_name').value.trim())a++;if(document.getElementById('department').value.trim())a++;
-  document.querySelectorAll('.question').forEach(q=>{if(q.querySelectorAll('input[type=checkbox]:checked').length>0||q.querySelectorAll('.scale-btn.selected').length>0)a++;});
-  if(document.querySelectorAll('#dataRows tr').length>0)a++;if(document.querySelectorAll('#platformRows tr').length>0)a++;
+  let a=0;
+  const nameEl = document.getElementById('manager_name');
+  const deptEl = document.getElementById('department');
+  if(nameEl && nameEl.value.trim()) a++;
+  if(deptEl && deptEl.value.trim()) a++;
+  document.querySelectorAll('.question').forEach(q=>{
+    if(q.querySelectorAll('input[type=checkbox]:checked').length>0||q.querySelectorAll('.scale-btn.selected').length>0) a++;
+  });
+  if(document.querySelectorAll('#dataRows tr').length>0) a++;
+  if(document.querySelectorAll('#platformRows tr').length>0) a++;
   const pct=Math.min(100,Math.round(a/8*100));
-  document.getElementById('progress').style.width=pct+'%';document.getElementById('progressText').textContent=pct+'% הושלם';
+  const pBar = document.getElementById('progress');
+  const pText = document.getElementById('progressText');
+  if(pBar) pBar.style.width=pct+'%';
+  if(pText) pText.textContent=pct+'% הושלם';
 }
-document.querySelectorAll('input,textarea,select').forEach(e=>{e.addEventListener('input',updateProgress);e.addEventListener('change',updateProgress);});
+
+function attachInputListeners(){
+  document.querySelectorAll('input,textarea,select').forEach(e=>{
+    e.removeEventListener('input', updateProgress);
+    e.removeEventListener('change', updateProgress);
+    e.addEventListener('input',updateProgress);
+    e.addEventListener('change',updateProgress);
+  });
+}
 
 function collectGuided(){
   const a={};
@@ -279,20 +774,52 @@ function collectGuided(){
 }
 
 function collectTables(){
-  const dg=[];document.querySelectorAll('#dataRows tr').forEach(r=>{const i=r.querySelectorAll('input,select,textarea');if(i[0]&&i[0].value.trim())dg.push({type:i[0].value,storage:i[1].value,sensitivity:i[2].value,platform:i[3].value,resources:i[4].value,notes:i[5].value});});
-  const pr=[];document.querySelectorAll('#platformRows tr').forEach(r=>{const i=r.querySelectorAll('input,select,textarea');if(i[0]&&i[0].value.trim())pr.push({name:i[0].value,problem:i[1].value,solution:i[2].value,cost:i[3].value,priority:i[4].value});});
+  const dg=[];
+  document.querySelectorAll('#dataRows tr').forEach(r=>{
+    const i=r.querySelectorAll('input,select,textarea');
+    if(i[0]&&i[0].value.trim()) dg.push({type:i[0].value,storage:i[1].value,sensitivity:i[2].value,platform:i[3].value,resources:i[4].value,notes:i[5].value});
+  });
+  const pr=[];
+  document.querySelectorAll('#platformRows tr').forEach(r=>{
+    const i=r.querySelectorAll('input,select,textarea');
+    if(i[0]&&i[0].value.trim()) pr.push({name:i[0].value,problem:i[1].value,solution:i[2].value,cost:i[3].value,priority:i[4].value});
+  });
   return{dg,pr};
 }
 
 function fmtEmail(n,d,g,t){
-  let s=`שאלון מיפוי פערי דאטא — Puratos Israel\n=========================================\n\nמנהל/ת: ${n}\nמחלקה: ${d}\nתאריך: ${new Date().toLocaleString('he-IL')}\n\n--- שאלון מודרך ---\n\n1. מיקום אחסון: ${g.q1.join(', ')||'לא צוין'}\n2. סוגי מידע: ${g.q2.join(', ')||'לא צוין'}\n3. רגישות: ${g.q3||'לא צוין'}\n4. תדירות שיתוף: ${g.q4||'לא צוין'}\n5. SharePoint: ${g.q5||'לא צוין'}\n6. צרכים: ${g.q6.join(', ')||'לא צוין'}\n\n--- מיפוי פערי דאטא (${t.dg.length}) ---\n\n`;
-  t.dg.forEach((g,i)=>{s+=`${i+1}. ${g.type} | אחסון: ${g.storage} | רגיש: ${g.sensitivity} | יעד: ${g.platform} | משאבים: ${g.resources}\n`;});
-  s+=`\n--- בקשות פרויקטים (${t.pr.length}) ---\n\n`;
-  t.pr.forEach((p,i)=>{s+=`${i+1}. ${p.name} | בעיה: ${p.problem} | פתרון: ${p.solution} | עלות: ${p.cost} | עדיפות: ${p.priority}\n`;});
+  let s=`שאלון מיפוי פערי דאטא — Puratos Israel
+=========================================
+
+מנהל/ת: ${n}
+מחלקה: ${d}
+תאריך: ${new Date().toLocaleString('he-IL')}
+
+--- שאלון מודרך ---
+
+1. מיקום אחסון: ${g.q1.join(', ')||'לא צוין'}
+2. סוגי מידע: ${g.q2.join(', ')||'לא צוין'}
+3. רגישות: ${g.q3||'לא צוין'}
+4. תדירות שיתוף: ${g.q4||'לא צוין'}
+5. SharePoint: ${g.q5||'לא צוין'}
+6. צרכים: ${g.q6.join(', ')||'לא צוין'}
+
+--- מיפוי פערי דאטא (${t.dg.length}) ---
+
+`;
+  t.dg.forEach((g,i)=>{s+=`${i+1}. ${g.type} | אחסון: ${g.storage} | רגיש: ${g.sensitivity} | יעד: ${g.platform} | משאבים: ${g.resources}
+`;});
+  s+=`
+--- בקשות פרויקטים (${t.pr.length}) ---
+
+`;
+  t.pr.forEach((p,i)=>{s+=`${i+1}. ${p.name} | בעיה: ${p.problem} | פתרון: ${p.solution} | עלות: ${p.cost} | עדיפות: ${p.priority}
+`;});
   return s;
 }
 
 async function submitForm(){
+  if(typeof ailonRateLimit === 'function' && !ailonRateLimit()) return;
   const n=document.getElementById('manager_name').value.trim(),d=document.getElementById('department').value.trim();
   if(!n){showToast('⚠️ נא למלא שם');return;}if(!d){showToast('⚠️ נא למלא מחלקה');return;}
   const g=collectGuided(),t=collectTables(),body=fmtEmail(n,d,g,t);
@@ -307,23 +834,30 @@ async function submitForm(){
 }
 
 async function loadSubmissions(){
-  const l=document.getElementById('submissionsList');l.innerHTML='<p style="color:#64748b;">טוען...</p>';
+  const l=document.getElementById('submissionsList');if(!l) return;
+  l.innerHTML='<p style="color:var(--text-muted);font-size:14px;">טוען...</p>';
   try{const r=await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/getAllDataMappings');const res=await r.json();
     if(res.items&&res.items.length){l.innerHTML=res.items.map(i=>`<div class="submission-card"><h4>${i.department} <span class="badge blue">${i.submitted_by}</span></h4><div class="meta">${new Date(i.submission_date).toLocaleDateString('he-IL')}</div><div class="stats">📋 ${i.data_gaps.length} | 💻 ${i.platform_requests.length}</div></div>`).join('');window.allSubmissions=res.items;}
-    else{l.innerHTML='<p style="color:#64748b;">אין הגשות עדיין.</p>';window.allSubmissions=[];}}
-  catch(e){const s=JSON.parse(localStorage.getItem('puratos_mappings')||'[]');if(s.length){l.innerHTML=s.map(i=>`<div class="submission-card"><h4>${i.department} <span class="badge green">מקומי</span></h4><div class="stats">📋 ${i.data_gaps.length}|💻 ${i.platform_requests.length}</div></div>`).join('');window.allSubmissions=s;}else{l.innerHTML='<p style="color:#64748b;">אין הגשות.</p>';}}
+    else{l.innerHTML='<p style="color:var(--text-muted);font-size:14px;">אין הגשות עדיין.</p>';window.allSubmissions=[];}}
+  catch(e){const s=JSON.parse(localStorage.getItem('puratos_mappings')||'[]');if(s.length){l.innerHTML=s.map(i=>`<div class="submission-card"><h4>${i.department} <span class="badge green">מקומי</span></h4><div class="stats">📋 ${i.data_gaps.length}|💻 ${i.platform_requests.length}</div></div>`).join('');window.allSubmissions=s;}else{l.innerHTML='<p style="color:var(--text-muted);font-size:14px;">אין הגשות.</p>';}}
 }
 
 function exportToExcel(){
   const subs=window.allSubmissions||[];if(!subs.length){showToast('⚠️ אין נתונים');return;}
-  let csv='\uFEFF';csv+='מחלקה,מנהל,תאריך,סוג דאטא,אחסון,רגישות,יעד,משאבים,הערות\n';
-  subs.forEach(s=>{(s.data_gaps||[]).forEach(g=>{if(g._guided)return;csv+=`"${s.department}","${s.submitted_by}","${new Date(s.submission_date||s.date).toLocaleDateString('he-IL')}","${g.type||''}","${g.storage||''}","${g.sensitivity||''}","${g.platform||''}","${g.resources||''}","${g.notes||''}"\n`;});});
-  csv+='\n\nמחלקה,מנהל,פרויקט,בעיה,פתרון,עלות,עדיפות\n';
-  subs.forEach(s=>{(s.platform_requests||[]).forEach(p=>{csv+=`"${s.department}","${s.submitted_by}","${p.name||''}","${p.problem||''}","${p.solution||''}","${p.cost||''}","${p.priority||''}"\n`;});});
+  let csv='﻿';csv+='מחלקה,מנהל,תאריך,סוג דאטא,אחסון,רגישות,יעד,משאבים,הערות
+';
+  subs.forEach(s=>{(s.data_gaps||[]).forEach(g=>{if(g._guided)return;csv+=`"${s.department}","${s.submitted_by}","${new Date(s.submission_date||s.date).toLocaleDateString('he-IL')}","${g.type||''}","${g.storage||''}","${g.sensitivity||''}","${g.platform||''}","${g.resources||''}","${g.notes||''}"
+`;});});
+  csv+='
+
+מחלקה,מנהל,פרויקט,בעיה,פתרון,עלות,עדיפות
+';
+  subs.forEach(s=>{(s.platform_requests||[]).forEach(p=>{csv+=`"${s.department}","${s.submitted_by}","${p.name||''}","${p.problem||''}","${p.solution||''}","${p.cost||''}","${p.priority||''}"
+`;});});
   const b=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`puratos_mapping_${new Date().toISOString().slice(0,10)}.csv`;a.click();showToast('📊 אקסל הורד');
 }
 
-addDataRow();addDataRow();addPlatformRow();addPlatformRow();loadSubmissions();updateProgress();
+addDataRow();addDataRow();addPlatformRow();addPlatformRow();loadSubmissions();updateProgress();attachInputListeners();
 </script>
 <div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
 </html>
