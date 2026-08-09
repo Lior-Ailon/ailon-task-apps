@@ -518,7 +518,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 </div>
 
 <script>
-const INGREDIENTS=['קמח','מים','שמרים','מלח','סוכר','שמן','משפר לחם','חמאה','חלב','ביצים','אחר'];
+const INGREDIENTS=['קקאו DCP-10R102-789','טרי סודים מיוגים ציטראט','מלבין קפה C-35%','מלטיטול','סודיום ביקרבונאט','סטיאלגין GCF 645','עמיל CTEX','פרוקטוזה יבשה','פריג\'ל HC','ציפורן טחון','קינמון טחון','קלציום לקטאט','גואר גם','קסנטן גם','קקאו GHR 10-12','קמח קשה','קמח כוסמין','קמח שיבולת שועל','קמח רך','Innosense wheat 1003','Puraveg 0602','שמרים טריים','שמרים יבשים','מים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
 let currentExp=1;
 let experiments={};
 for(let i=1;i<=6;i++){experiments[i]=[{name:'קמח',gram:'',pct:''},{name:'מים',gram:'',pct:''},{name:'שמרים',gram:'',pct:''},{name:'מלח',gram:'',pct:''}];}
@@ -540,13 +540,13 @@ function renderExperiment(expNum){
   div.className='exp-content active';
   const headers=document.createElement('div');
   headers.className='ing-headers';
-  headers.innerHTML='<div class="ing-name">חומר גלם</div><div class="ing-gram">גר'</div><div class="ing-pct">% נקי</div><div class="spacer"></div>';
+  headers.innerHTML='<div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% נקי</div><div class="spacer"></div>';
   div.appendChild(headers);
   const ings=experiments[expNum];
   ings.forEach((ing,idx)=>{
     const row=document.createElement('div');
     row.className='ingredient-row';
-    row.innerHTML='<div class="ing-name"><input type="text" list="ingList" value="'+ing.name+'" oninput="updateIng('+expNum+','+idx+','name',this.value)" onchange="updateIng('+expNum+','+idx+','name',this.value)" placeholder="חומר גלם"></div><div class="ing-gram"><input type="number" value="'+ing.gram+'" oninput="updateIng('+expNum+','+idx+','gram',this.value)" onchange="updateIng('+expNum+','+idx+','gram',this.value)" placeholder="גר'"></div><div class="ing-pct"><input type="number" step="0.1" value="'+ing.pct+'" oninput="updateIng('+expNum+','+idx+','pct',this.value)" onchange="updateIng('+expNum+','+idx+','pct',this.value)" placeholder="%"></div><button class="remove-btn" onclick="removeIng('+expNum+','+idx+')" title="הסר שורה">✕</button>';
+    row.innerHTML=`<div class="ing-name"><input type="text" list="ingList" value="${ing.name}" oninput="updateIng(${expNum},${idx},'name',this.value)" onchange="updateIng(${expNum},${idx},'name',this.value)" placeholder="חומר גלם"></div><div class="ing-gram"><input type="number" value="${ing.gram}" oninput="updateIng(${expNum},${idx},'gram',this.value)" onchange="updateIng(${expNum},${idx},'gram',this.value)" placeholder="גרם"></div><div class="ing-pct"><input type="number" step="0.1" value="${ing.pct}" oninput="updateIng(${expNum},${idx},'pct',this.value)" onchange="updateIng(${expNum},${idx},'pct',this.value)" placeholder="%"></div><button class="remove-btn" onclick="removeIng(${expNum},${idx})" title="הסר שורה">✕</button>`;
     div.appendChild(row);
   });
   const addBtn=document.createElement('button');
@@ -597,62 +597,47 @@ function saveReport(){
 
 function exportExcel(){
   var data=collectData();
-  var csv='﻿';
-  csv+='דוח ניסויים — תחום הלחמים (Bakery)
-';
-  csv+='שם הפרויקט,'+data.projectName+'
-שם החוקר/ת,'+data.researcher+'
-שם המאשר/ת,'+data.approver+'
-תאריך ביצוע,'+data.execDate+'
-תאריך עדכון,'+data.updateDate+'
-
-';
-  csv+='המתכון — חומרי גלם
-';
+  var csv='\ufeff';
+  csv+='דוח ניסויים — תחום הלחמים (Bakery)\n';
+  csv+='שם הפרויקט,'+data.projectName+'\n';
+  csv+='שם החוקר/ת,'+data.researcher+'\n';
+  csv+='שם המאשר/ת,'+data.approver+'\n';
+  csv+='תאריך ביצוע,'+data.execDate+'\n';
+  csv+='תאריך עדכון,'+data.updateDate+'\n\n';
+  csv+='המתכון — חומרי גלם\n';
   var expHeader='חומר גלם';
-  for(var i=1;i<=6;i++){expHeader+=',ניסוי '+i+' גר',,ניסוי '+i+' %';}
-  csv+=expHeader+'
-';
+  for(var i=1;i<=6;i++){expHeader+=',ניסוי '+i+' גרם,,ניסוי '+i+' %';}
+  csv+=expHeader+'\n';
   var allNames=new Set();
   for(var i=1;i<=6;i++){experiments[i].forEach(function(ing){allNames.add(ing.name);});}
   allNames.forEach(function(name){
     var row=name;
     for(var i=1;i<=6;i++){var ing=experiments[i].find(function(x){return x.name===name;});row+=','+(ing?ing.gram:'')+','+(ing?ing.pct:'');}
-    csv+=row+'
-';
+    csv+=row+'\n';
   });
-  csv+='
-תיאור התהליך
-';
-  csv+='הכנת הבצק,'+data.process.doughPrep+'
-זמן לישה,'+data.process.kneadTime+'
-טמפ בצק,'+data.process.doughTemp+'
-תפיחה ב-Bulk,'+data.process.bulkFerment+'
-תפיחה סופית,'+data.process.finalFerment+'
-טמפ תפיחה,'+data.process.fermentTemp+'
-לחות,'+data.process.fermentHumidity+'
-עיצוב,'+data.process.shaping+'
-מולדר,'+data.process.moulder+'
-תנור,'+data.process.ovenType+'
-תוכנית אפייה,'+data.process.bakingProgram+'
-קיטור,'+data.process.steam+'
-
-';
-  csv+='מדדי תהליך
-';
-  csv+='טמפ בצק,'+data.metrics.actualDoughTemp+'
-מרקם,'+data.metrics.doughTexture+'
-זמן תפיחה,'+data.metrics.actualFermentTime+'
-נפח,'+data.metrics.volumeStability+'
-
-';
-  csv+='מסקנות
-';
-  csv+='Crumb,'+data.conclusions.crumb+'
-Crust,'+data.conclusions.crust+'
-טעם,'+data.conclusions.taste+'
-הערות,'+data.conclusions.notes+'
-';
+  csv+='\nתיאור התהליך\n';
+  csv+='הכנת הבצק,'+data.process.doughPrep+'\n';
+  csv+='זמן לישה,'+data.process.kneadTime+'\n';
+  csv+='טמפ בצק,'+data.process.doughTemp+'\n';
+  csv+='תפיחה ב-Bulk,'+data.process.bulkFerment+'\n';
+  csv+='תפיחה סופית,'+data.process.finalFerment+'\n';
+  csv+='טמפ תפיחה,'+data.process.fermentTemp+'\n';
+  csv+='לחות,'+data.process.fermentHumidity+'\n';
+  csv+='עיצוב,'+data.process.shaping+'\n';
+  csv+='מולדר,'+data.process.moulder+'\n';
+  csv+='תנור,'+data.process.ovenType+'\n';
+  csv+='תוכנית אפייה,'+data.process.bakingProgram+'\n';
+  csv+='קיטור,'+data.process.steam+'\n\n';
+  csv+='מדדי תהליך\n';
+  csv+='טמפ בצק,'+data.metrics.actualDoughTemp+'\n';
+  csv+='מרקם,'+data.metrics.doughTexture+'\n';
+  csv+='זמן תפיחה,'+data.metrics.actualFermentTime+'\n';
+  csv+='נפח,'+data.metrics.volumeStability+'\n\n';
+  csv+='מסקנות\n';
+  csv+='Crumb,'+data.conclusions.crumb+'\n';
+  csv+='Crust,'+data.conclusions.crust+'\n';
+  csv+='טעם,'+data.conclusions.taste+'\n';
+  csv+='הערות,'+data.conclusions.notes+'\n';
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
