@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדיניות רכבים — Puratos Israel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0d9488;
+  --teal-light:#14b8a6;
+  --navy:#1e3a5f;
+  --bg:#f0fdfa;
+  --card:#ffffff;
+  --text:#1a2a3a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --danger:#ef4444;
+  --success:#22c55e;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Heebo',sans-serif;
+  background:linear-gradient(135deg,#f0fdfa 0%,#e0f2fe 100%);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.8;
+  padding-bottom:60px;
+}
+.container{max-width:720px;margin:0 auto;padding:16px;}
+
+/* Header */
+.header{
+  text-align:center;
+  padding:40px 20px 30px;
+  background:linear-gradient(135deg,var(--teal) 0%,var(--navy) 100%);
+  border-radius:0 0 28px 28px;
+  color:#fff;
+  box-shadow:0 8px 30px rgba(13,148,136,0.3);
+}
+.header .logo{
+  font-size:1.1rem;
+  font-weight:300;
+  opacity:0.85;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+.header h1{
+  font-size:1.85rem;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.header .sub{
+  font-size:0.95rem;
+  opacity:0.8;
+  font-weight:300;
+}
+
+/* Intro card */
+.intro-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:24px 20px;
+  margin:24px 0;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  text-align:center;
+}
+.intro-card h2{
+  font-size:1.15rem;
+  color:var(--navy);
+  margin-bottom:8px;
+}
+.intro-card p{
+  font-size:0.95rem;
+  color:var(--muted);
+}
+
+/* Section */
+.section{
+  background:var(--card);
+  border-radius:var(--radius);
+  margin:16px 0;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  transition:box-shadow 0.3s;
+}
+.section.read{
+  box-shadow:0 2px 12px rgba(13,148,136,0.15);
+  border-right:4px solid var(--teal-light);
+}
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px 20px;
+  cursor:pointer;
+  user-select:none;
+}
+.section-num{
+  flex-shrink:0;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--teal);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:0.9rem;
+}
+.section.read .section-num{
+  background:var(--teal-light);
+}
+.section-title{
+  flex:1;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--navy);
+}
+.section-toggle{
+  font-size:1.3rem;
+  color:var(--muted);
+  transition:transform 0.3s;
+}
+.section.open .section-toggle{
+  transform:rotate(180deg);
+}
+.section-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.4s ease;
+}
+.section.open .section-body{
+  max-height:2000px;
+}
+.section-content{
+  padding:0 20px 20px 20px;
+}
+.section-content p,
+.section-content li{
+  font-size:0.95rem;
+  color:var(--text);
+  line-height:1.85;
+}
+.section-content ul{
+  list-style:none;
+  padding:0;
+}
+.section-content ul li{
+  position:relative;
+  padding-right:20px;
+  margin-bottom:8px;
+}
+.section-content ul li::before{
+  content:"▸";
+  position:absolute;
+  right:0;
+  color:var(--teal);
+  font-weight:bold;
+}
+.section-content strong{
+  color:var(--navy);
+}
+.read-btn{
+  display:block;
+  margin:15px auto 5px;
+  padding:8px 28px;
+  background:var(--teal);
+  color:#fff;
+  border:none;
+  border-radius:24px;
+  font-family:'Heebo',sans-serif;
+  font-size:0.9rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.read-btn:hover{
+  background:var(--teal-light);
+  transform:scale(1.03);
+}
+.read-btn.done{
+  background:var(--success);
+  cursor:default;
+}
+
+/* Progress */
+.progress-bar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(240,253,250,0.95);
+  backdrop-filter:blur(8px);
+  padding:12px 20px;
+  border-bottom:1px solid var(--border);
+}
+.progress-track{
+  height:8px;
+  background:var(--border);
+  border-radius:4px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--teal-light));
+  border-radius:4px;
+  width:0%;
+  transition:width 0.5s ease;
+}
+.progress-text{
+  text-align:center;
+  font-size:0.8rem;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* Signature section */
+.sign-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:28px 20px;
+  margin:24px 0;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+.sign-section h2{
+  text-align:center;
+  font-size:1.25rem;
+  color:var(--navy);
+  margin-bottom:8px;
+}
+.sign-section .sub{
+  text-align:center;
+  font-size:0.9rem;
+  color:var(--muted);
+  margin-bottom:24px;
+}
+.sign-form .field{
+  margin-bottom:18px;
+}
+.sign-form label{
+  display:block;
+  font-size:0.9rem;
+  font-weight:500;
+  color:var(--navy);
+  margin-bottom:6px;
+}
+.sign-form input{
+  width:100%;
+  padding:14px 16px;
+  border:2px solid var(--border);
+  border-radius:10px;
+  font-family:'Heebo',sans-serif;
+  font-size:1rem;
+  color:var(--text);
+  transition:border-color 0.3s;
+}
+.sign-form input:focus{
+  outline:none;
+  border-color:var(--teal);
+}
+.sign-form input:disabled{
+  background:var(--bg);
+  color:var(--muted);
+}
+
+/* Signature canvas */
+.sig-wrap{
+  border:2px dashed var(--border);
+  border-radius:10px;
+  padding:8px;
+  background:var(--bg);
+  position:relative;
+}
+.sig-wrap canvas{
+  display:block;
+  width:100%;
+  touch-action:none;
+  cursor:crosshair;
+}
+.sig-clear{
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:var(--danger);
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:4px 12px;
+  font-size:0.8rem;
+  font-family:'Heebo',sans-serif;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.sig-wrap.has-sig .sig-clear{opacity:1;}
+.sig-placeholder{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  color:var(--border);
+  font-size:0.95rem;
+  pointer-events:none;
+}
+
+/* Submit */
+.submit-btn{
+  display:block;
+  width:100%;
+  padding:16px;
+  background:linear-gradient(135deg,var(--teal),var(--navy));
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  font-family:'Heebo',sans-serif;
+  font-size:1.1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.3s;
+  margin-top:10px;
+}
+.submit-btn:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(13,148,136,0.35);
+}
+.submit-btn:disabled{
+  opacity:0.45;
+  cursor:not-allowed;
+}
+
+/* Confirmation */
+.confirm-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.4s;
+}
+.confirm-overlay.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.confirm-box{
+  background:#fff;
+  border-radius:24px;
+  padding:40px 30px;
+  max-width:400px;
+  text-align:center;
+  transform:scale(0.8);
+  transition:transform 0.4s;
+}
+.confirm-overlay.show .confirm-box{
+  transform:scale(1);
+}
+.confirm-icon{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:var(--success);
+  margin:0 auto 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2.2rem;
+  color:#fff;
+}
+.confirm-box h2{
+  color:var(--navy);
+  font-size:1.3rem;
+  margin-bottom:8px;
+}
+.confirm-box p{
+  color:var(--muted);
+  font-size:0.95rem;
+  margin-bottom:24px;
+}
+.confirm-box .ref{
+  font-size:0.85rem;
+  color:var(--teal);
+  font-weight:500;
+  margin-bottom:20px;
+}
+.confirm-close{
+  padding:10px 32px;
+  background:var(--teal);
+  color:#fff;
+  border:none;
+  border-radius:24px;
+  font-family:'Heebo',sans-serif;
+  font-size:1rem;
+  font-weight:500;
+  cursor:pointer;
+}
+
+/* Warning */
+.warn{
+  text-align:center;
+  font-size:0.85rem;
+  color:var(--danger);
+  margin-top:12px;
+  display:none;
+}
+.sign-section.locked .warn{display:block;}
+.sign-section.locked{
+  border:2px solid var(--danger);
+}
+.sign-section.locked .sign-form input,
+.sign-section.locked .submit-btn{
+  pointer-events:none;
+}
+.locked-msg{
+  display:none;
+  text-align:center;
+  padding:16px;
+  background:#fef2f2;
+  border-radius:10px;
+  color:var(--danger);
+  font-size:0.9rem;
+  font-weight:500;
+}
+.sign-section.locked .locked-msg{display:block;}
+.sign-section.locked .sign-form{display:none;}
+
+/* Footer */
+.footer{
+  text-align:center;
+  padding:30px 20px;
+  color:var(--muted);
+  font-size:0.8rem;
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-text" id="progressText">0 מתוך 8 סעיפים נקראו</div>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">Puratos Israel</div>
+    <h1>מדיניות רכבים</h1>
+    <div class="sub">יולי 2026 — טופס אישור קריאה והתחייבות</div>
+  </div>
+
+  <div class="intro-card">
+    <h2>ברוכים הבאים</h2>
+    <p>נא קראו את כל סעיפי המדיניות בעיון.<br>לאחר קריאת כל הסעיפים, תוכלו לחתום על אישור הקריאה בתחתית הטופס.</p>
+  </div>
+
+  <!-- Section 1: מטרה -->
+  <div class="section" data-sec="1">
+    <div class="section-header" onclick="toggleSection(1)">
+      <div class="section-num">1</div>
+      <div class="section-title">מטרת המדיניות</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <p>הגדרת מדיניות רכבים מוסדרת, שקופה ואחידה אל מול כל אוכלוסיות הזכאים בקבוצת פוראטוס ישראל.</p>
+        <button class="read-btn" onclick="markRead(1)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: עקרונות - רמות רכב -->
+  <div class="section" data-sec="2">
+    <div class="section-header" onclick="toggleSection(2)">
+      <div class="section-num">2</div>
+      <div class="section-title">רמות רכבים וקבוצות זכאות</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <p><strong>הגדרת 3 רמות רכבים ע"פ קבוצות:</strong></p>
+        <ul>
+          <li>מנהלי ליבה</li>
+          <li>חברי הנהלה</li>
+          <li>חברי הנהלת קבוצה</li>
+        </ul>
+        <p>לפחות 2 רכבים לבחירה בכל קבוצה. רכבים לקבוצה ייקבעו ע"פ עלות התשלום החודשית. הרכבים בכל קבוצה ישתנו מעת לעת ע"פ אילוציי שינוי בעלויות וזמינות הרכבים לאספקה.</p>
+        <button class="read-btn" onclick="markRead(2)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: שדרוגים וחשמליות -->
+  <div class="section" data-sec="3">
+    <div class="section-header" onclick="toggleSection(3)">
+      <div class="section-num">3</div>
+      <div class="section-title">שדרוג רכב, רכב חשמלי ועמדות טעינה</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <ul>
+          <li><strong>שדרוג רכב:</strong> לכל עובד תעמוד האפשרות לשדרוג רכב, בתוספת תשלום אישי של עד 500 ₪ לחודש.</li>
+          <li><strong>רכב חשמלי:</strong> לכל עובד תעמוד האפשרות לשדרוג לרכב חשמלי ללא כל תוספת עלות (תוספת בגובה של עד 500 ₪).</li>
+          <li><strong>עמדת טעינה:</strong> התקנת עמדה בעבודה או בבית. למתקינים בבית — במידה ועוזבים בשלוש השנים הבאות, החזר השתתפות יחסי לתקופה בגין ההתקנה.</li>
+          <li><strong>עמדה בבית:</strong> קבלת תשלום חודשי בעבור חשמל ע"פ כמות הק"מ הממוצעת של העובד.</li>
+          <li><strong>ביטול עסקה:</strong> עובד אשר ישדרג רכב יישא בעלויות ביטול העסקה מול ספק הליסינג בכל מקרה של התפטרות. במקרה של פיטורים, יישא העובד ב-50% מעלות הקנס.</li>
+        </ul>
+        <button class="read-btn" onclick="markRead(3)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: עמדות טעינה במפעל -->
+  <div class="section" data-sec="4">
+    <div class="section-header" onclick="toggleSection(4)">
+      <div class="section-num">4</div>
+      <div class="section-title">שימוש בעמדות טעינה חשמליות במפעל</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <ul>
+          <li>עדיפות ראשונה לרכבים חשמליים בחברה.</li>
+          <li>עדיפות שנייה לרכבים פלאגן אין ורק לרכבי חברה.</li>
+          <li>עובדים בחברה עם בחירת אפשרות חלף — לא רשאים להטעין בעמדות טעינה של החברה.</li>
+          <li>עובדים עם רכבים פרטיים חשמליים — לא רשאים להטעין בעמדות טעינה של החברה.</li>
+        </ul>
+        <button class="read-btn" onclick="markRead(4)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: זכאויות מיוחדות ו"חלף" -->
+  <div class="section" data-sec="5">
+    <div class="section-header" onclick="toggleSection(5)">
+      <div class="section-num">5</div>
+      <div class="section-title">זכאויות מיוחדות, עובדים חדשים ומדיניות "חלף"</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <p><strong>רכב 7 מקומות:</strong> עובד עם יותר משלושה ילדים (בני פחות מגיל 18) יהיה זכאי לרכב 7 מקומות ללא תוספת תשלום. סוג הרכב ייקבע ע"פ החלטת החברה בלבד — רכב אחד, ללא בחירה.</p>
+        <p><strong>"חלף" רכב:</strong> לכל עובד תעמוד האופציה לקבל תשלום "חלף רכב" במקום רכב. יקבל סכום קבוע ע"פ 3 קבוצות הרכבים, דלקן לרכבו האישי, מנוי לכבישי אגרה (6 וחוצה צפון) ושטיפה ע"פ הנהוג. עובד יהיה רשאי לעבור מ"חלף" לרכב חברה בכל זמן.</p>
+        <p><strong>עובד חדש:</strong> יקבל רכב מאגר או של מי שהחליף, ע"פ קבוצת השייכות.</p>
+        <p><strong>עובד שמתקדם:</strong> רכב מאגר או של מי שהחליף, ע"פ קבוצת השייכות.</p>
+        <p><strong>סיום עסקת ליסינג:</strong> רכב חדש.</p>
+        <button class="read-btn" onclick="markRead(5)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 6: תוספות, נהגים מורשים, שטיפות, תאונות -->
+  <div class="section" data-sec="6">
+    <div class="section-header" onclick="toggleSection(6)">
+      <div class="section-num">6</div>
+      <div class="section-title">תוספות, נהגים מורשים, תחזוקה ותאונות</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <ul>
+          <li><strong>תוספות חריגות:</strong> בקשות ע"ח העובד (לדוגמה וו גרירה) — דרך מנהל צי הרכב ובאישור ספק הליסינג.</li>
+          <li><strong>מורשי נהיגה:</strong> בן/בת זוג של העובד וילדי עובדים. יש לפנות למנהל הצי בכל מקרה של נהג חדש/צעיר להסדרת הביטוח.</li>
+          <li><strong>כבישי אגרה:</strong> ע"ח החברה (למעט הנתיב המהיר).</li>
+          <li><strong>שטיפת רכב:</strong> שתי שטיפות בכל חודש ע"ח החברה, ע"פ ההסדר ורשימת התחנות.</li>
+          <li><strong>השתתפות עצמית בתאונה:</strong> תאונה שלישית — השתתפות העובד ב-50%. תאונה רביעית ומעלה — 100% ע"ח העובד. אי דיווח של דוח תאונה — תשלום מלא ע"ח העובד בכל מקרה.</li>
+          <li><strong>טיפולים וטסט:</strong> באחריות העובד לתאם מול חברת הליסינג כ-2-3 שבועות לפני טיפול, לפני הגעה לק"מ היעד.</li>
+        </ul>
+        <button class="read-btn" onclick="markRead(6)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 7: דוחות חנייה ותנועה -->
+  <div class="section" data-sec="7">
+    <div class="section-header" onclick="toggleSection(7)">
+      <div class="section-num">7</div>
+      <div class="section-title">דוחות חנייה ותנועה</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <ul>
+          <li>באחריות העובד לשלם את כל דוחות התנועה וחנייה עבור הרכב בו נוסע.</li>
+          <li>באחריות העובד לעשות הסבה של הדוח משם החברה על שמו הפרטי ולטפל בתשלום.</li>
+          <li>החברה לא תישא בתשלום של פיגורים עקב אי תשלום בזמן של דוחות.</li>
+          <li>למקרה ונדרש סיוע — ניתן לפנות למלי להב לפני הגעת הדוח לפיגור בתשלום.</li>
+        </ul>
+        <button class="read-btn" onclick="markRead(7)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 8: שימוש יומיומי -->
+  <div class="section" data-sec="8">
+    <div class="section-header" onclick="toggleSection(8)">
+      <div class="section-num">8</div>
+      <div class="section-title">שימוש יומיומי ברכב החברה</div>
+      <div class="section-toggle">▾</div>
+    </div>
+    <div class="section-body">
+      <div class="section-content">
+        <p>על אף ההיתר לכל בן משפחה לנהוג ברכב, הרכב הינו אישי של העובד ועליו להגיע איתו לעבודה בכל יום באופן קבע.</p>
+        <p>בכל מקרה חריג, על העובד לפנות למנהלו לעדכון ואישור.</p>
+        <button class="read-btn" onclick="markRead(8)">קראתי סעיף זה ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signature Section -->
+  <div class="sign-section" id="signSection">
+    <h2>אישור קריאה והתחייבות</h2>
+    <p class="sub">אני הח"מ הנכבד/ה מאשר/ת כי קראתי את מדיניות הרכבים של חברת פוראטוס ישראל במלואה והנני מתחייב/ת לפעול על פיה.</p>
+
+    <div class="locked-msg">
+      נא קראו את כל 8 הסעיפים לפני החתימה.<br>התקדמותכם תופיע בסרגל למעלה.
+    </div>
+
+    <div class="sign-form">
+      <div class="field">
+        <label>שם פרטי</label>
+        <input type="text" id="firstName" placeholder="הזינו את שמכם הפרטי" required>
+      </div>
+      <div class="field">
+        <label>שם משפחה</label>
+        <input type="text" id="lastName" placeholder="הזינו את שם משפחתכם" required>
+      </div>
+      <div class="field">
+        <label>תעודת זהות (4 ספרות אחרונות)</label>
+        <input type="text" id="idNum" maxlength="4" pattern="[0-9]{4}" placeholder="לדוגמה: 1234" required>
+      </div>
+      <div class="field">
+        <label>חתימה</label>
+        <div class="sig-wrap" id="sigWrap">
+          <span class="sig-placeholder">חתמו כאן בכתב יד</span>
+          <canvas id="sigCanvas"></canvas>
+          <button class="sig-clear" onclick="clearSig()">נקה</button>
+        </div>
+      </div>
+      <button class="submit-btn" id="submitBtn" disabled onclick="submitForm()">אני מאשר/ת כי קראתי את המדיניות ומתחייב/ת לפעול על פיה</button>
+      <p class="warn">⚠ יש לקרוא את כל הסעיפים ולמלא את כל השדות כולל חתימה</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Puratos Israel — מדיניות רכבים יולי 2026<br>
+    טופס דיגיטלי לאישור קריאה
+  </div>
+</div>
+
+<!-- Confirmation -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">✓</div>
+    <h2>אישור התקבל!</h2>
+    <p>תודה. אישור הקריאה שלך נשמר בהצלחה.</p>
+    <div class="ref" id="confirmRef"></div>
+    <button class="confirm-close" onclick="closeConfirm()">סגור</button>
+  </div>
+</div>
+
+<script>
+var totalSections=8;
+var readSections={};
+var sigEmpty=true;
+
+// Toggle section
+function toggleSection(n){
+  var sec=document.querySelector('[data-sec="'+n+'"]');
+  sec.classList.toggle('open');
+}
+
+// Mark section as read
+function markRead(n){
+  readSections[n]=true;
+  var sec=document.querySelector('[data-sec="'+n+'"]');
+  sec.classList.add('read');
+  var btn=sec.querySelector('.read-btn');
+  btn.textContent='✓ נקרא';
+  btn.classList.add('done');
+  btn.disabled=true;
+  updateProgress();
+}
+
+// Update progress bar
+function updateProgress(){
+  var count=Object.keys(readSections).length;
+  var pct=(count/totalSections)*100;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=count+' מתוך '+totalSections+' סעיפים נקראו';
+  
+  var signSec=document.getElementById('signSection');
+  if(count===totalSections){
+    signSec.classList.remove('locked');
+  }else{
+    signSec.classList.add('locked');
+  }
+  checkForm();
+}
+
+// Signature canvas
+var canvas=document.getElementById('sigCanvas');
+var ctx=canvas.getContext('2d');
+var drawing=false;
+var lastX=0,lastY=0;
+
+function resizeCanvas(){
+  var wrap=document.getElementById('sigWrap');
+  canvas.width=wrap.offsetWidth-16;
+  canvas.height=200;
+  ctx.lineWidth=2.5;
+  ctx.lineCap='round';
+  ctx.strokeStyle='#1e3a5f';
+}
+window.addEventListener('load',resizeCanvas);
+window.addEventListener('resize',resizeCanvas);
+
+function getPos(e){
+  var rect=canvas.getBoundingClientRect();
+  if(e.touches&&e.touches.length>0){
+    return{x:e.touches[0].clientX-rect.left,y:e.touches[0].clientY-rect.top};
+  }
+  return{x:e.clientX-rect.left,y:e.clientY-rect.top};
+}
+
+function startDraw(e){
+  e.preventDefault();
+  drawing=true;
+  var pos=getPos(e);
+  lastX=pos.x;lastY=pos.y;
+}
+function draw(e){
+  if(!drawing)return;
+  e.preventDefault();
+  var pos=getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(lastX,lastY);
+  ctx.lineTo(pos.x,pos.y);
+  ctx.stroke();
+  lastX=pos.x;lastY=pos.y;
+  sigEmpty=false;
+  document.getElementById('sigWrap').classList.add('has-sig');
+  document.querySelector('.sig-placeholder').style.display='none';
+  checkForm();
+}
+function stopDraw(){drawing=false;}
+
+canvas.addEventListener('mousedown',startDraw);
+canvas.addEventListener('mousemove',draw);
+canvas.addEventListener('mouseup',stopDraw);
+canvas.addEventListener('mouseleave',stopDraw);
+canvas.addEventListener('touchstart',startDraw);
+canvas.addEventListener('touchmove',draw);
+canvas.addEventListener('touchend',stopDraw);
+
+function clearSig(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  sigEmpty=true;
+  document.getElementById('sigWrap').classList.remove('has-sig');
+  document.querySelector('.sig-placeholder').style.display='';
+  checkForm();
+}
+
+// Check form completion
+function checkForm(){
+  var allRead=Object.keys(readSections).length===totalSections;
+  var fn=document.getElementById('firstName').value.trim();
+  var ln=document.getElementById('lastName').value.trim();
+  var id=document.getElementById('idNum').value.trim();
+  var canSubmit=allRead&&fn&&ln&&id&&!sigEmpty;
+  document.getElementById('submitBtn').disabled=!canSubmit;
+}
+
+document.getElementById('firstName').addEventListener('input',checkForm);
+document.getElementById('lastName').addEventListener('input',checkForm);
+document.getElementById('idNum').addEventListener('input',checkForm);
+
+// Submit
+function submitForm(){
+  var fn=document.getElementById('firstName').value.trim();
+  var ln=document.getElementById('lastName').value.trim();
+  var id=document.getElementById('idNum').value.trim();
+  var date=new Date().toLocaleDateString('he-IL');
+  var time=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  var ref='REF-'+Date.now().toString(36).toUpperCase().slice(-8);
+  
+  // Save signature as image
+  var sigData=canvas.toDataURL('image/png');
+  
+  // Build confirmation record
+  var record={
+    name:fn+' '+ln,
+    idLast4:id,
+    date:date,
+    time:time,
+    ref:ref,
+    policy:'מדיניות רכבים יולי 2026',
+    sectionsRead:totalSections,
+    signature:sigData
+  };
+  
+  // Save to localStorage as backup
+  try{
+    var existing=JSON.parse(localStorage.getItem('puratos_car_signatures')||'[]');
+    existing.push(record);
+    localStorage.setItem('puratos_car_signatures',JSON.stringify(existing));
+  }catch(e){}
+  
+  // Show confirmation
+  document.getElementById('confirmRef').textContent='מספר אסמכתא: '+ref+' | תאריך: '+date+' '+time;
+  document.getElementById('confirmOverlay').classList.add('show');
+  
+  // Also try to send via email
+  var mailBody=encodeURIComponent(
+    'אישור קריאת מדיניות רכבים\n\n'+
+    'שם: '+fn+' '+ln+'\n'+
+    'ת.ז. (4 אחרונות): '+id+'\n'+
+    'תאריך: '+date+' '+time+'\n'+
+    'מספר אסמכתא: '+ref+'\n'+
+    'מדיניות: מדיניות רכבים יולי 2026\n'+
+    'סעיפים שנקראו: '+totalSections+' מתוך '+totalSections+'\n\n'+
+    'אני מאשר/ת כי קראתי את המדיניות במלואה ומתחייב/ת לפעול על פיה.'
+  );
+  var mailLink='mailto:liors@puratos.co.il?subject='+encodeURIComponent('אישור קריאת מדיניות רכבים - '+fn+' '+ln)+'&body='+mailBody;
+  
+  // Open email client silently
+  var iframe=document.createElement('iframe');
+  iframe.style.display='none';
+  iframe.src=mailLink;
+  document.body.appendChild(iframe);
+  setTimeout(function(){document.body.removeChild(iframe);},3000);
+}
+
+function closeConfirm(){
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+
+// Initially lock signature section
+updateProgress();
+</script>
+</body>
+</html>
