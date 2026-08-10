@@ -632,10 +632,7 @@ body{
         <label>שם משפחה</label>
         <input type="text" id="lastName" placeholder="הזינו את שם משפחתכם" required>
       </div>
-      <div class="field">
-        <label>תעודת זהות (4 ספרות אחרונות)</label>
-        <input type="text" id="idNum" maxlength="4" pattern="[0-9]{4}" placeholder="לדוגמה: 1234" required>
-      </div>
+
       <div class="field">
         <label>חתימה</label>
         <div class="sig-wrap" id="sigWrap">
@@ -773,20 +770,17 @@ function checkForm(){
   var allRead=Object.keys(readSections).length===totalSections;
   var fn=document.getElementById('firstName').value.trim();
   var ln=document.getElementById('lastName').value.trim();
-  var id=document.getElementById('idNum').value.trim();
-  var canSubmit=allRead&&fn&&ln&&id&&!sigEmpty;
+  var canSubmit=allRead&&fn&&ln&&!sigEmpty;
   document.getElementById('submitBtn').disabled=!canSubmit;
 }
 
 document.getElementById('firstName').addEventListener('input',checkForm);
 document.getElementById('lastName').addEventListener('input',checkForm);
-document.getElementById('idNum').addEventListener('input',checkForm);
 
 // Submit
 function submitForm(){
   var fn=document.getElementById('firstName').value.trim();
   var ln=document.getElementById('lastName').value.trim();
-  var id=document.getElementById('idNum').value.trim();
   var date=new Date().toLocaleDateString('he-IL');
   var time=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
   var ref='REF-'+Date.now().toString(36).toUpperCase().slice(-8);
@@ -797,7 +791,6 @@ function submitForm(){
   // Build confirmation record
   var record={
     name:fn+' '+ln,
-    idLast4:id,
     date:date,
     time:time,
     ref:ref,
@@ -821,8 +814,7 @@ function submitForm(){
   var mailBody=encodeURIComponent(
     'אישור קריאת מדיניות רכבים\n\n'+
     'שם: '+fn+' '+ln+'\n'+
-    'ת.ז. (4 אחרונות): '+id+'\n'+
-    'תאריך: '+date+' '+time+'\n'+
+        'תאריך: '+date+' '+time+'\n'+
     'מספר אסמכתא: '+ref+'\n'+
     'מדיניות: מדיניות רכבים יולי 2026\n'+
     'סעיפים שנקראו: '+totalSections+' מתוך '+totalSections+'\n\n'+
