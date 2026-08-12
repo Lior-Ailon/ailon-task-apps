@@ -875,7 +875,43 @@ async function loadOverview() {
                 </table>
             </div>`;
 
-        content.innerHTML = stats;
+        
+    const libId = appState.library ? appState.library.id : '';
+    const baseUrl = 'https://lior-ailon.github.io/ailon-task-apps/dekel-library/display.html';
+    const displayMainUrl = libId ? `${baseUrl}?library_id=${libId}` : baseUrl;
+    const displayEventsUrl = libId ? `${baseUrl}?library_id=${libId}&view=events` : `${baseUrl}?view=events`;
+    
+    const displayIcons = `
+        <div style="margin-top:24px">
+            <h3 style="font-size:1.2rem;color:var(--navy);margin-bottom:16px">📺 קישורי תצוגה לטלוויזיה</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:8px">
+                <a href="${displayMainUrl}" target="_blank" style="text-decoration:none;color:inherit">
+                    <div style="background:white;border-radius:16px;padding:24px;text-align:center;box-shadow:var(--shadow);transition:transform 0.2s;border:1px solid var(--gray-light)">
+                        <div style="font-size:2.5rem;margin-bottom:10px">📺</div>
+                        <div style="font-weight:700;color:var(--navy);font-size:1rem;margin-bottom:4px">מסך ראשי</div>
+                        <div style="font-size:0.8rem;color:var(--gray)">שעון + אירועים</div>
+                    </div>
+                </a>
+                <a href="${displayEventsUrl}" target="_blank" style="text-decoration:none;color:inherit">
+                    <div style="background:white;border-radius:16px;padding:24px;text-align:center;box-shadow:var(--shadow);transition:transform 0.2s;border:1px solid var(--gray-light)">
+                        <div style="font-size:2.5rem;margin-bottom:10px">📅</div>
+                        <div style="font-weight:700;color:var(--navy);font-size:1rem;margin-bottom:4px">אירועים וקהילה</div>
+                        <div style="font-size:0.8rem;color:var(--gray)">מסך אירועים</div>
+                    </div>
+                </a>
+                <div onclick="loadPage('content')" style="cursor:pointer">
+                    <div style="background:white;border-radius:16px;padding:24px;text-align:center;box-shadow:var(--shadow);transition:transform 0.2s;border:1px solid var(--gray-light)">
+                        <div style="font-size:2.5rem;margin-bottom:10px">⚙️</div>
+                        <div style="font-weight:700;color:var(--navy);font-size:1rem;margin-bottom:4px">ממשק ניהול</div>
+                        <div style="font-size:0.8rem;color:var(--gray)">ניהול תוכן ואירועים</div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    
+    stats += displayIcons;
+
+    content.innerHTML = stats;
     } catch (e) {
         content.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>שגיאה בטעינת נתונים</p></div>`;
     }

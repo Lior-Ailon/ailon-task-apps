@@ -5,147 +5,566 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>תצוגת ספרייה</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap');
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #d8d0c3;
+            --bg-stripe: #d0c8bb;
+            --card-bg: #f4f1ea;
+            --teal-dark: #1c4e4c;
+            --teal: #0d9488;
+            --teal-light: #14b8a6;
+            --navy: #1e3a5f;
+            --text: #222222;
+            --text-muted: #666;
+            --border: #e0d8cc;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --amber: #d97706;
+            --rose: #e11d48;
+            --blue: #2563eb;
+            --green: #16a34a;
+            --purple: #7c3aed;
+        }
+        
         body {
-            font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f2942 0%, #1e3a5f 100%);
-            color: white;
+            font-family: 'Heebo', 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent 0,
+                transparent 40px,
+                rgba(0,0,0,0.02) 40px,
+                rgba(0,0,0,0.02) 41px
+            );
+            color: var(--text);
             min-height: 100vh;
             overflow: hidden;
         }
+        
         .display-container {
             display: grid;
-            grid-template-columns: 1fr 350px;
+            grid-template-columns: 320px 1fr 300px;
+            grid-template-rows: auto 1fr auto;
+            gap: 16px;
+            padding: 20px;
             height: 100vh;
-            padding: 40px;
-            gap: 30px;
         }
-        .main-area {
+        
+        /* Header Row */
+        .header-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 320px 1fr 300px;
+            gap: 16px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        /* Logo Card */
+        .logo-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-icon-box {
+            width: 52px;
+            height: 52px;
+            background: var(--teal-dark);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+        .logo-card .lib-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--teal-dark);
+        }
+        .logo-card .lib-tagline {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        /* Welcome Card */
+        .welcome-card {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
         }
-        .library-name {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #14b8a6;
+        .welcome-card .title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--teal-dark);
         }
-        .welcome {
-            font-size: 2rem;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 30px;
+        .welcome-card .heart {
+            font-size: 1.2rem;
+            margin: 0 6px;
         }
-        .clock {
-            font-size: 8rem;
-            font-weight: 200;
-            letter-spacing: 4px;
+        .welcome-card .subtitle {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
-        .date {
-            font-size: 1.8rem;
-            color: rgba(255,255,255,0.6);
-            margin-top: 10px;
+        
+        /* Clock Card */
+        .clock-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .message-center {
-            margin-top: 40px;
-            padding: 30px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 16px;
-            max-width: 600px;
-            display: none;
+        .clock-card .time {
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: var(--teal-dark);
+            letter-spacing: 2px;
         }
-        .message-center.active { display: block; }
-        .message-center h3 {
-            color: #14b8a6;
-            font-size: 1.5rem;
-            margin-bottom: 12px;
+        .clock-card .date {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
-        .message-center p {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.9);
-        }
-        .events-sidebar {
+        
+        /* Sidebar Cards */
+        .sidebar-left, .sidebar-right {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 20px;
         }
-        .events-sidebar h2 {
-            font-size: 1.8rem;
-            color: #14b8a6;
-            margin-bottom: 10px;
-            border-bottom: 2px solid rgba(20,184,166,0.3);
-            padding-bottom: 10px;
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--teal-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
         }
-        .event-card {
-            background: rgba(255,255,255,0.08);
+        
+        /* Search Card */
+        .search-card .qr-box {
+            background: white;
             border-radius: 12px;
-            padding: 20px;
-            border-right: 4px solid #14b8a6;
+            padding: 16px;
+            text-align: center;
+            margin-top: 8px;
         }
-        .event-card .title {
-            font-size: 1.3rem;
+        .search-card .qr-box .qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        .search-card .scan-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+        
+        /* Events */
+        .event-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .event-item:last-child { border-bottom: none; }
+        .event-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .event-info .ev-title {
+            font-size: 0.9rem;
             font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .event-info .ev-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .event-info .ev-time {
+            font-size: 0.72rem;
+            color: var(--teal);
+            font-weight: 600;
+        }
+        .events-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: var(--teal-dark);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .carousel-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .carousel-card .slide-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--teal-dark);
             margin-bottom: 8px;
         }
-        .event-card .date-time {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 6px;
+        .carousel-card .slide-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--teal);
+            border-radius: 2px;
+            margin-bottom: 16px;
         }
-        .event-card .location {
-            font-size: 0.95rem;
-            color: rgba(255,255,255,0.5);
+        .carousel-card .slide-text {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 400px;
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
-        .event-card .description {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            margin-top: 8px;
-            line-height: 1.4;
+        .carousel-card .slide-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
         }
-        .no-events {
-            color: rgba(255,255,255,0.4);
-            font-size: 1.2rem;
+        .carousel-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .carousel-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+        }
+        .carousel-dots .dot.active {
+            background: var(--teal-dark);
+        }
+        
+        /* Opening Hours */
+        .hours-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            padding: 3px 0;
+        }
+        .hours-row .day { color: var(--text); font-weight: 500; }
+        .hours-row .hours { color: var(--text-muted); }
+        .hours-row.closed .hours { color: var(--rose); }
+        
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .service-item {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 12px 6px;
             text-align: center;
-            padding: 40px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
+        .service-item .svc-icon {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        .services-footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--teal-dark);
+            margin-top: 10px;
+        }
+        
+        /* Footer */
+        .footer-bar {
+            grid-column: 1 / -1;
+            background: var(--teal-dark);
+            color: white;
+            border-radius: var(--radius);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+        }
+        .footer-left, .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.85rem;
+        }
+        .footer-bar .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Scrolling announcement */
+        .announcement-bar {
+            grid-column: 1 / -1;
+            background: var(--navy);
+            color: white;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .announcement-text {
+            display: inline-block;
+            animation: scroll 20s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* No events */
+        .no-events {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 20px 0;
+        }
+        
+        /* Loading */
         .loading-screen {
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-size: 2rem;
-            color: rgba(255,255,255,0.5);
+            font-size: 1.5rem;
+            color: var(--teal-dark);
+        }
+        
+        /* Events-only mode */
+        body.events-only .display-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+        }
+        body.events-only .header-row { grid-template-columns: 1fr 1fr; }
+        body.events-only .sidebar-left { display: none; }
+        body.events-only .sidebar-right { display: none; }
+        body.events-only .main-content { max-width: 800px; margin: 0 auto; width: 100%; }
+        body.events-only .events-full {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        body.events-only .events-full .event-card-large {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        body.events-only .events-full .event-card-large .evl-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--teal-dark);
+            margin-bottom: 8px;
+        }
+        body.events-only .events-full .event-card-large .evl-date {
+            font-size: 0.9rem;
+            color: var(--teal);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        body.events-only .events-full .event-card-large .evl-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        body.events-only .events-full .event-card-large .evl-loc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        
+        @media (max-width: 1200px) {
+            .display-container { grid-template-columns: 280px 1fr 260px; }
+            .header-row { grid-template-columns: 280px 1fr 260px; }
         }
         @media (max-width: 900px) {
-            .display-container { grid-template-columns: 1fr; padding: 20px; }
-            .clock { font-size: 4rem; }
-            .library-name { font-size: 2rem; }
+            .display-container { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto auto; padding: 10px; }
+            .header-row { grid-template-columns: 1fr; }
+            .sidebar-left, .sidebar-right { flex-direction: row; flex-wrap: wrap; }
+            .sidebar-left > *, .sidebar-right > * { flex: 1; min-width: 200px; }
+            .main-content { order: 3; }
         }
     </style>
 </head>
 <body>
     <div id="loadingScreen" class="loading-screen">טוען תצוגה...</div>
     <div id="displayContainer" class="display-container" style="display:none">
-        <div class="main-area">
-            <h1 id="libraryName" class="library-name"></h1>
-            <div class="welcome">ברוכים הבאים לספרייה 📚</div>
-            <div id="clock" class="clock">--:--</div>
-            <div id="dateDisplay" class="date"></div>
-            <div id="messageCenter" class="message-center">
-                <h3>📢 הודעה מהספרייה</h3>
-                <p id="messageText"></p>
+        
+        <!-- Header Row -->
+        <div class="header-row">
+            <!-- Logo -->
+            <div class="card logo-card">
+                <div class="logo-icon-box">📚</div>
+                <div>
+                    <div class="lib-name" id="libName">ספרייה</div>
+                    <div class="lib-tagline">ידע. קהילה. השראה.</div>
+                </div>
+            </div>
+            <!-- Welcome -->
+            <div class="card welcome-card">
+                <div class="title">ברוכים הבאים <span class="heart">💙</span></div>
+                <div class="subtitle" id="welcomeSub">לספרייה</div>
+            </div>
+            <!-- Clock -->
+            <div class="card clock-card">
+                <div class="time" id="clock">--:--</div>
+                <div class="date" id="dateDisplay"></div>
             </div>
         </div>
-        <div class="events-sidebar">
-            <h2>אירועים קרובים</h2>
-            <div id="eventsList"></div>
+        
+        <!-- Left Sidebar -->
+        <div class="sidebar-left">
+            <!-- Search / QR -->
+            <div class="card search-card">
+                <div class="card-title">🔍 מחפשים ספר?</div>
+                <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px">חפשו בקטלוג הספרייה</p>
+                <div class="qr-box">
+                    <div class="qr-placeholder">📱</div>
+                    <div class="scan-text">סרקו כאן</div>
+                </div>
+            </div>
+            <!-- Events -->
+            <div class="card events-card" style="flex:1">
+                <div class="card-title">📅 אירועים קרובים</div>
+                <div id="eventsList"></div>
+            </div>
         </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Carousel -->
+            <div class="card carousel-card" style="flex:1">
+                <div id="carouselContent">
+                    <div class="slide-icon" id="slideIcon">📚</div>
+                    <div class="slide-title" id="slideTitle">ברוכים הבאים</div>
+                    <div class="slide-divider"></div>
+                    <div class="slide-text" id="slideText">טוען תוכן...</div>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+            <!-- Message -->
+            <div class="card" id="messageCard" style="display:none">
+                <div class="card-title">📢 הודעה מהספרייה</div>
+                <p id="messageText" style="font-size:1rem;color:var(--text);line-height:1.6"></p>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="sidebar-right">
+            <!-- Opening Hours -->
+            <div class="card hours-card">
+                <div class="card-title">🕐 שעות פתיחה</div>
+                <div class="hours-list" id="hoursList"></div>
+            </div>
+            <!-- Services -->
+            <div class="card services-card">
+                <div class="card-title">✨ שירותים בספרייה</div>
+                <div class="services-grid">
+                    <div class="service-item"><div class="svc-icon">📶</div>Wi-Fi</div>
+                    <div class="service-item"><div class="svc-icon">💻</div>עמדת מחשב</div>
+                    <div class="service-item"><div class="svc-icon">📖</div>קטלוג</div>
+                    <div class="service-item"><div class="svc-icon">🧒</div>פינת ילדים</div>
+                    <div class="service-item"><div class="svc-icon">🖨️</div>מדפסות</div>
+                    <div class="service-item"><div class="svc-icon">📤</div>השאלת ספרים</div>
+                </div>
+                <div class="services-footer">אנחנו כאן בשבילכם! 💙</div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer-bar">
+            <div class="footer-left">
+                <div class="contact-item">📞 <span id="footerPhone"></span></div>
+                <div class="contact-item">🌐 <span id="footerWeb"></span></div>
+            </div>
+            <div class="footer-right">
+                <span>עקבו אחרינו:</span>
+                <span style="font-size:1.2rem">📘</span>
+                <span style="font-size:1.2rem">📷</span>
+            </div>
+        </div>
+        
+        <!-- Announcement -->
+        <div class="announcement-bar">
+            <div class="announcement-text" id="announcementText">ברוכים הבאים לספרייה | שעות פעילות מעודכנות | אירועים חדשים כל שבוע</div>
+        </div>
+    </div>
+
+    <!-- Events-only mode container -->
+    <div id="eventsOnlyContainer" style="display:none;padding:20px;max-width:900px;margin:0 auto">
+        <div class="card" style="text-align:center;margin-bottom:20px;padding:30px">
+            <div style="font-size:2rem;font-weight:800;color:var(--teal-dark)">📅 אירועים וקהילה</div>
+            <div style="font-size:1.2rem;color:var(--text-muted);margin-top:8px" id="eventsOnlyLibName"></div>
+        </div>
+        <div class="events-full" id="eventsFullList"></div>
     </div>
 
     <script>
@@ -155,79 +574,165 @@
             const params = new URLSearchParams(window.location.search);
             return params.get('library_id') || params.get('id') || '6a7c223bd36bfaaac6f001b4';
         }
-
-        async function loadData() {
-            const libraryId = getLibraryId();
-            try {
-                // Fetch library info and events
-                const [libRes, eventsRes] = await Promise.all([
-                    fetch(`${API_BASE}/libraryData`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'list', entity_type: 'library',
-                            session_token: 'public_display',
-                            library_id: libraryId
-                        })
-                    }).then(r => r.json()),
-                    fetch(`${API_BASE}/libraryData`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'list', entity_type: 'event',
-                            session_token: 'public_display',
-                            library_id: libraryId
-                        })
-                    }).then(r => r.json())
-                ]);
-
-                // Show library name
-                let libName = 'הספרייה';
-                if (libRes.success && libRes.data && libRes.data.length > 0) {
-                    libName = libRes.data[0].name || 'הספרייה';
-                    // Show message if exists
-                    if (libRes.data[0].notes) {
-                        document.getElementById('messageText').textContent = libRes.data[0].notes;
-                        document.getElementById('messageCenter').classList.add('active');
-                    }
-                }
-                document.getElementById('libraryName').textContent = libName;
-
-                // Show events
-                const events = eventsRes.success ? eventsRes.data.filter(e => e.status === 'upcoming').slice(0, 5) : [];
-                const eventsEl = document.getElementById('eventsList');
-                if (events.length === 0) {
-                    eventsEl.innerHTML = '<div class="no-events">אין אירועים קרובים</div>';
-                } else {
-                    eventsEl.innerHTML = events.map(e => `
-                        <div class="event-card">
-                            <div class="title">${e.title || ''}</div>
-                            <div class="date-time">${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL', {day:'numeric',month:'long'}) : ''} ${e.event_time || ''}</div>
-                            ${e.location ? `<div class="location">📍 ${e.location}</div>` : ''}
-                            ${e.description ? `<div class="description">${e.description}</div>` : ''}
-                        </div>
-                    `).join('');
-                }
-
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('displayContainer').style.display = 'grid';
-            } catch (err) {
-                console.error('Error loading display:', err);
-                document.getElementById('loadingScreen').textContent = 'שגיאה בטעינת נתונים';
-            }
+        
+        function getViewMode() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('view') || 'main';
         }
-
+        
+        const slideContent = [
+            { icon: '📚', title: 'מחדשים ספרים גם מהבית', text: 'ניתן להאריך השאלה דרך אתר הספרייה או בטלפון. הארכה אוטומטית עד 14 יום.' },
+            { icon: '👶', title: 'שעת סיפור לקטנטנים', text: 'כל שלישי ב-17:00 באולם הילדים. הרשמה מראש בדלפק הספרייה או בטלפון.' },
+            { icon: '📖', title: 'מועדון הקריאה חוזר', text: 'מפגש פתיחה ביום רביעי 19:30. נקרא ונדון בספרים נבחרים. כולם מוזמנים!' },
+            { icon: '💻', title: 'סדנת אוריינות דיגיטלית', text: 'למדו להשתמש בכלים דיגיטליים בבטחה. מתאים לכל הגילאים. הרשמה בדלפק.' },
+            { icon: '🌿', title: 'ספרייה ירוקה', text: 'אנו פועלים לצמצום צריכת נייר ומעודדים השאלה דיגיטלית. יחד לעולם ירוק יותר.' }
+        ];
+        
+        let currentSlide = 0;
+        
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
             document.getElementById('dateDisplay').textContent = now.toLocaleDateString('he-IL', {weekday:'long',day:'numeric',month:'long'});
         }
-
+        
+        function updateCarousel() {
+            const slide = slideContent[currentSlide];
+            document.getElementById('slideIcon').textContent = slide.icon;
+            document.getElementById('slideTitle').textContent = slide.title;
+            document.getElementById('slideText').textContent = slide.text;
+            
+            const dots = document.getElementById('carouselDots');
+            dots.innerHTML = slideContent.map((_, i) => 
+                `<div class="dot ${i === currentSlide ? 'active' : ''}"></div>`
+            ).join('');
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideContent.length;
+            updateCarousel();
+        }
+        
+        const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+        const defaultHours = [
+            { day: 'ראשון', hours: '09:00 - 13:00', closed: false },
+            { day: 'שני', hours: '09:00 - 19:00', closed: false },
+            { day: 'שלישי', hours: '09:00 - 13:00', closed: false },
+            { day: 'רביעי', hours: '09:00 - 19:00', closed: false },
+            { day: 'חמישי', hours: '09:00 - 13:00', closed: false },
+            { day: 'שישי', hours: '09:00 - 12:00', closed: false },
+            { day: 'שבת', hours: 'סגור', closed: true },
+        ];
+        
+        function renderHours() {
+            document.getElementById('hoursList').innerHTML = defaultHours.map(h => 
+                `<div class="hours-row ${h.closed ? 'closed' : ''}"><span class="day">${h.day}</span><span class="hours">${h.hours}</span></div>`
+            ).join('');
+        }
+        
+        async function loadData() {
+            const libraryId = getLibraryId();
+            const viewMode = getViewMode();
+            
+            try {
+                const [libRes, eventsRes] = await Promise.all([
+                    fetch(`${API_BASE}/libraryData`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'list', entity_type: 'library', session_token: 'public_display', library_id: libraryId })
+                    }).then(r => r.json()),
+                    fetch(`${API_BASE}/libraryData`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'list', entity_type: 'event', session_token: 'public_display', library_id: libraryId })
+                    }).then(r => r.json())
+                ]);
+                
+                let libName = 'הספרייה';
+                let libPhone = '';
+                let libNotes = '';
+                
+                if (libRes.success && libRes.data && libRes.data.length > 0) {
+                    const lib = libRes.data[0];
+                    libName = lib.name || 'הספרייה';
+                    libPhone = lib.phone || '';
+                    libNotes = lib.notes || '';
+                    if (lib.display_settings) {
+                        try {
+                            const settings = typeof lib.display_settings === 'string' ? JSON.parse(lib.display_settings) : lib.display_settings;
+                        } catch(e) {}
+                    }
+                }
+                
+                const events = eventsRes.success ? eventsRes.data.filter(e => e.status === 'upcoming').slice(0, 6) : [];
+                
+                if (viewMode === 'events') {
+                    document.body.classList.add('events-only');
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('displayContainer').style.display = 'none';
+                    document.getElementById('eventsOnlyContainer').style.display = 'block';
+                    document.getElementById('eventsOnlyLibName').textContent = libName;
+                    
+                    const listEl = document.getElementById('eventsFullList');
+                    if (events.length === 0) {
+                        listEl.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-muted)">אין אירועים קרובים</div>';
+                    } else {
+                        listEl.innerHTML = events.map(e => `
+                            <div class="event-card-large">
+                                <div class="evl-title">${e.title || ''}</div>
+                                <div class="evl-date">${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL', {weekday:'long',day:'numeric',month:'long'}) : ''} ${e.event_time || ''}</div>
+                                ${e.location ? `<div class="evl-loc">📍 ${e.location}</div>` : ''}
+                                ${e.description ? `<div class="evl-desc">${e.description}</div>` : ''}
+                            </div>
+                        `).join('');
+                    }
+                    return;
+                }
+                
+                // Main display mode
+                document.getElementById('libName').textContent = libName;
+                document.getElementById('welcomeSub').textContent = `ל${libName}`;
+                document.getElementById('footerPhone').textContent = libPhone || '';
+                document.getElementById('footerWeb').textContent = 'library.local';
+                
+                if (libNotes) {
+                    document.getElementById('messageText').textContent = libNotes;
+                    document.getElementById('messageCard').style.display = 'block';
+                }
+                
+                // Events in sidebar
+                const eventsEl = document.getElementById('eventsList');
+                if (events.length === 0) {
+                    eventsEl.innerHTML = '<div class="no-events">אין אירועים קרובים</div>';
+                } else {
+                    eventsEl.innerHTML = events.slice(0, 4).map(e => `
+                        <div class="event-item">
+                            <div class="event-thumb">${e.event_type === 'story_hour' ? '👶' : e.event_type === 'workshop' ? '🎨' : e.event_type === 'book_club' ? '📖' : '📅'}</div>
+                            <div class="event-info">
+                                <div class="ev-title">${e.title || ''}</div>
+                                <div class="ev-desc">${e.description ? e.description.substring(0, 60) : ''}</div>
+                                <div class="ev-time">${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL', {day:'numeric',month:'numeric'}) : ''} | ${e.event_time || ''}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('displayContainer').style.display = 'grid';
+                
+            } catch(err) {
+                console.error('Error:', err);
+                document.getElementById('loadingScreen').textContent = 'שגיאה בטעינת נתונים';
+            }
+        }
+        
         // Start
+        renderHours();
         updateClock();
+        updateCarousel();
         setInterval(updateClock, 1000);
+        setInterval(nextSlide, 5000);
         loadData();
-        // Refresh data every 60 seconds
         setInterval(loadData, 60000);
     </script>
 </body>
