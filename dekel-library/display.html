@@ -1,739 +1,659 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>תצוגת ספרייה</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --bg: #d8d0c3;
-            --bg-stripe: #d0c8bb;
-            --card-bg: #f4f1ea;
-            --teal-dark: #1c4e4c;
-            --teal: #0d9488;
-            --teal-light: #14b8a6;
-            --navy: #1e3a5f;
-            --text: #222222;
-            --text-muted: #666;
-            --border: #e0d8cc;
-            --shadow: 0 2px 8px rgba(0,0,0,0.06);
-            --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
-            --radius: 16px;
-            --amber: #d97706;
-            --rose: #e11d48;
-            --blue: #2563eb;
-            --green: #16a34a;
-            --purple: #7c3aed;
-        }
-        
-        body {
-            font-family: 'Heebo', 'Segoe UI', Arial, sans-serif;
-            background: var(--bg);
-            background-image: repeating-linear-gradient(
-                90deg,
-                transparent 0,
-                transparent 40px,
-                rgba(0,0,0,0.02) 40px,
-                rgba(0,0,0,0.02) 41px
-            );
-            color: var(--text);
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        
-        .display-container {
-            display: grid;
-            grid-template-columns: 320px 1fr 300px;
-            grid-template-rows: auto 1fr auto;
-            gap: 16px;
-            padding: 20px;
-            height: 100vh;
-        }
-        
-        /* Header Row */
-        .header-row {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: 320px 1fr 300px;
-            gap: 16px;
-        }
-        
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            border: 1px solid var(--border);
-        }
-        
-        /* Logo Card */
-        .logo-card {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .logo-icon-box {
-            width: 52px;
-            height: 52px;
-            background: var(--teal-dark);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-        }
-        .logo-card .lib-name {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--teal-dark);
-        }
-        .logo-card .lib-tagline {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        
-        /* Welcome Card */
-        .welcome-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .welcome-card .title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--teal-dark);
-        }
-        .welcome-card .heart {
-            font-size: 1.2rem;
-            margin: 0 6px;
-        }
-        .welcome-card .subtitle {
-            font-size: 1.4rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-        
-        /* Clock Card */
-        .clock-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .clock-card .time {
-            font-size: 2.8rem;
-            font-weight: 300;
-            color: var(--teal-dark);
-            letter-spacing: 2px;
-        }
-        .clock-card .date {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-        
-        /* Sidebar Cards */
-        .sidebar-left, .sidebar-right {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--teal-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border);
-        }
-        
-        /* Search Card */
-        .search-card .qr-box {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-top: 8px;
-        }
-        .search-card .qr-box .qr-placeholder {
-            width: 120px;
-            height: 120px;
-            background: #f0f0f0;
-            border-radius: 8px;
-            margin: 0 auto 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-        .search-card .scan-text {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-        
-        /* Events */
-        .event-item {
-            display: flex;
-            gap: 10px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .event-item:last-child { border-bottom: none; }
-        .event-thumb {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        .event-info .ev-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 2px;
-        }
-        .event-info .ev-desc {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-            line-height: 1.3;
-        }
-        .event-info .ev-time {
-            font-size: 0.72rem;
-            color: var(--teal);
-            font-weight: 600;
-        }
-        .events-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: var(--teal-dark);
-            color: white;
-            border: none;
-            border-radius: 24px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        
-        /* Main Content */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .carousel-card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .carousel-card .slide-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--teal-dark);
-            margin-bottom: 8px;
-        }
-        .carousel-card .slide-divider {
-            width: 60px;
-            height: 3px;
-            background: var(--teal);
-            border-radius: 2px;
-            margin-bottom: 16px;
-        }
-        .carousel-card .slide-text {
-            font-size: 1.05rem;
-            color: var(--text-muted);
-            max-width: 400px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        .carousel-card .slide-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-        .carousel-dots {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin-top: 12px;
-        }
-        .carousel-dots .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--border);
-            cursor: pointer;
-        }
-        .carousel-dots .dot.active {
-            background: var(--teal-dark);
-        }
-        
-        /* Opening Hours */
-        .hours-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .hours-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.82rem;
-            padding: 3px 0;
-        }
-        .hours-row .day { color: var(--text); font-weight: 500; }
-        .hours-row .hours { color: var(--text-muted); }
-        .hours-row.closed .hours { color: var(--rose); }
-        
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .service-item {
-            background: var(--bg);
-            border-radius: 10px;
-            padding: 12px 6px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-        .service-item .svc-icon {
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-        }
-        .services-footer {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--teal-dark);
-            margin-top: 10px;
-        }
-        
-        /* Footer */
-        .footer-bar {
-            grid-column: 1 / -1;
-            background: var(--teal-dark);
-            color: white;
-            border-radius: var(--radius);
-            padding: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            overflow: hidden;
-        }
-        .footer-left, .footer-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 0.85rem;
-        }
-        .footer-bar .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        /* Scrolling announcement */
-        .announcement-bar {
-            grid-column: 1 / -1;
-            background: var(--navy);
-            color: white;
-            border-radius: 10px;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .announcement-text {
-            display: inline-block;
-            animation: scroll 20s linear infinite;
-        }
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        
-        /* No events */
-        .no-events {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            padding: 20px 0;
-        }
-        
-        /* Loading */
-        .loading-screen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-size: 1.5rem;
-            color: var(--teal-dark);
-        }
-        
-        /* Events-only mode */
-        body.events-only .display-container {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr auto;
-        }
-        body.events-only .header-row { grid-template-columns: 1fr 1fr; }
-        body.events-only .sidebar-left { display: none; }
-        body.events-only .sidebar-right { display: none; }
-        body.events-only .main-content { max-width: 800px; margin: 0 auto; width: 100%; }
-        body.events-only .events-full {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        body.events-only .events-full .event-card-large {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 20px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-        }
-        body.events-only .events-full .event-card-large .evl-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--teal-dark);
-            margin-bottom: 8px;
-        }
-        body.events-only .events-full .event-card-large .evl-date {
-            font-size: 0.9rem;
-            color: var(--teal);
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        body.events-only .events-full .event-card-large .evl-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-        body.events-only .events-full .event-card-large .evl-loc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-        
-        @media (max-width: 1200px) {
-            .display-container { grid-template-columns: 280px 1fr 260px; }
-            .header-row { grid-template-columns: 280px 1fr 260px; }
-        }
-        @media (max-width: 900px) {
-            .display-container { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto auto; padding: 10px; }
-            .header-row { grid-template-columns: 1fr; }
-            .sidebar-left, .sidebar-right { flex-direction: row; flex-wrap: wrap; }
-            .sidebar-left > *, .sidebar-right > * { flex: 1; min-width: 200px; }
-            .main-content { order: 3; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>תצוגת ספרייה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --green-deep:#1e4a3d;
+  --green:#2f6b57;
+  --green-soft:#e3ece6;
+  --sage:#93ab97;
+  --sage-2:#b8c9b8;
+  --gold:#d9a441;
+  --tan-1:#cbb894;
+  --tan-2:#bda682;
+  --card:#f7f2e8;
+  --card-2:#fdfaf4;
+  --edge:#e6ddcb;
+  --ink:#2b3330;
+  --ink-soft:#7d857f;
+  --r:22px;
+  --r-sm:16px;
+  --shadow:0 6px 20px rgba(70,55,30,.10);
+  --shadow-lg:0 14px 34px rgba(70,55,30,.16);
+}
+
+html,body{height:100%}
+body{
+  font-family:'Heebo',system-ui,sans-serif;color:var(--ink);overflow:hidden;
+  background:#14201c;padding:6px;
+}
+
+/* ===== wood-grain backdrop ===== */
+.stage{
+  position:relative;height:100%;border-radius:10px;overflow:hidden;
+  padding:18px 20px 16px;display:flex;flex-direction:column;gap:14px;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.10) 0 3px,
+      rgba(0,0,0,.03) 3px 7px,
+      rgba(255,255,255,.05) 7px 12px,
+      rgba(0,0,0,.05) 12px 17px),
+    linear-gradient(180deg,#d5c4a3 0%, #c6b190 45%, #bda682 100%);
+}
+.stage::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(90% 70% at 50% 0%, rgba(255,255,255,.30), transparent 60%);
+}
+
+/* ===== cards ===== */
+.card{
+  background:linear-gradient(180deg,var(--card-2),var(--card));
+  border:1px solid rgba(255,255,255,.6);
+  border-radius:var(--r);box-shadow:var(--shadow);
+  padding:18px 20px;position:relative;z-index:1;
+}
+.card.green{
+  background:linear-gradient(160deg,var(--green),var(--green-deep));
+  border-color:rgba(255,255,255,.14);color:#eef5f0;
+}
+.ttl{
+  display:flex;align-items:center;gap:9px;justify-content:flex-start;
+  font-size:1.35rem;font-weight:800;color:var(--green-deep);margin-bottom:14px;
+}
+.ttl .ic{font-size:22px;color:var(--green)}
+.card.green .ttl{color:#fff}
+.card.green .ttl .ic{color:var(--gold)}
+
+.ic{font-size:24px;line-height:1;color:var(--green);display:inline-block}
+
+/* ===== HEADER ===== */
+.top{display:grid;grid-template-columns:360px 1fr 360px;gap:14px}
+
+.brand{display:flex;align-items:center;gap:16px;justify-content:flex-start}
+.brand-art{
+  width:74px;height:64px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(180deg,#fff,#f3ece0);border:1px solid var(--edge);
+  display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:10px 8px;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.04)
+}
+.brand-art i{display:block;width:11px;border-radius:3px 3px 1px 1px}
+.brand-art i:nth-child(1){height:34px;background:var(--green-deep)}
+.brand-art i:nth-child(2){height:42px;background:#c0563f}
+.brand-art i:nth-child(3){height:28px;background:var(--gold)}
+.brand-art i:nth-child(4){height:38px;background:var(--sage)}
+.brand .nm{font-size:1.7rem;font-weight:900;color:var(--green-deep);line-height:1.1}
+.brand .tg{font-size:.92rem;color:var(--ink-soft);margin-top:3px}
+
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}
+.welcome .h{font-size:3rem;font-weight:900;color:var(--green-deep);line-height:1;letter-spacing:-.02em;
+  display:flex;align-items:flex-start;gap:10px}
+.welcome .h .hrt{font-size:26px;color:var(--sage);margin-top:6px}
+.welcome .s{font-size:1.5rem;color:var(--green);font-weight:500;margin-top:2px}
+
+.timec{display:flex;align-items:center;justify-content:center;gap:18px;padding:10px 18px}
+.timec .t{font-size:3.6rem;font-weight:900;color:var(--green-deep);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.timec .meta{text-align:right;border-right:1px solid var(--edge);padding-right:16px}
+.timec .d1{font-size:.95rem;color:var(--ink-soft)}
+.timec .d2{font-size:.95rem;color:var(--green);font-weight:700;margin-top:2px}
+.timec .wx{display:flex;align-items:center;gap:7px;margin-top:7px;color:var(--ink-soft);font-size:.9rem}
+.timec .wx b{font-size:1.15rem;color:var(--green-deep)}
+
+/* ===== BODY GRID ===== */
+.grid{flex:1;display:grid;grid-template-columns:330px 1fr 320px;gap:14px;min-height:0}
+.col{display:flex;flex-direction:column;gap:14px;min-height:0}
+
+/* --- search / QR (green) --- */
+.searchc{display:flex;align-items:center;gap:16px}
+.searchc .txt{flex:1}
+.searchc .txt .h{font-size:1.3rem;font-weight:800}
+.searchc .txt .p{font-size:.92rem;opacity:.82;margin-top:3px}
+.searchc .qr{width:88px;height:88px;background:#fff;border-radius:12px;padding:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center}
+.searchc .qr img{width:100%;height:100%;border-radius:8px}
+.searchc .qr .ph{font-size:2rem}
+.pillbtn{margin-top:12px;background:#fff;color:var(--green-deep);border-radius:999px;
+  padding:8px 20px;font-weight:800;font-size:.92rem;display:inline-flex;align-items:center;gap:8px}
+.pillbtn .ic{font-size:16px;color:var(--green-deep)}
+
+/* --- events --- */
+.evc{flex:1;min-height:0;display:flex;flex-direction:column}
+.evlist{display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.ev{
+  background:var(--card-2);border:1px solid var(--edge);border-radius:var(--r-sm);
+  padding:14px 16px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 2px 8px rgba(70,55,30,.05)
+}
+.ev .blob{width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 32% 30%, #fff, var(--sage-2));
+  box-shadow:inset 0 -3px 8px rgba(0,0,0,.06)}
+.ev .b{min-width:0;flex:1}
+.ev .t{font-size:1.02rem;font-weight:800;color:var(--green-deep);margin-bottom:2px}
+.ev .d{font-size:.82rem;color:var(--ink-soft);line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ev .m{font-size:.82rem;color:var(--green);font-weight:700;margin-top:5px}
+.allbtn{margin-top:12px;background:var(--green-deep);color:#fff;border-radius:999px;
+  padding:11px;text-align:center;font-weight:800;font-size:.95rem}
+.empty{text-align:center;color:var(--ink-soft);padding:24px 0;font-size:.95rem}
+
+/* --- hours --- */
+.hrow{display:flex;justify-content:space-between;align-items:center;
+  font-size:.95rem;padding:6px 10px;border-radius:9px}
+.hrow .d{font-weight:700;color:var(--ink)}
+.hrow .h{color:var(--ink-soft);font-variant-numeric:tabular-nums;direction:ltr}
+.hrow.today{background:var(--green-soft)}
+.hrow.today .d{color:var(--green-deep)}
+.hrow.closed .h{color:#b4533f;font-weight:700}
+
+/* --- services --- */
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.svc .s{background:var(--card-2);border:1px solid var(--edge);border-radius:14px;
+  padding:14px 4px 11px;text-align:center;font-size:.74rem;font-weight:700;color:var(--ink-soft)}
+.svc .s .ic{font-size:24px;color:var(--green);margin:0 auto 7px;display:block}
+.svc-foot{display:flex;align-items:center;justify-content:center;gap:7px;
+  margin-top:12px;color:var(--green-deep);font-weight:700;font-size:.95rem}
+.svc-foot .ic{font-size:17px;color:var(--sage)}
+
+/* ===== SHOWCASE ===== */
+.show{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.show-in{flex:1;min-height:0;position:relative}
+.slide{
+  position:absolute;inset:0;padding:34px 46px;display:flex;align-items:center;justify-content:center;gap:44px;
+  opacity:0;transform:translateY(12px);transition:opacity .65s ease,transform .65s ease;pointer-events:none
+}
+.slide.on{opacity:1;transform:none}
+.slide .txt{flex:1;max-width:26ch;text-align:right}
+.slide .kick{font-size:.82rem;letter-spacing:.2em;font-weight:800;color:var(--gold);margin-bottom:12px}
+.slide h2{font-size:2.9rem;font-weight:900;color:var(--green-deep);line-height:1.15;letter-spacing:-.02em}
+.slide .rule{width:82px;height:4px;background:var(--sage);border-radius:3px;margin:14px 0 16px}
+.slide p{font-size:1.35rem;color:var(--ink-soft);line-height:1.55}
+.slide .tag{display:inline-block;margin-top:16px;background:var(--green-soft);color:var(--green-deep);
+  border-radius:999px;padding:6px 18px;font-size:.9rem;font-weight:800}
+.slide .art{width:330px;flex-shrink:0}
+.slide.center{flex-direction:column;text-align:center}
+.slide.center .txt{text-align:center;max-width:30ch}
+.slide .quote{font-size:2.3rem;font-weight:700;color:var(--green-deep);line-height:1.4}
+.slide .attrib{margin-top:18px;color:var(--green);font-weight:800;font-size:1.05rem}
+
+.cover{width:210px;height:296px;border-radius:6px 14px 14px 6px;flex-shrink:0;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,var(--green),var(--green-deep));color:#eef5f0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 18px;text-align:center;
+  box-shadow:0 16px 30px rgba(30,74,61,.28), inset -8px 0 14px rgba(0,0,0,.18)}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cover .ct{font-size:1.25rem;font-weight:800;line-height:1.3}
+.cover .ca{font-size:.9rem;opacity:.85;margin-top:8px}
+
+.showbar{display:flex;align-items:center;gap:12px;padding:0 24px 18px}
+.dots{display:flex;gap:7px;margin:0 auto}
+.dot{width:9px;height:9px;border-radius:50%;background:#ded3bf;transition:.3s}
+.dot.on{background:var(--green-deep);width:24px;border-radius:5px}
+
+/* message */
+.msg .ttl{margin-bottom:8px}
+.msg p{font-size:1.12rem;line-height:1.55}
+
+/* ===== FOOTER ===== */
+.foot{display:flex;align-items:stretch;padding:0;overflow:hidden}
+.foot .it{flex:1;display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:14px 18px;border-left:1px solid var(--edge)}
+.foot .it:last-of-type{border-left:none}
+.foot .it .ic{font-size:26px;color:var(--green);flex-shrink:0}
+.foot .it .l{font-size:.95rem;font-weight:800;color:var(--green-deep)}
+.foot .it .v{font-size:.85rem;color:var(--ink-soft);direction:ltr;text-align:right}
+.foot .soc{display:flex;gap:8px}
+.foot .soc span{width:26px;height:26px;border-radius:50%;background:var(--green-deep);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800}
+.foot .art{width:170px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:center;padding:0 10px}
+
+/* ===== TICKER ===== */
+.tick{background:linear-gradient(160deg,var(--green),var(--green-deep));color:#eef5f0;
+  border-radius:14px;height:46px;display:flex;align-items:center;overflow:hidden;flex-shrink:0;position:relative;z-index:1}
+.tick .ic{font-size:20px;color:var(--sage-2);margin:0 18px;flex-shrink:0}
+.tick .track{flex:1;overflow:hidden;white-space:nowrap}
+.tick .track span{display:inline-block;padding-right:100%;animation:mq 36s linear infinite;font-size:1rem;font-weight:500}
+@keyframes mq{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* ===== LOADING ===== */
+.load{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:linear-gradient(180deg,#d5c4a3,#bda682);color:var(--green-deep);font-weight:800;font-size:1.3rem}
+.load .b{width:56px;height:56px;border:4px solid rgba(255,255,255,.6);border-top-color:var(--green-deep);
+  border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ===== EVENTS-ONLY ===== */
+body.eo .grid{grid-template-columns:1fr}
+body.eo .col.side{display:none}
+.eofull{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;align-content:start;overflow:hidden}
+.eofull .t{font-size:1.5rem;font-weight:900;color:var(--green-deep);margin-bottom:6px}
+.eofull .dt{color:var(--green);font-weight:800;margin-bottom:8px}
+.eofull .ds{color:var(--ink-soft);line-height:1.5}
+
+@media(max-width:1500px){
+  .top{grid-template-columns:310px 1fr 320px}
+  .grid{grid-template-columns:296px 1fr 288px}
+  .slide h2{font-size:2.3rem}.slide p{font-size:1.15rem}
+  .slide .art{width:260px}.timec .t{font-size:3rem}.welcome .h{font-size:2.4rem}
+}
+@media(max-width:1100px){
+  body{overflow:auto}.stage{height:auto;min-height:100%}
+  .top{grid-template-columns:1fr}.grid{grid-template-columns:1fr}
+  .show{min-height:440px}.slide{flex-direction:column;text-align:center}
+  .slide .txt{text-align:center}.foot{flex-wrap:wrap}.foot .art{display:none}
+}
+</style>
 </head>
 <body>
-    <div id="loadingScreen" class="loading-screen">טוען תצוגה...</div>
-    <div id="displayContainer" class="display-container" style="display:none">
-        
-        <!-- Header Row -->
-        <div class="header-row">
-            <!-- Logo -->
-            <div class="card logo-card">
-                <div class="logo-icon-box">📚</div>
-                <div>
-                    <div class="lib-name" id="libName">ספרייה</div>
-                    <div class="lib-tagline">ידע. קהילה. השראה.</div>
-                </div>
-            </div>
-            <!-- Welcome -->
-            <div class="card welcome-card">
-                <div class="title">ברוכים הבאים <span class="heart">💙</span></div>
-                <div class="subtitle" id="welcomeSub">לספרייה</div>
-            </div>
-            <!-- Clock -->
-            <div class="card clock-card">
-                <div class="time" id="clock">--:--</div>
-                <div class="date" id="dateDisplay"></div>
-            </div>
-        </div>
-        
-        <!-- Left Sidebar -->
-        <div class="sidebar-left">
-            <!-- Search / QR -->
-            <div class="card search-card">
-                <div class="card-title">🔍 מחפשים ספר?</div>
-                <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px">חפשו בקטלוג הספרייה</p>
-                <div class="qr-box">
-                    <div class="qr-placeholder">📱</div>
-                    <div class="scan-text">סרקו כאן</div>
-                </div>
-            </div>
-            <!-- Events -->
-            <div class="card events-card" style="flex:1">
-                <div class="card-title">📅 אירועים קרובים</div>
-                <div id="eventsList"></div>
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Carousel -->
-            <div class="card carousel-card" style="flex:1">
-                <div id="carouselContent">
-                    <div class="slide-icon" id="slideIcon">📚</div>
-                    <div class="slide-title" id="slideTitle">ברוכים הבאים</div>
-                    <div class="slide-divider"></div>
-                    <div class="slide-text" id="slideText">טוען תוכן...</div>
-                </div>
-                <div class="carousel-dots" id="carouselDots"></div>
-            </div>
-            <!-- Message -->
-            <div class="card" id="messageCard" style="display:none">
-                <div class="card-title">📢 הודעה מהספרייה</div>
-                <p id="messageText" style="font-size:1rem;color:var(--text);line-height:1.6"></p>
-            </div>
-        </div>
-        
-        <!-- Right Sidebar -->
-        <div class="sidebar-right">
-            <!-- Opening Hours -->
-            <div class="card hours-card">
-                <div class="card-title">🕐 שעות פתיחה</div>
-                <div class="hours-list" id="hoursList"></div>
-            </div>
-            <!-- Services -->
-            <div class="card services-card">
-                <div class="card-title">✨ שירותים בספרייה</div>
-                <div class="services-grid">
-                    <div class="service-item"><div class="svc-icon">📶</div>Wi-Fi</div>
-                    <div class="service-item"><div class="svc-icon">💻</div>עמדת מחשב</div>
-                    <div class="service-item"><div class="svc-icon">📖</div>קטלוג</div>
-                    <div class="service-item"><div class="svc-icon">🧒</div>פינת ילדים</div>
-                    <div class="service-item"><div class="svc-icon">🖨️</div>מדפסות</div>
-                    <div class="service-item"><div class="svc-icon">📤</div>השאלת ספרים</div>
-                </div>
-                <div class="services-footer">אנחנו כאן בשבילכם! 💙</div>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer-bar">
-            <div class="footer-left">
-                <div class="contact-item">📞 <span id="footerPhone"></span></div>
-                <div class="contact-item">🌐 <span id="footerWeb"></span></div>
-            </div>
-            <div class="footer-right">
-                <span>עקבו אחרינו:</span>
-                <span style="font-size:1.2rem">📘</span>
-                <span style="font-size:1.2rem">📷</span>
-            </div>
-        </div>
-        
-        <!-- Announcement -->
-        <div class="announcement-bar">
-            <div class="announcement-text" id="announcementText">ברוכים הבאים לספרייה | שעות פעילות מעודכנות | אירועים חדשים כל שבוע</div>
-        </div>
+
+<div class="load" id="load"><div class="b"></div><div>טוען את תצוגת הספרייה…</div></div>
+
+<div class="stage" id="stage" style="display:none">
+
+  <!-- ============ TOP ============ -->
+  <div class="top">
+    <div class="card brand">
+      <div class="brand-art"><i></i><i></i><i></i><i></i></div>
+      <div>
+        <div class="nm" id="libName">ספרייה</div>
+        <div class="tg">ידע. קהילה. השראה.</div>
+      </div>
     </div>
 
-    <!-- Events-only mode container -->
-    <div id="eventsOnlyContainer" style="display:none;padding:20px;max-width:900px;margin:0 auto">
-        <div class="card" style="text-align:center;margin-bottom:20px;padding:30px">
-            <div style="font-size:2rem;font-weight:800;color:var(--teal-dark)">📅 אירועים וקהילה</div>
-            <div style="font-size:1.2rem;color:var(--text-muted);margin-top:8px" id="eventsOnlyLibName"></div>
-        </div>
-        <div class="events-full" id="eventsFullList"></div>
+    <div class="card welcome">
+      <div class="h">ברוכים הבאים <i class="ic ph-heart ph hrt"></i></div>
+      <div class="s" id="welcomeSub">לספרייה</div>
     </div>
 
-    <script>
-        const API_BASE = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
-        
-        function getLibraryId() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('library_id') || params.get('id') || '6a7c223bd36bfaaac6f001b4';
-        }
-        
-        function getViewMode() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('view') || 'main';
-        }
-        
-        const slideContent = [
-            { icon: '📚', title: 'מחדשים ספרים גם מהבית', text: 'ניתן להאריך השאלה דרך אתר הספרייה או בטלפון. הארכה אוטומטית עד 14 יום.' },
-            { icon: '👶', title: 'שעת סיפור לקטנטנים', text: 'כל שלישי ב-17:00 באולם הילדים. הרשמה מראש בדלפק הספרייה או בטלפון.' },
-            { icon: '📖', title: 'מועדון הקריאה חוזר', text: 'מפגש פתיחה ביום רביעי 19:30. נקרא ונדון בספרים נבחרים. כולם מוזמנים!' },
-            { icon: '💻', title: 'סדנת אוריינות דיגיטלית', text: 'למדו להשתמש בכלים דיגיטליים בבטחה. מתאים לכל הגילאים. הרשמה בדלפק.' },
-            { icon: '🌿', title: 'ספרייה ירוקה', text: 'אנו פועלים לצמצום צריכת נייר ומעודדים השאלה דיגיטלית. יחד לעולם ירוק יותר.' }
-        ];
-        
-        let currentSlide = 0;
-        
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
-            document.getElementById('dateDisplay').textContent = now.toLocaleDateString('he-IL', {weekday:'long',day:'numeric',month:'long'});
-        }
-        
-        function updateCarousel() {
-            const slide = slideContent[currentSlide];
-            document.getElementById('slideIcon').textContent = slide.icon;
-            document.getElementById('slideTitle').textContent = slide.title;
-            document.getElementById('slideText').textContent = slide.text;
-            
-            const dots = document.getElementById('carouselDots');
-            dots.innerHTML = slideContent.map((_, i) => 
-                `<div class="dot ${i === currentSlide ? 'active' : ''}"></div>`
-            ).join('');
-        }
-        
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slideContent.length;
-            updateCarousel();
-        }
-        
-        const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-        const defaultHours = [
-            { day: 'ראשון', hours: '09:00 - 13:00', closed: false },
-            { day: 'שני', hours: '09:00 - 19:00', closed: false },
-            { day: 'שלישי', hours: '09:00 - 13:00', closed: false },
-            { day: 'רביעי', hours: '09:00 - 19:00', closed: false },
-            { day: 'חמישי', hours: '09:00 - 13:00', closed: false },
-            { day: 'שישי', hours: '09:00 - 12:00', closed: false },
-            { day: 'שבת', hours: 'סגור', closed: true },
-        ];
-        
-        function renderHours() {
-            document.getElementById('hoursList').innerHTML = defaultHours.map(h => 
-                `<div class="hours-row ${h.closed ? 'closed' : ''}"><span class="day">${h.day}</span><span class="hours">${h.hours}</span></div>`
-            ).join('');
-        }
-        
-        async function loadData() {
-            const libraryId = getLibraryId();
-            const viewMode = getViewMode();
-            
-            try {
-                const [libRes, eventsRes] = await Promise.all([
-                    fetch(`${API_BASE}/libraryData`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'list', entity_type: 'library', session_token: 'public_display', library_id: libraryId })
-                    }).then(r => r.json()),
-                    fetch(`${API_BASE}/libraryData`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'list', entity_type: 'event', session_token: 'public_display', library_id: libraryId })
-                    }).then(r => r.json())
-                ]);
-                
-                let libName = 'הספרייה';
-                let libPhone = '';
-                let libNotes = '';
-                
-                if (libRes.success && libRes.data && libRes.data.length > 0) {
-                    const lib = libRes.data[0];
-                    libName = lib.name || 'הספרייה';
-                    libPhone = lib.phone || '';
-                    libNotes = lib.notes || '';
-                    if (lib.display_settings) {
-                        try {
-                            const settings = typeof lib.display_settings === 'string' ? JSON.parse(lib.display_settings) : lib.display_settings;
-                        } catch(e) {}
-                    }
-                }
-                
-                const events = eventsRes.success ? eventsRes.data.filter(e => e.status === 'upcoming').slice(0, 6) : [];
-                
-                if (viewMode === 'events') {
-                    document.body.classList.add('events-only');
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    document.getElementById('displayContainer').style.display = 'none';
-                    document.getElementById('eventsOnlyContainer').style.display = 'block';
-                    document.getElementById('eventsOnlyLibName').textContent = libName;
-                    
-                    const listEl = document.getElementById('eventsFullList');
-                    if (events.length === 0) {
-                        listEl.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-muted)">אין אירועים קרובים</div>';
-                    } else {
-                        listEl.innerHTML = events.map(e => `
-                            <div class="event-card-large">
-                                <div class="evl-title">${e.title || ''}</div>
-                                <div class="evl-date">${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL', {weekday:'long',day:'numeric',month:'long'}) : ''} ${e.event_time || ''}</div>
-                                ${e.location ? `<div class="evl-loc">📍 ${e.location}</div>` : ''}
-                                ${e.description ? `<div class="evl-desc">${e.description}</div>` : ''}
-                            </div>
-                        `).join('');
-                    }
-                    return;
-                }
-                
-                // Main display mode
-                document.getElementById('libName').textContent = libName;
-                document.getElementById('welcomeSub').textContent = `ל${libName}`;
-                document.getElementById('footerPhone').textContent = libPhone || '';
-                document.getElementById('footerWeb').textContent = 'library.local';
-                
-                if (libNotes) {
-                    document.getElementById('messageText').textContent = libNotes;
-                    document.getElementById('messageCard').style.display = 'block';
-                }
-                
-                // Events in sidebar
-                const eventsEl = document.getElementById('eventsList');
-                if (events.length === 0) {
-                    eventsEl.innerHTML = '<div class="no-events">אין אירועים קרובים</div>';
-                } else {
-                    eventsEl.innerHTML = events.slice(0, 4).map(e => `
-                        <div class="event-item">
-                            <div class="event-thumb">${e.event_type === 'story_hour' ? '👶' : e.event_type === 'workshop' ? '🎨' : e.event_type === 'book_club' ? '📖' : '📅'}</div>
-                            <div class="event-info">
-                                <div class="ev-title">${e.title || ''}</div>
-                                <div class="ev-desc">${e.description ? e.description.substring(0, 60) : ''}</div>
-                                <div class="ev-time">${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL', {day:'numeric',month:'numeric'}) : ''} | ${e.event_time || ''}</div>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-                
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('displayContainer').style.display = 'grid';
-                
-            } catch(err) {
-                console.error('Error:', err);
-                document.getElementById('loadingScreen').textContent = 'שגיאה בטעינת נתונים';
-            }
-        }
-        
-        // Start
-        renderHours();
-        updateClock();
-        updateCarousel();
-        setInterval(updateClock, 1000);
-        setInterval(nextSlide, 5000);
-        loadData();
-        setInterval(loadData, 60000);
-    </script>
+    <div class="card timec">
+      <div class="t" id="clock">--:--</div>
+      <div class="meta">
+        <div class="d1" id="gDate"></div>
+        <div class="d2" id="hDate"></div>
+        <div class="wx" id="wx" style="display:none">
+          <i id="wxIcon" class="ic ph ph-sun" style="font-size:20px"></i><b id="wxTemp">--°</b><span id="wxDesc"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ GRID ============ -->
+  <div class="grid">
+
+    <!-- right column -->
+    <div class="col side">
+      <div class="card green searchc">
+        <div class="txt">
+          <div class="h">מחפשים ספר?</div>
+          <div class="p">חפשו בקטלוג הספרייה</div>
+          <div class="pillbtn"><i class="ic ph-magnifying-glass ph "></i> סרקו כאן</div>
+        </div>
+        <div class="qr" id="qrBox"><i class="ph ph-qr-code" style="font-size:2rem;color:#1e4a3d"></i></div>
+      </div>
+
+      <div class="card evc">
+        <div class="ttl"><i class="ic ph-calendar-blank ph "></i> אירועים קרובים</div>
+        <div class="evlist" id="eventsList"></div>
+        <div class="allbtn">לכל האירועים</div>
+      </div>
+    </div>
+
+    <!-- center -->
+    <div class="col">
+      <div class="card show">
+        <div class="show-in" id="slides"></div>
+        <div class="showbar"><div class="dots" id="dots"></div></div>
+      </div>
+      <div class="card msg" id="msgCard" style="display:none">
+        <div class="ttl"><i class="ic ph-megaphone ph "></i> הודעה מהספרייה</div>
+        <p id="msgText"></p>
+      </div>
+      <div class="eofull" id="eventsFull" style="display:none"></div>
+    </div>
+
+    <!-- left column -->
+    <div class="col side">
+      <div class="card">
+        <div class="ttl"><i class="ic ph-clock ph "></i> שעות פתיחה</div>
+        <div id="hoursList"></div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="ttl">שירותים בספרייה</div>
+        <div class="svc">
+          <div class="s"><i class="ic ph-wifi-high ph "></i>Wi-Fi</div>
+          <div class="s"><i class="ic ph-desktop ph "></i>עמדות מחשב</div>
+          <div class="s"><i class="ic ph-book-open ph "></i>קטלוג</div>
+          <div class="s"><i class="ic ph-baby ph "></i>פינת ילדים</div>
+          <div class="s"><i class="ic ph-printer ph "></i>מדפסות</div>
+          <div class="s"><i class="ic ph-handshake ph "></i>השאלת ספרים</div>
+        </div>
+        <div class="svc-foot"><i class="ic ph-heart ph "></i> אנחנו כאן בשבילכם!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="card foot">
+    <div class="it">
+      <i class="ic ph-user-plus ph "></i>
+      <div><div class="l">הצטרפו עכשיו</div><div class="v" style="direction:rtl">והיו חלק מהקהילה</div></div>
+    </div>
+    <div class="it">
+      <div><div class="l">עקבו אחרינו</div><div class="v" style="direction:rtl" id="fLibName">קהילת הספרייה</div></div>
+      <div class="soc"><span>f</span><span>◎</span></div>
+    </div>
+    <div class="it">
+      <i class="ic ph-globe-simple ph "></i>
+      <div><div class="l">אתר הספרייה</div><div class="v" id="fWeb">-</div></div>
+    </div>
+    <div class="it">
+      <i class="ic ph-phone ph "></i>
+      <div><div class="l">צרו קשר</div><div class="v" id="fPhone">-</div></div>
+    </div>
+    <div class="art">
+      <svg viewBox="0 0 160 60" style="width:100%">
+        <rect x="6" y="14" width="118" height="40" rx="5" fill="#e9dfc9"/>
+        <g stroke="#cfc0a2" stroke-width="1.4">
+          <path d="M6 22h118M6 30h118M6 38h118M6 46h118"/>
+        </g>
+        <rect x="96" y="34" width="56" height="14" rx="4" fill="#2f6b57"/>
+        <rect x="100" y="24" width="34" height="9" rx="3" fill="#93ab97"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ============ TICKER ============ -->
+  <div class="tick">
+    <i class="ic ph-heart ph "></i>
+    <div class="track"><span id="tickerText">ברוכים הבאים לספרייה</span></div>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   הגדרות
+   ========================================================= */
+const API_BASE = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+const P = new URLSearchParams(location.search);
+const LIBRARY_ID = P.get('library_id') || P.get('id') || '6a7c223bd36bfaaac6f001b4';
+const VIEW = P.get('view') || 'main';
+let LAT = parseFloat(P.get('lat') || '31.6688');
+let LON = parseFloat(P.get('lon') || '34.5715');
+const SLIDE_MS = parseInt(P.get('slide') || '9000', 10);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+
+/* =========================================================
+   שעון + תאריך לועזי + עברי
+   ========================================================= */
+const hebFmt = new Intl.DateTimeFormat('he-IL-u-ca-hebrew',{day:'numeric',month:'long',year:'numeric'});
+function tick(){
+  const n = new Date();
+  $('clock').textContent = n.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  $('gDate').textContent = n.toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'});
+  try{ $('hDate').textContent = hebFmt.format(n); }catch(e){}
+}
+
+/* =========================================================
+   מזג אוויר
+   ========================================================= */
+const WX = {0:['ph-sun','בהיר'],1:['ph-cloud-sun','בהיר בעיקר'],2:['ph-cloud-sun','מעונן חלקית'],3:['ph-cloud','מעונן'],
+  45:['ph-cloud-fog','ערפל'],48:['ph-cloud-fog','ערפל'],51:['ph-cloud-rain','טפטוף'],53:['ph-cloud-rain','טפטוף'],55:['ph-cloud-rain','טפטוף'],
+  61:['ph-cloud-rain','גשם קל'],63:['ph-cloud-rain','גשם'],65:['ph-cloud-rain','גשם חזק'],71:['ph-snowflake','שלג'],
+  80:['ph-cloud-rain','ממטרים'],81:['ph-cloud-rain','ממטרים'],82:['ph-cloud-lightning','ממטרים עזים'],
+  95:['ph-cloud-lightning','סופת רעמים'],96:['ph-cloud-lightning','סופת רעמים'],99:['ph-cloud-lightning','סופת רעמים']};
+async function loadWeather(){
+  try{
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&timezone=Asia%2FJerusalem`);
+    const c = (await r.json()).current; if(!c) return;
+    const [ic,d] = WX[c.weather_code] || ['ph-thermometer-simple',''];
+    $('wxIcon').className = 'ic ph '+ic; $('wxTemp').textContent = Math.round(c.temperature_2m)+'°';
+    $('wxDesc').textContent = d; $('wx').style.display='flex';
+  }catch(e){}
+}
+
+/* =========================================================
+   שעות פתיחה
+   ========================================================= */
+let HOURS = [
+  {day:'ראשון',hh:'09:00 - 19:00'},{day:'שני',hh:'09:00 - 19:00'},
+  {day:'שלישי',hh:'09:00 - 19:00'},{day:'רביעי',hh:'09:00 - 19:00'},
+  {day:'חמישי',hh:'09:00 - 19:00'},{day:'שישי',hh:'09:00 - 13:00'},
+  {day:'שבת',hh:'סגור',closed:true}
+];
+function renderHours(){
+  const today = new Date().getDay();
+  $('hoursList').innerHTML = HOURS.map((h,i)=>
+    `<div class="hrow ${h.closed?'closed':''} ${i===today?'today':''}">
+       <span class="d">${esc(h.day)}</span><span class="h">${esc(h.hh)}</span></div>`).join('');
+}
+
+/* =========================================================
+   תוכן ברירת מחדל
+   ========================================================= */
+const FALLBACK_BOOKS = [
+  {title:'מדף הספרים החדשים',author:'הגיעו לספרייה',desc:'עשרות כותרים חדשים הגיעו למדפים - בואו לגלות מה חדש.',tag:'חדש על המדף'},
+  {title:'המלצת הספרנים',author:'ספר החודש',desc:'שאלו אותנו בדלפק ונשמח לספר לכם עוד.',tag:'המלצת הספרנים'},
+  {title:'פינת הילדים',author:'לגילאי 3-10',desc:'ספרי תמונות, סיפורים וקומיקס - מדף שלם שמחכה לקטנטנים.',tag:'לילדים'}
+];
+const QUOTES = [
+  {q:'ספרייה טובה היא מקום שאפשר להיכנס אליו כאדם אחד ולצאת ממנו כאדם אחר.',a:'על כוחה של קריאה'},
+  {q:'אין ספינה מהירה כמו ספר, שתיקח אותנו אל ארצות רחוקות.',a:'אמילי דיקינסון'},
+  {q:'הידע הוא האוצר היחיד שגדל ככל שמחלקים אותו.',a:'פתגם'}
+];
+const TIPS = [
+  {title:'מחדשים ספרים גם מהבית',text:'ניתן להאריך השאלה דרך אתר הספרייה או בטלפון. הארכה עד 14 יום נוספים.'},
+  {title:'ספרים דיגיטליים ואודיו',text:'לכרטיס הספרייה שלכם יש גם גישה לספרייה הדיגיטלית. שאלו אותנו איך.'},
+  {title:'ספרייה ירוקה',text:'אנחנו מצמצמים נייר ומעודדים השאלה דיגיטלית. יחד לעולם ירוק יותר.'}
+];
+
+/* ---- איור מרכזי (ספרים + עלים) ---- */
+const ART = `
+<svg class="art" viewBox="0 0 300 260">
+  <rect x="112" y="14" width="176" height="176" rx="26" fill="#f0ece0"/>
+  <path d="M200 14h4v176h-4z" fill="#e4dfd0"/><path d="M112 100h176v4H112z" fill="#e4dfd0"/>
+  <g fill="#93ab97">
+    <path d="M214 66c14-16 34-18 44-14 2 12-6 30-22 36-12 4-22-6-22-22z"/>
+    <path d="M206 96c-4-18 6-34 15-39 8 8 12 28 4 41-6 10-17 8-19-2z"/>
+  </g>
+  <path d="M212 60c14 12 22 30 24 46" stroke="#7d9481" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <g>
+    <rect x="26" y="122" width="150" height="24" rx="8" fill="#f3efe4" stroke="#d8d1bd" stroke-width="2"/>
+    <rect x="14" y="152" width="168" height="24" rx="8" fill="#3f5a4e"/>
+    <rect x="30" y="182" width="150" height="24" rx="8" fill="#f3efe4" stroke="#d8d1bd" stroke-width="2"/>
+    <rect x="18" y="212" width="164" height="24" rx="8" fill="#3f5a4e"/>
+    <g fill="#cfd8cd">
+      <rect x="26" y="160" width="26" height="8" rx="4"/><rect x="30" y="220" width="26" height="8" rx="4"/>
+    </g>
+  </g>
+  <path d="M44 44c0-9 7-14 14-14s14 5 14 14c0 12-14 22-14 22S44 56 44 44z" fill="none" stroke="#d9a441" stroke-width="3.2" stroke-linejoin="round"/>
+</svg>`;
+
+/* =========================================================
+   מנוע הסליידים
+   ========================================================= */
+let slides=[], cur=0, timer=null;
+
+function slideHTML(s){
+  if(s.type==='quote'){
+    return `<div class="txt"><div class="kick">מחשבה ליום</div>
+      <div class="quote">${esc(s.q)}</div><div class="attrib">${esc(s.a)}</div></div>`;
+  }
+  if(s.type==='book'){
+    const cover = s.image
+      ? `<div class="cover"><img src="${esc(s.image)}" alt=""></div>`
+      : `<div class="cover"><div class="ct">${esc(s.title)}</div><div class="ca">${esc(s.author||'')}</div></div>`;
+    return `<div class="txt"><div class="kick">מומלץ לקריאה</div>
+        <h2>${esc(s.title)}</h2>${s.author?`<div class="rule"></div>`:''}
+        ${s.desc?`<p>${esc(s.desc)}</p>`:''}
+        ${s.tag?`<span class="tag">${esc(s.tag)}</span>`:''}</div>${cover}`;
+  }
+  return `<div class="txt">
+      <div class="kick">${esc(s.kick||'הידעתם?')}</div>
+      <h2>${esc(s.title)}</h2><div class="rule"></div>
+      <p>${esc(s.text||'')}</p>
+      ${s.tag?`<span class="tag">${esc(s.tag)}</span>`:''}</div>${ART}`;
+}
+
+function buildSlides(list){
+  slides=list;
+  $('slides').innerHTML = slides.map((s,i)=>
+    `<div class="slide ${s.type==='quote'?'center':''} ${i===0?'on':''}">${slideHTML(s)}</div>`).join('');
+  $('dots').innerHTML = slides.map((_,i)=>`<div class="dot ${i===0?'on':''}"></div>`).join('');
+  cur=0; clearInterval(timer); timer=setInterval(()=>show(cur+1), SLIDE_MS);
+}
+function show(i){
+  const els=document.querySelectorAll('.slide'), ds=document.querySelectorAll('.dot');
+  if(!els.length) return;
+  els[cur]?.classList.remove('on'); ds[cur]?.classList.remove('on');
+  cur=(i+els.length)%els.length;
+  els[cur].classList.add('on'); ds[cur].classList.add('on');
+}
+
+/* =========================================================
+   API
+   ========================================================= */
+function api(entity){
+  return fetch(`${API_BASE}/libraryData`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'list',entity_type:entity,session_token:'public_display',library_id:LIBRARY_ID})
+  }).then(r=>r.json()).catch(()=>({success:false}));
+}
+
+const MONTHS=['ינו','פבר','מרץ','אפר','מאי','יוני','יולי','אוג','ספט','אוק','נוב','דצמ'];
+const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+let DS = {};
+
+async function loadData(){
+  const [libRes, evRes, bookRes] = await Promise.all([api('library'), api('event'), api('content')]);
+
+  let libName='הספרייה', phone='', notes='', web='';
+  if(libRes.success && libRes.data && libRes.data.length){
+    const l = libRes.data.find(x=>x.id===LIBRARY_ID) || libRes.data[0];
+    libName = l.name || libName; phone = l.phone || ''; notes = l.notes || '';
+
+    DS = l.display_settings || {};
+    if(typeof DS==='string'){ try{ DS=JSON.parse(DS); }catch(e){ DS={}; } }
+    web = DS.catalog || '';
+
+    if(Array.isArray(DS.hours) && DS.hours.length){ HOURS = DS.hours; renderHours(); }
+    if(DS.geo && !P.get('lat')){
+      const [la,lo] = String(DS.geo).split(',').map(Number);
+      if(!isNaN(la)&&!isNaN(lo)&&(la!==LAT||lo!==LON)){ LAT=la; LON=lo; loadWeather(); }
+    }
+    if(DS.catalog && !P.get('catalog')) renderQR(DS.catalog);
+  }
+
+  const events = (evRes.success && Array.isArray(evRes.data))
+    ? evRes.data.filter(e=>e.status==='upcoming').slice(0,8) : [];
+
+  /* ---- ספרים מומלצים (מסומנים ⭐ בניהול) ---- */
+  const CAT={book:'ספר',journal:'כתב עת',media:'מדיה',digital:'דיגיטלי',other:'המלצת הספרנים'};
+  let books=[];
+  if(bookRes.success && Array.isArray(bookRes.data)){
+    const ids = Array.isArray(DS.featured)?DS.featured:[];
+    const pool = ids.length ? bookRes.data.filter(b=>ids.includes(b.id)) : bookRes.data.slice(0,3);
+    books = pool.slice(0,6).map(b=>({title:b.title||'',author:b.author||'',desc:b.description||'',
+      image:b.cover_image||'',tag:CAT[b.category]||'המלצת הספרנים'})).filter(b=>b.title);
+  }
+  if(!books.length) books = FALLBACK_BOOKS;
+
+  /* ---- מצב אירועים בלבד ---- */
+  if(VIEW==='events'){
+    document.body.classList.add('eo');
+    document.querySelector('.show').style.display='none';
+    $('msgCard').style.display='none';
+    const f=$('eventsFull'); f.style.display='grid';
+    f.innerHTML = events.length ? events.map(e=>`
+      <div class="card">
+        <div class="t">${esc(e.title)}</div>
+        <div class="dt">${e.event_date?new Date(e.event_date).toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'}):''} ${esc(e.event_time||'')}</div>
+        ${e.location?`<div class="ds"><i class="ph ph-map-pin"></i> ${esc(e.location)}</div>`:''}
+        ${e.description?`<div class="ds">${esc(e.description)}</div>`:''}
+      </div>`).join('') : `<div class="card empty">אין אירועים קרובים</div>`;
+  }
+
+  /* ---- כותרות ופוטר ---- */
+  $('libName').textContent = libName;
+  $('welcomeSub').textContent = 'ל' + libName;
+  $('fLibName').textContent = 'קהילת ' + libName;
+  $('fPhone').textContent = phone || '-';
+  $('fWeb').textContent = web ? web.replace(/^https?:\/\//,'') : '-';
+
+  if(notes){
+    $('msgText').textContent = notes;
+    if(VIEW!=='events') $('msgCard').style.display='block';
+  }
+
+  /* ---- אירועים בצד ---- */
+  $('eventsList').innerHTML = events.length ? events.slice(0,3).map(e=>{
+    const d = e.event_date? new Date(e.event_date):null;
+    return `<div class="ev"><div class="blob"></div><div class="b">
+      <div class="t">${esc(e.title)}</div>
+      <div class="d">${esc(e.description||'')}</div>
+      <div class="m">${d?`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} | ${DAYS[d.getDay()]}`:''}${e.event_time?' | '+esc(e.event_time):''}</div>
+    </div></div>`;
+  }).join('') : `<div class="empty">אין אירועים קרובים כרגע</div>`;
+
+  /* ---- טיקר ---- */
+  const bits=[];
+  if(DS.ticker) bits.push(DS.ticker);
+  if(notes) bits.push(notes);
+  events.slice(0,3).forEach(e=>{
+    const d=e.event_date?new Date(e.event_date).toLocaleDateString('he-IL',{day:'numeric',month:'numeric'}):'';
+    bits.push(`${e.title}${d?' · '+d:''}${e.event_time?' · '+e.event_time:''}`);
+  });
+  if(!bits.length) bits.push(`ברוכים הבאים ל${libName}`);
+  bits.push('שאלו את הספרנים - אנחנו כאן בשבילכם');
+  $('tickerText').textContent = bits.join('   |   ');
+
+  /* ---- סליידים ---- */
+  const deck=[];
+  deck.push({type:'tip',kick:'ברוכים הבאים',title:libName,
+    text:'בית לספרים, לשקט ולקהילה. הכניסה חופשית - והכרטיס על חשבוננו.'});
+  books.forEach(b=>deck.push({type:'book',...b}));
+  events.slice(0,3).forEach(e=>deck.push({type:'tip',kick:'אירוע קרוב',title:e.title||'אירוע',
+    text:e.description||'', tag:[
+      e.event_date?new Date(e.event_date).toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'}):'',
+      e.event_time||'', e.location?'· '+e.location:''].filter(Boolean).join(' · ')}));
+  QUOTES.forEach(q=>deck.push({type:'quote',...q}));
+  TIPS.forEach(t=>deck.push({type:'tip',...t}));
+  buildSlides(deck);
+
+  $('load').style.display='none';
+  $('stage').style.display='flex';
+}
+
+/* =========================================================
+   QR
+   ========================================================= */
+function renderQR(override){
+  const url = override || P.get('catalog') || location.origin + location.pathname.replace('display.html','');
+  const src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data='+encodeURIComponent(url);
+  const img = new Image();
+  img.onload = ()=>{ $('qrBox').innerHTML = `<img src="${src}" alt="">`; };
+  img.src = src;
+}
+
+/* =========================================================
+   הפעלה
+   ========================================================= */
+renderHours(); tick(); renderQR(); loadWeather(); loadData();
+setInterval(tick,1000);
+setInterval(loadData,60000);
+setInterval(loadWeather,900000);
+setInterval(renderHours,3600000);
+</script>
 </body>
 </html>
