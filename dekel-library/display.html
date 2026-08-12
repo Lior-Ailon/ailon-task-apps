@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <title>תצוגת ספרייה</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2942 0%, #1e3a5f 100%);
+            color: white;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .display-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            height: 100vh;
+            padding: 40px;
+            gap: 30px;
+        }
+        .main-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .library-name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #14b8a6;
+        }
+        .welcome {
+            font-size: 2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+        }
+        .clock {
+            font-size: 8rem;
+            font-weight: 200;
+            letter-spacing: 4px;
+        }
+        .date {
+            font-size: 1.8rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 10px;
+        }
+        .message-center {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            max-width: 600px;
+            display: none;
+        }
+        .message-center.active { display: block; }
+        .message-center h3 {
+            color: #14b8a6;
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        .message-center p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+        }
+        .events-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-top: 20px;
+        }
+        .events-sidebar h2 {
+            font-size: 1.8rem;
+            color: #14b8a6;
+            margin-bottom: 10px;
+            border-bottom: 2px solid rgba(20,184,166,0.3);
+            padding-bottom: 10px;
+        }
+        .event-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            border-right: 4px solid #14b8a6;
+        }
+        .event-card .title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .event-card .date-time {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 6px;
+        }
+        .event-card .location {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.5);
+        }
+        .event-card .description {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        .no-events {
+            color: rgba(255,255,255,0.4);
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 40px;
+        }
+        .loading-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-size: 2rem;
+            color: rgba(255,255,255,0.5);
+        }
+        @media (max-width: 900px) {
+            .display-container { grid-template-columns: 1fr; padding: 20px; }
+            .clock { font-size: 4rem; }
+            .library-name { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading-screen">טוען תצוגה...</div>
+    <div id="displayContainer" class="display-container" style="display:none">
+        <div class="main-area">
+            <h1 id="libraryName" class="library-name"></h1>
+            <div class="welcome">ברוכים הבאים לספרייה 📚</div>
+            <div id="clock" class="clock">--:--</div>
+            <div id="dateDisplay" class="date"></div>
+            <div id="messageCenter" class="message-center">
+                <h3>📢 הודעה מהספרייה</h3>
+                <p id="messageText"></p>
+            </div>
+        </div>
+        <div class="events-sidebar">
+            <h2>אירועים קרובים</h2>
+            <div id="eventsList"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+        
+        function getLibraryId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('library_id') || params.get('id') || '6a7c223bd36bfaaac6f001b4';
+        }
+
+        async function loadData() {
+            const libraryId = getLibraryId();
+            try {
+                // Fetch library info and events
+                const [libRes, eventsRes] = await Promise.all([
+                    fetch(`${API_BASE}/libraryData`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'list', entity_type: 'library',
+                            session_token: 'public_display',
+                            library_id: libraryId
+                        })
+                    }).then(r => r.json()),
+                    fetch(`${API_BASE}/libraryData`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'list', entity_type: 'event',
+                            session_token: 'public_display',
+                            library_id: libraryId
+                        })
+                    }).then(r => r.json())
+                ]);
+
+                // Show library name
+                let libName = 'הספרייה';
+                if (libRes.success && libRes.data && libRes.data.length > 0) {
+                    libName = libRes.data[0].name || 'הספרייה';
+                    // Show message if exists
+                    if (libRes.data[0].notes) {
+                        document.getElementById('messageText').textContent = libRes.data[0].notes;
+                        document.getElementById('messageCenter').classList.add('active');
+                    }
+                }
+                document.getElementById('libraryName').textContent = libName;
+
+                // Show events
+                const events = eventsRes.success ? eventsRes.data.filter(e => e.status === 'upcoming').slice(0, 5) : [];
+                const eventsEl = document.getElementById('eventsList');
+                if (events.length === 0) {
+                    eventsEl.innerHTML = '<div class="no-events">אין אירועים קרובים</div>';
+                } else {
+                    eventsEl.innerHTML = events.map(e => `
+                        <div class="event-card">
+                            <div class="title">${e.title || ''}</div>
+                            <div class="date-time">${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL', {day:'numeric',month:'long'}) : ''} ${e.event_time || ''}</div>
+                            ${e.location ? `<div class="location">📍 ${e.location}</div>` : ''}
+                            ${e.description ? `<div class="description">${e.description}</div>` : ''}
+                        </div>
+                    `).join('');
+                }
+
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('displayContainer').style.display = 'grid';
+            } catch (err) {
+                console.error('Error loading display:', err);
+                document.getElementById('loadingScreen').textContent = 'שגיאה בטעינת נתונים';
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
+            document.getElementById('dateDisplay').textContent = now.toLocaleDateString('he-IL', {weekday:'long',day:'numeric',month:'long'});
+        }
+
+        // Start
+        updateClock();
+        setInterval(updateClock, 1000);
+        loadData();
+        // Refresh data every 60 seconds
+        setInterval(loadData, 60000);
+    </script>
+</body>
+</html>

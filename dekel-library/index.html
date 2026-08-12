@@ -1103,6 +1103,11 @@ async function deleteEvent(id) {
 // TV Display Preview
 function loadDisplay() {
     const content = document.getElementById('mainContent');
+    const libId = appState.library ? appState.library.id : '';
+    const baseUrl = 'https://lior-ailon.github.io/ailon-task-apps/dekel-library/display.html';
+    const displayUrl = libId ? `${baseUrl}?library_id=${libId}` : baseUrl;
+    const eventsUrl = `${displayUrl}&view=events`;
+    
     content.innerHTML = `
         <h2 class="page-title">תצוגת טלוויזיה</h2>
         <p style="color:var(--gray);margin-bottom:24px">תצוגה מקדימה של מסך הטלוויזיה בלובי הספרייה</p>
@@ -1114,10 +1119,27 @@ function loadDisplay() {
                 <div style="color:rgba(255,255,255,0.5);padding:20px">טוען אירועים...</div>
             </div>
         </div>
-        <div style="margin-top:24px;padding:20px;background:white;border-radius:12px;box-shadow:var(--shadow)">
-            <h3 style="margin-bottom:12px;color:var(--navy)">קישור לתצוגה ציבורית</h3>
-            <p style="color:var(--gray);font-size:0.9rem;margin-bottom:12px">שתף קישור זה בטלוויזיה בלובי לתצוגה ציבורית ללא התחברות</p>
-            <code style="background:var(--bg);padding:12px;border-radius:8px;display:block;font-size:0.85rem">מתפתח...</code>
+        <div style="margin-top:24px;padding:24px;background:white;border-radius:12px;box-shadow:var(--shadow)">
+            <h3 style="margin-bottom:16px;color:var(--navy)">📺 קישורי תצוגה לטלוויזיה</h3>
+            <p style="color:var(--gray);font-size:0.9rem;margin-bottom:16px">פתח את הקישור בדפדפן של המחשב/סטרימר המחובר לטלוויזיה, העבר למסך מלא והשאר פתוח</p>
+            
+            <div style="margin-bottom:16px">
+                <div style="font-weight:600;color:var(--navy);margin-bottom:6px">מסך ראשי (שעון + אירועים)</div>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <code style="background:var(--bg);padding:10px 12px;border-radius:8px;display:block;font-size:0.85rem;flex:1;direction:ltr;text-align:left;overflow-x:auto;white-space:nowrap">${displayUrl}</code>
+                    <button class="btn-add" style="white-space:nowrap" onclick="navigator.clipboard.writeText('${displayUrl}').then(()=>alert('הקישור הועתק!'))">העתק</button>
+                </div>
+            </div>
+            
+            <div style="margin-bottom:16px">
+                <div style="font-weight:600;color:var(--navy);margin-bottom:6px">מסך אירועים בלבד</div>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <code style="background:var(--bg);padding:10px 12px;border-radius:8px;display:block;font-size:0.85rem;flex:1;direction:ltr;text-align:left;overflow-x:auto;white-space:nowrap">${eventsUrl}</code>
+                    <button class="btn-add" style="white-space:nowrap" onclick="navigator.clipboard.writeText('${eventsUrl}').then(()=>alert('הקישור הועתק!'))">העתק</button>
+                </div>
+            </div>
+            
+            <a href="${displayUrl}" target="_blank" style="display:inline-block;margin-top:8px;padding:10px 24px;background:var(--teal);color:white;border-radius:8px;text-decoration:none;font-weight:600">פתח תצוגה בחלון חדש →</a>
         </div>`;
     
     // Update clock
