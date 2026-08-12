@@ -26,7 +26,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
-            background: linear-gradient(135deg, var(--bg) 0%, #e0f2fe 100%);
+            background: 
+                linear-gradient(135deg, rgba(15,41,66,0.92) 0%, rgba(13,148,136,0.85) 100%),
+                url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1920&q=80') center/cover no-repeat fixed;
             min-height: 100vh;
             color: var(--navy);
         }
@@ -84,6 +86,20 @@
             padding: 80px 20px 60px;
             max-width: 900px;
             margin: 0 auto;
+        }
+        .hero h1, .hero p { 
+            text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        }
+        .landing-header {
+            background: linear-gradient(135deg, rgba(15,41,66,0.95) 0%, rgba(13,148,136,0.9) 100%) !important;
+            backdrop-filter: blur(10px);
+        }
+        .features .feature-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+        }
+        .footer {
+            color: rgba(255,255,255,0.7) !important;
         }
         .hero h1 {
             font-size: 3rem;
@@ -508,6 +524,98 @@
         .empty-state .icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
         .empty-state p { font-size: 1rem; margin-bottom: 8px; }
         .empty-state .hint { font-size: 0.85rem; }
+    
+        /* Simplified Manager Dashboard */
+        .manager-simple {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 40px 20px;
+        }
+        .manager-simple h2 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .manager-simple .welcome-text {
+            color: rgba(255,255,255,0.85);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .manager-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+            gap: 32px;
+            max-width: 800px;
+            width: 100%;
+        }
+        .manager-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 48px 32px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .manager-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            background: white;
+        }
+        .manager-card .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 16px rgba(13,148,136,0.3);
+        }
+        .manager-card .card-icon.navy {
+            background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+            box-shadow: 0 8px 16px rgba(30,58,95,0.3);
+        }
+        .manager-card .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .manager-card .card-desc {
+            font-size: 0.95rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+        .manager-card .card-arrow {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: var(--teal);
+            transition: transform 0.3s;
+        }
+        .manager-card:hover .card-arrow {
+            transform: translateX(-8px);
+        }
+        @media (max-width: 600px) {
+            .manager-cards { grid-template-columns: 1fr; gap: 20px; }
+            .manager-card { padding: 36px 24px; }
+            .manager-simple h2 { font-size: 1.5rem; }
+        }
+        
     </style>
 </head>
 <body>
@@ -741,17 +849,23 @@ function showDashboard() {
 function buildSidebar() {
     const sidebar = document.getElementById('sidebar');
     const isAdmin = appState.user.role === 'admin';
+    
+    if (!isAdmin) {
+        // Manager (like Dekel) - no sidebar, simplified view
+        sidebar.innerHTML = '';
+        sidebar.style.display = 'none';
+        return;
+    }
+    
+    sidebar.style.display = 'flex';
     const items = [
         { id: 'overview', label: 'ראשי', icon: '🏠' },
         { id: 'content', label: 'ניהול תוכן', icon: '📖' },
         { id: 'events', label: 'אירועים', icon: '📅' },
         { id: 'display', label: 'תצוגת טלוויזיה', icon: '📺' },
+        { id: 'libraries', label: 'ניהול ספריות', icon: '🏛️' },
+        { id: 'users', label: 'ניהול משתמשים', icon: '👥' },
     ];
-    
-    if (isAdmin) {
-        items.push({ id: 'libraries', label: 'ניהול ספריות', icon: '🏛️' });
-        items.push({ id: 'users', label: 'ניהול משתמשים', icon: '👥' });
-    }
     
     sidebar.innerHTML = items.map(item => 
         `<div class="sidebar-item ${item.id === appState.currentPage ? 'active' : ''}" onclick="loadPage('${item.id}')">
