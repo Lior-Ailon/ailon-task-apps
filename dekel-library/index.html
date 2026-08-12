@@ -881,6 +881,12 @@ async function loadPage(pageId) {
     const content = document.getElementById('mainContent');
     content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
 
+    // Manager (non-admin) gets simplified view - only 2 cards
+    if (appState.user.role !== 'admin' && (pageId === 'overview' || pageId === 'display' || pageId === 'events')) {
+        loadManagerSimple();
+        return;
+    }
+
     switch (pageId) {
         case 'overview': await loadOverview(); break;
         case 'content': await loadContent(); break;
@@ -889,6 +895,34 @@ async function loadPage(pageId) {
         case 'libraries': await loadLibraries(); break;
         case 'users': await loadUsers(); break;
     }
+}
+
+function loadManagerSimple() {
+    const content = document.getElementById('mainContent');
+    const libId = appState.library ? appState.library.id : '';
+    const libName = appState.library ? appState.library.name : 'הספרייה';
+    const baseUrl = 'https://lior-ailon.github.io/ailon-task-apps/dekel-library/display.html';
+    const displayUrl = libId ? baseUrl + '?library_id=' + libId : baseUrl;
+    
+    content.innerHTML = 
+        '<div class="manager-simple">' +
+            '<h2>שלום, ' + (appState.user.display_name || appState.user.username) + ' 👋</h2>' +
+            '<div class="welcome-text">בחר מסך להמשך</div>' +
+            '<div class="manager-cards">' +
+                '<a href="' + displayUrl + '" target="_blank" class="manager-card">' +
+                    '<div class="card-icon">📺</div>' +
+                    '<div class="card-title">מסך תצוגה ראשית</div>' +
+                    '<div class="card-desc">תצוגת טלוויזיה — שעון, אירועים ותוכן הספרייה</div>' +
+                    '<div class="card-arrow">←</div>' +
+                '</a>' +
+                '<div class="manager-card" onclick="loadPage(\'content\')">' +
+                    '<div class="card-icon navy">⚙️</div>' +
+                    '<div class="card-title">מסך ניהול</div>' +
+                    '<div class="card-desc">ניהול תוכן הספרייה — ספרים, פריטים ואירועים</div>' +
+                    '<div class="card-arrow">←</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
 }
 
 // API helper
