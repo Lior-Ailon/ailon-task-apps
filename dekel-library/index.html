@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול ספריות | דקל מחשבים</title>
+    <meta name="description" content="פלטפורמת ניהול ספריות ולובים - ניהול תוכן, אירועים ותצוגה בטלוויזיה">
+    <style>
+        :root {
+            --teal: #0d9488;
+            --teal-light: #14b8a6;
+            --navy: #1e3a5f;
+            --navy-dark: #0f2942;
+            --bg: #f0fdfa;
+            --white: #ffffff;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --red: #ef4444;
+            --green: #22c55e;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            color: var(--navy);
+        }
+        
+        /* Landing Page */
+        .landing-header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        .landing-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .landing-header .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .landing-header nav { display: flex; gap: 24px; align-items: center; }
+        .landing-header nav a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .landing-header nav a:hover { color: var(--teal-light); }
+        .btn-login {
+            background: var(--teal);
+            color: white !important;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-login:hover { background: var(--teal-light); transform: translateY(-1px); }
+        
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        .hero h1 span { color: var(--teal); }
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--gray);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: var(--teal);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+        .btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .btn-secondary {
+            background: white;
+            color: var(--navy);
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 2px solid var(--gray-light);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .feature-card .icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+        }
+        .feature-card h3 { font-size: 1.3rem; margin-bottom: 12px; color: var(--navy); }
+        .feature-card p { color: var(--gray); line-height: 1.6; font-size: 0.95rem; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        .footer a { color: var(--teal); text-decoration: none; }
+
+        /* Login Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal h2 { font-size: 1.6rem; margin-bottom: 8px; color: var(--navy); }
+        .modal .subtitle { color: var(--gray); margin-bottom: 28px; font-size: 0.95rem; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--navy);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .form-group input:focus { outline: none; border-color: var(--teal); }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .alert.error { background: #fef2f2; color: var(--red); display: block; }
+        .alert.success { background: #f0fdf4; color: var(--green); display: block; }
+        .btn-full {
+            width: 100%;
+            background: var(--teal);
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            transition: background 0.2s;
+        }
+        .btn-full:hover { background: var(--teal-light); }
+        .btn-full:disabled { opacity: 0.6; cursor: not-allowed; }
+        .modal-close {
+            float: left;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            padding: 0;
+            line-height: 1;
+        }
+
+        /* Dashboard */
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+        .dash-header {
+            background: var(--navy);
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        .dash-header .left { display: flex; align-items: center; gap: 16px; }
+        .dash-header .logo-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .dash-header h1 { font-size: 1.2rem; font-weight: 700; }
+        .dash-header .library-name { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+        .dash-header .right { display: flex; gap: 12px; align-items: center; }
+        .dash-header .user-info {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+        .dash-header .avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--teal);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+        }
+        .btn-logout {
+            background: rgba(239,68,68,0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(239,68,68,0.3); color: white; }
+
+        .dash-body { display: flex; min-height: calc(100vh - 65px); }
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-left: 1px solid var(--gray-light);
+            padding: 20px 0;
+        }
+        .sidebar-item {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-right: 3px solid transparent;
+        }
+        .sidebar-item:hover { background: var(--bg); color: var(--teal); }
+        .sidebar-item.active { background: var(--bg); color: var(--teal); border-right-color: var(--teal); }
+        .sidebar-item .icon { font-size: 1.3rem; }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--navy);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        .stat-card .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 800; color: var(--navy); }
+        .stat-card .stat-label { color: var(--gray); font-size: 0.85rem; }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .table-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        .table-header h3 { font-size: 1.2rem; color: var(--navy); }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: right;
+            padding: 14px 24px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        td {
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--gray-light);
+            font-size: 0.9rem;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: var(--bg); }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge.active { background: #d1fae5; color: #065f46; }
+        .badge.inactive { background: #fee2e2; color: #991b1b; }
+        .badge.trial { background: #fef3c7; color: #92400e; }
+        .badge.admin { background: #dbeafe; color: #1e40af; }
+        .badge.manager { background: #d1fae5; color: #065f46; }
+        .badge.viewer { background: #e0e7ff; color: #3730a3; }
+        .badge.available { background: #d1fae5; color: #065f46; }
+        .badge.borrowed { background: #fef3c7; color: #92400e; }
+        .badge.upcoming { background: #dbeafe; color: #1e40af; }
+        
+        .btn-action {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-edit { background: #e0f2fe; color: #0284c7; }
+        .btn-edit:hover { background: #bae6fd; }
+        .btn-delete { background: #fee2e2; color: #ef4444; }
+        .btn-delete:hover { background: #fecaca; }
+        .btn-add {
+            background: var(--teal);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        .btn-add:hover { background: var(--teal-light); }
+
+        /* Modal Forms */
+        .form-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .form-modal h2 { font-size: 1.4rem; margin-bottom: 24px; color: var(--navy); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-actions { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-cancel {
+            flex: 1;
+            background: var(--gray-light);
+            color: var(--gray);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-save {
+            flex: 1;
+            background: var(--teal);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-save:hover { background: var(--teal-light); }
+
+        /* Display Preview */
+        .display-preview {
+            background: var(--navy);
+            border-radius: 16px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .display-preview h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        .display-preview .clock { font-size: 4rem; font-weight: 300; margin: 20px 0; }
+        .display-preview .welcome { font-size: 1.5rem; color: var(--teal-light); margin-bottom: 30px; }
+        .display-preview .events-list { width: 100%; max-width: 400px; }
+        .display-preview .event-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .dash-body { flex-direction: column; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .landing-header { padding: 16px 20px; }
+            .landing-header nav { display: none; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .loading { text-align: center; padding: 60px; color: var(--gray); }
+        .loading .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid var(--gray-light);
+            border-top-color: var(--teal);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--gray); }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state p { font-size: 1rem; margin-bottom: 8px; }
+        .empty-state .hint { font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<!-- Landing Page -->
+<div id="landingPage">
+    <header class="landing-header">
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <span>מערכת ניהול ספריות</span>
+        </div>
+        <nav>
+            <a href="#features">תכונות</a>
+            <a href="#about">אודות</a>
+            <button class="btn-login" onclick="showLogin()">כניסה למערכת</button>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>ניהול חכם <span>לספריות</span> ולובים</h1>
+        <p>פלטפורמה מקצועית לניהול תוכן, אירועים, משתמשים ותצוגות בטלוויזיה — הכל במקום אחד</p>
+        <div class="hero-cta">
+            <button class="btn-primary" onclick="showLogin()">כניסה למערכת</button>
+            <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">למידע נוסף</button>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature-card">
+            <div class="icon">📖</div>
+            <h3>ניהול תוכן</h3>
+            <p>קטלוג מלא של ספרים, כתבי עת ומדיה דיגיטלית עם מעקב השאלות והחזרות</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">📅</div>
+            <h3>אירועים וקהילה</h3>
+            <p>ניהול אירועים, סדנאות, מועדוני קריאה והרשמת משתתפים</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">📺</div>
+            <h3>תצוגת טלוויזיה</h3>
+            <p>מסכי תצוגה ללובי עם שעון, אירועים קרובים ומידע למבקרים</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">👥</div>
+            <h3>ניהול משתמשים</h3>
+            <p>מערכת ריבוי משתמשים עם הרשאות: אדמין, מנהל ספרייה וצופה</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🔐</div>
+            <h3>סביבה פרטנית</h3>
+            <p>כל ספרייה מקבלת סביבה נפרדת עם חשבון וסיסמה ייעודיים</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">📊</div>
+            <h3>דוחות וסטטיסטיקה</h3>
+            <p>מעקב השאלות, פעילות ונתוני שימוש לכל ספרייה</p>
+        </div>
+    </section>
+
+    <div class="footer">
+        <p>מערכת ניהול ספריות ולובים | מופעל על ידי דקל מחשבים</p>
+        <p style="margin-top:8px;">פותח על ידי AILON Task</p>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal">
+        <button class="modal-close" onclick="hideLogin()">×</button>
+        <h2>כניסה למערכת</h2>
+        <p class="subtitle">הזן את פרטי ההתחברות שלך</p>
+        <div class="alert" id="loginAlert"></div>
+        <div class="form-group">
+            <label>שם משתמש</label>
+            <input type="text" id="loginUsername" placeholder="הזן שם משתמש" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>סיסמה</label>
+            <input type="password" id="loginPassword" placeholder="הזן סיסמה" autocomplete="off">
+        </div>
+        <button class="btn-full" id="loginBtn" onclick="handleLogin()">התחבר</button>
+    </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dashboard" id="dashboard">
+    <header class="dash-header">
+        <div class="left">
+            <div class="logo-icon">📚</div>
+            <div>
+                <h1>מערכת ניהול ספריות</h1>
+                <div class="library-name" id="dashLibraryName"></div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">L</div>
+                <span id="userName">משתמש</span>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">התנתק</button>
+        </div>
+    </header>
+    <div class="dash-body">
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar items populated by JS -->
+        </aside>
+        <main class="main-content" id="mainContent">
+            <!-- Content populated by JS -->
+        </main>
+    </div>
+</div>
+
+<script>
+// API Configuration
+const API_BASE = 'https://api.base44.com/apps/69f63b4536d7a2c6688403df/backend/functions';
+
+// App State
+let appState = {
+    user: null,
+    library: null,
+    token: null,
+    currentPage: 'dashboard'
+};
+
+// Check for existing session on load
+window.addEventListener('DOMContentLoaded', async () => {
+    const savedToken = sessionStorage.getItem('library_token');
+    if (savedToken) {
+        try {
+            const res = await fetch(`${API_BASE}/libraryAuth`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'verify', session_token: savedToken })
+            });
+            const data = await res.json();
+            if (data.success) {
+                appState.user = data.user;
+                appState.library = data.library;
+                appState.token = savedToken;
+                showDashboard();
+            } else {
+                sessionStorage.removeItem('library_token');
+            }
+        } catch (e) {
+            console.error('Session verify error:', e);
+        }
+    }
+});
+
+// Login Functions
+function showLogin() { document.getElementById('loginModal').classList.add('active'); }
+function hideLogin() { 
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('loginAlert').className = 'alert';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+}
+
+async function handleLogin() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const alertEl = document.getElementById('loginAlert');
+    const btn = document.getElementById('loginBtn');
+
+    if (!username || !password) {
+        alertEl.textContent = 'נא למלא את כל השדות';
+        alertEl.className = 'alert error';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'מתחבר...';
+
+    try {
+        const res = await fetch(`${API_BASE}/libraryAuth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'login', username, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            appState.user = data.user;
+            appState.library = data.library;
+            appState.token = data.token;
+            sessionStorage.setItem('library_token', data.token);
+            hideLogin();
+            showDashboard();
+        } else {
+            alertEl.textContent = data.message || 'שגיאה בהתחברות';
+            alertEl.className = 'alert error';
+        }
+    } catch (e) {
+        alertEl.textContent = 'שגיאת תקשורת. נסה שוב.';
+        alertEl.className = 'alert error';
+    }
+    btn.disabled = false;
+    btn.textContent = 'התחבר';
+}
+
+async function handleLogout() {
+    try {
+        await fetch(`${API_BASE}/libraryAuth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'logout', session_token: appState.token })
+        });
+    } catch (e) {}
+    sessionStorage.removeItem('library_token');
+    appState = { user: null, library: null, token: null, currentPage: 'dashboard' };
+    document.getElementById('dashboard').classList.remove('active');
+    document.getElementById('landingPage').style.display = 'block';
+}
+
+function showDashboard() {
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('dashboard').classList.add('active');
+    
+    // Set user info
+    document.getElementById('userName').textContent = appState.user.display_name || appState.user.username;
+    document.getElementById('userAvatar').textContent = (appState.user.display_name || appState.user.username)[0].toUpperCase();
+    document.getElementById('dashLibraryName').textContent = appState.library ? appState.library.name : 'מנהל מערכת';
+    
+    // Build sidebar
+    buildSidebar();
+    // Load default page
+    loadPage('overview');
+}
+
+function buildSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const isAdmin = appState.user.role === 'admin';
+    const items = [
+        { id: 'overview', label: 'ראשי', icon: '🏠' },
+        { id: 'content', label: 'ניהול תוכן', icon: '📖' },
+        { id: 'events', label: 'אירועים', icon: '📅' },
+        { id: 'display', label: 'תצוגת טלוויזיה', icon: '📺' },
+    ];
+    
+    if (isAdmin) {
+        items.push({ id: 'libraries', label: 'ניהול ספריות', icon: '🏛️' });
+        items.push({ id: 'users', label: 'ניהול משתמשים', icon: '👥' });
+    }
+    
+    sidebar.innerHTML = items.map(item => 
+        `<div class="sidebar-item ${item.id === appState.currentPage ? 'active' : ''}" onclick="loadPage('${item.id}')">
+            <span class="icon">${item.icon}</span>
+            <span>${item.label}</span>
+        </div>`
+    ).join('');
+}
+
+async function loadPage(pageId) {
+    appState.currentPage = pageId;
+    buildSidebar();
+    const content = document.getElementById('mainContent');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
+
+    switch (pageId) {
+        case 'overview': await loadOverview(); break;
+        case 'content': await loadContent(); break;
+        case 'events': await loadEvents(); break;
+        case 'display': loadDisplay(); break;
+        case 'libraries': await loadLibraries(); break;
+        case 'users': await loadUsers(); break;
+    }
+}
+
+// API helper
+async function apiCall(entity_type, action, data = {}, entity_id = null, library_id = null) {
+    const res = await fetch(`${API_BASE}/libraryData`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action, entity_type, entity_id, data, library_id,
+            session_token: appState.token
+        })
+    });
+    return await res.json();
+}
+
+// Overview Page
+async function loadOverview() {
+    const isAdmin = appState.user.role === 'admin';
+    const content = document.getElementById('mainContent');
+    
+    try {
+        const [contentRes, eventsRes] = await Promise.all([
+            apiCall('content', 'list'),
+            apiCall('event', 'list')
+        ]);
+        
+        const books = contentRes.success ? contentRes.data : [];
+        const events = eventsRes.success ? eventsRes.data : [];
+        const available = books.filter(b => b.status === 'available').length;
+        const borrowed = books.filter(b => b.status === 'borrowed').length;
+        const upcoming = events.filter(e => e.status === 'upcoming').length;
+
+        let stats = `
+            <h2 class="page-title">ראשי</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#d1fae5">📚</div>
+                    <div class="stat-value">${books.length}</div>
+                    <div class="stat-label">סך פריטים בקטלוג</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#dbeafe">✅</div>
+                    <div class="stat-value">${available}</div>
+                    <div class="stat-label">זמינים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#fef3c7">📤</div>
+                    <div class="stat-value">${borrowed}</div>
+                    <div class="stat-label">מושאלים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#e0e7ff">📅</div>
+                    <div class="stat-value">${upcoming}</div>
+                    <div class="stat-label">אירועים קרובים</div>
+                </div>
+            </div>`;
+
+        if (isAdmin) {
+            const [libsRes, usersRes] = await Promise.all([
+                apiCall('library', 'list'),
+                apiCall('user', 'list')
+            ]);
+            const libs = libsRes.success ? libsRes.data : [];
+            const users = usersRes.success ? usersRes.data : [];
+            stats += `
+                <div class="stats-grid" style="margin-top:20px">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fef3c7">🏛️</div>
+                        <div class="stat-value">${libs.length}</div>
+                        <div class="stat-label">ספריות רשומות</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fce7f3">👥</div>
+                        <div class="stat-value">${users.length}</div>
+                        <div class="stat-label">משתמשים</div>
+                    </div>
+                </div>`;
+        }
+
+        // Recent activity
+        const recentBooks = books.slice(-5).reverse();
+        stats += `
+            <h3 style="margin:30px 0 16px;font-size:1.3rem;color:var(--navy)">פריטים אחרונים</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>כותר</th><th>מחבר</th><th>קטגוריה</th><th>סטטוס</th></tr></thead>
+                    <tbody>
+                    ${recentBooks.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--gray)">אין פריטים עדיין</td></tr>' : 
+                    recentBooks.map(b => `
+                        <tr>
+                            <td>${b.title || '-'}</td>
+                            <td>${b.author || '-'}</td>
+                            <td>${b.category || '-'}</td>
+                            <td><span class="badge ${b.status || 'available'}">${b.status || 'זמין'}</span></td>
+                        </tr>
+                    `).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+
+        content.innerHTML = stats;
+    } catch (e) {
+        content.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>שגיאה בטעינת נתונים</p></div>`;
+    }
+}
+
+// Content Management
+async function loadContent() {
+    const content = document.getElementById('mainContent');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
+    
+    try {
+        const res = await apiCall('content', 'list');
+        const items = res.success ? res.data : [];
+        
+        content.innerHTML = `
+            <div class="table-header">
+                <h2 class="page-title" style="margin:0">ניהול תוכן</h2>
+                <button class="btn-add" onclick="showContentForm()">+ הוסף פריט</button>
+            </div>
+            <div class="table-container" style="margin-top:16px">
+                <table>
+                    <thead><tr><th>כותר</th><th>מחבר</th><th>קטגוריה</th><th>מיקום</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+                    <tbody id="contentTable">
+                    ${items.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:40px">אין פריטים עדיין. לחץ על "הוסף פריט" כדי להתחיל.</td></tr>' :
+                    items.map(item => `
+                        <tr>
+                            <td>${item.title || '-'}</td>
+                            <td>${item.author || '-'}</td>
+                            <td>${item.category || '-'}</td>
+                            <td>${item.shelf_location || '-'}</td>
+                            <td><span class="badge ${item.status || 'available'}">${item.status || 'זמין'}</span></td>
+                            <td>
+                                <button class="btn-action btn-edit" onclick="showContentForm('${item.id}')">ערוך</button>
+                                <button class="btn-action btn-delete" onclick="deleteContent('${item.id}')">מחק</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    } catch (e) {
+        content.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>שגיאה בטעינת תוכן</p></div>`;
+    }
+}
+
+function showContentForm(id = null) {
+    const isEdit = !!id;
+    showModal(`
+        <h2>${isEdit ? 'עריכת פריט' : 'הוספת פריט'}</h2>
+        <div class="form-group"><label>כותר</label><input type="text" id="cf_title" placeholder="שם הספר/פריט"></div>
+        <div class="form-group"><label>מחבר</label><input type="text" id="cf_author" placeholder="שם המחבר"></div>
+        <div class="form-row">
+            <div class="form-group"><label>קטגוריה</label>
+                <select id="cf_category" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="book">ספר</option>
+                    <option value="journal">כתב עת</option>
+                    <option value="media">מדיה</option>
+                    <option value="digital">דיגיטלי</option>
+                    <option value="other">אחר</option>
+                </select>
+            </div>
+            <div class="form-group"><label>סטטוס</label>
+                <select id="cf_status" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="available">זמין</option>
+                    <option value="borrowed">מושאל</option>
+                    <option value="reserved">שמור</option>
+                    <option value="maintenance">בתחזוקה</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>מיקום מדף</label><input type="text" id="cf_shelf" placeholder="מיקום על המדף"></div>
+            <div class="form-group"><label>ISBN</label><input type="text" id="cf_isbn" placeholder="מספר ISBN"></div>
+        </div>
+        <div class="form-group"><label>תיאור</label><input type="text" id="cf_desc" placeholder="תיאור קצר"></div>
+        <div class="form-actions">
+            <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+            <button class="btn-save" onclick="saveContent('${id || ''}')">שמור</button>
+        </div>
+    `);
+}
+
+async function saveContent(id) {
+    const data = {
+        title: document.getElementById('cf_title').value.trim(),
+        author: document.getElementById('cf_author').value.trim(),
+        category: document.getElementById('cf_category').value,
+        status: document.getElementById('cf_status').value,
+        shelf_location: document.getElementById('cf_shelf').value.trim(),
+        isbn: document.getElementById('cf_isbn').value.trim(),
+        description: document.getElementById('cf_desc').value.trim(),
+        library_id: appState.user.library_id || appState.user.id
+    };
+    if (!data.title) { alert('נא למלא כותר'); return; }
+
+    try {
+        const res = id 
+            ? await apiCall('content', 'update', data, id)
+            : await apiCall('content', 'create', data);
+        if (res.success) { closeModal(); loadContent(); }
+        else { alert(res.message || 'שגיאה בשמירה'); }
+    } catch (e) { alert('שגיאה בשמירה'); }
+}
+
+async function deleteContent(id) {
+    if (!confirm('האם למחוק פריט זה?')) return;
+    try {
+        await apiCall('content', 'delete', {}, id);
+        loadContent();
+    } catch (e) { alert('שגיאה במחיקה'); }
+}
+
+// Events Management
+async function loadEvents() {
+    const content = document.getElementById('mainContent');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
+    
+    try {
+        const res = await apiCall('event', 'list');
+        const items = res.success ? res.data : [];
+        
+        content.innerHTML = `
+            <div class="table-header">
+                <h2 class="page-title" style="margin:0">אירועים</h2>
+                <button class="btn-add" onclick="showEventForm()">+ הוסף אירוע</button>
+            </div>
+            <div class="table-container" style="margin-top:16px">
+                <table>
+                    <thead><tr><th>כותר</th><th>תאריך</th><th>שעה</th><th>סוג</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+                    <tbody>
+                    ${items.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:40px">אין אירועים עדיין</td></tr>' :
+                    items.map(item => `
+                        <tr>
+                            <td>${item.title || '-'}</td>
+                            <td>${item.event_date ? new Date(item.event_date).toLocaleDateString('he-IL') : '-'}</td>
+                            <td>${item.event_time || '-'}</td>
+                            <td>${item.event_type || '-'}</td>
+                            <td><span class="badge ${item.status || 'upcoming'}">${item.status || 'קרוב'}</span></td>
+                            <td>
+                                <button class="btn-action btn-edit" onclick="showEventForm('${item.id}')">ערוך</button>
+                                <button class="btn-action btn-delete" onclick="deleteEvent('${item.id}')">מחק</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    } catch (e) {
+        content.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>שגיאה</p></div>`;
+    }
+}
+
+function showEventForm(id = null) {
+    showModal(`
+        <h2>${id ? 'עריכת אירוע' : 'הוספת אירוע'}</h2>
+        <div class="form-group"><label>כותר</label><input type="text" id="ef_title" placeholder="שם האירוע"></div>
+        <div class="form-group"><label>תיאור</label><input type="text" id="ef_desc" placeholder="תיאור האירוע"></div>
+        <div class="form-row">
+            <div class="form-group"><label>תאריך</label><input type="date" id="ef_date"></div>
+            <div class="form-group"><label>שעה</label><input type="time" id="ef_time"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>סוג</label>
+                <select id="ef_type" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="story_time">שעת סיפור</option>
+                    <option value="book_club">מועדון קריאה</option>
+                    <option value="workshop">סדנה</option>
+                    <option value="lecture">הרצאה</option>
+                    <option value="community">קהילה</option>
+                    <option value="other">אחר</option>
+                </select>
+            </div>
+            <div class="form-group"><label>מיקום</label><input type="text" id="ef_location" placeholder="מיקום האירוע"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>מספר משתתפים מקסימלי</label><input type="number" id="ef_max" placeholder="0" value="0"></div>
+            <div class="form-group"><label>סטטוס</label>
+                <select id="ef_status" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="upcoming">קרוב</option>
+                    <option value="ongoing">מתקיים</option>
+                    <option value="completed">הסתיים</option>
+                    <option value="cancelled">בוטל</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+            <button class="btn-save" onclick="saveEvent('${id || ''}')">שמור</button>
+        </div>
+    `);
+}
+
+async function saveEvent(id) {
+    const data = {
+        title: document.getElementById('ef_title').value.trim(),
+        description: document.getElementById('ef_desc').value.trim(),
+        event_date: document.getElementById('ef_date').value,
+        event_time: document.getElementById('ef_time').value,
+        event_type: document.getElementById('ef_type').value,
+        location: document.getElementById('ef_location').value.trim(),
+        max_participants: parseInt(document.getElementById('ef_max').value) || 0,
+        status: document.getElementById('ef_status').value,
+        registered_participants: 0,
+        library_id: appState.user.library_id || appState.user.id
+    };
+    if (!data.title) { alert('נא למלא כותר'); return; }
+
+    try {
+        const res = id
+            ? await apiCall('event', 'update', data, id)
+            : await apiCall('event', 'create', data);
+        if (res.success) { closeModal(); loadEvents(); }
+        else { alert(res.message || 'שגיאה'); }
+    } catch (e) { alert('שגיאה בשמירה'); }
+}
+
+async function deleteEvent(id) {
+    if (!confirm('האם למחוק אירוע זה?')) return;
+    try {
+        await apiCall('event', 'delete', {}, id);
+        loadEvents();
+    } catch (e) { alert('שגיאה במחיקה'); }
+}
+
+// TV Display Preview
+function loadDisplay() {
+    const content = document.getElementById('mainContent');
+    content.innerHTML = `
+        <h2 class="page-title">תצוגת טלוויזיה</h2>
+        <p style="color:var(--gray);margin-bottom:24px">תצוגה מקדימה של מסך הטלוויזיה בלובי הספרייה</p>
+        <div class="display-preview">
+            <h2>${appState.library ? appState.library.name : 'ספרייה'}</h2>
+            <div class="welcome">ברוכים הבאים 📚</div>
+            <div class="clock" id="displayClock">--:--</div>
+            <div class="events-list" id="displayEvents">
+                <div style="color:rgba(255,255,255,0.5);padding:20px">טוען אירועים...</div>
+            </div>
+        </div>
+        <div style="margin-top:24px;padding:20px;background:white;border-radius:12px;box-shadow:var(--shadow)">
+            <h3 style="margin-bottom:12px;color:var(--navy)">קישור לתצוגה ציבורית</h3>
+            <p style="color:var(--gray);font-size:0.9rem;margin-bottom:12px">שתף קישור זה בטלוויזיה בלובי לתצוגה ציבורית ללא התחברות</p>
+            <code style="background:var(--bg);padding:12px;border-radius:8px;display:block;font-size:0.85rem">מתפתח...</code>
+        </div>`;
+    
+    // Update clock
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('displayClock').textContent = now.toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+    
+    // Load events
+    apiCall('event', 'list').then(res => {
+        const events = res.success ? res.data.filter(e => e.status === 'upcoming').slice(0, 3) : [];
+        const el = document.getElementById('displayEvents');
+        if (events.length === 0) {
+            el.innerHTML = '<div style="color:rgba(255,255,255,0.5);padding:20px">אין אירועים קרובים</div>';
+        } else {
+            el.innerHTML = events.map(e => `
+                <div class="event-item">
+                    <div style="font-weight:700;margin-bottom:4px">${e.title}</div>
+                    <div style="font-size:0.85rem;color:rgba(255,255,255,0.7)">
+                        ${e.event_date ? new Date(e.event_date).toLocaleDateString('he-IL') : ''} ${e.event_time || ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+    });
+}
+
+// Libraries Management (Admin only)
+async function loadLibraries() {
+    if (appState.user.role !== 'admin') { loadPage('overview'); return; }
+    const content = document.getElementById('mainContent');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
+    
+    try {
+        const res = await apiCall('library', 'list');
+        const items = res.success ? res.data : [];
+        
+        content.innerHTML = `
+            <div class="table-header">
+                <h2 class="page-title" style="margin:0">ניהול ספריות</h2>
+                <button class="btn-add" onclick="showLibraryForm()">+ הוסף ספרייה</button>
+            </div>
+            <div class="table-container" style="margin-top:16px">
+                <table>
+                    <thead><tr><th>שם</th><th>כתובת</th><th>טלפון</th><th>סוג מנוי</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+                    <tbody>
+                    ${items.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:40px">אין ספריות עדיין</td></tr>' :
+                    items.map(item => `
+                        <tr>
+                            <td><strong>${item.name || '-'}</strong></td>
+                            <td>${item.address || '-'}</td>
+                            <td>${item.phone || '-'}</td>
+                            <td>${item.subscription_type || '-'}</td>
+                            <td><span class="badge ${item.status || 'active'}">${item.status || 'פעיל'}</span></td>
+                            <td>
+                                <button class="btn-action btn-edit" onclick="showLibraryForm('${item.id}')">ערוך</button>
+                                <button class="btn-action btn-delete" onclick="deleteLibrary('${item.id}')">מחק</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    } catch (e) {
+        content.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>שגיאה</p></div>`;
+    }
+}
+
+function showLibraryForm(id = null) {
+    showModal(`
+        <h2>${id ? 'עריכת ספרייה' : 'הוספת ספרייה'}</h2>
+        <div class="form-group"><label>שם הספרייה</label><input type="text" id="lf_name" placeholder="שם הספרייה"></div>
+        <div class="form-group"><label>כתובת</label><input type="text" id="lf_address" placeholder="כתובת"></div>
+        <div class="form-row">
+            <div class="form-group"><label>טלפון</label><input type="text" id="lf_phone" placeholder="טלפון"></div>
+            <div class="form-group"><label>איש קשר</label><input type="text" id="lf_contact" placeholder="איש קשר"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>סוג מנוי</label>
+                <select id="lf_sub" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="basic">בסיסי</option>
+                    <option value="premium">פרימיום</option>
+                    <option value="enterprise">ארגוני</option>
+                </select>
+            </div>
+            <div class="form-group"><label>סטטוס</label>
+                <select id="lf_status" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="active">פעיל</option>
+                    <option value="trial">תקופת ניסיון</option>
+                    <option value="inactive">לא פעיל</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+            <button class="btn-save" onclick="saveLibrary('${id || ''}')">שמור</button>
+        </div>
+    `);
+}
+
+async function saveLibrary(id) {
+    const data = {
+        name: document.getElementById('lf_name').value.trim(),
+        address: document.getElementById('lf_address').value.trim(),
+        phone: document.getElementById('lf_phone').value.trim(),
+        contact_person: document.getElementById('lf_contact').value.trim(),
+        subscription_type: document.getElementById('lf_sub').value,
+        status: document.getElementById('lf_status').value
+    };
+    if (!data.name) { alert('נא למלא שם'); return; }
+
+    try {
+        const res = id
+            ? await apiCall('library', 'update', data, id)
+            : await apiCall('library', 'create', data);
+        if (res.success) { closeModal(); loadLibraries(); }
+        else { alert(res.message || 'שגיאה'); }
+    } catch (e) { alert('שגיאה'); }
+}
+
+async function deleteLibrary(id) {
+    if (!confirm('האם למחוק ספרייה זו?')) return;
+    try {
+        await apiCall('library', 'delete', {}, id);
+        loadLibraries();
+    } catch (e) { alert('שגיאה'); }
+}
+
+// Users Management (Admin only)
+async function loadUsers() {
+    if (appState.user.role !== 'admin') { loadPage('overview'); return; }
+    const content = document.getElementById('mainContent');
+    content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
+    
+    try {
+        const [usersRes, libsRes] = await Promise.all([
+            apiCall('user', 'list'),
+            apiCall('library', 'list')
+        ]);
+        const users = usersRes.success ? usersRes.data : [];
+        const libs = libsRes.success ? libsRes.data : [];
+        const libMap = {};
+        libs.forEach(l => libMap[l.id] = l.name);
+        
+        content.innerHTML = `
+            <div class="table-header">
+                <h2 class="page-title" style="margin:0">ניהול משתמשים</h2>
+                <button class="btn-add" onclick="showUserForm()">+ הוסף משתמש</button>
+            </div>
+            <div class="table-container" style="margin-top:16px">
+                <table>
+                    <thead><tr><th>שם תצוגה</th><th>שם משתמש</th><th>תפקיד</th><th>ספרייה</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+                    <tbody>
+                    ${users.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:40px">אין משתמשים עדיין</td></tr>' :
+                    users.map(item => `
+                        <tr>
+                            <td><strong>${item.display_name || '-'}</strong></td>
+                            <td>${item.username || '-'}</td>
+                            <td><span class="badge ${item.role || 'viewer'}">${item.role || 'צופה'}</span></td>
+                            <td>${item.library_id ? (libMap[item.library_id] || '-') : 'כל הספריות'}</td>
+                            <td><span class="badge ${item.status || 'active'}">${item.status || 'פעיל'}</span></td>
+                            <td>
+                                <button class="btn-action btn-edit" onclick="showUserForm('${item.id}')">ערוך</button>
+                                <button class="btn-action btn-delete" onclick="deleteUser('${item.id}')">מחק</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    } catch (e) {
+        content.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>שגיאה</p></div>`;
+    }
+}
+
+function showUserForm(id = null) {
+    // Need libraries list for dropdown
+    apiCall('library', 'list').then(res => {
+        const libs = res.success ? res.data : [];
+        const libOptions = libs.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+        
+        showModal(`
+            <h2>${id ? 'עריכת משתמש' : 'הוספת משתמש'}</h2>
+            <div class="form-group"><label>שם תצוגה</label><input type="text" id="uf_name" placeholder="שם מלא"></div>
+            <div class="form-row">
+                <div class="form-group"><label>שם משתמש</label><input type="text" id="uf_username" placeholder="שם משתמש"></div>
+                <div class="form-group"><label>סיסמה</label><input type="text" id="uf_password" placeholder="סיסמה"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>תפקיד</label>
+                    <select id="uf_role" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                        <option value="admin">אדמין</option>
+                        <option value="manager">מנהל ספרייה</option>
+                        <option value="viewer">צופה</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>ספרייה</label>
+                    <select id="uf_library" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                        <option value="">כל הספריות (אדמין)</option>
+                        ${libOptions}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>אימייל</label><input type="email" id="uf_email" placeholder="אימייל"></div>
+                <div class="form-group"><label>טלפון</label><input type="text" id="uf_phone" placeholder="טלפון"></div>
+            </div>
+            <div class="form-group"><label>סטטוס</label>
+                <select id="uf_status" style="width:100%;padding:12px;border:2px solid var(--gray-light);border-radius:10px;font-size:1rem">
+                    <option value="active">פעיל</option>
+                    <option value="pending">ממתין</option>
+                    <option value="inactive">לא פעיל</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+                <button class="btn-save" onclick="saveUser('${id || ''}')">שמור</button>
+            </div>
+        `);
+    });
+}
+
+async function saveUser(id) {
+    const password = document.getElementById('uf_password').value.trim();
+    const crypto = window.crypto || window.Crypto;
+    // Simple hash (the backend also hashes)
+    const data = {
+        display_name: document.getElementById('uf_name').value.trim(),
+        username: document.getElementById('uf_username').value.trim(),
+        password_hash: password, // backend will hash
+        role: document.getElementById('uf_role').value,
+        library_id: document.getElementById('uf_library').value,
+        email: document.getElementById('uf_email').value.trim(),
+        phone: document.getElementById('uf_phone').value.trim(),
+        status: document.getElementById('uf_status').value
+    };
+    if (!data.display_name || !data.username) { alert('נא למלא שם תצוגה ושם משתמש'); return; }
+    if (!id && !password) { alert('נא להזין סיסמה'); return; }
+    if (id && !password) delete data.password_hash;
+
+    try {
+        const res = id
+            ? await apiCall('user', 'update', data, id)
+            : await apiCall('user', 'create', data);
+        if (res.success) { closeModal(); loadUsers(); }
+        else { alert(res.message || 'שגיאה'); }
+    } catch (e) { alert('שגיאה'); }
+}
+
+async function deleteUser(id) {
+    if (!confirm('האם למחוק משתמש זה?')) return;
+    try {
+        await apiCall('user', 'delete', {}, id);
+        loadUsers();
+    } catch (e) { alert('שגיאה'); }
+}
+
+// Modal Helper
+function showModal(html) {
+    let overlay = document.getElementById('formModal');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'formModal';
+        overlay.className = 'modal-overlay active';
+        overlay.style.zIndex = '1100';
+        document.body.appendChild(overlay);
+    }
+    overlay.className = 'modal-overlay active';
+    overlay.innerHTML = `<div class="form-modal"><button class="modal-close" onclick="closeModal()">×</button>${html}</div>`;
+}
+
+function closeModal() {
+    const overlay = document.getElementById('formModal');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// Enter key on login
+document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleLogin();
+});
+</script>
+</body>
+</html>
