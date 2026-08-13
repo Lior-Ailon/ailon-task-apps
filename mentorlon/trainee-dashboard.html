@@ -36,7 +36,30 @@
   .empty .icon { font-size:40px; margin-bottom:12px; }
   .save-note { font-size:12px; color:#0d9488; text-align:center; margin-top:14px; height:16px; opacity:0; transition:opacity 0.3s; }
   .save-note.show { opacity:1; }
-</style>
+
+    /* Enhanced responsive */
+    @media (max-width: 768px) {
+        .container, .main-container, .dashboard, .content, .app-container { padding: 12px !important; }
+        .card, .feature-card, .stat-card, .tool-card { padding: 16px !important; margin-bottom: 12px; }
+        h1 { font-size: 1.5rem !important; }
+        h2 { font-size: 1.25rem !important; }
+        table { font-size: 0.85rem; }
+        .btn, button { padding: 10px 20px !important; font-size: 0.95rem !important; }
+        .grid, .features, .cards-grid, .tools-grid { grid-template-columns: 1fr !important; }
+        .sidebar { display: none !important; }
+        .main-content { margin: 0 !important; padding: 12px !important; }
+        .nav, .navbar { flex-direction: column !important; gap: 8px; }
+    }
+    @media (max-width: 480px) {
+        body { font-size: 0.9rem; }
+        .container, .main-container { padding: 8px !important; }
+        h1 { font-size: 1.25rem !important; }
+        .btn, button { width: 100% !important; padding: 12px !important; }
+        input, select, textarea { font-size: 16px !important; }
+        table { font-size: 0.8rem; }
+        .modal { width: 95% !important; padding: 20px !important; }
+    }
+    </style>
 </head>
 <body>
 <div class="container">
