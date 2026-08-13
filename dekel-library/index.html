@@ -466,10 +466,15 @@ function go(page){
   S.page=page;
   if(isAdmin()) buildSide();
   loading();
-  ({
-    dash:pgDash, libs:pgLibs, users:pgUsers, screens:pgScreens,
-    hub:pgHub, manage:pgManage, libctx:pgLibCtx
-  }[page] || pgHub)();
+  try{
+    ({
+      dash:pgDash, libs:pgLibs, users:pgUsers, screens:pgScreens,
+      hub:pgHub, manage:pgManage, libctx:pgLibCtx
+    }[page] || pgHub)();
+  }catch(err){
+    $('main').innerHTML = '<div style="padding:30px;color:red;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace">ERROR in go('+page+'): '+String(err.message||err)+'\nStack: '+(err.stack||'')+'</div>';
+    console.error('go error:', err);
+  }
 }
 
 /* =========================================================
