@@ -798,6 +798,30 @@ tbody tr:hover td{
         table { font-size: 0.8rem; }
         .modal { width: 95% !important; padding: 20px !important; }
     }
+    
+    /* 2FA Styles */
+    .twofa-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.85); display:none; align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(8px); }
+    .twofa-overlay.active { display:flex; }
+    .twofa-card { background:#fff; border-radius:18px; padding:36px 32px; max-width:400px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .twofa-card h2 { font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px; }
+    .twofa-card p { font-size:14px; color:#64748b; margin-bottom:24px; }
+    .twofa-input { width:100%; padding:14px 16px; border:2px solid #e2e8f0; border-radius:12px; font-size:20px; text-align:center; letter-spacing:8px; font-weight:700; direction:ltr; font-family:monospace; }
+    .twofa-input:focus { outline:none; border-color:#0d9488; }
+    .twofa-btn { width:100%; padding:14px; margin-top:16px; border:none; border-radius:12px; background:linear-gradient(135deg,#14b8a6,#0d9488); color:#fff; font-size:16px; font-weight:800; cursor:pointer; }
+    .twofa-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .twofa-btn.secondary { background:#f1f5f9; color:#334155; margin-top:10px; }
+    .twofa-error { color:#ef4444; font-size:13px; margin-top:12px; display:none; }
+    .twofa-qr { margin:20px auto; padding:16px; background:#fff; border:2px solid #e2e8f0; border-radius:12px; display:inline-block; }
+    .twofa-qr img { width:200px; height:200px; }
+    .twofa-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; background:#dcfce7; color:#16a34a; }
+    .twofa-badge.off { background:#fef3c7; color:#d97706; }
+    .twofa-settings { margin:20px 0; padding:20px; background:#f8fafc; border-radius:14px; border:1px solid #e2e8f0; }
+    .twofa-settings h3 { font-size:16px; font-weight:800; color:#0f172a; margin-bottom:6px; }
+    .twofa-settings p { font-size:13px; color:#64748b; margin-bottom:14px; }
+    .twofa-toggle { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .twofa-toggle-btn { padding:10px 20px; border-radius:10px; border:none; font-weight:700; cursor:pointer; font-size:14px; }
+    .twofa-toggle-btn.enable { background:#0d9488; color:#fff; }
+    .twofa-toggle-btn.disable { background:#fee2e2; color:#dc2626; }
     </style>
 </head>
 <body>
@@ -829,6 +853,7 @@ tbody tr:hover td{
     </div>
     <div class="header-actions">
       <span id="userName"></span>
+      <button class="btn-logout" onclick="open2FASettings()" style="margin-left:8px;background:transparent;color:#0d9488;border:1px solid #0d9488;">🔒 2FA</button>
       <button class="btn-logout" onclick="doLogout()">יציאה</button>
     </div>
   </div>
@@ -862,6 +887,22 @@ tbody tr:hover td{
   </div>
 </div>
 
+<!-- 2FA Verification Overlay -->
+<div class="twofa-overlay" id="twofaOverlay">
+  <div class="twofa-card">
+    <h2 id="twofaTitle">אימות דו-שלבי</h2>
+    <p id="twofaDesc">הזן את הקוד מאפליקציית האימות שלך</p>
+    <div id="twofaQrWrap" style="display:none;">
+      <div class="twofa-qr" id="twofaQr"></div>
+      <p style="font-size:13px;color:#64748b;margin-top:8px;">סרוק עם Google Authenticator / Authy</p>
+    </div>
+    <input type="text" class="twofa-input" id="twofaCode" placeholder="000000" maxlength="6" autocomplete="one-time-code" inputmode="numeric">
+    <div class="twofa-error" id="twofaError"></div>
+    <button class="twofa-btn" id="twofaBtn" onclick="verify2FA()">אישור</button>
+    <button class="twofa-btn secondary" id="twofaCancelBtn" onclick="cancel2FA()">ביטול</button>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -874,6 +915,14 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let currentPage = 'dashboard';
+
+// Enter key for 2FA
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('twofaOverlay').classList.contains('active')) {
+    e.preventDefault();
+    verify2FA();
+  }
+});
 
 // ============ AUTH ============
 async function doLogin() {
@@ -888,8 +937,194 @@ async function doLogin() {
     errEl.classList.remove('hidden');
     return;
   }
-  currentUser = data.user;
-  showApp();
+  
+  // Check if MFA is enrolled
+  const { data: factors } = await sb.auth.mfa.listFactors();
+  const totpFactor = factors?.totp?.find(f => f.status === 'verified');
+  
+  if (totpFactor) {
+    // 2FA required — challenge the user
+    pendingSession = data;
+    show2FAChallenge(totpFactor.id);
+  } else {
+    currentUser = data.user;
+    showApp();
+  }
+}
+
+// ============ 2FA / MFA ============
+let pendingSession = null;
+let pendingFactorId = null;
+
+function show2FAChallenge(factorId) {
+  pendingFactorId = factorId;
+  document.getElementById('twofaTitle').textContent = 'אימות דו-שלבי';
+  document.getElementById('twofaDesc').textContent = 'הזן את הקוד מאפליקציית האימות שלך (Google Authenticator / Authy)';
+  document.getElementById('twofaQrWrap').style.display = 'none';
+  document.getElementById('twofaCode').value = '';
+  document.getElementById('twofaCode').placeholder = '000000';
+  document.getElementById('twofaError').style.display = 'none';
+  document.getElementById('twofaCancelBtn').style.display = 'block';
+  document.getElementById('twofaOverlay').classList.add('active');
+  setTimeout(() => document.getElementById('twofaCode').focus(), 100);
+}
+
+async function verify2FA() {
+  const code = document.getElementById('twofaCode').value.trim();
+  const errEl = document.getElementById('twofaError');
+  const btn = document.getElementById('twofaBtn');
+  
+  if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+    errEl.textContent = 'נא להזין 6 ספרות';
+    errEl.style.display = 'block';
+    return;
+  }
+  
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'מאמת...';
+  
+  try {
+    const { data: challenge, error: chErr } = await sb.auth.mfa.challenge({ factorId: pendingFactorId });
+    if (chErr) throw chErr;
+    
+    const { error: verifyErr } = await sb.auth.mfa.verify({
+      factorId: pendingFactorId,
+      challengeId: challenge.id,
+      code: code
+    });
+    
+    if (verifyErr) throw verifyErr;
+    
+    // 2FA success
+    document.getElementById('twofaOverlay').classList.remove('active');
+    btn.disabled = false;
+    btn.textContent = 'אישור';
+    currentUser = pendingSession.user;
+    pendingSession = null;
+    pendingFactorId = null;
+    showApp();
+  } catch (err) {
+    errEl.textContent = 'קוד שגוי. נסה שוב.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'אישור';
+    document.getElementById('twofaCode').value = '';
+    document.getElementById('twofaCode').focus();
+  }
+}
+
+function cancel2FA() {
+  document.getElementById('twofaOverlay').classList.remove('active');
+  pendingSession = null;
+  pendingFactorId = null;
+  // Sign out the pending session
+  sb.auth.signOut();
+}
+
+// ============ 2FA Enrollment (Settings) ============
+async function open2FASettings() {
+  const { data: factors } = await sb.auth.mfa.listFactors();
+  const totpFactor = factors?.totp?.find(f => f.status === 'verified');
+  
+  const modalBody = document.getElementById('modalBody');
+  const modalTitle = document.getElementById('modalTitle');
+  
+  modalTitle.textContent = 'אימות דו-שלבי (2FA)';
+  
+  if (totpFactor) {
+    // Already enrolled — show disable option
+    modalBody.innerHTML = `
+      <div class="twofa-settings">
+        <h3>2FA פעיל ✅</h3>
+        <p>האימות הדו-שלבי מופעל בחשבונך. בכל כניסה תתבקש להזין קוד מאפליקציית האימות.</p>
+        <div class="twofa-toggle">
+          <span class="twofa-badge">מופעל</span>
+          <button class="twofa-toggle-btn disable" onclick="unenroll2FA('${totpFactor.id}')">כיבוי 2FA</button>
+        </div>
+      </div>
+    `;
+  } else {
+    // Not enrolled — show enable option
+    modalBody.innerHTML = `
+      <div class="twofa-settings">
+        <h3>2FA לא מופעל ⚠️</h3>
+        <p>הפעלת אימות דו-שלבי מוסיפה שכבת אבטחה לחשבונך. בכל כניסה תצטרך להזין קוד חד-פעמי מאפליקציית אימות (Google Authenticator, Authy וכו').</p>
+        <div class="twofa-toggle">
+          <span class="twofa-badge off">לא מופעל</span>
+          <button class="twofa-toggle-btn enable" onclick="enroll2FA()">הפעלת 2FA</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+async function enroll2FA() {
+  try {
+    const { data, error } = await sb.auth.mfa.enroll({ factorType: 'totp', issuer: 'AILON Task CRM', friendlyName: 'CRM' });
+    if (error) throw error;
+    
+    const modalBody = document.getElementById('modalBody');
+    modalBody.innerHTML = `
+      <div class="twofa-settings">
+        <h3>סרוק את הקוד</h3>
+        <p>1. פתח אפליקציית אימות (Google Authenticator / Authy)<br>2. סרוק את ה-QR<br>3. הזן את הקוד שמופיע</p>
+        <div style="text-align:center;margin:20px 0;">
+          <img src="${data.totp.qr_code}" style="width:200px;height:200px;border:2px solid #e2e8f0;border-radius:12px;" alt="QR Code">
+        </div>
+        <p style="font-size:12px;color:#64748b;text-align:center;margin-bottom:16px;">קוד ידני: <code style="background:#f1f5f9;padding:4px 8px;border-radius:6px;direction:ltr;">${data.totp.secret}</code></p>
+        <input type="text" class="twofa-input" id="enrollCode" placeholder="000000" maxlength="6" style="margin-bottom:12px;">
+        <button class="twofa-btn" onclick="verifyEnroll('${data.id}')">אישור והפעלה</button>
+        <button class="twofa-btn secondary" onclick="closeModal()">ביטול</button>
+      </div>
+    `;
+  } catch (err) {
+    alert('שגיאה בהפעלת 2FA: ' + err.message);
+  }
+}
+
+async function verifyEnroll(factorId) {
+  const code = document.getElementById('enrollCode').value.trim();
+  if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+    alert('נא להזין 6 ספרות');
+    return;
+  }
+  
+  try {
+    const { data: challenge, error: chErr } = await sb.auth.mfa.challenge({ factorId });
+    if (chErr) throw chErr;
+    
+    const { error: verifyErr } = await sb.auth.mfa.verify({
+      factorId,
+      challengeId: challenge.id,
+      code
+    });
+    
+    if (verifyErr) throw verifyErr;
+    
+    closeModal();
+    showToast('2FA הופעל בהצלחה! 🎉');
+    setTimeout(() => open2FASettings(), 500);
+  } catch (err) {
+    alert('קוד שגוי. נסה שוב.');
+  }
+}
+
+async function unenroll2FA(factorId) {
+  if (!confirm('האם אתה בטוח שברצונך לכבות את האימות הדו-שלבי?')) return;
+  
+  try {
+    const { error } = await sb.auth.mfa.unenroll({ factorId });
+    if (error) throw error;
+    
+    closeModal();
+    showToast('2FA כוּבה');
+    setTimeout(() => open2FASettings(), 500);
+  } catch (err) {
+    alert('שגיאה בכיבוי 2FA: ' + err.message);
+  }
 }
 
 async function doLogout() {
