@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-13-v1">
+  <meta name="version" content="2026-08-13-v2">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="./manifest.json">
@@ -68,7 +68,16 @@
         table { font-size: 0.8rem; }
         .modal { width: 95% !important; padding: 20px !important; }
     }
-/* === AILON Task — Accessibility & Design Upgrade === */
+
+  .skip-link { position: absolute; top: -40px; right: 0; background: #0d9488; color: #fff; padding: 8px 16px; border-radius: 0 0 8px 8px; font-size: 14px; z-index: 100; text-decoration: none; }
+  .skip-link:focus { top: 0; }
+  /* Ensure buttons are clickable */
+  .submit-btn { position: relative; z-index: 10; }
+  .tab { position: relative; z-index: 10; }
+  .forgot-link { position: relative; z-index: 10; }
+  .field input { position: relative; z-index: 10; }
+
+  /* === AILON Task — Accessibility & Design Upgrade === */
     </style>
 </head>
 <body>
