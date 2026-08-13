@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-01-v1">
+  <meta name="version" content="2026-08-13-v2">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>מצפן הקריירה</title>
@@ -352,28 +352,36 @@ var JOBS = [
   {id:208,i:"💼",t:"תקציבאי",d:"ניהול תקציב ופיתוח עסקי"}
 ];
 
-var DB = {};
+var API_URL = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/careerCompass';
 var ST = {
   screen: 'login',
   mode: 'user',
   user: null,
   friendOwner: null,
+  friendOwnerName: '',
   friendName: '',
   idx: 0,
   votes: {}
 };
 
-function loadDB() {
-  try { DB = JSON.parse(localStorage.getItem('mk_db') || '{}'); } catch(e){ DB={}; }
-}
-function saveDB() {
-  try { localStorage.setItem('mk_db', JSON.stringify(DB)); } catch(e){}
-}
 function loadST() {
   try { var s = localStorage.getItem('mk_st'); if(s) ST = Object.assign(ST, JSON.parse(s)); } catch(e){}
 }
 function saveST() {
   try { localStorage.setItem('mk_st', JSON.stringify(ST)); } catch(e){}
+}
+
+async function apiCall(body) {
+  try {
+    var r = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    return await r.json();
+  } catch(e) {
+    return { success: false, error: e.message };
+  }
 }
 
 function show(html) {
@@ -418,13 +426,15 @@ function drawLogin() {
   );
 }
 
-function doLogin() {
+async function doLogin() {
   var u = document.getElementById('u').value.trim();
   var p = document.getElementById('p').value.trim();
-  if (!DB[u] || DB[u].pw !== p) { document.getElementById('le').style.display='block'; return; }
-  ST.user = {un: u, name: DB[u].name, token: DB[u].token};
-  ST.votes = DB[u].votes || {};
-  ST.idx = DB[u].idx || 0;
+  document.getElementById('le').style.display='none';
+  var res = await apiCall({action:'login', username:u, password:p});
+  if (!res.success) { document.getElementById('le').style.display='block'; return; }
+  ST.user = {un: u, name: res.name, token: res.token};
+  ST.votes = res.votes || {};
+  ST.idx = res.idx || 0;
   ST.screen = ST.idx >= JOBS.length ? 'results' : 'swipe';
   saveST();
   draw();
@@ -450,16 +460,15 @@ function drawRegister() {
   );
 }
 
-function doRegister() {
+async function doRegister() {
   var n = document.getElementById('rn').value.trim();
   var u = document.getElementById('ru').value.trim();
   var p = document.getElementById('rp').value.trim();
+  document.getElementById('re').style.display='none';
   if (!n || !u || p.length < 4) { document.getElementById('re').style.display='block'; document.getElementById('re').textContent='נא למלא את כל השדות (סיסמה לפחות 4 תווים)'; return; }
-  if (DB[u]) { document.getElementById('re').style.display='block'; document.getElementById('re').textContent='שם המשתמש תפוס, בחר אחר'; return; }
-  var tok = Math.random().toString(36).substr(2,8).toUpperCase();
-  DB[u] = {name:n, pw:p, token:tok, votes:{}, idx:0, friends:{}, fnames:[]};
-  saveDB();
-  ST.user = {un:u, name:n, token:tok};
+  var res = await apiCall({action:'register', username:u, password:p, name:n});
+  if (!res.success) { document.getElementById('re').style.display='block'; document.getElementById('re').textContent = res.error === 'Username already exists' ? 'שם המשתמש תפוס, בחר אחר' : res.error; return; }
+  ST.user = {un:u, name:n, token:res.token};
   ST.votes = {};
   ST.idx = 0;
   ST.screen = 'swipe';
@@ -491,17 +500,16 @@ function drawSwipe() {
   );
 }
 
-function vote(v) {
+async function vote(v) {
   var job = JOBS[ST.idx];
   ST.votes[job.id] = v;
   ST.idx++;
-  if (ST.user && DB[ST.user.un]) {
-    DB[ST.user.un].votes = ST.votes;
-    DB[ST.user.un].idx = ST.idx;
-    saveDB();
+  if (ST.user) {
+    saveST();
+    apiCall({action:'save_votes', username:ST.user.un, votes:ST.votes});
   }
   saveST();
-  if (ST.idx >= JOBS.length) { go('share'); return; }
+  if (ST.idx >= JOBS.length) { go('strengths'); return; }
   drawSwipe();
 }
 
@@ -512,7 +520,7 @@ function prevJob() {
 /* ===== SHARE ===== */
 function drawShare() {
   var tok = ST.user ? ST.user.token : '';
-  var url = (window.location.protocol === 'file:' ? 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/77faff981_matzpen_kariera_final.html' : window.location.origin + window.location.pathname) + '?token=' + tok;
+  var url = window.location.origin + window.location.pathname + '?token=' + tok;
   var yes = Object.values(ST.votes).filter(function(v){return v==='yes';}).length;
   var maybe = Object.values(ST.votes).filter(function(v){return v==='maybe';}).length;
   show(
@@ -533,11 +541,18 @@ function drawShare() {
 }
 
 /* ===== RESULTS ===== */
-function drawResults() {
+async function drawResults() {
   var tab = window._rtab || 'mine';
   var myV = ST.votes;
   var fv = {};
-  if (ST.user && DB[ST.user.un]) fv = DB[ST.user.un].friends || {};
+  if (ST.user) {
+    var res = await apiCall({action:'get_results', username:ST.user.un});
+    if (res.success) {
+      fv = res.friends || {};
+      ST.votes = res.votes || ST.votes;
+      myV = ST.votes;
+    }
+  }
 
   var YES = JOBS.filter(function(j){return myV[j.id]==='yes';});
   var MAYBE = JOBS.filter(function(j){return myV[j.id]==='maybe';});
@@ -571,7 +586,7 @@ function drawResults() {
     (MAYBE.length ? MAYBE.slice(0,15).map(jrow).join('') : '<p style="opacity:0.5;font-size:13px">אין</p>') + '</div>';
 
   var tok = ST.user ? ST.user.token : '';
-  var url = (window.location.protocol === 'file:' ? 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/77faff981_matzpen_kariera_final.html' : window.location.origin + window.location.pathname) + '?token=' + tok;
+  var url = window.location.origin + window.location.pathname + '?token=' + tok;
 
   var anaHtml = fnames.length===0 ?
     '<div class="card"><div class="alert a-blue">עדיין אין תגובות מחברים. שלח את הקישור!</div>' +
@@ -638,8 +653,14 @@ function drawAdmin() {
 }
 
 /* ===== FRIEND MODE ===== */
-function drawFriendIntro() {
-  var owner = ST.friendOwner ? DB[ST.friendOwner] : null;
+async function drawFriendIntro() {
+  var owner = null;
+  if (ST.friendOwnerName) {
+    owner = {name: ST.friendOwnerName};
+  } else if (ST.friendToken) {
+    var res = await apiCall({action:'get_profile', token:ST.friendToken});
+    if (res.success) { owner = {name: res.name}; ST.friendOwnerName = res.name; saveST(); }
+  }
   var oname = owner ? owner.name : '?';
   show(
     '<div class="card" style="text-align:center">' +
@@ -700,11 +721,10 @@ function voteF(v) {
 
 function prevFJob() { if (ST.idx>0){ST.idx--;saveST();drawFriendSwipe();} }
 
-function saveFriendVotes() {
-  if (!ST.friendOwner || !DB[ST.friendOwner]) return;
-  if (!DB[ST.friendOwner].friends) DB[ST.friendOwner].friends = {};
-  DB[ST.friendOwner].friends[ST.friendName] = ST.votes;
-  saveDB();
+async function saveFriendVotes() {
+  if (ST.friendToken) {
+    await apiCall({action:'submit_friend', token:ST.friendToken, friendName:ST.friendName, friendVotes:ST.votes});
+  }
 }
 
 function drawFriendDone() {
@@ -720,24 +740,17 @@ function drawFriendDone() {
 }
 
 /* ===== INIT ===== */
-loadDB();
 loadST();
 
 var urlTok = new URLSearchParams(window.location.search).get('token');
 if (urlTok) {
-  var ownerKey = null;
-  Object.keys(DB).forEach(function(k){ if(DB[k].token===urlTok) ownerKey=k; });
-  if (ownerKey) {
-    ST.mode = 'friend';
-    ST.friendOwner = ownerKey;
-    ST.votes = {};
-    ST.idx = 0;
-    ST.screen = 'f_intro';
-    saveST();
-    draw();
-  } else {
-    show('<div class="card" style="text-align:center"><div style="font-size:40px">😕</div><div class="stitle">קישור לא תקין</div></div>');
-  }
+  ST.mode = 'friend';
+  ST.friendToken = urlTok;
+  ST.votes = {};
+  ST.idx = 0;
+  ST.screen = 'f_intro';
+  saveST();
+  draw();
 } else {
   if (ST.mode === 'user' && ST.user) {
     draw();
@@ -936,6 +949,23 @@ function ailonSubmitFeedback(){
   document.getElementById('ailonRating').querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
 }
 </script>
-<style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
+<style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}
+    @media (max-width: 768px) {
+        .card { padding: 16px !important; }
+        h1 { font-size: 22px !important; }
+        .job-title { font-size: 18px !important; }
+        .wrap { padding: 12px; }
+    }
+    @media (max-width: 480px) {
+        body { font-size: 14px; }
+        .card { padding: 14px !important; }
+        .wrap { padding: 8px; }
+        .job-icon { font-size: 36px; }
+        .job-title { font-size: 16px !important; }
+        .btn { padding: 11px !important; font-size: 14px !important; }
+        .vbtn { padding: 11px 6px !important; font-size: 13px !important; }
+        input { font-size: 16px !important; }
+    }
+    </style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
 </body>
 </html>
