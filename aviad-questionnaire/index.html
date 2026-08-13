@@ -242,10 +242,12 @@ textarea { min-height: 80px; resize: vertical; }
   .section { padding: 16px; }
   .priority-grid { grid-template-columns: 1fr 1fr; }
 }
+/* === AILON Task — Accessibility & Design Upgrade === */
 input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style>
 </head>
 <body>
-<div class="container">
+  <a href="#main-content" class="skip-link">דלג לתוכן</a>
+<div class="container" id="main-content">
   <div class="header">
     <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" alt="AILON Task" onerror="this.style.display='none'">
     <h1>שאלון אפיון אפליקציית ניהול נדל"ן</h1>
@@ -993,5 +995,6 @@ updateProgress();
         table { font-size: 0.8rem; }
         .modal { width: 95% !important; padding: 20px !important; }
     }
+/* === AILON Task — Accessibility & Design Upgrade === */
     </style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
 </html>

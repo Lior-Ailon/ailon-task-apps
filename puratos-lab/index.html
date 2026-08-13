@@ -88,11 +88,71 @@
   .conclusions-box textarea:focus { outline: none; border-color: var(--puratos-gold); box-shadow: 0 0 0 3px rgba(201,162,39,0.15); }
   .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 15px; }
   @media print { body { background: white; padding: 0; } .tabs, .actions-bar, .trial-delete, .saved-item-actions, .btn { display: none !important; } .card { box-shadow: none; border: 1px solid #ccc; } .results-table input { border: 1px solid #ddd; background: white; } .field input, .field select, .field textarea { border: 1px solid #ccc !important; background: white !important; } }
+/* === AILON Task — Accessibility & Design Upgrade === */
+/* === AILON Task — Accessibility & Design Upgrade === */
+
+/* Skip to content link */
+.skip-link{position:absolute;top:-40px;right:0;background:#0d9488;color:#fff;padding:8px 16px;border-radius:0 0 0 8px;z-index:9999;font-weight:700;font-size:14px;text-decoration:none;transition:top .2s}
+.skip-link:focus{top:0;outline:2px solid #14b8a6}
+
+/* Screen reader only text */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Focus visible — all interactive elements */
+*:focus-visible{outline:3px solid #14b8a6 !important;outline-offset:2px !important;border-radius:4px}
+
+/* Button base — consistent across all apps */
+button,.btn,.submit-btn,.btn-primary,.btn-secondary{
+  cursor:pointer !important;
+  transition:all .2s ease !important;
+  min-height:44px;
+  font-family:inherit;
+  font-weight:700;
+}
+button:hover,.btn:hover,.submit-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(13,148,136,0.3) !important;
+}
+button:active,.btn:active,.submit-btn:active{
+  transform:translateY(0);
+}
+button:disabled,.btn:disabled{
+  cursor:not-allowed !important;
+  opacity:0.5;
+  transform:none !important;
+}
+
+/* Link focus */
+a:focus-visible{outline:3px solid #14b8a6 !important;outline-offset:2px !important;border-radius:4px}
+
+/* Input focus — teal accent */
+input:focus,select:focus,textarea:focus{
+  outline:none !important;
+  border-color:#0d9488 !important;
+  box-shadow:0 0 0 3px rgba(13,148,136,0.15) !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast:high){
+  *{border-color:#000 !important}
+  button,.btn{border:2px solid #000 !important}
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+
+/* Touch target — minimum 44px on mobile */
+@media (max-width:768px){
+  button,.btn,.submit-btn{min-height:48px;min-width:48px;font-size:16px}
+}
 </style>
 <script>window.addEventListener("error",function(e){console.error("Error:",e.message);if(document.body)document.body.insertAdjacentHTML("beforeend","<div style='position:fixed;bottom:20px;left:20px;background:#ef4444;color:white;padding:12px 20px;border-radius:8px;z-index:9999;font-family:Heebo,sans-serif'>שגיאה: "+e.message+"</div>");});</script>
 </head>
 <body>
-<div class="container">
+  <a href="#main-content" class="skip-link">דלג לתוכן</a>
+<div class="container" id="main-content">
   <div class="header">
     <div class="header-brand">
       <div class="header-logo">P</div>
@@ -288,5 +348,6 @@ function clearForm(){
 function printReport(){window.print();}
 init();
 </script>
+/* === AILON Task — Accessibility & Design Upgrade === */
 <div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
 </html>

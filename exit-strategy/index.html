@@ -187,9 +187,69 @@ body::before {
   50% { box-shadow: 0 0 0 10px rgba(20,184,166,0); }
 }
 
+/* === AILON Task — Accessibility & Design Upgrade === */
+/* === AILON Task — Accessibility & Design Upgrade === */
+
+/* Skip to content link */
+.skip-link{position:absolute;top:-40px;right:0;background:#0d9488;color:#fff;padding:8px 16px;border-radius:0 0 0 8px;z-index:9999;font-weight:700;font-size:14px;text-decoration:none;transition:top .2s}
+.skip-link:focus{top:0;outline:2px solid #14b8a6}
+
+/* Screen reader only text */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Focus visible — all interactive elements */
+*:focus-visible{outline:3px solid #14b8a6 !important;outline-offset:2px !important;border-radius:4px}
+
+/* Button base — consistent across all apps */
+button,.btn,.submit-btn,.btn-primary,.btn-secondary{
+  cursor:pointer !important;
+  transition:all .2s ease !important;
+  min-height:44px;
+  font-family:inherit;
+  font-weight:700;
+}
+button:hover,.btn:hover,.submit-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(13,148,136,0.3) !important;
+}
+button:active,.btn:active,.submit-btn:active{
+  transform:translateY(0);
+}
+button:disabled,.btn:disabled{
+  cursor:not-allowed !important;
+  opacity:0.5;
+  transform:none !important;
+}
+
+/* Link focus */
+a:focus-visible{outline:3px solid #14b8a6 !important;outline-offset:2px !important;border-radius:4px}
+
+/* Input focus — teal accent */
+input:focus,select:focus,textarea:focus{
+  outline:none !important;
+  border-color:#0d9488 !important;
+  box-shadow:0 0 0 3px rgba(13,148,136,0.15) !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast:high){
+  *{border-color:#000 !important}
+  button,.btn{border:2px solid #000 !important}
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+
+/* Touch target — minimum 44px on mobile */
+@media (max-width:768px){
+  button,.btn,.submit-btn{min-height:48px;min-width:48px;font-size:16px}
+}
 </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">דלג לתוכן</a>
 <div class="decision-insight" id="decision-insight-el">טוען...</div>
 
 <div class="eisenhower-mini" title="מטריצת אייזנהאואר — כלי לעדיפות">
@@ -200,7 +260,7 @@ body::before {
 </div>
 
 
-<div class="container">
+<div class="container" id="main-content">
   <div class="hero-banner">
     <div class="hero-overlay">
       <div class="hero-icon">♟️</div>
@@ -846,6 +906,7 @@ document.addEventListener('DOMContentLoaded', renderHistory);
 </script>
 <!-- Back to MentorLON --><div style="position:fixed;bottom:16px;left:16px;z-index:9999;"><a href="../mentorlon/dashboard.html" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;font-family:Segoe UI,Arial,sans-serif;box-shadow:0 4px 16px rgba(13,148,136,0.35);">← Mentor-IT</a></div>
 <!-- AILON Task Feedback Widget -->
+/* === AILON Task — Accessibility & Design Upgrade === */
 <!-- Include this before <style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
 </body> on any app page -->
 <style>
@@ -868,6 +929,7 @@ document.addEventListener('DOMContentLoaded', renderHistory);
 .ailon-feedback-modal .close:hover{opacity:1}
 .ailon-feedback-toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d9488;color:#fff;padding:10px 20px;border-radius:10px;font-family:Heebo,sans-serif;font-size:14px;font-weight:600;z-index:99999;opacity:0;transition:opacity .3s}
 .ailon-feedback-toast.show{opacity:1}
+/* === AILON Task — Accessibility & Design Upgrade === */
 </style>
 <div class="ailon-fab" id="ailonFab" onclick="document.getElementById('ailonFeedbackModal').classList.toggle('active')">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -895,6 +957,7 @@ function ailonSetRating(v){
 }
 function ailonSubmitFeedback(){
   var text=document.getElementById('ailonFeedbackText').value;
+/* === AILON Task — Accessibility & Design Upgrade === */
   if(ailonRatingValue===0<style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
 </body></body>!text){alert('בחר דירוג או כתוב משוב');return}
   var appName=document.title.split('·')[0].trim()||'Unknown';
@@ -938,6 +1001,7 @@ function ailonSubmitFeedback(){
         table { font-size: 0.8rem; }
         .modal { width: 95% !important; padding: 20px !important; }
     }
+/* === AILON Task — Accessibility & Design Upgrade === */
     </style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
 </body>
 </html>

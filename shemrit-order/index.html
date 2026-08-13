@@ -70,10 +70,12 @@
     .send-toggle { display: flex; gap: 8px; margin-top: 8px; }
     .toggle-btn { flex: 1; padding: 10px; border: 2px solid #e2e8f0; border-radius: 10px; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; font-family: inherit; color: #64748b; }
     .toggle-btn.active { border-color: #1e40af; background: #eff6ff; color: #1e40af; }
+/* === AILON Task — Accessibility & Design Upgrade === */
   </style>
 </head>
 <body>
-<div class="container">
+  <a href="#main-content" class="skip-link">דלג לתוכן</a>
+<div class="container" id="main-content">
   <div class="header">
     <div class="logo">🍽️</div>
     <h1>שמרית — הזמנת אוכל</h1>
@@ -313,5 +315,6 @@ renderMenu();
 updateSummary();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+/* === AILON Task — Accessibility & Design Upgrade === */
 <div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
 </html>
