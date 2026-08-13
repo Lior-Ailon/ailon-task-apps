@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-03-v1">
+  <meta name="version" content="2026-08-13-v1">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="./manifest.json">
@@ -448,5 +448,22 @@ function updateGreeting(displayName, trainees) {
 
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+<script>
+(function(){
+  var images = [
+    'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/2f6a2e360_generated_image.png',
+    'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/7ce156b31_generated_image.png',
+    'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/3f29eaa81_generated_image.png',
+    'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/9fa5008b4_generated_image.png'
+  ];
+  var idx = 0;
+  var hero = document.getElementById('heroMentor');
+  if(hero) hero.style.backgroundImage = "url('"+images[0]+"')";
+  setInterval(function(){
+    idx = (idx + 1) % images.length;
+    if(hero) hero.style.backgroundImage = "url('"+images[idx]+"')";
+  }, 6000);
+})();
+</script>
 </body>
 </html>

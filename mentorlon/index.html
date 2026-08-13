@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-08-01-v1">
+  <meta name="version" content="2026-08-13-v1">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="./manifest.json">
@@ -39,8 +39,10 @@
 
   .footer-note { text-align:center; font-size:12px; color:#64748b; margin-top:20px; }
 
-  .bg-video-wrap { position:fixed; inset:0; width:100%; height:100%; overflow:hidden; z-index:0; opacity:0.10; pointer-events:none; }
-  .bg-video-wrap video { width:100%; height:100%; object-fit:cover; }
+  .bg-rotator { position:fixed; inset:0; width:100%; height:100%; overflow:hidden; z-index:0; pointer-events:none; }
+  .bg-slide { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity 2s ease-in-out; }
+  .bg-slide.active { opacity:0.15; }
+  @media (max-width:768px) { .bg-slide.active { opacity:0.12; } }
   .container { position:relative; z-index:1; }
 
 
@@ -69,10 +71,11 @@
     </style>
 </head>
 <body>
-<div class="bg-video-wrap">
-  <video autoplay muted loop playsinline>
-    <source src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/61b5c4d12_ailon_intro_full_muted.mp4" type="video/mp4">
-  </video>
+<div class="bg-rotator" id="bgRotator">
+  <div class="bg-slide active" style="background-image:url('https://media.base44.com/images/public/69f63b4536d7a2c6688403df/2f6a2e360_generated_image.png');"></div>
+  <div class="bg-slide" style="background-image:url('https://media.base44.com/images/public/69f63b4536d7a2c6688403df/7ce156b31_generated_image.png');"></div>
+  <div class="bg-slide" style="background-image:url('https://media.base44.com/images/public/69f63b4536d7a2c6688403df/3f29eaa81_generated_image.png');"></div>
+  <div class="bg-slide" style="background-image:url('https://media.base44.com/images/public/69f63b4536d7a2c6688403df/9fa5008b4_generated_image.png');"></div>
 </div>
 <div class="container">
   <div class="header">
@@ -209,5 +212,16 @@ function checkPwdStrength(v) {
 
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script>
+<script>
+  (function(){
+    var slides = document.querySelectorAll('.bg-slide');
+    var idx = 0;
+    setInterval(function(){
+      slides[idx].classList.remove('active');
+      idx = (idx + 1) % slides.length;
+      slides[idx].classList.add('active');
+    }, 5000);
+  })();
+</script>
 </body>
 </html>
