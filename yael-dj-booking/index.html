@@ -992,19 +992,13 @@
                     detailsHtml += '<div class="summary-row"><span class="summary-label">שעה:</span><span class="summary-value">' + selectedTime + '</span></div>';
                     document.getElementById('bookingDetails').innerHTML = detailsHtml;
 
-                    let waMsg = 'היי יהל, הזמנה חדשה:
-';
-                    waMsg += 'שם: ' + name + '
-';
-                    waMsg += 'טלפון: ' + phone + '
-';
-                    waMsg += 'סוג אירוע: ' + selectedEventType + '
-';
-                    waMsg += 'תאריך: ' + formatDateHebrew(selectedDate) + '
-';
+                    let waMsg = 'היי יהל, הזמנה חדשה:\n';
+                    waMsg += 'שם: ' + name + '\n';
+                    waMsg += 'טלפון: ' + phone + '\n';
+                    waMsg += 'סוג אירוע: ' + selectedEventType + '\n';
+                    waMsg += 'תאריך: ' + formatDateHebrew(selectedDate) + '\n';
                     waMsg += 'שעה: ' + selectedTime;
-                    if (notes) waMsg += '
-הערות: ' + notes;
+                    if (notes) waMsg += '\nהערות: ' + notes;
                     const waLink = 'https://wa.me/' + YAEL_PHONE + '?text=' + encodeURIComponent(waMsg);
                     document.getElementById('whatsappBtn').href = waLink;
                 } else {

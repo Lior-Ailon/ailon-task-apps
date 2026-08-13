@@ -658,6 +658,7 @@ function saveReport(){
     msg.classList.add('show');
     setTimeout(function(){msg.classList.remove('show');},2500);
   }
+  } catch(e) { console.error('Save error:', e); alert('שגיאה בשמירה: '+e.message); }
 }
 
 function exportExcel(){

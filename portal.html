@@ -369,7 +369,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
     }
   }, 3000);
 });
-
+</script>
 <div class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</div><script>function toggleDark(){var b=document.body;b.classList.toggle("dark-active");var t=document.getElementById("darkToggle");if(b.classList.contains("dark-active")){t.textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}else{t.textContent="🌙";document.documentElement.style.setProperty("color-scheme","light")}try{localStorage.setItem("ailon_dark",b.classList.contains("dark-active")?"1":"0")}catch(e){}}try{if(localStorage.getItem("ailon_dark")==="1"){document.body.classList.add("dark-active");document.getElementById("darkToggle").textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}}catch(e){}</script><!-- AILON Task Feedback Widget -->
 <!-- Include this before </body> on any app page -->
 <style>

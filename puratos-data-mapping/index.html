@@ -904,14 +904,10 @@ async function loadSubmissions(){
 
 function exportToExcel(){
   const subs=window.allSubmissions||[];if(!subs.length){showToast('⚠️ אין נתונים');return;}
-  let csv='﻿';csv+='מחלקה,מנהל,תאריך,סוג דאטא,אחסון,רגישות,יעד,משאבים,הערות
-';
+  let csv='\ufeff';csv+='מחלקה,מנהל,תאריך,סוג דאטא,אחסון,רגישות,יעד,משאבים,הערות\n';
   subs.forEach(s=>{(s.data_gaps||[]).forEach(g=>{if(g._guided)return;csv+=`"${s.department}","${s.submitted_by}","${new Date(s.submission_date||s.date).toLocaleDateString('he-IL')}","${g.type||''}","${g.storage||''}","${g.sensitivity||''}","${g.platform||''}","${g.resources||''}","${g.notes||''}"
 `;});});
-  csv+='
-
-מחלקה,מנהל,פרויקט,בעיה,פתרון,עלות,עדיפות
-';
+  csv+='\nמחלקה,מנהל,פרויקט,בעיה,פתרון,עלות,עדיפות\n';
   subs.forEach(s=>{(s.platform_requests||[]).forEach(p=>{csv+=`"${s.department}","${s.submitted_by}","${p.name||''}","${p.problem||''}","${p.solution||''}","${p.cost||''}","${p.priority||''}"
 `;});});
   const b=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`puratos_mapping_${new Date().toISOString().slice(0,10)}.csv`;a.click();showToast('📊 אקסל הורד');
