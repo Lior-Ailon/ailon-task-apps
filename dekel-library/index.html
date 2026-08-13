@@ -301,6 +301,14 @@ tr:hover td{background:rgba(47,107,87,.05)}
 </div>
 
 <script>
+window.addEventListener('error', function(e){
+  const m = document.getElementById('main');
+  if(m) m.innerHTML = '<div style="padding:30px;color:red;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace">JS ERROR: '+e.message+'\nFile: '+e.filename+':'+e.lineno+':'+e.colno+'\nStack: '+(e.error&&e.error.stack||'')+'</div>';
+});
+window.addEventListener('unhandledrejection', function(e){
+  const m = document.getElementById('main');
+  if(m) m.innerHTML = '<div style="padding:30px;color:red;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace">UNHANDLED REJECTION: '+(e.reason&&e.reason.stack||e.reason)+'</div>';
+});
 /* =========================================================
    קונפיגורציה
    ========================================================= */
