@@ -264,7 +264,7 @@ var JOBS = [
   {id:60,i:"🤝",t:"יועץ ארגוני",d:"שיפור תהליכים ופיתוח ארגוני"},
   {id:61,i:"👥",t:"יועץ השמה וכוח אדם",d:"גיוס עובדים, התאמת מועמדים"},
   {id:62,i:"📊",t:"יועץ כלכלי",d:"ניתוח כלכלי ועסקי"},
-  {id:63,i:"🏠",t:"יועץ משכנתאות",d:"ייעוץ מימון נדל"ן"},
+  {id:63,i:"🏠",t:"יועץ משכנתאות",d:"ייעוץ מימון נדל״ן"},
   {id:64,i:"💰",t:"יועץ פיננסי",d:"ניהול השקעות ותכנון פיננסי"},
   {id:65,i:"📢",t:"יועץ פרסום",d:"אסטרטגיה שיווקית ופרסומית"},
   {id:66,i:"📈",t:"יועץ שיווקי",d:"אסטרטגיית שיווק ומיתוג"},
@@ -921,7 +921,7 @@ function drawStrengths() {
     '</div>' +
 
     '<button class="btn btn-gold" onclick="saveStrengthsAndContinue()">הצג תוצאות ←</button>' +
-    '<button class="btn btn-clear" onclick="go('share')" style="margin-top:6px">דלג על שאלות</button>'
+    '<button class="btn btn-clear" onclick="go(\'share\')" style="margin-top:6px">דלג על שאלות</button>'
   );
 }
 
@@ -991,8 +991,7 @@ function ailonSetRating(v){
 function ailonSubmitFeedback(){
   var text=document.getElementById('ailonFeedbackText').value;
 /* === AILON Task — Accessibility & Design Upgrade === */
-  if(ailonRatingValue===0<style>.ailon-mentor-btn{position:fixed;bottom:16px;right:16px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 18px;border-radius:14px;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:13px;z-index:9997;box-shadow:0 4px 16px rgba(13,148,136,0.35);display:flex;align-items:center;gap:6px;transition:all .2s}.ailon-mentor-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,0.45)}</style><a href="../mentorlon/index.html" class="ailon-mentor-btn">🧭 Mentor-IT</a>
-</body></body>!text){alert('בחר דירוג או כתוב משוב');return}
+  if(ailonRatingValue===0 && !text){alert('בחר דירוג או כתוב משוב');return}
   var appName=document.title.split('·')[0].trim()||'Unknown';
   try{
     // Store feedback locally (can be sent to backend later)

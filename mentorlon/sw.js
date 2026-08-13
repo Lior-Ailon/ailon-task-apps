@@ -1,5 +1,5 @@
 // Mentor-IT Service Worker
-const CACHE_NAME = 'mentor-it-v1';
+const CACHE_NAME = 'mentor-it-v2';
 const ASSETS = [
   './index.html',
   './dashboard.html',

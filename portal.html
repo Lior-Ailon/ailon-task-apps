@@ -419,7 +419,7 @@ function ailonSetRating(v){
 }
 function ailonSubmitFeedback(){
   var text=document.getElementById('ailonFeedbackText').value;
-  if(ailonRatingValue===0</body></body>!text){alert('בחר דירוג או כתוב משוב');return}
+  if(ailonRatingValue===0 && !text){alert('בחר דירוג או כתוב משוב');return}
   var appName=document.title.split('·')[0].trim()||'Unknown';
   try{
     // Store feedback locally (can be sent to backend later)
