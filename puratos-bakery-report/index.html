@@ -6,470 +6,84 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="1.0">
+<meta name="version" content="2.0">
 <title>Puratos · דוח ניסויים — תחום הלחמים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-            --teal: #0d9488;
-            --teal-light: #14b8a6;
-            --navy: #1e3a5f;
-            --navy-dark: #0f2942;
-  --puratos-red: #0d9488;
-  --puratos-dark: #8B0620;
-  --puratos-light: #fdf2f4;
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --green: #16a34a;
-  --radius-card: 12px;
-  --radius-btn: 10px;
-  --radius-input: 8px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --puratos-red: #CC092F; --puratos-dark: #8B0620; --puratos-light: #fdf2f4;
+  --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b;
+  --gray-600: #475569; --gray-700: #334155; --gray-800: #1e293b;
+  --green: #16a34a; --radius-card: 12px; --radius-btn: 10px; --radius-input: 8px;
   --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 8px 24px rgba(204, 9, 47, 0.18);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Heebo', sans-serif;
-  background: var(--gray-100);
-  color: var(--gray-800);
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1.5;
-  padding-bottom: 40px;
-}
-
-/* Sticky Header */
-.header {
-  background: #ffffff;
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid var(--gray-200);
-}
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.header-left svg {
-  height: 42px;
-  width: auto;
-}
-.header-right {
-  text-align: left;
-}
-.header-right h1 {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--gray-800);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.header-right p {
-  font-size: 12px;
-  color: var(--gray-500);
-}
-.header-tag {
-  background: var(--puratos-red);
-  color: #ffffff;
-  font-size: 11px;
-  padding: 2px 10px;
-  border-radius: 20px;
-  font-weight: 700;
-}
-
-/* Container & Cards */
-.container {
-  max-width: 900px;
-  margin: 20px auto 0 auto;
-  padding: 0 16px;
-}
-
-.card {
-  background: #ffffff;
-  border-radius: var(--radius-card);
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--gray-200);
-}
-.card-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--puratos-red);
-  margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--puratos-light);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Form Layouts */
-.form-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-.form-field {
-  flex: 1;
-  min-width: 180px;
-}
-.form-field.full {
-  flex: 100%;
-}
-
-label {
-  display: block;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--gray-700);
-  margin-bottom: 6px;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid var(--gray-300);
-  border-radius: var(--radius-input);
-  font-size: 14.5px;
-  font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: #ffffff;
-  color: var(--gray-800);
-}
-
-input:focus, textarea:focus, select:focus {
-  border-color: var(--puratos-red);
-  outline: none;
-  box-shadow: 0 0 0 3.5px rgba(204, 9, 47, 0.12);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 70px;
-}
-
-/* Section Dividers */
-.section-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 22px 0 14px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--gray-700);
-}
-.section-divider .line {
-  flex: 1;
-  height: 1px;
-  background: var(--gray-200);
-}
-
-/* Tabs */
-.exp-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  -webkit-overflow-scrolling: touch;
-}
-.exp-tab {
-  padding: 10px 20px;
-  border-radius: var(--radius-btn);
-  font-size: 14px;
-  font-weight: 600;
-  background: var(--gray-100);
-  color: var(--gray-600);
-  white-space: nowrap;
-  cursor: pointer;
-  border: 1.5px solid var(--gray-200);
-  transition: all 0.2s ease;
-  user-select: none;
-}
-.exp-tab:hover {
-  color: var(--puratos-red);
-  border-color: rgba(204, 9, 47, 0.3);
-  background: var(--puratos-light);
-}
-.exp-tab.active {
-  background: var(--puratos-red);
-  border-color: var(--puratos-red);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(204, 9, 47, 0.25);
-}
-
-/* Ingredients */
-.ing-headers {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 12.5px;
-  color: var(--gray-500);
-  font-weight: 700;
-  padding: 0 4px;
-}
-.ing-headers .ing-name { flex: 2.5; }
-.ing-headers .ing-gram { flex: 1; }
-.ing-headers .ing-pct { flex: 1; }
-.ing-headers .spacer { width: 36px; flex-shrink: 0; }
-
-.ingredient-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.ingredient-row .ing-name { flex: 2.5; }
-.ingredient-row .ing-gram { flex: 1; }
-.ingredient-row .ing-pct { flex: 1; }
-.ingredient-row .remove-btn {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  width: 36px;
-  height: 38px;
-  color: #dc2626;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-.ingredient-row .remove-btn:hover {
-  background: #fee2e2;
-  border-color: #fca5a5;
-}
-
-.add-btn {
-  background: var(--gray-50);
-  border: 1.5px dashed var(--gray-300);
-  border-radius: var(--radius-btn);
-  padding: 10px 20px;
-  color: var(--gray-600);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-  margin-top: 8px;
-  font-family: inherit;
-}
-.add-btn:hover {
-  border-color: var(--puratos-red);
-  color: var(--puratos-red);
-  background: var(--puratos-light);
-}
-
-/* Buttons */
-.btn {
-  padding: 12px 26px;
-  border-radius: var(--radius-btn);
-  font-size: 15px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
-}
-.btn-primary {
-  background: var(--puratos-red);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(204, 9, 47, 0.25);
-}
-.btn-primary:hover {
-  background: var(--puratos-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(204, 9, 47, 0.35);
-}
-.btn-secondary {
-  background: #ffffff;
-  color: var(--gray-700);
-  border: 1.5px solid var(--gray-300);
-}
-.btn-secondary:hover {
-  background: var(--gray-100);
-  border-color: var(--gray-400);
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  padding: 16px 0;
-  flex-wrap: wrap;
-}
-
-.process-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-.process-grid .full {
-  grid-column: 1 / -1;
-}
-
-/* Success Msg / Toast */
-.success-msg {
-  position: fixed;
-  top: 84px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--green);
-  color: #ffffff;
-  padding: 14px 28px;
-  border-radius: var(--radius-btn);
-  font-size: 15px;
-  font-weight: 700;
-  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
-  z-index: 200;
-  display: none;
-}
-.success-msg.show {
-  display: block;
-  animation: slideIn 0.3s ease;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(-15px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-.footer-note {
-  font-size: 12.5px;
-  color: var(--gray-400);
-  text-align: center;
-  padding: 20px 16px;
-}
-
-.tag {
-  display: inline-block;
-  background: var(--puratos-light);
-  color: var(--puratos-red);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-
-.info-label {
-  font-size: 13.5px;
-  color: var(--gray-500);
-  margin-bottom: 14px;
-}
-
-/* Accessibility Focus */
-input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
-  outline: 3px solid var(--puratos-red);
-  outline-offset: 2px;
-}
-
-@media (max-width: 640px) {
-  .header { padding: 12px 16px; }
-  .header-right p { display: none; }
-  .process-grid { grid-template-columns: 1fr; }
-  .form-row { flex-direction: column; gap: 12px; }
-  .actions { flex-direction: column; }
-  .btn { width: 100%; }
-}
-/* === AILON Task — Accessibility & Design Upgrade === */
-/* === AILON Task — Accessibility & Design Upgrade === */
-
-/* Skip to content link */
-.skip-link{position:absolute;top:-40px;right:0;background:#0d9488;color:#fff;padding:8px 16px;border-radius:0 0 0 8px;z-index:9999;font-weight:700;font-size:14px;text-decoration:none;transition:top .2s}
-.skip-link:focus{top:0;outline:2px solid #14b8a6}
-
-/* Screen reader only text */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-/* Focus visible — all interactive elements */
-*:focus-visible{outline:3px solid #14b8a6 !important;outline-offset:2px !important;border-radius:4px}
-
-/* Button base — consistent across all apps */
-button,.btn,.submit-btn,.btn-primary,.btn-secondary{
-  cursor:pointer !important;
-  transition:all .2s ease !important;
-  min-height:44px;
-  font-family:inherit;
-  font-weight:700;
-}
-button:hover,.btn:hover,.submit-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(13,148,136,0.3) !important;
-}
-button:active,.btn:active,.submit-btn:active{
-  transform:translateY(0);
-}
-button:disabled,.btn:disabled{
-  cursor:not-allowed !important;
-  opacity:0.5;
-  transform:none !important;
-}
-
-/* Link focus */
-a:focus-visible{outline:3px solid #14b8a6 !important;outline-offset:2px !important;border-radius:4px}
-
-/* Input focus — teal accent */
-input:focus,select:focus,textarea:focus{
-  outline:none !important;
-  border-color:#0d9488 !important;
-  box-shadow:0 0 0 3px rgba(13,148,136,0.15) !important;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast:high){
-  *{border-color:#000 !important}
-  button,.btn{border:2px solid #000 !important}
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
-}
-
-/* Touch target — minimum 44px on mobile */
-@media (max-width:768px){
-  button,.btn,.submit-btn{min-height:48px;min-width:48px;font-size:16px}
-}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Heebo',sans-serif; background:var(--gray-100); color:var(--gray-800); line-height:1.5; padding-bottom:40px; -webkit-tap-highlight-color:transparent; }
+.header { background:#fff; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 10px rgba(0,0,0,0.05); position:sticky; top:0; z-index:100; border-bottom:1px solid var(--gray-200); }
+.header-left { display:flex; align-items:center; gap:12px; }
+.header-left svg { height:42px; width:auto; }
+.header-right { text-align:left; }
+.header-right h1 { font-size:17px; font-weight:700; color:var(--gray-800); display:flex; align-items:center; gap:8px; }
+.header-right p { font-size:12px; color:var(--gray-500); }
+.header-tag { background:var(--puratos-red); color:#fff; font-size:11px; padding:2px 10px; border-radius:20px; font-weight:700; }
+.container { max-width:900px; margin:20px auto 0; padding:0 16px; }
+.card { background:#fff; border-radius:var(--radius-card); padding:24px; margin-bottom:20px; box-shadow:var(--shadow-md); border:1px solid var(--gray-200); }
+.card-title { font-size:18px; font-weight:700; color:var(--puratos-red); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--puratos-light); display:flex; align-items:center; gap:8px; }
+.form-row { display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
+.form-field { flex:1; min-width:180px; }
+.form-field.full { flex:100%; }
+label { display:block; font-size:13.5px; font-weight:600; color:var(--gray-700); margin-bottom:6px; }
+input, textarea, select { width:100%; padding:10px 14px; border:1.5px solid var(--gray-300); border-radius:var(--radius-input); font-size:14.5px; font-family:inherit; transition:border-color 0.2s,box-shadow 0.2s; background:#fff; color:var(--gray-800); }
+input:focus, textarea:focus, select:focus { border-color:var(--puratos-red); outline:none; box-shadow:0 0 0 3.5px rgba(204,9,47,0.12); }
+textarea { resize:vertical; min-height:70px; }
+input.locked { background:var(--gray-100); color:var(--gray-600); border-color:var(--gray-200); cursor:not-allowed; }
+input.locked:focus { border-color:var(--gray-200); box-shadow:none; }
+.lock-badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--gray-500); background:var(--gray-100); padding:2px 8px; border-radius:6px; border:1px solid var(--gray-200); }
+.section-divider { display:flex; align-items:center; gap:12px; margin:22px 0 14px; font-size:15px; font-weight:700; color:var(--gray-700); }
+.section-divider .line { flex:1; height:1px; background:var(--gray-200); }
+.exp-tabs { display:flex; gap:6px; margin-bottom:16px; overflow-x:auto; padding-bottom:6px; }
+.exp-tab { padding:10px 20px; border-radius:var(--radius-btn); font-size:14px; font-weight:600; background:var(--gray-100); color:var(--gray-600); white-space:nowrap; cursor:pointer; border:1.5px solid var(--gray-200); transition:all 0.2s; user-select:none; }
+.exp-tab:hover { color:var(--puratos-red); border-color:rgba(204,9,47,0.3); background:var(--puratos-light); }
+.exp-tab.active { background:var(--puratos-red); border-color:var(--puratos-red); color:#fff; box-shadow:0 2px 8px rgba(204,9,47,0.25); }
+.ing-headers { display:flex; gap:10px; margin-bottom:10px; font-size:12.5px; color:var(--gray-500); font-weight:700; padding:0 4px; }
+.ing-headers .ing-name { flex:2.5; } .ing-headers .ing-gram { flex:1; } .ing-headers .ing-pct { flex:1; } .ing-headers .spacer { width:36px; flex-shrink:0; }
+.ingredient-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+.ingredient-row .ing-name { flex:2.5; } .ingredient-row .ing-gram { flex:1; } .ingredient-row .ing-pct { flex:1; }
+.ingredient-row .ing-pct input { background:var(--puratos-light); color:var(--puratos-red); font-weight:600; pointer-events:none; opacity:0.85; }
+.ingredient-row.is-flour .ing-name input { font-weight:700; border-color:var(--puratos-red); background:var(--puratos-light); }
+.ingredient-row .remove-btn { background:#fef2f2; border:1px solid #fecaca; border-radius:8px; width:36px; height:38px; color:#dc2626; cursor:pointer; font-size:16px; font-weight:bold; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.ingredient-row .remove-btn:hover { background:#fee2e2; border-color:#fca5a5; }
+.add-btn { background:var(--gray-50); border:1.5px dashed var(--gray-300); border-radius:var(--radius-btn); padding:10px 20px; color:var(--gray-600); font-size:14px; font-weight:600; cursor:pointer; width:100%; margin-top:8px; font-family:inherit; }
+.add-btn:hover { border-color:var(--puratos-red); color:var(--puratos-red); background:var(--puratos-light); }
+.btn { padding:12px 26px; border-radius:var(--radius-btn); font-size:15px; font-weight:700; border:none; cursor:pointer; transition:all 0.2s; font-family:inherit; display:inline-flex; align-items:center; gap:8px; justify-content:center; }
+.btn-primary { background:var(--puratos-red); color:#fff; box-shadow:0 4px 12px rgba(204,9,47,0.25); }
+.btn-primary:hover { background:var(--puratos-dark); transform:translateY(-1px); }
+.btn-secondary { background:#fff; color:var(--gray-700); border:1.5px solid var(--gray-300); }
+.btn-secondary:hover { background:var(--gray-100); border-color:var(--gray-400); }
+.btn-unlock { background:#fef3c7; color:#92400e; border:1.5px solid #fcd34d; font-size:13px; padding:8px 16px; }
+.btn-unlock:hover { background:#fde68a; }
+.actions { display:flex; gap:12px; justify-content:center; padding:16px 0; flex-wrap:wrap; }
+.process-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.process-grid .full { grid-column:1/-1; }
+.success-msg { position:fixed; top:84px; left:50%; transform:translateX(-50%); background:var(--green); color:#fff; padding:14px 28px; border-radius:var(--radius-btn); font-size:15px; font-weight:700; box-shadow:0 8px 24px rgba(22,163,74,0.3); z-index:200; display:none; }
+.success-msg.show { display:block; animation:slideIn 0.3s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateX(-50%) translateY(-15px);} to{opacity:1;transform:translateX(-50%) translateY(0);} }
+.footer-note { font-size:12.5px; color:var(--gray-400); text-align:center; padding:20px 16px; }
+.info-label { font-size:13.5px; color:var(--gray-500); margin-bottom:14px; }
+@media(max-width:640px) { .header{padding:12px 16px;} .header-right p{display:none;} .process-grid{grid-template-columns:1fr;} .form-row{flex-direction:column;gap:12px;} .actions{flex-direction:column;} .btn{width:100%;} }
 </style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">דלג לתוכן</a>
-
 <div class="header">
   <div class="header-left">
     <svg viewBox="0 0 189 106" fill="none" xmlns="http://www.w3.org/2000/svg" width="80">
-      <path d="M68.0067 46.5278H71.5278V60.221C71.5278 69.1276 67.5591 73.6112 60.0993 73.6112C52.6394 73.6112 48.6111 69.1276 48.6111 60.221V46.5278H52.1321V59.4333C52.1321 62.2204 52.1321 64.5228 52.8781 66.0981C54.1015 68.7943 56.8169 70.3394 60.0993 70.3394C62.5163 70.3394 64.605 69.4305 65.9776 68.0067C68.0365 65.7649 67.9769 63.2201 67.9769 59.4333V46.5278H68.0067Z" fill="#0d9488"/>
-      <path d="M81.2924 50.3624C83.2581 47.494 85.3728 45.8334 87.9938 45.8334C89.5128 45.8334 90.2872 46.3165 90.9723 46.7392L89.215 49.6075C88.8278 49.3962 88.1725 49.1244 87.4577 49.1244C85.0154 49.1244 82.8114 51.2682 81.8285 54.8913C81.3817 56.5822 81.2924 59.2996 81.2924 62.8926V72.9167H77.7778V46.558H81.2924V50.3624Z" fill="#0d9488"/>
-      <path d="M95.0931 59.7828C95.0931 65.5017 99.5027 70.5247 105.342 70.5247C110.676 70.5247 115.741 66.4398 115.741 59.8736C115.741 53.7612 111.242 49.1316 105.402 49.1316C99.4133 49.1316 95.0931 54.1243 95.0931 59.7828ZM115.473 46.5596H118.75V72.9757H115.473V68.4369C112.642 71.9167 109.037 73.6112 104.985 73.6112C97.3873 73.6112 91.6667 67.1962 91.6667 59.6618C91.6667 52.1575 97.5363 45.8334 105.104 45.8334C109.305 45.8334 112.91 47.6792 115.502 51.3708V46.5596H115.473Z" fill="#0d9488"/>
-      <path d="M19.7289 59.9079C19.7289 66.476 24.7234 70.5621 30.0449 70.5621C35.8124 70.5621 40.3015 65.5679 40.3015 59.8171C40.3015 54.1267 35.9908 49.1628 30.0449 49.1628C24.2477 49.1326 19.7289 53.7635 19.7289 59.9079ZM19.9964 51.3724C22.5829 47.6797 26.1504 45.8334 30.3125 45.8334C37.8934 45.8334 43.7501 52.1593 43.7501 59.6657C43.7501 67.1721 38.0123 73.6191 30.4017 73.6191C26.3287 73.6191 22.8207 71.9242 19.9964 68.4434V82.6389H16.6667V46.5598H19.9964V51.3724Z" fill="#0d9488"/>
-      <path d="M44.9158 28.9793C44.0736 28.3227 43.0811 27.5767 41.7577 26.6814C39.893 25.428 37.6072 23.906 34.9003 21.5484C33.9378 20.7128 32.825 19.9369 31.8926 19.3102C31.7422 19.2207 31.6821 19.0118 31.7723 18.8626C31.9828 18.5343 32.3137 17.9673 32.7949 17.2212C33.216 16.505 33.7574 15.6097 34.3589 14.6547C34.4792 14.4458 34.6296 14.2369 34.7499 13.9982C34.7499 13.9982 34.7499 13.9982 34.7499 13.9683C37.1861 9.99923 40.4945 4.59766 42.66 0.956835C43.051 0.330134 42.2089 -0.326406 41.6675 0.180923C37.9079 3.79191 32.0731 9.43221 29.1556 12.2673C28.915 12.506 28.7045 12.7149 28.4939 12.894C27.8022 13.5505 27.3811 13.9683 27.351 13.9982C27.4413 13.5804 27.4713 13.1327 27.4713 12.7149C27.4713 12.6552 27.4713 12.5956 27.4713 12.5657C27.4713 12.3867 27.4713 12.2076 27.4413 11.9987C27.3811 10.805 27.1104 9.22331 26.6292 8.41755C26.2081 9.67095 25.1253 10.7155 24.3434 11.8495C24.223 12.0285 24.1027 12.2076 24.0125 12.3867L23.9824 12.4463C23.8321 12.7746 23.6817 13.1029 23.6215 13.461C23.5012 13.1327 23.3809 12.8045 23.2907 12.4762L23.2606 12.4463C23.2004 12.2673 23.1403 12.0882 23.0801 11.9092C22.5989 10.3573 22.2681 8.74583 22.0575 7.04478C22.0575 7.04478 19.9522 8.38771 18.9596 12.4762C18.9296 12.5956 18.8995 12.7149 18.8694 12.8641V12.9238C18.7491 13.6997 18.4784 15.4903 18.6889 17.4898C17.937 16.6243 15.561 13.7296 15.561 13.7296C13.9368 14.2668 12.3728 14.983 10.9592 15.9081L10.8389 15.9678C9.75617 16.684 8.73357 17.4301 7.80119 18.2359C8.73357 19.0118 10.478 20.6233 11.4104 22.1751C9.24487 20.9217 7.25981 20.2055 6.08682 19.8175C3.83107 22.1453 2.14678 24.861 1.12417 27.9646C1.81594 28.3526 4.10176 29.6657 5.99659 31.3966C3.65061 30.74 1.57532 30.4117 0.522641 30.2625C0.131644 32.0829 -0.0488151 34.0526 0.0113382 36.1416C0.161722 42.7965 3.56038 49.7201 8.37265 53.8384C8.49295 53.9578 8.64334 54.0473 8.76365 54.1667C8.61326 53.8682 8.49295 53.54 8.37265 53.2415L8.34257 53.1222C7.74104 51.5703 7.16958 48.974 6.95905 47.3327C5.57552 35.485 10.3878 24.1149 20.8845 18.027C20.8545 17.9673 20.8545 17.9076 20.8244 17.8181C20.6439 17.0123 20.4334 15.8783 20.3732 14.6249C20.3732 13.9683 20.4033 13.3118 20.4935 12.6552V12.6254C20.5236 12.4762 20.5537 12.2971 20.5838 12.1479C20.7342 11.372 20.9 10.6 21.0504 9.8" fill="#0d9488"/>
+      <path d="M68 46.5H71.5V60.2C71.5 69.1 67.6 73.6 60.1 73.6C52.6 73.6 48.6 69.1 48.6 60.2V46.5H52.1V59.4C52.1 62.2 52.1 64.5 52.9 66.1C54.1 68.8 56.8 70.3 60.1 70.3C62.5 70.3 64.6 69.4 66 68C68 65.8 68 63.2 68 59.4V46.5H68Z" fill="#CC092F"/>
+      <path d="M81.3 50.4C83.3 47.5 85.4 45.8 88 45.8C89.5 45.8 90.3 46.3 91 46.7L89.2 49.6C88.8 49.4 88.2 49.1 87.5 49.1C85 49.1 82.8 51.3 81.8 54.9C81.4 56.6 81.3 59.3 81.3 62.9V72.9H77.8V46.6H81.3V50.4Z" fill="#CC092F"/>
+      <path d="M95.1 59.8C95.1 65.5 99.5 70.5 105.3 70.5C110.7 70.5 115.7 66.4 115.7 59.9C115.7 53.8 111.2 49.1 105.4 49.1C99.4 49.1 95.1 54.1 95.1 59.8ZM115.5 46.6H118.8V73H115.5V68.4C112.6 71.9 109 73.6 105 73.6C97.4 73.6 91.7 67.2 91.7 59.7C91.7 52.2 97.5 45.8 105.1 45.8C109.3 45.8 112.9 47.7 115.5 51.4V46.6Z" fill="#CC092F"/>
+      <path d="M19.7 59.9C19.7 66.5 24.7 70.6 30 70.6C35.8 70.6 40.3 65.6 40.3 59.8C40.3 54.1 36 49.2 30 49.2C24.2 49.1 19.7 53.8 19.7 59.9ZM20 51.4C22.6 47.7 26.2 45.8 30.3 45.8C37.9 45.8 43.8 52.2 43.8 59.7C43.8 67.2 38 73.6 30.4 73.6C26.3 73.6 22.8 71.9 20 68.4V82.6H16.7V46.6H20V51.4Z" fill="#CC092F"/>
     </svg>
   </div>
   <div class="header-right">
@@ -479,8 +93,7 @@ input:focus,select:focus,textarea:focus{
 </div>
 
 <div class="success-msg" id="successMsg">✓ הדוח נשמר בהצלחה</div>
-
-<div class="container" id="main-content">
+<div class="container">
 
   <div class="card">
     <div class="card-title">📋 פרטים כלליים</div>
@@ -489,17 +102,20 @@ input:focus,select:focus,textarea:focus{
     </div>
     <div class="form-row">
       <div class="form-field"><label>שם החוקר/ת</label><input id="researcher" placeholder="שם מלא"></div>
-      <div class="form-field"><label>שם המאשר/ת</label><input id="approver" placeholder="שם מלא"></div>
+      <div class="form-field"><label>תאריך ביצוע</label><input type="date" id="execDate"></div>
     </div>
     <div class="form-row">
-      <div class="form-field"><label>תאריך ביצוע</label><input type="date" id="execDate"></div>
-      <div class="form-field"><label>תאריך עדכון</label><input type="date" id="updateDate"></div>
+      <div class="form-field"><label>שם המאשר/ת <span class="lock-badge" id="approverLock" style="display:none">🔒 נעול</span></label><input id="approver" placeholder="שם מלא"></div>
+      <div class="form-field"><label>תאריך עדכון <span class="lock-badge" id="updateDateLock" style="display:none">🔒 נעול</span></label><input type="date" id="updateDate"></div>
+    </div>
+    <div class="form-row" id="unlockRow" style="display:none">
+      <div class="form-field full"><button class="btn btn-unlock" onclick="unlockApprovedFields()">🔓 שינוי גרסה — פתיחת שדות מאשר</button></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">🧪 המתכון — חומרי גלם</div>
-    <div class="info-label">מלא את חומרי הגלם עבור כל ניסוי. הוסף שורות לפי הצורך.</div>
+    <div class="info-label">מלא את חומרי הגלם עבור כל ניסוי. האחוזים מחושבים אוטומטית ביחס לקמח (Baker's %). סמן את חומר הגלם שהוא הקמח ע"י ה-V.</div>
     <div class="exp-tabs" id="expTabs">
       <div class="exp-tab active" data-exp="1">ניסוי 1</div>
       <div class="exp-tab" data-exp="2">ניסוי 2</div>
@@ -518,6 +134,7 @@ input:focus,select:focus,textarea:focus{
       <div class="form-field full"><label>הכנת הבצק — תיאור</label><textarea id="doughPrep" placeholder="תיאור שלבי הכנת הבצק..."></textarea></div>
       <div class="form-field"><label>זמן לישה (דקות)</label><input type="number" id="kneadTime" placeholder="דקות"></div>
       <div class="form-field"><label>טמפ' בצק רצויה (°C)</label><input type="number" id="doughTemp" step="0.1" placeholder="°C"></div>
+      <div class="form-field"><label>משקל יחידת בצק (גרם)</label><input type="number" id="doughWeight" step="1" placeholder="גרם"></div>
     </div>
     <div class="section-divider"><span>⏳ תפיחה</span><span class="line"></span></div>
     <div class="process-grid">
@@ -526,9 +143,9 @@ input:focus,select:focus,textarea:focus{
       <div class="form-field"><label>טמפ' תפיחה (°C)</label><input type="number" id="fermentTemp" step="0.1" placeholder="°C"></div>
       <div class="form-field"><label>לחות בתא התפיחה (%)</label><input type="number" id="fermentHumidity" placeholder="%"></div>
     </div>
-    <div class="section-divider"><span>🍞 עיצוב ומולדר</span><span class="line"></span></div>
+    <div class="section-divider"><span>🍞 מולדר ותפיחה</span><span class="line"></span></div>
     <div class="process-grid">
-      <div class="form-field"><label>עיצוב וצורת הלחם</label><input id="shaping" placeholder="לדוגמה: כיכר עגול 500 גר'"></div>
+      <div class="form-field"><label>משקל יחידת הבצק בתפיחה (גרם)</label><input type="number" id="proofWeight" step="1" placeholder="גרם"></div>
       <div class="form-field"><label>נתוני מולדר</label><input id="moulder" placeholder="לדוגמה: מהירות 60%"></div>
     </div>
     <div class="section-divider"><span>🔥 אפייה</span><span class="line"></span></div>
@@ -543,32 +160,17 @@ input:focus,select:focus,textarea:focus{
     <div class="card-title">📊 מדדי תהליך במהלך הניסוי</div>
     <div class="process-grid">
       <div class="form-field"><label>טמפ' בצק בפועל (°C)</label><input type="number" id="actualDoughTemp" step="0.1" placeholder="°C"></div>
-      <div class="form-field"><label>מרקם הבצק</label><select id="doughTexture">
-        <option value="">בחר...</option>
-        <option>רך מדי</option><option>רך</option><option>תקין</option><option>קשה</option><option>קשה מדי</option>
-      </select></div>
+      <div class="form-field"><label>מרקם הבצק</label><select id="doughTexture"><option value="">בחר...</option><option>רך מדי</option><option>רך</option><option>תקין</option><option>קשה</option><option>קשה מדי</option></select></div>
       <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="number" id="actualFermentTime" placeholder="דקות"></div>
-      <div class="form-field"><label>נפח ויציבות בסוף התפיחה</label><select id="volumeStability">
-        <option value="">בחר...</option>
-        <option>נפח נמוך — לא יציב</option><option>נפח בינוני — יציב חלקית</option><option>נפח טוב — יציב</option><option>נפח גבוה — יציב מאוד</option>
-      </select></div>
+      <div class="form-field"><label>נפח ויציבות בסוף התפיחה</label><select id="volumeStability"><option value="">בחר...</option><option>נפח נמוך — לא יציב</option><option>נפח בינוני — יציב חלקית</option><option>נפח טוב — יציב</option><option>נפח גבוה — יציב מאוד</option></select></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">✍️ מסקנות</div>
-    <div class="tag">התייחס למרקם הפנים (crumb), צורת הכיכר (crust) וטעם</div>
+    <div class="info-label">הזן את כל המסקנות מהניסוי — מרקם, צורה, טעם והערות כלליות.</div>
     <div class="form-row" style="margin-top:12px">
-      <div class="form-field full"><label>מרקם הפנים (Crumb)</label><textarea id="crumb" placeholder="תאר את מרקם הפנים..."></textarea></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field full"><label>צורת הכיכר (Crust)</label><textarea id="crust" placeholder="תאר את צורת הכיכר, הקרום, הצבע..."></textarea></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field full"><label>טעם</label><textarea id="taste" placeholder="תאר את הטעם, הארומה..."></textarea></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field full"><label>הערות כלליות</label><textarea id="notes" placeholder="הערות נוספות..."></textarea></div>
+      <div class="form-field full"><label>מסקנות</label><textarea id="conclusions" placeholder="הזן את המסקנות — מרקם הפנים (crumb), צורת הכיכר (crust), טעם, והערות כלליות..." style="min-height:120px"></textarea></div>
     </div>
   </div>
 
@@ -577,15 +179,15 @@ input:focus,select:focus,textarea:focus{
     <button class="btn btn-secondary" onclick="exportExcel()">📊 ייצא לאקסל</button>
     <button class="btn btn-secondary" onclick="clearForm()">🗑️ נקה</button>
   </div>
-
-  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v1.0</div>
+  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v2.0</div>
 </div>
 
 <script>
-const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','תלכיד תעורא','90% טחון','70% טחון','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','Multec Data HP 20','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','פרוקטוגליקוז','X-708 Panamore','X-830 Premix','X-221 Premix','X-555 Premix','X-710 Premix','Optiva LS','X-618 Premix','X-401 Premix','X-901 Premix','Cakezyme Sublime','YL-230-898-0 Premix','SAPP 40','אבקת גבינה טבעית','קקאו DCP-10R102-789','טרי סודים מיוגים ציטראט','מלבין קפה C-35%','סודיום ביקרבונאט','סטיאלגין GCF 645','עמיל CTEX','פרוקטוזה יבשה','פריג\'ל HC','ציפורן טחון','קינמון טחון','קלציום לקטאט','גואר גם','קסנטן גם','קקאו GHR 10-12','קמח קשה','קמח כוסמין','קמח שיבולת שועל','קמח רך','Innosense wheat 1003','Puraveg 0602','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
+const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','קמח 90% טחון','קמח 70% טחון','קמח קשה','קמח כוסמין','קמח שיבולת שועל','קמח רך','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
 let currentExp=1;
 let experiments={};
-for(let i=1;i<=6;i++){experiments[i]=[{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''}];}
+for(let i=1;i<=6;i++){experiments[i]=[];for(let j=0;j<15;j++){experiments[i].push({name:'',gram:'',isFlour:false});}}
+experiments[1][0].isFlour=true;
 
 document.querySelectorAll('.exp-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
@@ -596,40 +198,84 @@ document.querySelectorAll('.exp-tab').forEach(tab=>{
   });
 });
 
+function escapeHtml(s){if(!s)return'';return s.replace(/"/g,'&quot;');}
+function escapeCsv(val){if(!val)return'';val=String(val);if(val.indexOf(',')>=0||val.indexOf('"')>=0||val.indexOf('\n')>=0){return '"'+val.replace(/"/g,'""')+'"';}return val;}
+
+function findFlourIdx(exp){
+  for(var i=0;i<experiments[exp].length;i++){if(experiments[exp][i].isFlour&&parseFloat(experiments[exp][i].gram)>0)return i;}
+  for(var i=0;i<experiments[exp].length;i++){if(experiments[exp][i].name&&experiments[exp][i].name.indexOf('קמח')>=0&&parseFloat(experiments[exp][i].gram)>0)return i;}
+  return -1;
+}
+
+function calcPct(exp,idx){
+  var fi=findFlourIdx(exp);
+  if(fi<0)return '—';
+  var fg=parseFloat(experiments[exp][fi].gram);
+  if(!fg||fg<=0)return '—';
+  var ig=parseFloat(experiments[exp][idx].gram);
+  if(!ig||ig<=0)return '';
+  return (ig/fg*100).toFixed(1)+'%';
+}
+
 function renderExperiment(expNum){
-  const container=document.getElementById('experimentsContainer');
-  if(!container) return;
+  var container=document.getElementById('experimentsContainer');
+  if(!container)return;
   container.innerHTML='';
-  const div=document.createElement('div');
+  var div=document.createElement('div');
   div.className='exp-content active';
-  const headers=document.createElement('div');
+  var headers=document.createElement('div');
   headers.className='ing-headers';
-  headers.innerHTML='<div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% נקי</div><div class="spacer"></div>';
+  headers.innerHTML='<div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% ביחס לקמח</div><div class="spacer"></div>';
   div.appendChild(headers);
-  const ings=experiments[expNum];
-  ings.forEach((ing,idx)=>{
-    const row=document.createElement('div');
+  var ings=experiments[expNum];
+  ings.forEach(function(ing,idx){
+    var row=document.createElement('div');
     row.className='ingredient-row';
-    row.innerHTML=`<div class="ing-name"><input type="text" list="ingList" value="${ing.name}" oninput="updateIng(${expNum},${idx},'name',this.value)" onchange="updateIng(${expNum},${idx},'name',this.value)" placeholder="חומר גלם"></div><div class="ing-gram"><input type="number" value="${ing.gram}" oninput="updateIng(${expNum},${idx},'gram',this.value)" onchange="updateIng(${expNum},${idx},'gram',this.value)" placeholder="גרם"></div><div class="ing-pct"><input type="number" step="0.1" value="${ing.pct}" oninput="updateIng(${expNum},${idx},'pct',this.value)" onchange="updateIng(${expNum},${idx},'pct',this.value)" placeholder="%"></div><button class="remove-btn" onclick="removeIng(${expNum},${idx})" title="הסר שורה">✕</button>`;
+    if(ing.isFlour)row.classList.add('is-flour');
+    var pv=calcPct(expNum,idx);
+    row.innerHTML='<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="checkbox" '+(ing.isFlour?'checked':'')+' onchange="toggleFlour('+expNum+','+idx+',this.checked)" title="סמן כקמח" style="width:auto"><input type="text" list="ingList" value="'+escapeHtml(ing.name)+'" oninput="updateIng('+expNum+','+idx+',\'name\',this.value)" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="'+(ing.gram||'')+'" oninput="updateIng('+expNum+','+idx+',\'gram\',this.value)" onchange="renderExperiment('+expNum+')" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="'+pv+'" readonly placeholder="—"></div><button class="remove-btn" onclick="removeIng('+expNum+','+idx+')" title="הסר שורה">✕</button>';
     div.appendChild(row);
   });
-  const addBtn=document.createElement('button');
+  var addBtn=document.createElement('button');
   addBtn.className='add-btn';
   addBtn.innerHTML='+ הוסף חומר גלם';
-  addBtn.onclick=function(){experiments[expNum].push({name:'',gram:'',pct:''});renderExperiment(expNum);};
+  addBtn.onclick=function(){experiments[expNum].push({name:'',gram:'',isFlour:false});renderExperiment(expNum);};
   div.appendChild(addBtn);
-  const dl=document.createElement('datalist');
+  var dl=document.createElement('datalist');
   dl.id='ingList';
-  INGREDIENTS.forEach(function(i){const o=document.createElement('option');o.value=i;dl.appendChild(o);});
+  INGREDIENTS.forEach(function(i){var o=document.createElement('option');o.value=i;dl.appendChild(o);});
   div.appendChild(dl);
   container.appendChild(div);
 }
 
+function toggleFlour(exp,idx,checked){
+  if(checked){experiments[exp].forEach(function(ing){ing.isFlour=false;});experiments[exp][idx].isFlour=true;}
+  else{experiments[exp][idx].isFlour=false;}
+  renderExperiment(exp);
+}
+
 function updateIng(exp,idx,field,val){experiments[exp][idx][field]=val;}
-function removeIng(exp,idx){experiments[exp].splice(idx,1);renderExperiment(exp);}
+
+function removeIng(exp,idx){
+  if(experiments[exp][idx].isFlour){if(!confirm('זהו שורת הקמח. מחיקה תבטל את חישוב האחוזים. להמשיך?'))return;}
+  experiments[exp].splice(idx,1);
+  renderExperiment(exp);
+}
 
 document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
 document.getElementById('updateDate').value=new Date().toISOString().split('T')[0];
+
+function lockApprovedFields(){
+  var a=document.getElementById('approver'),u=document.getElementById('updateDate');
+  if(a.value&&u.value){a.classList.add('locked');a.readOnly=true;u.classList.add('locked');u.readOnly=true;document.getElementById('approverLock').style.display='inline-flex';document.getElementById('updateDateLock').style.display='inline-flex';document.getElementById('unlockRow').style.display='flex';}
+}
+
+function unlockApprovedFields(){
+  if(!confirm('פתיחת שדות המאשר ותאריך עדכון לעריכה (שינוי גרסה)?'))return;
+  var a=document.getElementById('approver'),u=document.getElementById('updateDate');
+  a.classList.remove('locked');a.readOnly=false;u.classList.remove('locked');u.readOnly=false;
+  document.getElementById('approverLock').style.display='none';document.getElementById('updateDateLock').style.display='none';document.getElementById('unlockRow').style.display='none';
+}
 
 function collectData(){
   return{
@@ -639,111 +285,98 @@ function collectData(){
     execDate:document.getElementById('execDate').value,
     updateDate:document.getElementById('updateDate').value,
     experiments:experiments,
-    process:{doughPrep:document.getElementById('doughPrep').value,kneadTime:document.getElementById('kneadTime').value,doughTemp:document.getElementById('doughTemp').value,bulkFerment:document.getElementById('bulkFerment').value,finalFerment:document.getElementById('finalFerment').value,fermentTemp:document.getElementById('fermentTemp').value,fermentHumidity:document.getElementById('fermentHumidity').value,shaping:document.getElementById('shaping').value,moulder:document.getElementById('moulder').value,ovenType:document.getElementById('ovenType').value,bakingProgram:document.getElementById('bakingProgram').value,steam:document.getElementById('steam').value},
+    process:{doughPrep:document.getElementById('doughPrep').value,kneadTime:document.getElementById('kneadTime').value,doughTemp:document.getElementById('doughTemp').value,doughWeight:document.getElementById('doughWeight').value,bulkFerment:document.getElementById('bulkFerment').value,finalFerment:document.getElementById('finalFerment').value,fermentTemp:document.getElementById('fermentTemp').value,fermentHumidity:document.getElementById('fermentHumidity').value,proofWeight:document.getElementById('proofWeight').value,moulder:document.getElementById('moulder').value,ovenType:document.getElementById('ovenType').value,bakingProgram:document.getElementById('bakingProgram').value,steam:document.getElementById('steam').value},
     metrics:{actualDoughTemp:document.getElementById('actualDoughTemp').value,doughTexture:document.getElementById('doughTexture').value,actualFermentTime:document.getElementById('actualFermentTime').value,volumeStability:document.getElementById('volumeStability').value},
-    conclusions:{crumb:document.getElementById('crumb').value,crust:document.getElementById('crust').value,taste:document.getElementById('taste').value,notes:document.getElementById('notes').value}
+    conclusions:document.getElementById('conclusions').value
   };
 }
 
 function saveReport(){
-  try {
-  if(typeof ailonRateLimit === 'function' && !ailonRateLimit()) return;
-  var report=collectData();
-  if(!report.projectName){alert('נא למלא שם פרויקט');return;}
+  var r=collectData();
+  if(!r.projectName){alert('נא למלא שם פרויקט');return;}
   var reports=JSON.parse(localStorage.getItem('puratos_reports')||'[]');
-  reports.push(Object.assign(report,{savedAt:new Date().toISOString()}));
+  reports.push(Object.assign(r,{savedAt:new Date().toISOString()}));
   localStorage.setItem('puratos_reports',JSON.stringify(reports));
-  var msg=document.getElementById('successMsg');
-  if(msg){
-    msg.classList.add('show');
-    setTimeout(function(){msg.classList.remove('show');},2500);
-  }
-  } catch(e) { console.error('Save error:', e); alert('שגיאה בשמירה: '+e.message); }
+  lockApprovedFields();
+  var m=document.getElementById('successMsg');
+  if(m){m.classList.add('show');setTimeout(function(){m.classList.remove('show');},2500);}
 }
 
 function exportExcel(){
-  var data=collectData();
+  var d=collectData();
   var csv='\ufeff';
-  csv+='דוח ניסויים — תחום הלחמים (Bakery)\n';
-  csv+='שם הפרויקט,'+data.projectName+'\n';
-  csv+='שם החוקר/ת,'+data.researcher+'\n';
-  csv+='שם המאשר/ת,'+data.approver+'\n';
-  csv+='תאריך ביצוע,'+data.execDate+'\n';
-  csv+='תאריך עדכון,'+data.updateDate+'\n\n';
+  csv+='Puratos Israel — דוח ניסויים, תחום הלחמים (Bakery R&D)\n';
+  csv+='תאריך ייצוא,'+new Date().toLocaleDateString('he-IL')+'\n\n';
+  csv+='פרטים כלליים\n';
+  csv+='שם הפרויקט,'+escapeCsv(d.projectName)+'\n';
+  csv+='שם החוקר/ת,'+escapeCsv(d.researcher)+'\n';
+  csv+='תאריך ביצוע,'+escapeCsv(d.execDate)+'\n';
+  csv+='שם המאשר/ת,'+escapeCsv(d.approver)+'\n';
+  csv+='תאריך עדכון,'+escapeCsv(d.updateDate)+'\n\n';
   csv+='המתכון — חומרי גלם\n';
-  var expHeader='חומר גלם';
-  for(var i=1;i<=6;i++){expHeader+=',ניסוי '+i+' גרם,,ניסוי '+i+' %';}
-  csv+=expHeader+'\n';
-  var allNames=new Set();
-  for(var i=1;i<=6;i++){experiments[i].forEach(function(ing){allNames.add(ing.name);});}
+  var hdr='חומר גלם';
+  for(var i=1;i<=6;i++){hdr+=',ניסוי '+i+' גרם,ניסוי '+i+' %';}
+  csv+=hdr+'\n';
+  var allNames=[];var ns={};
+  for(var i=1;i<=6;i++){experiments[i].forEach(function(ing){if(ing.name&&!ns[ing.name]){ns[ing.name]=true;allNames.push(ing.name);}});}
   allNames.forEach(function(name){
-    var row=name;
-    for(var i=1;i<=6;i++){var ing=experiments[i].find(function(x){return x.name===name;});row+=','+(ing?ing.gram:'')+','+(ing?ing.pct:'');}
+    var row=escapeCsv(name);
+    for(var i=1;i<=6;i++){
+      var ing=experiments[i].find(function(x){return x.name===name;});
+      if(ing&&ing.gram){
+        row+=','+escapeCsv(ing.gram);
+        var fi=findFlourIdx(i);
+        if(fi>=0){var fg=parseFloat(experiments[i][fi].gram);if(fg>0){var pct=parseFloat(ing.gram)/fg*100;row+=','+(isNaN(pct)?'':pct.toFixed(1)+'%');}else{row+=',';}}else{row+=',';}
+      }else{row+=',,';}
+    }
     csv+=row+'\n';
   });
   csv+='\nתיאור התהליך\n';
-  csv+='הכנת הבצק,'+data.process.doughPrep+'\n';
-  csv+='זמן לישה,'+data.process.kneadTime+'\n';
-  csv+='טמפ בצק,'+data.process.doughTemp+'\n';
-  csv+='תפיחה ב-Bulk,'+data.process.bulkFerment+'\n';
-  csv+='תפיחה סופית,'+data.process.finalFerment+'\n';
-  csv+='טמפ תפיחה,'+data.process.fermentTemp+'\n';
-  csv+='לחות,'+data.process.fermentHumidity+'\n';
-  csv+='עיצוב,'+data.process.shaping+'\n';
-  csv+='מולדר,'+data.process.moulder+'\n';
-  csv+='תנור,'+data.process.ovenType+'\n';
-  csv+='תוכנית אפייה,'+data.process.bakingProgram+'\n';
-  csv+='קיטור,'+data.process.steam+'\n\n';
+  csv+='הכנת הבצק — תיאור,'+escapeCsv(d.process.doughPrep)+'\n';
+  csv+='זמן לישה (דקות),'+escapeCsv(d.process.kneadTime)+'\n';
+  csv+='טמפ בצק רצויה (°C),'+escapeCsv(d.process.doughTemp)+'\n';
+  csv+='משקל יחידת בצק (גרם),'+escapeCsv(d.process.doughWeight)+'\n';
+  csv+='תפיחה ב-Bulk,'+escapeCsv(d.process.bulkFerment)+'\n';
+  csv+='תפיחה סופית,'+escapeCsv(d.process.finalFerment)+'\n';
+  csv+='טמפ תפיחה (°C),'+escapeCsv(d.process.fermentTemp)+'\n';
+  csv+='לחות תפיחה (%),'+escapeCsv(d.process.fermentHumidity)+'\n';
+  csv+='משקל יחידת בצק בתפיחה (גרם),'+escapeCsv(d.process.proofWeight)+'\n';
+  csv+='נתוני מולדר,'+escapeCsv(d.process.moulder)+'\n';
+  csv+='סוג תנור,'+escapeCsv(d.process.ovenType)+'\n';
+  csv+='תוכנית אפייה,'+escapeCsv(d.process.bakingProgram)+'\n';
+  csv+='קיטור (שניות),'+escapeCsv(d.process.steam)+'\n\n';
   csv+='מדדי תהליך\n';
-  csv+='טמפ בצק,'+data.metrics.actualDoughTemp+'\n';
-  csv+='מרקם,'+data.metrics.doughTexture+'\n';
-  csv+='זמן תפיחה,'+data.metrics.actualFermentTime+'\n';
-  csv+='נפח,'+data.metrics.volumeStability+'\n\n';
+  csv+='טמפ בצק בפועל (°C),'+escapeCsv(d.metrics.actualDoughTemp)+'\n';
+  csv+='מרקם הבצק,'+escapeCsv(d.metrics.doughTexture)+'\n';
+  csv+='זמן תפיחה בפועל (דקות),'+escapeCsv(d.metrics.actualFermentTime)+'\n';
+  csv+='נפח ויציבות,'+escapeCsv(d.metrics.volumeStability)+'\n\n';
   csv+='מסקנות\n';
-  csv+='Crumb,'+data.conclusions.crumb+'\n';
-  csv+='Crust,'+data.conclusions.crust+'\n';
-  csv+='טעם,'+data.conclusions.taste+'\n';
-  csv+='הערות,'+data.conclusions.notes+'\n';
+  csv+=escapeCsv(d.conclusions)+'\n';
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
-  a.href=url;a.download='דוח_ניסוי_'+(data.projectName||'חדש')+'_'+(data.execDate||'')+'.csv';a.click();
+  a.href=url;a.download='דוח_ניסוי_'+(d.projectName||'חדש').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+(d.execDate||'')+'.csv';a.click();
   URL.revokeObjectURL(url);
 }
 
 function clearForm(){
   if(!confirm('האם לנקות את כל הטופס?'))return;
-  document.querySelectorAll('input,textarea,select').forEach(function(el){if(el.type!=='button')el.value='';});
-  for(var i=1;i<=6;i++){experiments[i]=[{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''},{name:'',gram:'',pct:''}];}
+  document.querySelectorAll('input,textarea,select').forEach(function(el){if(el.type!=='button'&&el.type!=='checkbox')el.value='';});
+  document.querySelectorAll('input[type=checkbox]').forEach(function(el){el.checked=false;});
+  for(var i=1;i<=6;i++){experiments[i]=[];for(var j=0;j<15;j++){experiments[i].push({name:'',gram:'',isFlour:false});}}
+  experiments[1][0].isFlour=true;
   renderExperiment(1);
   document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
   document.getElementById('updateDate').value=new Date().toISOString().split('T')[0];
+  var a=document.getElementById('approver'),u=document.getElementById('updateDate');
+  a.classList.remove('locked');a.readOnly=false;u.classList.remove('locked');u.readOnly=false;
+  document.getElementById('approverLock').style.display='none';document.getElementById('updateDateLock').style.display='none';document.getElementById('unlockRow').style.display='none';
 }
 
 renderExperiment(1);
 </script>
-<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #0d9488;outline-offset:2px}
-    /* Enhanced responsive */
-    @media (max-width: 768px) {
-        .container, .main-container, .dashboard, .content { padding: 12px !important; }
-        .card, .feature-card, .stat-card { padding: 16px !important; margin-bottom: 12px; }
-        h1 { font-size: 1.5rem !important; }
-        h2 { font-size: 1.25rem !important; }
-        table { font-size: 0.85rem; }
-        .btn, button { padding: 10px 20px !important; font-size: 0.95rem !important; }
-        .grid, .features, .cards-grid { grid-template-columns: 1fr !important; }
-        .sidebar { display: none !important; }
-        .main-content { margin: 0 !important; padding: 12px !important; }
-    }
-    @media (max-width: 480px) {
-        body { font-size: 0.9rem; }
-        .container, .main-container { padding: 8px !important; }
-        h1 { font-size: 1.25rem !important; }
-        .btn, button { width: 100% !important; padding: 12px !important; }
-        input, select, textarea { font-size: 16px !important; }
-        table { font-size: 0.8rem; }
-        .modal { width: 95% !important; padding: 20px !important; }
-    }
-/* === AILON Task — Accessibility & Design Upgrade === */
-    </style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
+<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #CC092F;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#CC092F;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div>
+<style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style>
+<script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300);}});</script>
+</body>
 </html>
