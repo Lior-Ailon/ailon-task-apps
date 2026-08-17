@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>מי מכיר את נתלי? 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --navy: #1e3a5f;
+  --pink: #b8336a;
+  --gold: #d4a017;
+  --bg: #fdf6f0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: linear-gradient(135deg, var(--bg), #f5f0f0);
+  min-height: 100vh;
+  color: #2d2d2d;
+}
+.app { max-width: 500px; margin: 0 auto; padding: 16px; }
+
+/* Start Screen */
+.start-screen { text-align: center; padding: 40px 20px; }
+.start-screen .emoji { font-size: 60px; margin-bottom: 16px; }
+.start-screen h1 { font-size: 28px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+.start-screen .subtitle { font-size: 16px; color: #666; margin-bottom: 24px; }
+.start-screen .prize-box {
+  background: linear-gradient(135deg, #fff8e1, #fff);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin: 20px auto;
+  max-width: 320px;
+}
+.start-screen .prize-box .prize-title { font-size: 14px; color: var(--gold); font-weight: 700; margin-bottom: 4px; }
+.start-screen .prize-box .prize-text { font-size: 16px; font-weight: 700; color: #2d2d2d; }
+.name-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  font-size: 18px;
+  font-family: 'Heebo';
+  text-align: center;
+  margin-bottom: 16px;
+  outline: none;
+}
+.name-input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(184,51,106,0.1); }
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Heebo';
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: white;
+  box-shadow: 0 4px 12px rgba(13,148,136,0.3);
+}
+
+/* Quiz Screen */
+.quiz-screen { display: none; }
+.progress-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.progress-dot {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #e0e0e0;
+  transition: background 0.3s;
+}
+.progress-dot.done { background: var(--teal); }
+.progress-dot.current { background: var(--pink); }
+.q-counter { text-align: center; font-size: 14px; color: #999; margin-bottom: 12px; }
+.question-card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
+}
+.question-card .q-number {
+  display: inline-block;
+  background: var(--navy);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.question-card .q-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.answers { display: flex; flex-direction: column; gap: 10px; }
+.answer-btn {
+  padding: 14px 18px;
+  border: 2px solid #e0e0e0;
+  border-radius: 14px;
+  background: white;
+  font-size: 16px;
+  font-family: 'Heebo';
+  text-align: right;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #2d2d2d;
+}
+.answer-btn:hover { border-color: var(--teal); background: #f0fdfa; }
+.answer-btn.selected { border-color: var(--teal); background: #f0fdfa; }
+.answer-btn.correct { border-color: #22c55e; background: #f0fdf4; }
+.answer-btn.wrong { border-color: #ef4444; background: #fef2f2; }
+.answer-btn:disabled { cursor: default; opacity: 0.85; }
+
+/* Results Screen */
+.results-screen { display: none; text-align: center; padding: 40px 20px; }
+.results-screen .score-emoji { font-size: 60px; margin-bottom: 12px; }
+.results-screen .score-title { font-size: 26px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+.results-screen .score-text { font-size: 18px; color: #555; margin-bottom: 20px; }
+.results-screen .score-num { font-size: 48px; font-weight: 900; color: var(--teal); margin-bottom: 4px; }
+.results-screen .score-out-of { font-size: 16px; color: #999; margin-bottom: 24px; }
+.results-screen .prize-won {
+  background: linear-gradient(135deg, #fff8e1, #fff);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 340px;
+}
+.results-screen .prize-won .emoji { font-size: 40px; margin-bottom: 8px; }
+.results-screen .prize-won .text { font-size: 18px; font-weight: 700; color: var(--gold); }
+.score-message { font-size: 16px; color: #666; margin: 16px 0; line-height: 1.6; }
+.replay-btn { margin-top: 20px; }
+.leaderboard { margin-top: 24px; text-align: right; }
+.leaderboard h3 { font-size: 18px; color: var(--navy); margin-bottom: 12px; text-align: center; }
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 15px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.leaderboard-item .rank { font-weight: 700; color: var(--teal); }
+.leaderboard-item .name { flex: 1; margin: 0 12px; }
+.leaderboard-item .pts { font-weight: 700; color: var(--navy); }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="emoji">🎂</div>
+    <h1>מי מכיר את נתלי?</h1>
+    <p class="subtitle">חידון למשפחה — 20 שאלות על נתלי המלכה</p>
+    <div class="prize-box">
+      <div class="prize-title">🏆 הזוכה מקבל</div>
+      <div class="prize-text">סיר קובה! 🥘</div>
+    </div>
+    <input type="text" class="name-input" id="playerName" placeholder="הכנס את שמך" maxlength="20">
+    <button class="btn btn-primary" onclick="startQuiz()">התחל חידון →</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div class="quiz-screen" id="quizScreen">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="q-counter" id="qCounter"></div>
+    <div class="question-card" id="questionCard"></div>
+    <div class="answers" id="answersArea"></div>
+  </div>
+
+  <!-- Results Screen -->
+  <div class="results-screen" id="resultsScreen">
+    <div class="score-emoji" id="scoreEmoji">🎉</div>
+    <div class="score-title" id="scoreTitle">כל הכבוד!</div>
+    <div class="score-text" id="scoreName"></div>
+    <div class="score-num" id="scoreNum">0</div>
+    <div class="score-out-of" id="scoreOutOf">מתוך 20</div>
+    <div class="score-message" id="scoreMessage"></div>
+    <div id="prizeArea"></div>
+    <button class="btn btn-primary replay-btn" onclick="resetQuiz()">שחק שוב 🔄</button>
+    <div class="leaderboard" id="leaderboard" style="display:none;">
+      <h3>📋 טבלת מובילים</h3>
+      <div id="leaderboardList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { q: "באיזה גיל נתלי חוגגת השנה?", options: ["40", "41", "42", "43"], correct: 2 },
+  { q: "איפה נתלי עובדת?", options: ["עיריית אשקלון", "אורות אשקלון", "קופת חולים", "בית ספר"], correct: 1 },
+  { q: "מה התפקיד של נתלי בעבודה?", options: ["מורה", "מזכירה", "מנהלת המוסד והכספים", "גזברית"], correct: 2 },
+  { q: "אצל מי נתלי עובדת?", options: ["אלי פלאח", "אבי כהן", "משה לוי", "דני רבינוביץ'"], correct: 0 },
+  { q: "באיזו אולפנה נתלי למדה?", options: ["אולפנה צבייה אשקלון", "אולפנת בני עקיבא", "תיכון אורט", "בית יעקב"], correct: 0 },
+  { q: "לפני כמה שנים נתלי סיימה אולפנה?", options: ["20 שנה", "23 שנה", "25 שנה", "30 שנה"], correct: 1 },
+  { q: "מה התפקיד של נתלי באולפנה של הבת שלה?", options: ["מורה", "גזברית", "ראש ועד הורים", "מנהלת"], correct: 2 },
+  { q: "באיזו אולפנה הבת של נתלי לומדת (שי-לי)?", options: ["צבייה אשקלון", "בני עקיבא אשקלון", "אורות", "צביה ירושלים"], correct: 0 },
+  { q: "כמה ילדים יש לנתלי?", options: ["3", "4", "5", "6"], correct: 1 },
+  { q: "מה המקצוע של אורין (הבת הבכירה)?", options: ["ספרנית", "מתנדבת שירות לאומי", "חיילת", "סטודנטית"], correct: 1 },
+  { q: "מה אורין רוצה ללמוד בעתיד?", options: ["רפואה", "הנדסה", "עריכת דין", "הוראה"], correct: 2 },
+  { q: "מה החלום של ליאני?", options: ["להיות רופאה", "להיות וטרינרית", "להיות מהנדסת", "להיות מאמנת"], correct: 1 },
+  { q: "באיזה חוג ליאני משתתפת?", options: ["כדורגל", "ג'ודו", "כדורסל באקדמיה", "שחייה"], correct: 2 },
+  { q: "מה אביתר (הבן הקטן) אוהב לשחק?", options: ["כדורגל וגיימינג", "כדורסל", "שחמט", "טניס"], correct: 0 },
+  { q: "באיזה תפקיד אביתר מצטיין?", options: ["חלוץ", "שוער", "בלם", "קשר"], correct: 1 },
+  { q: "נתלי היא האדם ש—", options: ["הכי מארגנת טיולים", "הדבק של המשפחה", "הכי אופה עוגות", "הכי צועקת"], correct: 1 },
+  { q: "מה סיימו לאחרונה ליאור ונתלי?", options: ["מטייל בעולם", "שיפוץ בית", "קניית רכב", "שיפוץ גינה"], correct: 1 },
+  { q: "כמה שנות נישואין יחגגו (בעזרת השם) באוקטובר?", options: ["15", "18", "20", "25"], correct: 2 },
+  { q: "איך נתלי תיארה את השיפוץ שלהם?", options: ["בסדר", "מעשה ידייך להתפאר", "נחמד", "רגיל"], correct: 1 },
+  { q: "מה המאפיין הבולט של נתלי בחברה?", options: ["ביישנית", "רבת מוחות וטובת לב", "מופנמת", "קרה"], correct: 1 }
+];
+
+let currentQ = 0;
+let score = 0;
+let playerName = '';
+let answers = [];
+
+function startQuiz() {
+  const input = document.getElementById('playerName');
+  playerName = input.value.trim();
+  if (!playerName) {
+    input.focus();
+    input.style.borderColor = '#ef4444';
+    input.placeholder = 'חובה להכניס שם! 😊';
+    return;
+  }
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  currentQ = 0;
+  score = 0;
+  answers = [];
+  renderProgress();
+  showQuestion();
+}
+
+function renderProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  for (let i = 0; i < questions.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < currentQ) dot.classList.add('done');
+    if (i === currentQ) dot.classList.add('current');
+    bar.appendChild(dot);
+  }
+}
+
+function showQuestion() {
+  renderProgress();
+  const q = questions[currentQ];
+  document.getElementById('qCounter').textContent = `שאלה ${currentQ + 1} מתוך ${questions.length}`;
+  
+  const card = document.getElementById('questionCard');
+  card.innerHTML = `<div class="q-number">${currentQ + 1}</div><div class="q-text">${q.q}</div>`;
+  
+  const area = document.getElementById('answersArea');
+  area.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(i, btn);
+    area.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx, btn) {
+  const q = questions[currentQ];
+  const allBtns = document.querySelectorAll('.answer-btn');
+  allBtns.forEach(b => b.disabled = true);
+  
+  if (idx === q.correct) {
+    btn.classList.add('correct');
+    score++;
+    answers.push(true);
+  } else {
+    btn.classList.add('wrong');
+    allBtns[q.correct].classList.add('correct');
+    answers.push(false);
+  }
+  
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < questions.length) {
+      showQuestion();
+    } else {
+      showResults();
+    }
+  }, 1200);
+}
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+  document.getElementById('scoreName').textContent = playerName + ', התוצאה שלך:';
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreOutOf').textContent = `מתוך ${questions.length}`;
+  
+  let emoji, title, message;
+  if (score >= 18) {
+    emoji = '👑';
+    title = 'מומחית נתלי!';
+    message = 'את/ה מכיר/ה את נתלי יותר טוב ממנה עצמה! זכית בסיר קובה! 🥘';
+    showPrize(true);
+  } else if (score >= 14) {
+    emoji = '🌟';
+    title = 'כל הכבוד!';
+    message = 'מכיר/ה את נתלי היטב! כמעט שם...';
+    showPrize(score >= 16);
+  } else if (score >= 10) {
+    emoji = '😊';
+    title = 'לא רע!';
+    message = 'מכיר/ה את נתלי, אבל יש עוד מה ללמוד 😄';
+    showPrize(false);
+  } else if (score >= 5) {
+    emoji = '🤔';
+    title = 'נו... נו';
+    message = 'אולי כדאי לבלות קצת יותר עם נתלי 😉';
+    showPrize(false);
+  } else {
+    emoji = '😂';
+    title = 'מי את/ה?!';
+    message = 'האם באמת מכירים את נתלי? 😂 נסה/י שוב!';
+    showPrize(false);
+  }
+  
+  document.getElementById('scoreEmoji').textContent = emoji;
+  document.getElementById('scoreTitle').textContent = title;
+  document.getElementById('scoreMessage').textContent = message;
+  
+  saveScore();
+  showLeaderboard();
+}
+
+function showPrize(won) {
+  const area = document.getElementById('prizeArea');
+  if (won) {
+    area.innerHTML = `<div class="prize-won"><div class="emoji">🥘</div><div class="text">זכית בסיר קובה! 🎉</div></div>`;
+  } else {
+    area.innerHTML = '';
+  }
+}
+
+function saveScore() {
+  let scores = JSON.parse(localStorage.getItem('natali_quiz_scores') || '[]');
+  scores.push({ name: playerName, score: score, total: questions.length, date: new Date().toISOString() });
+  scores.sort((a, b) => b.score - a.score);
+  scores = scores.slice(0, 10);
+  localStorage.setItem('natali_quiz_scores', JSON.stringify(scores));
+}
+
+function showLeaderboard() {
+  let scores = JSON.parse(localStorage.getItem('natali_quiz_scores') || '[]');
+  if (scores.length === 0) return;
+  document.getElementById('leaderboard').style.display = 'block';
+  const list = document.getElementById('leaderboardList');
+  list.innerHTML = '';
+  scores.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'leaderboard-item';
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`;
+    item.innerHTML = `<span class="rank">${medal}</span><span class="name">${s.name}</span><span class="pts">${s.score}/${s.total}</span>`;
+    list.appendChild(item);
+  });
+}
+
+function resetQuiz() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'block';
+  document.getElementById('playerName').value = '';
+  document.getElementById('playerName').style.borderColor = 'var(--teal)';
+}
+</script>
+</body>
+</html>
