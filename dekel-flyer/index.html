@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>דקל מחשבים | מערכת ניהול ספריות דיגיטלית</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --navy: #1e3a5f;
+  --navy-dark: #0f2942;
+  --gold: #d4a017;
+  --bg: #f8fafc;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: #1a202c;
+  overflow-x: hidden;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--teal) 100%);
+  min-height: 520px;
+  padding: 60px 20px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(20,184,166,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+.hero .logo-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.hero .logo-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 8px 24px rgba(13,148,136,0.4);
+}
+.hero .logo-text {
+  color: white;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.hero h1 {
+  color: white;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.hero .subtitle {
+  color: rgba(255,255,255,0.9);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.hero .cta-badges {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hero .badge {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Features Section */
+.features {
+  max-width: 1100px;
+  margin: -50px auto 0;
+  padding: 0 20px;
+  position: relative;
+  z-index: 5;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.feature-card {
+  background: white;
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+}
+.feature-card .icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 18px;
+}
+.feature-card .icon-teal { background: linear-gradient(135deg, #ccfbf1, #f0fdfa); }
+.feature-card .icon-navy { background: linear-gradient(135deg, #dbeafe, #eff6ff); }
+.feature-card .icon-gold { background: linear-gradient(135deg, #fef3c7, #fffbeb); }
+.feature-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.feature-card p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #475569;
+}
+
+/* Showcase Section */
+.showcase {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.section-subtitle {
+  text-align: center;
+  font-size: 17px;
+  color: #64748b;
+  margin-bottom: 40px;
+}
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.showcase-item {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  transition: transform 0.3s;
+}
+.showcase-item:hover { transform: translateY(-4px); }
+.showcase-item .showcase-img {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+.showcase-item .showcase-body { padding: 20px 24px; }
+.showcase-item h4 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.showcase-item p { font-size: 14px; color: #64748b; line-height: 1.6; }
+
+/* Stats */
+.stats {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  padding: 50px 20px;
+  text-align: center;
+}
+.stats-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 32px;
+}
+.stat-item .stat-num {
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--teal-light);
+  margin-bottom: 4px;
+}
+.stat-item .stat-label {
+  font-size: 15px;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Pricing Banner */
+.pricing-banner {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+.pricing-card {
+  background: linear-gradient(135deg, #fffbeb, #fff);
+  border: 2px solid var(--gold);
+  border-radius: 24px;
+  padding: 40px 36px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(212,160,23,0.15);
+}
+.pricing-card .pricing-tag {
+  display: inline-block;
+  background: var(--gold);
+  color: white;
+  padding: 6px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.pricing-card h2 {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.pricing-card p {
+  font-size: 17px;
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.pricing-features {
+  display: inline-block;
+  text-align: right;
+  margin: 0 auto 28px;
+}
+.pricing-features li {
+  list-style: none;
+  padding: 6px 0;
+  font-size: 16px;
+  color: #1a202c;
+}
+.pricing-features li::before {
+  content: '✓ ';
+  color: var(--teal);
+  font-weight: 900;
+  margin-left: 8px;
+}
+
+/* Footer */
+.footer {
+  background: var(--navy-dark);
+  padding: 40px 20px;
+  text-align: center;
+}
+.footer .footer-logo {
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+.footer .footer-info {
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.footer .footer-contact {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer .footer-contact a {
+  color: var(--teal-light);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.7s ease-out; }
+.delay-1 { animation-delay: 0.1s; animation-fill-mode: backwards; }
+.delay-2 { animation-delay: 0.2s; animation-fill-mode: backwards; }
+.delay-3 { animation-delay: 0.3s; animation-fill-mode: backwards; }
+.delay-4 { animation-delay: 0.4s; animation-fill-mode: backwards; }
+.delay-5 { animation-delay: 0.5s; animation-fill-mode: backwards; }
+
+@media (max-width: 600px) {
+  .hero h1 { font-size: 30px; }
+  .hero .subtitle { font-size: 17px; }
+  .section-title { font-size: 24px; }
+  .hero .logo-text { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="logo-area fade-up">
+      <div class="logo-icon">💻</div>
+      <div class="logo-text">דקל מחשבים</div>
+    </div>
+    <h1 class="fade-up delay-1">מערכת ניהול ספריות דיגיטלית</h1>
+    <p class="subtitle fade-up delay-2">
+      פתרון טכנולוגי מתקדם לניהול ספריות ולובים<br>
+      אינטואיטיבי, גמיש ומותאם אישית לכל לקוח
+    </p>
+    <div class="cta-badges fade-up delay-3">
+      <span class="badge">⚡ הפעלה מיידית</span>
+      <span class="badge">🎨 התאמה אישית</span>
+      <span class="badge">📱 נגיש מכל מכשיר</span>
+    </div>
+  </div>
+</div>
+
+<!-- Features -->
+<div class="features">
+  <div class="features-grid">
+    <div class="feature-card fade-up delay-1">
+      <div class="icon-wrap icon-teal">🎯</div>
+      <h3>אינטראקציה אינטואיטיבית</h3>
+      <p>ממשק נקי ופשוט שלא דורש הדרכה. כל אחד יכול להפעיל ולנהל מהיום הראשון — בלי צורך ברקע טכני.</p>
+    </div>
+    <div class="feature-card fade-up delay-2">
+      <div class="icon-wrap icon-navy">⚙️</div>
+      <h3>טיפול פשוט וקל</h3>
+      <p>ניהול תכנים, אירועים ותצוגות בכמה לחיצות. הוספת ספרים, עדכון מלאי וניהול משתמשים בקלות ובמהירות.</p>
+    </div>
+    <div class="feature-card fade-up delay-3">
+      <div class="icon-wrap icon-gold">🔧</div>
+      <h3>התאמות על פי צורך הלקוח</h3>
+      <p>כל מערכת מותאמת בדיוק לצרכים שלך — עיצוב, שפה, קטגוריות, הרשאות ותהליכי עבודה. המערכת מתאימה אליך, לא להיפך.</p>
+    </div>
+    <div class="feature-card fade-up delay-4">
+      <div class="icon-wrap icon-teal">🚀</div>
+      <h3>התאמה מיידית</h3>
+      <p>שינויים ועדכונים נכנסים לתוקף מיד. אין זמן המתנה, אין תהליכים ארוכים. מה שמשנים — מתעדכן על המקום.</p>
+    </div>
+    <div class="feature-card fade-up delay-5">
+      <div class="icon-wrap icon-navy">📺</div>
+      <h3>תצוגת טלוויזיה חכמה</h3>
+      <p>מסכי תצוגה בלובי עם תכנים מתחלפים — אירועים, המלצות ספרים, הודעות ועוד. נראה מקצועי, פועל אוטונומית.</p>
+    </div>
+    <div class="feature-card fade-up delay-5">
+      <div class="icon-wrap icon-gold">📊</div>
+      <h3>דוחות וניהול מלא</h3>
+      <p>מעקב השאלות, סטטיסטיקות שימוש, ניהול מנויים ודוחות מפורטים. כל המידע לפניך — בכל רגע נתון.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Showcase -->
+<div class="showcase">
+  <h2 class="section-title">מה המערכת כוללת?</h2>
+  <p class="section-subtitle">כל מה שספרייה מודרנית צריכה — במקום אחד</p>
+  <div class="showcase-grid">
+    <div class="showcase-item">
+      <div class="showcase-img">📚</div>
+      <div class="showcase-body">
+        <h4>ניהול תוכן מלא</h4>
+        <p>קטלוג ספרים חכם עם חיפוש, סינון, קטגוריות, מיקום על מדף ותמונות כריכה.</p>
+      </div>
+    </div>
+    <div class="showcase-item">
+      <div class="showcase-img">👥</div>
+      <div class="showcase-body">
+        <h4>ניהול משתמשים</h4>
+        <p>מערכת הרשאות מלאה — מנהל, ספרן ומשתמש. כניסה מאובטחת עם מעקב פעילות.</p>
+      </div>
+    </div>
+    <div class="showcase-item">
+      <div class="showcase-img">📅</div>
+      <div class="showcase-body">
+        <h4>ניהול אירועים</h4>
+        <p>יצירת אירועים, הרשמה מקוונת, מעקב משתתפים ותצוגה אוטומטית בלובי.</p>
+      </div>
+    </div>
+    <div class="showcase-item">
+      <div class="showcase-img">🔄</div>
+      <div class="showcase-body">
+        <h4>השאלה והחזרה</h4>
+        <p>מעקב השאלות, תזכורות אוטומטיות, ניהול מלאי והיסטוריית פעילות מלאה.</p>
+      </div>
+    </div>
+    <div class="showcase-item">
+      <div class="showcase-img">☁️</div>
+      <div class="showcase-body">
+        <h4>ענן מאובטח</h4>
+        <p>גיבוי מלא ואוטומטי של כל הנתונים. המידע שלך שמור, מוגן וזמין תמיד.</p>
+      </div>
+    </div>
+    <div class="showcase-item">
+      <div class="showcase-img">🌐</div>
+      <div class="showcase-body">
+        <h4>אתר אינטרנט</h4>
+        <p>אתר ניהולי ודף תצוגה ציבורי. נגיש מכל מכשיר — מחשב, טאבלט או נייד.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">התאמה אישית</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">זמינות מערכתית</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0</div>
+      <div class="stat-label">צורך בהתקנה</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">משתמשים ותכנים</div>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing -->
+<div class="pricing-banner">
+  <div class="pricing-card">
+    <span class="pricing-tag">🏆 הצעה מיוחדת</span>
+    <h2>מחירים ללא תחרות</h2>
+    <p>שירות ברמה הגבוהה ביותר — במחיר שמתאים לך</p>
+    <ul class="pricing-features">
+      <li>מחיר חד-פעמי להקמה + עלות חודשית נמוכה</li>
+      <li>ללא עמלות נסתרות — מחיר שקוף והוגן</li>
+      <li>תמיכה טכנית מהצוות של דקל מחשבים</li>
+      <li>עדכונים ושדרוגים ללא עלות נוספת</li>
+      <li>הדרכה מלאה לצוות הספרייה</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-logo">💻 דקל מחשבים</div>
+  <div class="footer-info">
+    רחוב קלישר 16, ראשל"צ · ח.פ. 033880246<br>
+    מערכות טכנולוגיות לניהול ספריות ולובים
+  </div>
+  <div class="footer-contact">
+    <span>פיתוח טכנולוגי: AILON Task</span>
+  </div>
+</div>
+
+</body>
+</html>
