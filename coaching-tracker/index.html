@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>טבלת מעקב אימון זוגי | יניר וזוהר</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --navy: #1e3a5f;
+  --navy-dark: #0f2942;
+  --gold: #c8954a;
+  --cream: #f5f1ea;
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #f59e0b;
+  --gray: #64748b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--cream);
+  color: #1a202c;
+  min-height: 100vh;
+  padding: 20px;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--navy-dark), var(--teal));
+  border-radius: 20px;
+  padding: 28px 32px;
+  color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(13,148,136,0.2);
+}
+.header h1 { font-size: 24px; font-weight: 900; margin-bottom: 6px; }
+.header .subtitle { font-size: 15px; opacity: 0.85; }
+.header .meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.header .meta-tag {
+  background: rgba(255,255,255,0.15);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Section */
+.section { margin-bottom: 28px; }
+.section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .icon { font-size: 1.3rem; }
+
+/* Table */
+.table-wrap {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: var(--teal);
+  color: white;
+  padding: 14px 12px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f8fafc; }
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-progress { background: #dbeafe; color: #1e40af; }
+.badge-done { background: #d1fae5; color: #065f46; }
+.badge-check { background: #fce7f3; color: #9f1239; }
+
+/* Person badges */
+.person {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.person-yanir { background: #e0f2fe; color: #0c4a6e; }
+.person-zohar { background: #fce7f3; color: #9f1239; }
+.person-both { background: #e0e7ff; color: #3730a3; }
+
+/* Notes card */
+.notes-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+.notes-card h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.notes-card ul { list-style: none; padding: 0; }
+.notes-card li {
+  padding: 6px 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+.notes-card li::before {
+  content: '▸ ';
+  color: var(--teal);
+  font-weight: 900;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .table-wrap { overflow-x: auto; }
+  table { min-width: 600px; }
+  th, td { font-size: 12px; padding: 8px; }
+  .header h1 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <h1>📋 טבלת מעקב אימון זוגי — יניר וזוהר</h1>
+  <div class="subtitle">מתאמן: ליאור סופר | פגישה ראשונה: 17.8.26</div>
+  <div class="meta">
+    <span class="meta-tag">👶 ילד: יהונתן</span>
+    <span class="meta-tag">⏰ יניר חוזר ~18:00</span>
+    <span class="meta-tag">📍 פגישה אצלם בבית</span>
+    <span class="meta-tag">📅 פגישה הבאה: טרם נקבעה</span>
+  </div>
+</div>
+
+<!-- Zohar Tasks -->
+<div class="section">
+  <div class="section-title"><span class="icon">💖</span> משימות זוהר</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>משימה</th>
+          <th>פירוט</th>
+          <th>סטטוס</th>
+          <th>בדיקה בפגישה הבאה</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>לקיחת אחריות ובקשת סליחה</td>
+          <td>להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.</td>
+          <td><span class="badge badge-pending">ממתין</span></td>
+          <td>האם ביקשה סליחה? איך יניר הגיב? האם יש חיבה פיזית יומיומית?</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>לחשוב לפני תגובה</td>
+          <td>לא להגיב בחום הרגע (שידור מת). לחכות, לחשוב, ואז לפרגן במה שהוא אוהב.</td>
+          <td><span class="badge badge-pending">ממתין</span></td>
+          <td>האם הצליחה לשתוק ברגע חם? האם פירגנה ליניר מתוך שקט?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Yanir Tasks -->
+<div class="section">
+  <div class="section-title"><span class="icon">💪</span> משימות יניר</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>משימה</th>
+          <th>פירוט</th>
+          <th>סטטוס</th>
+          <th>בדיקה בפגישה הבאה</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>להימנע מביקורת</td>
+          <td>נקודת המוצא לא אפקטיבית בכל מקרה. לעצור את הביקורת לפני שיוצאת מהפה.</td>
+          <td><span class="badge badge-pending">ממתין</span></td>
+          <td>האם הצליח להימנע? כמה פעמים תפס את עצמו? איך זוהר הרגישה?</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>לעזור בבית — שעתיים בלי טלפון</td>
+          <td>להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.</td>
+          <td><span class="badge badge-pending">ממתין</span></td>
+          <td>האם ביצע? כמה פעמים בשבוע? האם זוהר הרגישה הקלה? איך יהונתן הגיב?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Improvement Points -->
+<div class="section">
+  <div class="section-title"><span class="icon">📈</span> נקודות שיפור מתמשכות</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>מי</th>
+          <th>נקודת שיפור</th>
+          <th>פירוט</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="person person-zohar">זוהר</span></td>
+          <td>לפרגן על דברים קטנים</td>
+          <td>גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.</td>
+          <td><span class="badge badge-check">למעקב</span></td>
+        </tr>
+        <tr>
+          <td><span class="person person-zohar">זוהר</span></td>
+          <td>פחות ציניות, יותר חיוב</td>
+          <td>לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.</td>
+          <td><span class="badge badge-check">למעקב</span></td>
+        </tr>
+        <tr>
+          <td><span class="person person-yanir">יניר</span></td>
+          <td>להימנע מביקורת</td>
+          <td>לא אפקטיבי כנקודת מוצא — לבנות במקום לבקר.</td>
+          <td><span class="badge badge-check">למעקב</span></td>
+        </tr>
+        <tr>
+          <td><span class="person person-yanir">יניר</span></td>
+          <td>נוכחות ביתית</td>
+          <td>שעתיים ייעודיות לילדים בלי טלפון, מיד עם ההגעה.</td>
+          <td><span class="badge badge-check">למעקב</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Session Notes -->
+<div class="section">
+  <div class="section-title"><span class="icon">📝</span> נקודות מהפגישה הראשונה (17.8.26)</div>
+  <div class="notes-card">
+    <ul>
+      <li>זוהר התחברה חזק לסיכום — "חזק מאוד מתחבר, נעשה ונצליח"</li>
+      <li>מציאותית — "יהיה קשה אבל נצליח" (Stretch Zone)</li>
+      <li>רעיון מעשי של זוהר — "נתחיל במשתמש וסיסמא לבנק?" — שיתוף פיננסי</li>
+      <li>זוהר: "אם זה קורה שיפור של 10% מובטח" — כבר חושבת במספרים</li>
+      <li>זוהר: "נדבר על ההצעות שלי בפגישה הבאה בע"ה" — יש לה הצעות משלה</li>
+      <li>גרייפ ווטר נקנה — נעדכן איך עובד (נושא נפרד)</li>
+      <li>כלי מרכזי באימון: "שידור חי מול שידור מת" — לא להגיב בחום הרגע</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Next Session -->
+<div class="section">
+  <div class="section-title"><span class="icon">🎯</span> מה לבדוק בפגישה הבאה</div>
+  <div class="notes-card">
+    <ul>
+      <li>האם יניר ביצע את "שעתיים בלי טלפון"? כמה פעמים? מה הרגיש?</li>
+      <li>האם זוהר הצליחה לעצור תגובה בחום הרגע (שידור מת)?</li>
+      <li>האם הייתה חיבה פיזית יומיומית?</li>
+      <li>האם יניר הפחית ביקורת? האם זוהר הרגישה את זה?</li>
+      <li>האם זוהר פירגנה על דברים קטנים? איך יניר הגיב?</li>
+      <li>לשמוע את "ההצעות של זוהר" לפגישה הבאה</li>
+      <li>עדכון על גרייפ ווטר</li>
+      <li>האם יש שיפור של 10%? לפי מה שזוהר מדדה?</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
