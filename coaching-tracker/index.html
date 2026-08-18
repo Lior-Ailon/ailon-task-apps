@@ -139,7 +139,6 @@ tr:last-child td { border-bottom: none; }
 }
 .person-yanir { background: #e0f2fe; color: #0c4a6e; }
 .person-zohar { background: #fce7f3; color: #9f1239; }
-.person-both { background: #e0e7ff; color: #3730a3; }
 
 /* Status select */
 .status-select {
@@ -227,9 +226,8 @@ tr:last-child td { border-bottom: none; }
     <button class="save-btn" onclick="saveAll()">💾 שמור עדכונים</button>
   </div>
   <div class="meta">
-    <span class="meta-tag">👶 ילד: יהונתן</span>
     <span class="meta-tag">⏰ יניר חוזר ~18:00</span>
-    <span class="meta-tag">📍 פגישה אצלם בבית</span>
+    <span class="meta-tag">☕ פגישה: קינמון</span>
     <span class="meta-tag">📅 פגישה הבאה: טרם נקבעה</span>
   </div>
 </div>
@@ -253,7 +251,7 @@ tr:last-child td { border-bottom: none; }
           <th style="width:160px">משימה</th>
           <th>פירוט</th>
           <th style="width:120px">סטטוס</th>
-          <th style="width:180px">הערות / מה נבדק</th>
+          <th style="width:180px">הערות</th>
         </tr>
       </thead>
       <tbody id="yanirBody"></tbody>
@@ -272,7 +270,7 @@ tr:last-child td { border-bottom: none; }
           <th style="width:160px">משימה</th>
           <th>פירוט</th>
           <th style="width:120px">סטטוס</th>
-          <th style="width:180px">הערות / מה נבדק</th>
+          <th style="width:180px">הערות</th>
         </tr>
       </thead>
       <tbody id="zoharBody"></tbody>
@@ -301,7 +299,7 @@ tr:last-child td { border-bottom: none; }
 
 <!-- Session Notes -->
 <div class="section">
-  <div class="section-title"><span class="icon">📝</span> נקודות מהפגישה הראשונה (17.8.26)</div>
+  <div class="section-title"><span class="icon">📝</span> נקודות מהפגישה הראשונה (17.8.26 — קינמון)</div>
   <div class="notes-card">
     <ul>
       <li><b>יניר:</b> "חזק מאוד מתחבר, נעשה ונצליח" — מתחבר חזק לתהליך</li>
@@ -319,40 +317,21 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
-<!-- Next Session -->
-<div class="section">
-  <div class="section-title"><span class="icon">🎯</span> מה לבדוק בפגישה הבאה</div>
-  <div class="notes-card">
-    <ul>
-      <li>האם יניר ביצע "שעתיים בלי טלפון"? כמה פעמים? מה הרגיש?</li>
-      <li>האם יניר הצליח להימנע מביקורת? האם זוהר הרגישה את זה?</li>
-      <li>האם יניר לקח אחריות וביקש סליחה? האם הייתה חיבה פיזית?</li>
-      <li>האם יניר חשב לפני תגובה (שידור מת)?</li>
-      <li>האם זוהר פירגנה על דברים קטנים? איך יניר הגיב?</li>
-      <li>האם זוהר הפחיתה ציניות? האם דיבור מקדם?</li>
-      <li>לשמוע את "ההצעות של יניר" לפגישה הבאה</li>
-      <li>עדכון על גרייפ ווטר</li>
-      <li>האם יש שיפור של 10%? לפי מה שיניר מדד?</li>
-    </ul>
-  </div>
-</div>
-
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// Data
 const tasks = {
   yanir: [
-    { id: 'y1', task: 'לקיחת אחריות ובקשת סליחה', detail: 'להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.', status: 'pending', notes: 'האם ביקש סליחה? איך זוהר הגיבה? האם יש חיבה פיזית יומיומית?' },
-    { id: 'y2', task: 'לחשוב לפני תגובה (שידור מת)', detail: 'לא להגיב בחום הרגע. לחכות, לחשוב, ואז לפרגן במה שהיא אוהבת.', status: 'pending', notes: 'האם הצליח לשתוק ברגע חם? האם פירגן מתוך שקט?' },
-    { id: 'y3', task: 'להימנע מביקורת', detail: 'נקודת מוצא לא אפקטיבית. לעצור את הביקורת לפני שיוצאת מהפה.', status: 'pending', notes: 'האם הצליח להימנע? כמה פעמים תפס את עצמו?' },
-    { id: 'y4', task: 'לעזור בבית — 2 שעות בלי טלפון', detail: 'להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.', status: 'pending', notes: 'האם ביצע? כמה פעמים בשבוע? האם זוהר הרגישה הקלה?' }
+    { id: 'y1', task: 'לקיחת אחריות ובקשת סליחה', detail: 'להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.', status: 'pending', notes: '' },
+    { id: 'y2', task: 'לחשוב לפני תגובה (שידור מת)', detail: 'לא להגיב בחום הרגע. לחכות, לחשוב, ואז לפרגן במה שהיא אוהבת.', status: 'pending', notes: '' },
+    { id: 'y3', task: 'להימנע מביקורת', detail: 'נקודת מוצא לא אפקטיבית. לעצור את הביקורת לפני שיוצאת מהפה.', status: 'pending', notes: '' },
+    { id: 'y4', task: 'לעזור בבית — 2 שעות בלי טלפון', detail: 'להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.', status: 'pending', notes: '' }
   ],
   zohar: [
-    { id: 'z1', task: 'לפרגן ליניר על דברים קטנים', detail: 'גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.', status: 'pending', notes: 'האם פירגנה? איך יניר הגיב? איך זה הרגיש לשניהם?' },
-    { id: 'z2', task: 'פחות ציניות, יותר חיוב', detail: 'לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.', status: 'pending', notes: 'האם שינתה גישה? האם יניר שם לב להבדל?' }
+    { id: 'z1', task: 'לפרגן ליניר על דברים קטנים', detail: 'גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.', status: 'pending', notes: '' },
+    { id: 'z2', task: 'פחות ציניות, יותר חיוב', detail: 'לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.', status: 'pending', notes: '' }
   ],
   improvement: [
     { id: 'i1', person: 'yanir', task: 'להימנע מביקורת', detail: 'לא אפקטיבי כנקודת מוצא — לבנות במקום לבקר.', status: 'pending', notes: '' },
@@ -374,7 +353,6 @@ const personLabels = {
   zohar: { label: 'זוהר', cls: 'person-zohar' }
 };
 
-// Load saved data
 function loadData() {
   const saved = localStorage.getItem('coachingTracker');
   if (saved) {
@@ -387,10 +365,8 @@ function loadData() {
   }
 }
 
-// Render table rows
 function renderRow(row, showPerson) {
   const statusCls = row.status || 'pending';
-  const statusLabel = statusOptions.find(s => s.value === statusCls)?.label || 'ממתין';
   const optionsHtml = statusOptions.map(s => 
     `<option value="${s.value}" ${s.value === statusCls ? 'selected' : ''}>${s.label}</option>`
   ).join('');
@@ -436,8 +412,6 @@ function updateStatus(id, value, select) {
   const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
   const task = all.find(t => t.id === id);
   if (task) task.status = value;
-  
-  // Update select styling
   select.className = 'status-select ' + value;
   updateSummary();
   showToast('סטטוס עודכן ✓');
@@ -462,7 +436,6 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-// Init
 loadData();
 renderAll();
 </script>
