@@ -216,6 +216,30 @@ body::before{
 }
 .footer a{color:var(--gold);text-decoration:none}
 
+/* Gantt Chart */
+.gantt-wrapper{overflow-x:auto;padding-bottom:8px}
+.gantt-grid{display:grid;min-width:800px;position:relative}
+.gantt-header-row{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:8px}
+.gantt-header-label{font-size:.82rem;font-weight:700;color:var(--gold);padding-right:12px}
+.gantt-header-timeline{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-muted);padding:0 4px}
+.gantt-row{display:grid;grid-template-columns:140px 1fr;align-items:center;min-height:48px;border-bottom:1px solid var(--border-light);padding:6px 0}
+.gantt-row:hover{background:rgba(255,255,255,0.02)}
+.gantt-row-label{font-size:.82rem;font-weight:600;color:var(--text);padding-right:12px;display:flex;align-items:center;gap:6px}
+.gantt-row-label .floor-num{color:var(--gold);font-weight:800}
+.gantt-bar-container{position:relative;height:32px;display:flex;align-items:center}
+.gantt-bar{position:absolute;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;overflow:hidden;white-space:nowrap;transition:all .3s;cursor:pointer}
+.gantt-bar:hover{transform:scaleY(1.15);box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10}
+.gantt-bar.done{background:rgba(74,222,128,0.25);color:var(--green);border:1px solid rgba(74,222,128,0.4)}
+.gantt-bar.active{background:rgba(251,146,60,0.3);color:var(--orange);border:1px solid rgba(251,146,60,0.5);animation:pulse-bar 2s ease-in-out infinite}
+.gantt-bar.planning{background:rgba(251,191,36,0.12);color:var(--yellow);border:1px dashed rgba(251,191,36,0.3)}
+.gantt-bar.empty{background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.08)}
+@keyframes pulse-bar{0%,100%{opacity:1}50%{opacity:.7}}
+.gantt-today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--red);z-index:5;opacity:.6}
+.gantt-today-label{position:absolute;top:-20px;right:-20px;font-size:.65rem;color:var(--red);font-weight:700;background:var(--red-bg);padding:2px 6px;border-radius:4px;white-space:nowrap}
+.gantt-legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+.gantt-legend-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-light)}
+.gantt-legend-dot{width:12px;height:12px;border-radius:4px}
+
 /* Responsive */
 @media(max-width:768px){
   .topbar-nav{display:none}
@@ -239,6 +263,8 @@ body::before{
       <button class="nav-btn active" onclick="showView('dashboard')">דשבורד</button>
       <button class="nav-btn" onclick="showView('projects')">פרויקטים</button>
       <button class="nav-btn" onclick="showView('insights')">תובנות</button>
+      <button class="nav-btn" onclick="showView('gantt')">גאנט</button>
+      <button class="nav-btn" onclick="showView('gantt')">גאנט</button>
     </div>
   </div>
 </div>
@@ -260,7 +286,15 @@ body::before{
     <div id="projectsList"></div>
   </div>
 
-  <div id="view-insights" style="display:none">
+  <div id="view-gantt" style="display:none">
+    <div class="section-header"><div><h2>תרשים גאנט</h2><p>ציר זמן לשלבי הפרויקט — איפה כל קומה עומדת</p></div></div>
+    <div class="card"><div class="card-title">📅 ציר זמן — מגדל הורדים</div><div id="ganttContent"></div></div>
+  </div>
+    <div id="view-gantt" style="display:none">
+    <div class="section-header"><div><h2>תרשים גאנט</h2><p>ציר זמן לשלבי הפרויקט — איפה כל קומה עומדת</p></div></div>
+    <div class="card"><div class="card-title">📅 ציר זמן — מגדל הורדים</div><div id="ganttContent"></div></div>
+  </div>
+<div id="view-insights" style="display:none">
     <div class="section-header"><div><h2>תובנות ולמידה</h2><p>המערכת לומדת מכל קומה ומשפרת חיזויים</p></div></div>
     <div id="insightsContent"></div>
   </div>
@@ -467,11 +501,12 @@ function showView(view){
   document.querySelectorAll('[id^="view-"]').forEach(v=>v.style.display='none');
   document.getElementById('view-'+view).style.display='block';
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const idx = view==='dashboard'?0:view==='projects'?1:2;
+  const idx = view==='dashboard'?0:view==='projects'?1:view==='insights'?2:3;
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if(view==='dashboard') renderDashboard();
   if(view==='projects') renderProjects();
   if(view==='insights') renderInsights();
+  if(view==='gantt') renderGantt();
 }
 
 // ============ DASHBOARD ============
@@ -733,6 +768,74 @@ function renderInsights(){
       <p>${ins.text}</p>
     </div>
   `).join('');
+}
+
+
+// ============ GANTT CHART ============
+function renderGantt(){
+  const p = appData.projects[0];
+  const startDate = new Date("2026-03-01");
+  const endDate = new Date("2026-08-01");
+  const totalSpan = (endDate - startDate) / (1000*60*60*24);
+  
+  const months = [];
+  let cur = new Date(startDate);
+  while(cur <= endDate){
+    const m = cur.toLocaleDateString("he-IL",{month:"short"});
+    if(!months.includes(m)) months.push(m);
+    cur.setMonth(cur.getMonth()+1);
+  }
+  
+  let html = '<div class="gantt-wrapper"><div class="gantt-grid">';
+  html += '<div class="gantt-header-row"><div class="gantt-header-label">קומה / שלב</div><div class="gantt-header-timeline">';
+  months.forEach(m => html += '<span>'+m+'</span>');
+  html += '</div></div>';
+  
+  p.floors.forEach(f => {
+    html += '<div class="gantt-row">';
+    html += '<div class="gantt-row-label"><span class="floor-num">קומה '+f.number+'</span> <span style="font-size:.72rem;color:var(--text-muted)">'+(f.status==="completed"?"✓":f.status==="active"?"⏳":"⏸")+'</span></div>';
+    html += '<div class="gantt-bar-container">';
+    if(f.stages.length === 0){
+      html += '<div class="gantt-bar empty" style="right:0%;width:100%">לא תוכנן</div>';
+    } else {
+      let dayOffset = 0;
+      const floorStart = f.startedAt ? new Date(f.startedAt) : null;
+      f.stages.forEach(s => {
+        if(!floorStart) return;
+        const stageStart = new Date(floorStart);
+        stageStart.setDate(stageStart.getDate() + dayOffset);
+        const rightPct = Math.max(0, Math.min(100, ((stageStart - startDate) / (endDate - startDate)) * 100));
+        const widthPct = Math.min(100 - rightPct, (s.estimatedDays / totalSpan) * 100);
+        html += '<div class="gantt-bar '+s.status+'" style="right:'+rightPct+'%;width:'+widthPct+'%" title="'+s.name+'">'+s.name+'</div>';
+        dayOffset += s.estimatedDays;
+      });
+    }
+    html += '</div></div>';
+  });
+  
+  html += '</div></div>';
+  
+  html += '<div class="gantt-legend">';
+  html += '<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:rgba(74,222,128,0.25);border:1px solid rgba(74,222,128,0.4)"></div>הושלם</div>';
+  html += '<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:rgba(251,146,60,0.3);border:1px solid rgba(251,146,60,0.5)"></div>בביצוע</div>';
+  html += '<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:rgba(251,191,36,0.12);border:1px dashed rgba(251,191,36,0.3)"></div>מתוכנן</div>';
+  html += '</div>';
+  
+  html += '<div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">';
+  p.floors.forEach(f => {
+    const done = f.stages.filter(s=>s.status==="done").length;
+    const total = f.stages.length || 0;
+    const pct = total > 0 ? Math.round(done/total*100) : 0;
+    const statusColor = f.status==="completed"?"var(--green)":f.status==="active"?"var(--orange)":"var(--yellow)";
+    html += '<div style="padding:14px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid var(--border-light)">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-weight:700;color:var(--text)">קומה '+f.number+'</span><span style="font-size:.75rem;color:'+statusColor+';font-weight:600">'+pct+'%</span></div>';
+    html += '<div class="floor-progress" style="margin:0"><div class="floor-progress-bar" style="width:'+pct+'%"></div></div>';
+    html += '<div style="font-size:.72rem;color:var(--text-muted);margin-top:6px">'+done+'/'+total+' שלבים</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  document.getElementById('ganttContent').innerHTML = html;
 }
 
 // ============ INIT ============
