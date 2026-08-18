@@ -814,11 +814,11 @@ function renderGantt(){
     html += '</div></div>';
   });
   
-  // Today line
+  // Today line — INSIDE the gantt-grid (which has position:relative)
   const rowHeight = 54;
   const totalRowsHeight = p.floors.length * rowHeight + 16;
-  html += '<div style="position:absolute;top:42px;right:' + todayRight + '%;width:2px;height:' + totalRowsHeight + 'px;background:linear-gradient(180deg,#f87171,rgba(248,113,113,0.3));z-index:5;pointer-events:none"></div>';
-  html += '<div style="position:absolute;top:24px;right:' + (todayRight - 3) + '%;font-size:.62rem;color:#f87171;font-weight:700;background:rgba(248,113,113,0.15);padding:1px 6px;border-radius:4px;white-space:nowrap;z-index:6">היום</div>';
+  html += '<div style="position:absolute;top:42px;right:' + todayRight + '%;width:2px;height:' + totalRowsHeight + 'px;background:linear-gradient(180deg,#f87171,rgba(248,113,113,0.2));z-index:5;pointer-events:none"></div>';
+  html += '<div style="position:absolute;top:22px;right:calc(' + todayRight + '% - 14px);font-size:.62rem;color:#f87171;font-weight:700;background:rgba(248,113,113,0.15);padding:1px 6px;border-radius:4px;white-space:nowrap;z-index:6">היום</div>';
   
   html += '</div></div>';
   
