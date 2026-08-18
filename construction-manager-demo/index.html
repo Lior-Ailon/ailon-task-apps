@@ -775,6 +775,9 @@ function renderGantt(){
   const startDate = new Date("2026-03-01");
   const endDate = new Date("2026-08-01");
   const totalSpan = (endDate - startDate) / (1000*60*60*24);
+  const today = new Date("2026-06-18");
+  const todayPct = Math.min(100, Math.max(0, ((today - startDate) / (endDate - startDate)) * 100));
+  const todayRight = 100 - todayPct; // RTL: position from right
   
   const months = [];
   let cur = new Date(startDate);
@@ -810,6 +813,12 @@ function renderGantt(){
     }
     html += '</div></div>';
   });
+  
+  // Today line
+  const rowHeight = 54;
+  const totalRowsHeight = p.floors.length * rowHeight + 16;
+  html += '<div style="position:absolute;top:42px;right:' + todayRight + '%;width:2px;height:' + totalRowsHeight + 'px;background:linear-gradient(180deg,#f87171,rgba(248,113,113,0.3));z-index:5;pointer-events:none"></div>';
+  html += '<div style="position:absolute;top:24px;right:' + (todayRight - 3) + '%;font-size:.62rem;color:#f87171;font-weight:700;background:rgba(248,113,113,0.15);padding:1px 6px;border-radius:4px;white-space:nowrap;z-index:6">היום</div>';
   
   html += '</div></div>';
   
