@@ -25,47 +25,78 @@ body {
   background: var(--cream);
   color: #1a202c;
   min-height: 100vh;
-  padding: 20px;
+  padding: 16px;
 }
-.container { max-width: 1000px; margin: 0 auto; }
+.container { max-width: 1050px; margin: 0 auto; }
 
 /* Header */
 .header {
   background: linear-gradient(135deg, var(--navy-dark), var(--teal));
   border-radius: 20px;
-  padding: 28px 32px;
+  padding: 24px 28px;
   color: white;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 10px 30px rgba(13,148,136,0.2);
 }
-.header h1 { font-size: 24px; font-weight: 900; margin-bottom: 6px; }
-.header .subtitle { font-size: 15px; opacity: 0.85; }
-.header .meta {
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-.header .meta-tag {
+.header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.header h1 { font-size: 22px; font-weight: 900; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+.header .meta { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.meta-tag {
   background: rgba(255,255,255,0.15);
-  padding: 6px 16px;
+  padding: 5px 14px;
   border-radius: 50px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
+.save-btn {
+  background: var(--gold);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.save-btn:hover { transform: scale(1.05); }
+
+/* Summary bar */
+.summary-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.summary-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px 20px;
+  flex: 1;
+  min-width: 140px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  text-align: center;
+}
+.summary-card .num { font-size: 28px; font-weight: 900; }
+.summary-card .label { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.summary-card .num.green { color: var(--green); }
+.summary-card .num.blue { color: #3b82f6; }
+.summary-card .num.amber { color: var(--orange); }
+.summary-card .num.gray { color: var(--gray); }
 
 /* Section */
-.section { margin-bottom: 28px; }
+.section { margin-bottom: 24px; }
 .section-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--navy);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.section-title .icon { font-size: 1.3rem; }
+.section-title .icon { font-size: 1.2rem; }
 
 /* Table */
 .table-wrap {
@@ -73,88 +104,113 @@ body {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  overflow-x: auto;
 }
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
+  min-width: 700px;
 }
 th {
   background: var(--teal);
   color: white;
-  padding: 14px 12px;
+  padding: 12px 10px;
   text-align: right;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
 }
 td {
-  padding: 12px;
+  padding: 10px;
   border-bottom: 1px solid #e2e8f0;
   vertical-align: top;
 }
 tr:last-child td { border-bottom: none; }
-tr:hover td { background: #f8fafc; }
-
-/* Status badges */
-.badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 50px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.badge-pending { background: #fef3c7; color: #92400e; }
-.badge-progress { background: #dbeafe; color: #1e40af; }
-.badge-done { background: #d1fae5; color: #065f46; }
-.badge-check { background: #fce7f3; color: #9f1239; }
 
 /* Person badges */
 .person {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
 }
 .person-yanir { background: #e0f2fe; color: #0c4a6e; }
 .person-zohar { background: #fce7f3; color: #9f1239; }
 .person-both { background: #e0e7ff; color: #3730a3; }
 
+/* Status select */
+.status-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Heebo', sans-serif;
+  transition: all 0.2s;
+}
+.status-select.pending { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+.status-select.progress { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+.status-select.done { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.status-select.stuck { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+/* Notes textarea */
+.notes-input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: 'Heebo', sans-serif;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.notes-input:focus { border-color: var(--teal); outline: none; }
+
 /* Notes card */
 .notes-card {
   background: white;
   border-radius: 16px;
-  padding: 20px 24px;
+  padding: 18px 22px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  margin-bottom: 24px;
 }
-.notes-card h3 {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--navy);
-  margin-bottom: 10px;
-}
+.notes-card h3 { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
 .notes-card ul { list-style: none; padding: 0; }
 .notes-card li {
-  padding: 6px 0;
-  font-size: 14px;
+  padding: 5px 0;
+  font-size: 13px;
   color: #475569;
   line-height: 1.6;
 }
-.notes-card li::before {
-  content: '▸ ';
-  color: var(--teal);
-  font-weight: 900;
-}
+.notes-card li::before { content: '▸ '; color: var(--teal); font-weight: 900; }
 
-/* Responsive */
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy-dark);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
 @media (max-width: 650px) {
-  .table-wrap { overflow-x: auto; }
-  table { min-width: 600px; }
-  th, td { font-size: 12px; padding: 8px; }
-  .header h1 { font-size: 20px; }
+  th, td { font-size: 11px; padding: 8px 6px; }
+  .header h1 { font-size: 18px; }
+  .summary-card { min-width: 100px; }
 }
 </style>
 </head>
@@ -163,13 +219,45 @@ tr:hover td { background: #f8fafc; }
 
 <!-- Header -->
 <div class="header">
-  <h1>📋 טבלת מעקב אימון זוגי — יניר וזוהר</h1>
-  <div class="subtitle">מתאמן: ליאור סופר | פגישה ראשונה: 17.8.26</div>
+  <div class="header-top">
+    <div>
+      <h1>📋 טבלת מעקב אימון זוגי — יניר וזוהר</h1>
+      <div class="subtitle">מאמן: ליאור סופר | פגישה ראשונה: 17.8.26</div>
+    </div>
+    <button class="save-btn" onclick="saveAll()">💾 שמור עדכונים</button>
+  </div>
   <div class="meta">
     <span class="meta-tag">👶 ילד: יהונתן</span>
     <span class="meta-tag">⏰ יניר חוזר ~18:00</span>
     <span class="meta-tag">📍 פגישה אצלם בבית</span>
     <span class="meta-tag">📅 פגישה הבאה: טרם נקבעה</span>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="summary-bar" id="summaryBar">
+  <div class="summary-card"><div class="num gray" id="totalTasks">0</div><div class="label">סה"כ משימות</div></div>
+  <div class="summary-card"><div class="num amber" id="pendingTasks">0</div><div class="label">ממתין</div></div>
+  <div class="summary-card"><div class="num blue" id="progressTasks">0</div><div class="label">בתהליך</div></div>
+  <div class="summary-card"><div class="num green" id="doneTasks">0</div><div class="label">בוצע</div></div>
+</div>
+
+<!-- Yanir Tasks -->
+<div class="section">
+  <div class="section-title"><span class="icon">💪</span> משימות יניר</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th style="width:160px">משימה</th>
+          <th>פירוט</th>
+          <th style="width:120px">סטטוס</th>
+          <th style="width:180px">הערות / מה נבדק</th>
+        </tr>
+      </thead>
+      <tbody id="yanirBody"></tbody>
+    </table>
   </div>
 </div>
 
@@ -180,63 +268,14 @@ tr:hover td { background: #f8fafc; }
     <table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>משימה</th>
+          <th style="width:40px">#</th>
+          <th style="width:160px">משימה</th>
           <th>פירוט</th>
-          <th>סטטוס</th>
-          <th>בדיקה בפגישה הבאה</th>
+          <th style="width:120px">סטטוס</th>
+          <th style="width:180px">הערות / מה נבדק</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>לקיחת אחריות ובקשת סליחה</td>
-          <td>להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.</td>
-          <td><span class="badge badge-pending">ממתין</span></td>
-          <td>האם ביקשה סליחה? איך יניר הגיב? האם יש חיבה פיזית יומיומית?</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>לחשוב לפני תגובה</td>
-          <td>לא להגיב בחום הרגע (שידור מת). לחכות, לחשוב, ואז לפרגן במה שהוא אוהב.</td>
-          <td><span class="badge badge-pending">ממתין</span></td>
-          <td>האם הצליחה לשתוק ברגע חם? האם פירגנה ליניר מתוך שקט?</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Yanir Tasks -->
-<div class="section">
-  <div class="section-title"><span class="icon">💪</span> משימות יניר</div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>משימה</th>
-          <th>פירוט</th>
-          <th>סטטוס</th>
-          <th>בדיקה בפגישה הבאה</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>להימנע מביקורת</td>
-          <td>נקודת המוצא לא אפקטיבית בכל מקרה. לעצור את הביקורת לפני שיוצאת מהפה.</td>
-          <td><span class="badge badge-pending">ממתין</span></td>
-          <td>האם הצליח להימנע? כמה פעמים תפס את עצמו? איך זוהר הרגישה?</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>לעזור בבית — שעתיים בלי טלפון</td>
-          <td>להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.</td>
-          <td><span class="badge badge-pending">ממתין</span></td>
-          <td>האם ביצע? כמה פעמים בשבוע? האם זוהר הרגישה הקלה? איך יהונתן הגיב?</td>
-        </tr>
-      </tbody>
+      <tbody id="zoharBody"></tbody>
     </table>
   </div>
 </div>
@@ -248,38 +287,14 @@ tr:hover td { background: #f8fafc; }
     <table>
       <thead>
         <tr>
-          <th>מי</th>
-          <th>נקודת שיפור</th>
+          <th style="width:80px">מי</th>
+          <th style="width:180px">נקודת שיפור</th>
           <th>פירוט</th>
-          <th>סטטוס</th>
+          <th style="width:120px">סטטוס</th>
+          <th style="width:180px">הערות</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><span class="person person-zohar">זוהר</span></td>
-          <td>לפרגן על דברים קטנים</td>
-          <td>גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.</td>
-          <td><span class="badge badge-check">למעקב</span></td>
-        </tr>
-        <tr>
-          <td><span class="person person-zohar">זוהר</span></td>
-          <td>פחות ציניות, יותר חיוב</td>
-          <td>לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.</td>
-          <td><span class="badge badge-check">למעקב</span></td>
-        </tr>
-        <tr>
-          <td><span class="person person-yanir">יניר</span></td>
-          <td>להימנע מביקורת</td>
-          <td>לא אפקטיבי כנקודת מוצא — לבנות במקום לבקר.</td>
-          <td><span class="badge badge-check">למעקב</span></td>
-        </tr>
-        <tr>
-          <td><span class="person person-yanir">יניר</span></td>
-          <td>נוכחות ביתית</td>
-          <td>שעתיים ייעודיות לילדים בלי טלפון, מיד עם ההגעה.</td>
-          <td><span class="badge badge-check">למעקב</span></td>
-        </tr>
-      </tbody>
+      <tbody id="improvementBody"></tbody>
     </table>
   </div>
 </div>
@@ -289,13 +304,17 @@ tr:hover td { background: #f8fafc; }
   <div class="section-title"><span class="icon">📝</span> נקודות מהפגישה הראשונה (17.8.26)</div>
   <div class="notes-card">
     <ul>
-      <li>זוהר התחברה חזק לסיכום — "חזק מאוד מתחבר, נעשה ונצליח"</li>
-      <li>מציאותית — "יהיה קשה אבל נצליח" (Stretch Zone)</li>
-      <li>רעיון מעשי של זוהר — "נתחיל במשתמש וסיסמא לבנק?" — שיתוף פיננסי</li>
-      <li>זוהר: "אם זה קורה שיפור של 10% מובטח" — כבר חושבת במספרים</li>
-      <li>זוהר: "נדבר על ההצעות שלי בפגישה הבאה בע"ה" — יש לה הצעות משלה</li>
+      <li><b>יניר:</b> "חזק מאוד מתחבר, נעשה ונצליח" — מתחבר חזק לתהליך</li>
+      <li><b>יניר:</b> "יהיה קשה אבל נצליח" — מציאותי, בחר בעבודה (Stretch Zone)</li>
+      <li><b>יניר:</b> "נתחיל במשתמש וסיסמא לבנק?" — רעיון לשיתוף פיננסי</li>
+      <li><b>יניר:</b> "אם זה קורה שיפור של 10% מובטח" — כבר חושב במספרים</li>
+      <li><b>יניר:</b> "נדבר על ההצעות שלי בפגישה הבאה בע"ה" — יש לו הצעות משלו</li>
+      <li><b>יניר:</b> "צריך לחשוב טוב" — עיבוד עצמי</li>
+      <li><b>יניר:</b> "אמת" — אימות והסכמה</li>
+      <li><b>זוהר:</b> ביקשה שיניר יימנע מביקורת (נקודת מוצא לא אפקטיבית)</li>
+      <li><b>זוהר:</b> ביקשה שיניר יעזור בבית — 2 שעות בלי טלפון עם הילדים</li>
+      <li><b>זוהר:</b> קיבלה על עצמה — לפרגן על דברים קטנים + פחות ציניות</li>
       <li>גרייפ ווטר נקנה — נעדכן איך עובד (נושא נפרד)</li>
-      <li>כלי מרכזי באימון: "שידור חי מול שידור מת" — לא להגיב בחום הרגע</li>
     </ul>
   </div>
 </div>
@@ -305,18 +324,147 @@ tr:hover td { background: #f8fafc; }
   <div class="section-title"><span class="icon">🎯</span> מה לבדוק בפגישה הבאה</div>
   <div class="notes-card">
     <ul>
-      <li>האם יניר ביצע את "שעתיים בלי טלפון"? כמה פעמים? מה הרגיש?</li>
-      <li>האם זוהר הצליחה לעצור תגובה בחום הרגע (שידור מת)?</li>
-      <li>האם הייתה חיבה פיזית יומיומית?</li>
-      <li>האם יניר הפחית ביקורת? האם זוהר הרגישה את זה?</li>
+      <li>האם יניר ביצע "שעתיים בלי טלפון"? כמה פעמים? מה הרגיש?</li>
+      <li>האם יניר הצליח להימנע מביקורת? האם זוהר הרגישה את זה?</li>
+      <li>האם יניר לקח אחריות וביקש סליחה? האם הייתה חיבה פיזית?</li>
+      <li>האם יניר חשב לפני תגובה (שידור מת)?</li>
       <li>האם זוהר פירגנה על דברים קטנים? איך יניר הגיב?</li>
-      <li>לשמוע את "ההצעות של זוהר" לפגישה הבאה</li>
+      <li>האם זוהר הפחיתה ציניות? האם דיבור מקדם?</li>
+      <li>לשמוע את "ההצעות של יניר" לפגישה הבאה</li>
       <li>עדכון על גרייפ ווטר</li>
-      <li>האם יש שיפור של 10%? לפי מה שזוהר מדדה?</li>
+      <li>האם יש שיפור של 10%? לפי מה שיניר מדד?</li>
     </ul>
   </div>
 </div>
 
 </div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Data
+const tasks = {
+  yanir: [
+    { id: 'y1', task: 'לקיחת אחריות ובקשת סליחה', detail: 'להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.', status: 'pending', notes: 'האם ביקש סליחה? איך זוהר הגיבה? האם יש חיבה פיזית יומיומית?' },
+    { id: 'y2', task: 'לחשוב לפני תגובה (שידור מת)', detail: 'לא להגיב בחום הרגע. לחכות, לחשוב, ואז לפרגן במה שהיא אוהבת.', status: 'pending', notes: 'האם הצליח לשתוק ברגע חם? האם פירגן מתוך שקט?' },
+    { id: 'y3', task: 'להימנע מביקורת', detail: 'נקודת מוצא לא אפקטיבית. לעצור את הביקורת לפני שיוצאת מהפה.', status: 'pending', notes: 'האם הצליח להימנע? כמה פעמים תפס את עצמו?' },
+    { id: 'y4', task: 'לעזור בבית — 2 שעות בלי טלפון', detail: 'להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.', status: 'pending', notes: 'האם ביצע? כמה פעמים בשבוע? האם זוהר הרגישה הקלה?' }
+  ],
+  zohar: [
+    { id: 'z1', task: 'לפרגן ליניר על דברים קטנים', detail: 'גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.', status: 'pending', notes: 'האם פירגנה? איך יניר הגיב? איך זה הרגיש לשניהם?' },
+    { id: 'z2', task: 'פחות ציניות, יותר חיוב', detail: 'לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.', status: 'pending', notes: 'האם שינתה גישה? האם יניר שם לב להבדל?' }
+  ],
+  improvement: [
+    { id: 'i1', person: 'yanir', task: 'להימנע מביקורת', detail: 'לא אפקטיבי כנקודת מוצא — לבנות במקום לבקר.', status: 'pending', notes: '' },
+    { id: 'i2', person: 'yanir', task: 'נוכחות ביתית', detail: 'שעתיים ייעודיות לילדים בלי טלפון, מיד עם ההגעה.', status: 'pending', notes: '' },
+    { id: 'i3', person: 'zohar', task: 'לפרגן על דברים קטנים', detail: 'גם על מה שנראה מובן מאליו.', status: 'pending', notes: '' },
+    { id: 'i4', person: 'zohar', task: 'פחות ציניות, יותר חיוב', detail: 'ראיה חיובית, דיבור טוב ומקדם.', status: 'pending', notes: '' }
+  ]
+};
+
+const statusOptions = [
+  { value: 'pending', label: 'ממתין', cls: 'pending' },
+  { value: 'progress', label: 'בתהליך', cls: 'progress' },
+  { value: 'done', label: 'בוצע', cls: 'done' },
+  { value: 'stuck', label: 'נתקע', cls: 'stuck' }
+];
+
+const personLabels = {
+  yanir: { label: 'יניר', cls: 'person-yanir' },
+  zohar: { label: 'זוהר', cls: 'person-zohar' }
+};
+
+// Load saved data
+function loadData() {
+  const saved = localStorage.getItem('coachingTracker');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed.yanir) tasks.yanir = parsed.yanir;
+      if (parsed.zohar) tasks.zohar = parsed.zohar;
+      if (parsed.improvement) tasks.improvement = parsed.improvement;
+    } catch(e) {}
+  }
+}
+
+// Render table rows
+function renderRow(row, showPerson) {
+  const statusCls = row.status || 'pending';
+  const statusLabel = statusOptions.find(s => s.value === statusCls)?.label || 'ממתין';
+  const optionsHtml = statusOptions.map(s => 
+    `<option value="${s.value}" ${s.value === statusCls ? 'selected' : ''}>${s.label}</option>`
+  ).join('');
+  
+  const personHtml = showPerson ? 
+    `<td><span class="person ${personLabels[row.person].cls}">${personLabels[row.person].label}</span></td>` : '';
+  
+  return `<tr>
+    ${showPerson ? personHtml : '<td style="text-align:center;font-weight:700;color:var(--gray)">' + row.id.replace(/[a-z]/,'') + '</td>'}
+    <td style="font-weight:700;color:var(--navy)">${row.task}</td>
+    <td style="color:#555;line-height:1.5">${row.detail}</td>
+    <td>
+      <select class="status-select ${statusCls}" onchange="updateStatus('${row.id}', this.value, this)">
+        ${optionsHtml}
+      </select>
+    </td>
+    <td>
+      <textarea class="notes-input" onchange="updateNotes('${row.id}', this.value)" placeholder="הערות...">${row.notes || ''}</textarea>
+    </td>
+  </tr>`;
+}
+
+function renderAll() {
+  document.getElementById('yanirBody').innerHTML = tasks.yanir.map(r => renderRow(r, false)).join('');
+  document.getElementById('zoharBody').innerHTML = tasks.zohar.map(r => renderRow(r, false)).join('');
+  document.getElementById('improvementBody').innerHTML = tasks.improvement.map(r => renderRow(r, true)).join('');
+  updateSummary();
+}
+
+function updateSummary() {
+  const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
+  const pending = all.filter(t => t.status === 'pending').length;
+  const progress = all.filter(t => t.status === 'progress').length;
+  const done = all.filter(t => t.status === 'done').length;
+  
+  document.getElementById('totalTasks').textContent = all.length;
+  document.getElementById('pendingTasks').textContent = pending;
+  document.getElementById('progressTasks').textContent = progress;
+  document.getElementById('doneTasks').textContent = done;
+}
+
+function updateStatus(id, value, select) {
+  const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
+  const task = all.find(t => t.id === id);
+  if (task) task.status = value;
+  
+  // Update select styling
+  select.className = 'status-select ' + value;
+  updateSummary();
+  showToast('סטטוס עודכן ✓');
+}
+
+function updateNotes(id, value) {
+  const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
+  const task = all.find(t => t.id === id);
+  if (task) task.notes = value;
+  showToast('הערה נשמרה ✓');
+}
+
+function saveAll() {
+  localStorage.setItem('coachingTracker', JSON.stringify(tasks));
+  showToast('כל העדכונים נשמרו ✓');
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Init
+loadData();
+renderAll();
+</script>
 </body>
 </html>
