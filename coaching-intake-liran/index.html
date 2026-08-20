@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="2026-08-20-v1">
+<title>שאלון אימון אישי | AILON Task</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --secondary: #14b8a6;
+  --dark: #1e3a5f;
+  --bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #cbd5e1;
+  --border-light: #e2e8f0;
+  --radius-card: 12px;
+  --radius-btn: 10px;
+  --radius-input: 8px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: linear-gradient(135deg, #f0fdfa 0%, #f1f5f9 50%, #eff6ff 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 20px 16px 40px 16px;
+  line-height: 1.6;
+  -webkit-tap-highlight-color: transparent;
+}
+.container { max-width: 800px; margin: 0 auto; }
+.header {
+  text-align: center;
+  padding: 36px 24px;
+  background: linear-gradient(135deg, var(--dark) 0%, #0f766e 60%, var(--primary) 100%);
+  color: white;
+  border-radius: var(--radius-card);
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(30, 58, 95, 0.18);
+}
+.header .logo {
+  width: 60px; height: 60px; border-radius: 14px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-size: 28px; font-weight: 800; color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.header p { font-size: 14px; opacity: 0.92; }
+.header .subtitle {
+  margin-top: 10px; font-size: 13px; background: rgba(255,255,255,0.15);
+  display: inline-block; padding: 6px 16px; border-radius: 20px;
+}
+.intro-card {
+  background: var(--card-bg); border-radius: var(--radius-card); padding: 24px;
+  margin-bottom: 20px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light);
+  border-right: 4px solid var(--primary);
+}
+.intro-card h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+.intro-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+.section {
+  background: var(--card-bg); border-radius: var(--radius-card); padding: 24px;
+  margin-bottom: 20px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light);
+}
+.section-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+.section-icon {
+  width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white; flex-shrink: 0; box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
+}
+.section-desc { font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px; }
+.form-group { margin-bottom: 22px; }
+.form-group label { font-size: 15px; font-weight: 600; color: var(--dark); display: block; margin-bottom: 8px; line-height: 1.5; }
+.form-group .hint { font-size: 13px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+.form-group input[type="text"], .form-group textarea {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-input); font-size: 15px; font-family: inherit;
+  background: #ffffff; color: var(--text-main); transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input[type="text"]:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--primary); box-shadow: 0 0 0 3.5px rgba(13, 148, 136, 0.15);
+}
+.form-group textarea { min-height: 100px; resize: vertical; }
+.scale-container { margin-top: 10px; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; padding: 0 4px; }
+.scale-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.scale-btn {
+  flex: 1; min-width: 36px; padding: 12px 4px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn); cursor: pointer; font-size: 15px; font-weight: 700;
+  transition: all 0.2s ease; background: #ffffff; color: var(--text-main); text-align: center;
+}
+.scale-btn:hover { border-color: var(--primary); background: #f0fdfa; transform: translateY(-1px); }
+.scale-btn.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 3px 10px rgba(13, 148, 136, 0.3); }
+.scale-btn.selected.low { background: #dc2626; border-color: #dc2626; box-shadow: 0 3px 10px rgba(220,38,38,0.3); }
+.scale-btn.selected.mid { background: #f59e0b; border-color: #f59e0b; box-shadow: 0 3px 10px rgba(245,158,11,0.3); }
+.scale-btn.selected.high { background: #16a34a; border-color: #16a34a; box-shadow: 0 3px 10px rgba(22,163,74,0.3); }
+.choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.choice-card {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  border: 1.5px solid var(--border-light); border-radius: var(--radius-btn);
+  cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease;
+  background: #f8fafc; color: var(--text-main); user-select: none;
+}
+.choice-card:hover { border-color: var(--secondary); background: #f0fdfa; }
+.choice-card.selected { border-color: var(--primary); background: #f0fdfa; box-shadow: 0 2px 8px rgba(13, 148, 136, 0.12); }
+.choice-card input[type="radio"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+.submit-section {
+  text-align: center; padding: 32px 24px; background: var(--card-bg);
+  border-radius: var(--radius-card); margin-bottom: 20px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light);
+}
+.btn-submit {
+  padding: 16px 48px; background: linear-gradient(135deg, var(--dark), var(--primary));
+  color: white; border: none; border-radius: var(--radius-card); font-size: 18px; font-weight: 700;
+  font-family: inherit; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.3);
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4); }
+.btn-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+.success-msg {
+  display: none; background: #dcfce7; border: 2px solid #16a34a; border-radius: var(--radius-card);
+  padding: 32px 24px; text-align: center; margin-bottom: 20px;
+}
+.success-msg .icon { font-size: 48px; margin-bottom: 12px; }
+.success-msg h3 { color: #15803d; font-size: 20px; margin-bottom: 8px; font-weight: 700; }
+.success-msg p { color: #16a34a; font-size: 15px; line-height: 1.6; }
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--dark); color: white; padding: 14px 28px; border-radius: var(--radius-btn);
+  font-size: 14px; font-weight: 500; z-index: 9999; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.toast.show { opacity: 1; pointer-events: auto; }
+.required { color: #dc2626; font-weight: bold; }
+@media (max-width: 600px) {
+  .scale-btn { min-width: 30px; font-size: 14px; padding: 10px 2px; }
+  .header h1 { font-size: 20px; }
+  .section { padding: 18px 16px; }
+  .btn-submit { width: 100%; padding: 14px 20px; }
+  button, .btn-submit, .choice-card, .scale-btn { min-height: 48px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">A</div>
+    <h1>שאלון אימון אישי</h1>
+    <p>אימון קריירה • התפתחות אישית</p>
+    <div class="subtitle">AILON Task — Dream it. Plan it. Achieve it.</div>
+  </div>
+
+  <div class="intro-card">
+    <h3>שלום לירן! 👋</h3>
+    <p>
+      שאלון זה נועד לעזור לליאור להכיר אותך טוב יותר לפני פגישת האימון הראשונה.
+      אין תשובות נכונות או לא נכונות — תשיב בכנות ומהלב.
+      השאלון ייקח כ-10 דקות. התשובות נשלחות ישירות לליאור.
+    </p>
+  </div>
+
+  <div id="formArea">
+    <div class="section">
+      <div class="section-title"><div class="section-icon">👤</div><span>פרטים אישיים</span></div>
+      <div class="section-desc">כמה פרטים בסיסיים לפני שמתחילים</div>
+      <div class="form-group">
+        <label>שם מלא <span class="required">*</span></label>
+        <input type="text" id="client_name" placeholder="לדוגמה: לירן אלבאז" required>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-icon">📊</div><span>מדדים — היכן אתה נמצא כיום</span></div>
+      <div class="section-desc">לכל שאלה, בחר מ-1 (כלל לא) עד 10 (בהחלט כן)</div>
+
+      <div class="form-group">
+        <label>1. עד כמה אתה מרוצה מהקריירה הנוכחית שלך? <span class="required">*</span></label>
+        <div class="hint">1 = כלל לא מרוצה, 10 = מרוצה מאוד</div>
+        <div class="scale-container" data-q="q1">
+          <div class="scale-labels"><span>כלל לא</span><span>בינוני</span><span>מאוד</span></div>
+          <div class="scale-options" id="scale-q1"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>2. עד כמה ברור לך מה אתה רוצה לעשות הלאה? <span class="required">*</span></label>
+        <div class="hint">1 = כלל לא ברור, 10 = ברור לחלוטין</div>
+        <div class="scale-container" data-q="q2">
+          <div class="scale-labels"><span>כלל לא ברור</span><span>בערך</span><span>ברור לגמרי</span></div>
+          <div class="scale-options" id="scale-q2"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>3. עד כמה אתה מרגיש מוטיבציה לעשות שינוי? <span class="required">*</span></label>
+        <div class="hint">1 = אפס מוטיבציה, 10 = מלא מוטיבציה</div>
+        <div class="scale-container" data-q="q3">
+          <div class="scale-labels"><span>אפס</span><span>בערך</span><span>מלא</span></div>
+          <div class="scale-options" id="scale-q3"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>4. עד כמה אתה מרגיש שיש לך את היכולת והביטחון לעשות את השינוי? <span class="required">*</span></label>
+        <div class="hint">1 = כלל לא, 10 = בהחלט כן</div>
+        <div class="scale-container" data-q="q4">
+          <div class="scale-labels"><span>כלל לא</span><span>בערך</span><span>בהחלט כן</span></div>
+          <div class="scale-options" id="scale-q4"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-icon">✨</div><span>תשוקות, חלומים ועולם פנימי</span></div>
+      <div class="section-desc">השאלות הבאות פתוחות — תשיב בחופשיות, כמה שתרצה</div>
+
+      <div class="form-group">
+        <label>5. אם היו לך 50 מיליון דולר בבנק — איך היה נראה סדר היום שלך? <span class="required">*</span></label>
+        <div class="hint">תאר יום אופייני מהרגע שתקום עד שתישן. אל תחשוב על מגבלות.</div>
+        <textarea id="q5" placeholder="תאר את היום המושלם שלך..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>6. מה הדברים שמלהיבים אותך? מה התשוקות שלך? <span class="required">*</span></label>
+        <div class="hint">מה גורם לך להרגיש חי? ממה אתה מתמלא אנרגיה?</div>
+        <textarea id="q6" placeholder="תשוקות, דברים שמלהיבים אותך..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>7. אילו תחביבים יש לך או היו לך בעבר? <span class="required">*</span></label>
+        <div class="hint">מה אהבת לעשות כילד/נער? מה עשית ששכחת את הזמן?</div>
+        <textarea id="q7" placeholder="תחביבים, תחומי עניין, פעילויות..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>8. אילו דברים או מצבים מעליבים אותך או מתסכלים אותך? <span class="required">*</span></label>
+        <div class="hint">מה "מלחיץ לך את הכפתורים"? מה גורם לך לאבד סבלנות?</div>
+        <textarea id="q8" placeholder="דברים שמתסכלים אותך, מצבים שמעליבים..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>9. מה הצילום אומר לך? איך אתה רואה את עולם הצילום משתלב בעתיד שלך?</label>
+        <div class="hint">איך הרגשת כשצילמת? מה הלב שלך אומר על זה?</div>
+        <textarea id="q9" placeholder="הקשר שלך לצילום, חלומות בתחום..."></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-icon">🎯</div><span>קריירה, החלטות וכיוון</span></div>
+
+      <div class="form-group">
+        <label>10. מה האתגר הגדול ביותר שלך בעשיית שינוי קריירה? <span class="required">*</span></label>
+        <div class="choice-grid" id="q10-choices">
+          <label class="choice-card">
+            <input type="radio" name="q10" value="know_what">
+            <span>לדעת במה לבחור — לא ברור לי מה הכיוון</span>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="q10" value="decide">
+            <span>לקבל החלטה — קשה לי להתחייב לכיוון</span>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="q10" value="how">
+            <span>לדעת איך — לא יודע איך לבצע את השינוי</span>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="q10" value="motivation">
+            <span>מוטיבציה — קשה לי להתחיל ולהתמיד</span>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="q10" value="all">
+            <span>הכל ביחד — כל האפשרויות</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>11. איך היית רוצה שהחיים שלך יראו בעוד 5 שנים? <span class="required">*</span></label>
+        <div class="hint">תאר את החיים המושלמים שלך — עבודה, משפחה, תחביבים, מקום מגורים.</div>
+        <textarea id="q11" placeholder="החזון שלי לעוד 5 שנים..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>12. עד כמה אתה מוכן להשקיע זמן ומאמץ בשינוי הזה? <span class="required">*</span></label>
+        <div class="hint">1 = מינימום, 10 = מוכן להכל</div>
+        <div class="scale-container" data-q="q12">
+          <div class="scale-labels"><span>מינימום</span><span>בערך</span><span>מוכן להכל</span></div>
+          <div class="scale-options" id="scale-q12"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>13. מה עוצר אותך כרגע מלעשות את השינוי? <span class="required">*</span></label>
+        <div class="hint">פחדים, חסמים, מגבלות — מה באמת עוצר אותך?</div>
+        <textarea id="q13" placeholder="חסמים, פחדים, מגבלות..." required></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-icon">💪</div><span>חוזקות וסגירה</span></div>
+
+      <div class="form-group">
+        <label>15. מה החוזקות שלך? במה אתה טוב?</label>
+        <div class="hint">תחשוב על מחמאות שקיבלת, דברים שבאים לך טבעי, תחומים שאנשים פונים אליך בהם.</div>
+        <textarea id="q15" placeholder="החוזקות שלי..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>14. יש משהו נוסף שתרצה שליאור ידע לפני הפגישה?</label>
+        <div class="hint">כל דבר שלא נשאלת עליו וחשוב לך.</div>
+        <textarea id="q14" placeholder="דברים נוספים שחשובים לי..."></textarea>
+      </div>
+    </div>
+
+    <div class="submit-section">
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()">שלח שאלון 📤</button>
+      <p style="margin-top:12px;font-size:13px;color:var(--text-muted);">
+        התשובות נשלחות ישירות לליאור • שאלון זה נשמר באופן מאובטח
+      </p>
+    </div>
+  </div>
+
+  <div class="success-msg" id="successMsg">
+    <div class="icon">✅</div>
+    <h3>תודה רבה!</h3>
+    <p>השאלון נשלח בהצלחה לליאור.<br>נתראה בפגישת האימון! 🙌</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const scaleQs = ['q1','q2','q3','q4','q12'];
+const answers = {};
+
+scaleQs.forEach(q => {
+  const container = document.getElementById('scale-' + q);
+  if (!container) return;
+  for (let i = 1; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'scale-btn';
+    btn.textContent = i;
+    btn.dataset.value = i;
+    btn.onclick = function() {
+      container.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected','low','mid','high'));
+      this.classList.add('selected');
+      const v = parseInt(this.dataset.value);
+      if (v <= 3) this.classList.add('low');
+      else if (v <= 7) this.classList.add('mid');
+      else this.classList.add('high');
+      answers[q] = String(v);
+    };
+    container.appendChild(btn);
+  }
+});
+
+document.querySelectorAll('#q10-choices .choice-card').forEach(card => {
+  card.addEventListener('click', function(e) {
+    if (e.target.tagName === 'INPUT') return;
+    const input = this.querySelector('input[type="radio"]');
+    input.checked = true;
+    document.querySelectorAll('#q10-choices .choice-card').forEach(c => c.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+  card.addEventListener('change', function() {
+    document.querySelectorAll('#q10-choices .choice-card').forEach(c => c.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+const q10Texts = {
+  'know_what': 'לדעת במה לבחור — לא ברור לי מה הכיוון',
+  'decide': 'לקבל החלטה — קשה לי להתחייב לכיוון',
+  'how': 'לדעת איך — לא יודע איך לבצע את השינוי',
+  'motivation': 'מוטיבציה — קשה לי להתחיל ולהתמיד',
+  'all': 'הכל ביחד — כל האפשרויות'
+};
+
+async function submitForm() {
+  const name = document.getElementById('client_name').value.trim();
+  if (!name) { showToast('נא למלא שם'); return; }
+  for (const q of scaleQs) {
+    if (!answers[q]) { showToast('נא לדרג את כל שאלות המדדים'); return; }
+  }
+  const requiredTexts = ['q5','q6','q7','q8','q11','q13'];
+  const textAnswers = {};
+  for (const q of requiredTexts) {
+    const val = document.getElementById(q)?.value.trim();
+    if (!val) { showToast('נא למלא את כל השדות הנדרשים'); return; }
+    textAnswers[q] = val;
+  }
+  ['q9','q14','q15'].forEach(q => {
+    textAnswers[q] = document.getElementById(q)?.value.trim() || '';
+  });
+  const q10Val = document.querySelector('input[name="q10"]:checked')?.value;
+  if (!q10Val) { showToast('נא לבחור אתגר מרכזי בשאלה 10'); return; }
+  answers.q10 = q10Texts[q10Val] || q10Val;
+
+  const allAnswers = { ...answers, ...textAnswers };
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'שולח...';
+
+  try {
+    const res = await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/submitCoachingIntake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_name: name,
+        coach_name: 'ליאור סופר',
+        session_type: 'אימון קריירה',
+        answers: allAnswers
+      })
+    });
+    const result = await res.json();
+    if (result.success) {
+      document.getElementById('formArea').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error(result.error || 'שגיאה');
+    }
+  } catch (e) {
+    showToast('שגיאה בשליחה. נסה שוב.');
+    btn.disabled = false;
+    btn.textContent = 'שלח שאלון 📤';
+  }
+}
+</script>
+</body>
+</html>
