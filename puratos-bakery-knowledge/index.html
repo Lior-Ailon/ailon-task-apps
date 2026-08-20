@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="version" content="1.0">
+<title>Puratos · מאגר דוחות ניסויים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--pr:#CC092F;--pd:#8B0620;--pl:#fdf2f4;--g50:#f8fafc;--g100:#f1f5f9;--g200:#e2e8f0;--g300:#cbd5e1;--g400:#94a3b8;--g500:#64748b;--g600:#475569;--g700:#334155;--g800:#1e293b;--green:#16a34a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);line-height:1.5;padding-bottom:40px;}
+.header{background:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--g200);}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-right{text-align:left;}
+.header-right h1{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.header-tag{background:var(--pr);color:#fff;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700;}
+.container{max-width:900px;margin:20px auto 0;padding:0 16px;}
+.search-bar{background:#fff;border-radius:12px;padding:16px 20px;margin-bottom:20px;box-shadow:0 4px 16px rgba(15,23,42,0.06);border:1px solid var(--g200);}
+.search-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;padding:10px 16px;border:1.5px solid var(--g300);border-radius:8px;font-size:15px;font-family:inherit;}
+.search-input:focus{border-color:var(--pr);outline:none;box-shadow:0 0 0 3.5px rgba(204,9,47,0.12);}
+.btn{padding:10px 22px;border-radius:10px;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;justify-content:center;text-decoration:none;}
+.btn-primary{background:var(--pr);color:#fff;}
+.btn-secondary{background:#fff;color:var(--g700);border:1.5px solid var(--g300);}
+.report-card{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 4px 16px rgba(15,23,42,0.06);border:1px solid var(--g200);cursor:pointer;transition:all 0.2s;}
+.report-card:hover{border-color:var(--pr);box-shadow:0 6px 20px rgba(204,9,47,0.1);transform:translateY(-1px);}
+.report-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;}
+.report-title{font-size:16px;font-weight:700;color:var(--g800);}
+.report-date{font-size:12px;color:var(--g500);white-space:nowrap;}
+.report-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--g600);}
+.report-meta-item{display:flex;align-items:center;gap:4px;}
+.report-status{font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700;}
+.status-submitted{background:#fef3c7;color:#92400e;}
+.status-approved{background:#dcfce7;color:#166534;}
+.report-purpose{font-size:13px;color:var(--g500);margin-top:6px;}
+.report-conclusions{font-size:13px;color:var(--g600);margin-top:8px;padding-top:8px;border-top:1px solid var(--g100);max-height:60px;overflow:hidden;text-overflow:ellipsis;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--g400);}
+.empty-state svg{width:64px;height:64px;margin:0 auto 16px;opacity:0.4;}
+.empty-state p{font-size:16px;margin-bottom:8px;}
+.empty-state small{font-size:13px;}
+.loading{text-align:center;padding:40px;color:var(--g400);}
+.spinner{width:36px;height:36px;border:4px solid var(--g200);border-top-color:var(--pr);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--pr);text-decoration:none;font-weight:600;margin-bottom:12px;}
+.back-link:hover{text-decoration:underline;}
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:200;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:12px;max-width:700px;width:100%;padding:28px;margin:20px 0;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.modal-title{font-size:20px;font-weight:700;color:var(--pr);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--pl);}
+.modal-section{margin-bottom:16px;}
+.modal-section-title{font-size:14px;font-weight:700;color:var(--g700);margin-bottom:6px;}
+.modal-section-content{font-size:14px;color:var(--g600);line-height:1.6;}
+.modal-close{position:relative;float:left;background:var(--g100);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--g600);}
+.modal-close:hover{background:var(--g200);}
+@media(max-width:640px){.header{padding:12px 16px;}.search-row{flex-direction:column;}.btn{width:100%;}.report-meta{flex-direction:column;gap:6px;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <svg viewBox="0 0 189 106" fill="none" xmlns="http://www.w3.org/2000/svg" width="60">
+      <path d="M68 46.5H71.5V60.2C71.5 69.1 67.6 73.6 60.1 73.6C52.6 73.6 48.6 69.1 48.6 60.2V46.5H52.1V59.4C52.1 62.2 52.1 64.5 52.9 66.1C54.1 68.8 56.8 70.3 60.1 70.3C62.5 70.3 64.6 69.4 66 68C68 65.8 68 63.2 68 59.4V46.5H68Z" fill="#CC092F"/>
+      <path d="M95.1 59.8C95.1 65.5 99.5 70.5 105.3 70.5C110.7 70.5 115.7 66.4 115.7 59.9C115.7 53.8 111.2 49.1 105.4 49.1C99.4 49.1 95.1 54.1 95.1 59.8ZM115.5 46.6H118.8V73H115.5V68.4C112.6 71.9 109 73.6 105 73.6C97.4 73.6 91.7 67.2 91.7 59.7C91.7 52.2 97.5 45.8 105.1 45.8C109.3 45.8 112.9 47.7 115.5 51.4V46.6Z" fill="#CC092F"/>
+      <path d="M19.7 59.9C19.7 66.5 24.7 70.6 30 70.6C35.8 70.6 40.3 65.6 40.3 59.8C40.3 54.1 36 49.2 30 49.2C24.2 49.1 19.7 53.8 19.7 59.9ZM20 51.4C22.6 47.7 26.2 45.8 30.3 45.8C37.9 45.8 43.8 52.2 43.8 59.7C43.8 67.2 38 73.6 30.4 73.6C26.3 73.6 22.8 71.9 20 68.4V82.6H16.7V46.6H20V51.4Z" fill="#CC092F"/>
+    </svg>
+  </div>
+  <div class="header-right">
+    <h1>מאגר דוחות ניסויים <span class="header-tag">R&D</span></h1>
+    <p style="font-size:12px;color:var(--g500);">Puratos Israel · תחום הלחמים</p>
+  </div>
+</div>
+
+<div class="container">
+  <a class="back-link" href="../puratos-bakery-report/">→ חזרה לטופס דוח חדש</a>
+
+  <div class="search-bar">
+    <div class="search-row">
+      <input type="text" id="searchInput" class="search-input" placeholder="חיפוש לפי שם פרויקט, חוקר, מאשר או מטרת ניסוי..." oninput="debounceSearch()">
+      <button class="btn btn-primary" onclick="loadReports()">🔍 חפש</button>
+      <button class="btn btn-secondary" onclick="clearSearch()">נקה</button>
+    </div>
+  </div>
+
+  <div id="reportsList">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>טוען דוחות...</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+var API_BASE='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+var allReports=[];
+var searchTimer;
+
+function debounceSearch(){
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(loadReports,300);
+}
+
+function loadReports(){
+  var term=document.getElementById('searchInput').value.trim();
+  var url=API_BASE+'/listBakeryReports';
+  if(term)url+='?search='+encodeURIComponent(term);
+  
+  document.getElementById('reportsList').innerHTML='<div class="loading"><div class="spinner"></div><p>טוען...</p></div>';
+  
+  fetch(url)
+    .then(function(res){return res.json();})
+    .then(function(data){
+      allReports=data.reports||[];
+      renderReports();
+    })
+    .catch(function(err){
+      document.getElementById('reportsList').innerHTML='<div class="empty-state"><p>שגיאה בטעינת דוחות</p><small>בדוק את החיבור לאינטרנט</small></div>';
+    });
+}
+
+function renderReports(){
+  var list=document.getElementById('reportsList');
+  if(allReports.length===0){
+    list.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p>אין דוחות במאגר</p><small>דוחות שיישמרו בטופס יופיעו כאן</small></div>';
+    return;
+  }
+  
+  var html='';
+  allReports.forEach(function(r){
+    var dateStr=r.execDate?new Date(r.execDate).toLocaleDateString('he-IL'):'—';
+    var createdStr=r.createdDate?new Date(r.createdDate).toLocaleDateString('he-IL'):'—';
+    var statusClass=r.status==='approved'?'status-approved':'status-submitted';
+    var statusText=r.status==='approved'?'מאושר':'הוגש';
+    
+    html+='<div class="report-card" onclick="viewReport(\''+r.id+'\')">';
+    html+='<div class="report-header">';
+    html+='<div class="report-title">'+escapeHtml(r.projectName||'ללא שם')+'</div>';
+    html+='<div class="report-date">'+createdStr+'</div>';
+    html+='</div>';
+    if(r.expPurpose)html+='<div class="report-purpose">🎯 '+escapeHtml(r.expPurpose)+'</div>';
+    html+='<div class="report-meta">';
+    if(r.researcher)html+='<div class="report-meta-item">👤 '+escapeHtml(r.researcher)+'</div>';
+    if(r.approver)html+='<div class="report-meta-item">✓ '+escapeHtml(r.approver)+'</div>';
+    html+='<div class="report-meta-item">📅 '+dateStr+'</div>';
+    html+='<div class="report-status '+statusClass+'">'+statusText+'</div>';
+    html+='</div>';
+    if(r.conclusions)html+='<div class="report-conclusions">'+escapeHtml(r.conclusions.substring(0,150))+(r.conclusions.length>150?'...':'')+'</div>';
+    html+='</div>';
+  });
+  list.innerHTML=html;
+}
+
+function viewReport(id){
+  var r=allReports.find(function(x){return x.id===id;});
+  if(!r)return;
+  
+  var modal=document.getElementById('modalContent');
+  var html='<button class="modal-close" onclick="closeModal()">✕</button>';
+  html+='<div class="modal-title">'+escapeHtml(r.projectName||'ללא שם')+'</div>';
+  
+  if(r.expPurpose){
+    html+='<div class="modal-section"><div class="modal-section-title">🎯 מטרת הניסוי</div><div class="modal-section-content">'+escapeHtml(r.expPurpose)+'</div></div>';
+  }
+  
+  html+='<div class="modal-section"><div class="modal-section-title">פרטים כלליים</div><div class="modal-section-content">';
+  if(r.researcher)html+='חוקר: '+escapeHtml(r.researcher)+'<br>';
+  if(r.approver)html+='מאשר: '+escapeHtml(r.approver)+'<br>';
+  if(r.execDate)html+='תאריך ביצוע: '+new Date(r.execDate).toLocaleDateString('he-IL')+'<br>';
+  if(r.updateDate)html+='תאריך עדכון: '+escapeHtml(r.updateDate)+'<br>';
+  html+='</div></div>';
+  
+  // Experiments
+  if(r.experiments&&Object.keys(r.experiments).length>0){
+    html+='<div class="modal-section"><div class="modal-section-title">🧪 חומרי גלם</div><div class="modal-section-content">';
+    for(var i=1;i<=6;i++){
+      var ings=r.experiments[i]||[];
+      var hasData=ings.some(function(ing){return ing.name||ing.gram;});
+      if(hasData){
+        html+='<strong>ניסוי '+i+':</strong><br>';
+        ings.forEach(function(ing){
+          if(ing.name||ing.gram)html+='&nbsp;&nbsp;'+escapeHtml(ing.name||'')+' — '+escapeHtml(ing.gram||'')+'גרם<br>';
+        });
+      }
+    }
+    html+='</div></div>';
+  }
+  
+  // Process
+  if(r.processData&&Object.keys(r.processData).length>0){
+    html+='<div class="modal-section"><div class="modal-section-title">📝 תיאור התהליך</div><div class="modal-section-content">';
+    var p=r.processData;
+    if(p.kneadTime)html+='זמן לישה: '+escapeHtml(p.kneadTime)+' דקות<br>';
+    if(p.doughTemp)html+='טמפ\' בצק: '+escapeHtml(p.doughTemp)+'°C<br>';
+    if(p.bulkFerment)html+='תפיחה ב-Bulk: '+escapeHtml(p.bulkFerment)+'<br>';
+    if(p.doughWeight)html+='משקל יחידת בצק: '+escapeHtml(p.doughWeight)+'גרם<br>';
+    if(p.moulder)html+='נתוני מולדר: '+escapeHtml(p.moulder)+'<br>';
+    if(p.finalFerment)html+='תפיחה סופית: '+escapeHtml(p.finalFerment)+'<br>';
+    if(p.fermentTemp)html+='טמפ\' תפיחה: '+escapeHtml(p.fermentTemp)+'°C<br>';
+    if(p.fermentHumidity)html+='לחות: '+escapeHtml(p.fermentHumidity)+'%<br>';
+    if(p.ovenType)html+='תנור: '+escapeHtml(p.ovenType)+'<br>';
+    if(p.bakingProgram)html+='תוכנית אפייה: '+escapeHtml(p.bakingProgram)+'<br>';
+    if(p.steam)html+='קיטור: '+escapeHtml(p.steam)+' שניות<br>';
+    html+='</div></div>';
+  }
+  
+  // Metrics
+  if(r.metricsData&&Object.keys(r.metricsData).length>0){
+    html+='<div class="modal-section"><div class="modal-section-title">📊 מדדי תהליך</div><div class="modal-section-content">';
+    var m=r.metricsData;
+    if(m.actualDoughTemp)html+='טמפ\' בצק בפועל: '+escapeHtml(m.actualDoughTemp)+'°C<br>';
+    if(m.doughTexture)html+='מרקם: '+escapeHtml(m.doughTexture)+'<br>';
+    if(m.actualFermentTime)html+='זמן תפיחה בפועל: '+escapeHtml(m.actualFermentTime)+' דקות<br>';
+    if(m.volumeStability)html+='נפח ויציבות: '+escapeHtml(m.volumeStability)+'<br>';
+    html+='</div></div>';
+  }
+  
+  if(r.conclusions){
+    html+='<div class="modal-section"><div class="modal-section-title">✍️ מסקנות</div><div class="modal-section-content">'+escapeHtml(r.conclusions).replace(/\n/g,'<br>')+'</div></div>';
+  }
+  if(r.nextSteps){
+    html+='<div class="modal-section"><div class="modal-section-title">➡️ Next Steps</div><div class="modal-section-content">'+escapeHtml(r.nextSteps).replace(/\n/g,'<br>')+'</div></div>';
+  }
+  
+  modal.innerHTML=html;
+  document.getElementById('reportModal').classList.add('show');
+}
+
+function closeModal(){
+  document.getElementById('reportModal').classList.remove('show');
+}
+
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  loadReports();
+}
+
+function escapeHtml(s){
+  if(!s)return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+loadReports();
+</script>
+</body>
+</html>

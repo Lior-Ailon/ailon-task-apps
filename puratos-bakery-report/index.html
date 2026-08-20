@@ -210,6 +210,7 @@ textarea { resize:vertical; min-height:70px; }
     <button class="btn btn-primary" onclick="saveReport()">💾 שמור דוח</button>
     <button class="btn btn-secondary" onclick="exportExcel()">📊 ייצא לאקסל</button>
     <button class="btn btn-secondary" onclick="window.print()">🖨️ הדפסה</button>
+    <a class="btn btn-secondary" href="../puratos-bakery-knowledge/" style="text-decoration:none">📚 מאגר דוחות</a>
     <button class="btn btn-secondary" onclick="clearForm()">🗑️ נקה</button>
   </div>
   <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v3.0</div>
@@ -326,15 +327,30 @@ function collectData(){
   };
 }
 
+var API_BASE='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+
 function saveReport(){
   var r=collectData();
   if(!r.projectName){alert('נא למלא שם פרויקט');return;}
-  var reports=JSON.parse(localStorage.getItem('puratos_reports')||'[]');
-  reports.push(Object.assign(r,{savedAt:new Date().toISOString()}));
-  localStorage.setItem('puratos_reports',JSON.stringify(reports));
-  lockApprovedFields();
   var m=document.getElementById('successMsg');
-  if(m){m.classList.add('show');setTimeout(function(){m.classList.remove('show');},2500);}
+  if(m){m.textContent='שומר דוח...';m.classList.add('show');}
+  fetch(API_BASE+'/saveBakeryReport',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(r)
+  })
+  .then(function(res){return res.json();})
+  .then(function(data){
+    if(data.success){
+      lockApprovedFields();
+      if(m){m.textContent='✓ הדוח נשמר במאגר הידע';m.classList.add('show');setTimeout(function(){m.classList.remove('show');},3000);}
+    }else{
+      if(m){m.textContent='✗ שגיאה בשמירה';m.classList.add('show');setTimeout(function(){m.classList.remove('show');},3000);}
+    }
+  })
+  .catch(function(err){
+    if(m){m.textContent='✗ שגיאת רשת';m.classList.add('show');setTimeout(function(){m.classList.remove('show');},3000);}
+  });
 }
 
 function exportExcel(){
