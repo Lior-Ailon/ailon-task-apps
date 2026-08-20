@@ -4,323 +4,343 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>דקל מחשבים | מערכת ניהול ספריות דיגיטלית</title>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="2026-08-20-v2-rebrand">
+<title>Info Screen · מסך הודעות לכל עסק</title>
 <link rel="icon" href="https://media.base44.com/images/public/69f63b4536d7a2c6688403df/a8e957c4e_generated_image.png">
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --teal: #1e4d4d;
-  --teal-bright: #0d9488;
-  --teal-light: #14b8a6;
-  --navy: #1e3a5f;
-  --navy-dark: #0f2942;
-  --gold: #c8954a;
-  --gold-light: #e6b86a;
-  --cream: #f2efe9;
-  --cream-dark: #e8e2d5;
-  --orange: #cc7840;
-  --bg-texture: #f5f1ea;
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0f172a; --ink-soft:#64748b;
+  --brand:#0d9488; --brand-light:#14b8a6; --brand-dark:#0f766e;
+  --navy:#1e3a5f; --navy-light:#2e5a8f;
+  --paper:#f8fafc; --paper-2:#ffffff; --paper-edge:#e2e8f0;
+  --gold:#d9a441; --gold-light:#e8c274;
+  --r:16px; --r-sm:10px;
+  --shadow:0 4px 16px rgba(15,23,42,.06);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.10);
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Heebo', sans-serif; color: #333; overflow-x: hidden; }
-.hero {
-  background: var(--cream);
-  background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(180,160,130,0.04) 40px, rgba(180,160,130,0.04) 42px), linear-gradient(180deg, #f5f1ea 0%, #efe9dd 100%);
-  min-height: 560px; padding: 0; position: relative; border-bottom: 4px solid var(--teal);
+body{font-family:'Heebo',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h2,h3{letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:none}
+a{color:inherit;text-decoration:none}
+
+/* HERO */
+.hero{
+  position:relative;min-height:92vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 24px;overflow:hidden;
+  background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 35%,#0f766e 70%,#0d9488 100%);
+  color:#fff;
 }
-.hero-header { background: var(--teal); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; color: white; }
-.hero-header .logo-area { display: flex; align-items: center; gap: 14px; }
-.hero-header .logo-icon { width: 52px; height: 52px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
-.hero-header .logo-text { font-size: 22px; font-weight: 900; }
-.hero-header .logo-subtitle { font-size: 13px; font-weight: 400; opacity: 0.85; margin-top: 2px; }
-.hero-header .time-badge { background: rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 8px; font-size: 15px; font-weight: 600; }
-.hero-main { padding: 40px 40px 60px; text-align: center; max-width: 900px; margin: 0 auto; }
-.hero-main h1 { font-size: 40px; font-weight: 900; color: var(--teal); line-height: 1.3; margin-bottom: 14px; }
-.hero-main .hero-tagline { font-size: 18px; color: #555; font-weight: 500; margin-bottom: 28px; }
-.hero-main .hero-subtitle { font-size: 16px; color: #666; line-height: 1.8; margin-bottom: 32px; max-width: 700px; margin: 0 auto 32px; }
-.hero-badges { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
-.hero-badge { background: var(--teal); color: white; padding: 12px 26px; border-radius: 50px; font-size: 15px; font-weight: 700; box-shadow: 0 4px 14px rgba(30,77,77,0.25); }
-.kiosk-preview { max-width: 900px; margin: -40px auto 0; padding: 0 20px; position: relative; z-index: 10; }
-.kiosk-frame { background: var(--cream); border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.12); border: 2px solid #d4cdb8; }
-.kiosk-top { background: var(--teal); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; color: white; font-size: 14px; font-weight: 700; }
-.kiosk-body { display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 0; min-height: 280px; }
-.kiosk-col { padding: 16px; border-left: 1px solid #ddd6c5; }
-.kiosk-col:last-child { border-left: none; }
-.kiosk-col h4 { font-size: 13px; font-weight: 700; color: var(--teal); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--cream-dark); }
-.kiosk-event { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #e8e2d5; }
-.kiosk-event .date-circle { width: 36px; height: 36px; background: var(--orange); color: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
-.kiosk-event .event-text { font-size: 11px; color: #555; line-height: 1.4; }
-.kiosk-center { background: linear-gradient(135deg, #f8f5ef, #ede8dc); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; }
-.kiosk-center .big-icon { font-size: 3rem; margin-bottom: 10px; }
-.kiosk-center h3 { font-size: 16px; font-weight: 800; color: var(--teal); margin-bottom: 6px; }
-.kiosk-center p { font-size: 12px; color: #666; line-height: 1.5; }
-.kiosk-center .dots { margin-top: 10px; display: flex; gap: 5px; }
-.kiosk-center .dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
-.kiosk-center .dot.active { background: var(--teal); }
-.kiosk-hours { font-size: 11px; color: #555; line-height: 2; }
-.kiosk-hours .day { display: flex; justify-content: space-between; padding: 2px 0; }
-.kiosk-services { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.kiosk-service { text-align: center; font-size: 10px; color: #555; }
-.kiosk-service .icon { font-size: 1.4rem; display: block; margin-bottom: 2px; }
-.kiosk-footer { background: var(--teal); padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; color: white; font-size: 11px; }
-.kiosk-footer .contact-info { display: flex; gap: 16px; }
-.kiosk-footer .status-bar { background: var(--teal-bright); text-align: center; padding: 4px; font-size: 12px; font-weight: 600; color: white; }
-.demo-section { max-width: 900px; margin: 30px auto 0; padding: 0 20px; }
-.demo-section h3 { text-align: center; font-size: 18px; font-weight: 800; color: var(--teal); margin-bottom: 16px; }
-.demo-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-.demo-link-card { background: white; border: 1.5px solid var(--cream-dark); border-radius: 14px; padding: 20px 18px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; text-decoration: none; display: block; }
-.demo-link-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(30,77,77,0.12); border-color: var(--teal-bright); }
-.demo-link-card .demo-icon { font-size: 1.8rem; margin-bottom: 8px; }
-.demo-link-card .demo-name { font-size: 16px; font-weight: 800; color: var(--teal); margin-bottom: 4px; }
-.demo-link-card .demo-city { font-size: 13px; color: #777; }
-.demo-link-card .demo-btn { display: inline-block; margin-top: 8px; background: var(--teal-bright); color: white; padding: 6px 18px; border-radius: 50px; font-size: 13px; font-weight: 700; }
-.features { background: white; padding: 60px 20px; }
-.features-inner { max-width: 1100px; margin: 0 auto; }
-.section-title { text-align: center; font-size: 32px; font-weight: 900; color: var(--teal); margin-bottom: 10px; }
-.section-subtitle { text-align: center; font-size: 17px; color: #777; margin-bottom: 40px; }
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-.feature-card { background: var(--cream); border-radius: 16px; padding: 28px 24px; border: 1px solid var(--cream-dark); transition: transform 0.3s, box-shadow 0.3s; }
-.feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
-.feature-card .icon-wrap { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; }
-.feature-card .icon-teal { background: #d4ebe9; }
-.feature-card .icon-orange { background: #f5e6d3; }
-.feature-card .icon-gold { background: #f5ead0; }
-.feature-card h3 { font-size: 19px; font-weight: 800; color: var(--teal); margin-bottom: 8px; }
-.feature-card p { font-size: 15px; line-height: 1.7; color: #555; }
-.showcase { background: var(--cream); background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(180,160,130,0.03) 40px, rgba(180,160,130,0.03) 42px); padding: 60px 20px; }
-.showcase-inner { max-width: 1100px; margin: 0 auto; }
-.showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-.showcase-item { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.05); transition: transform 0.3s; border: 1px solid var(--cream-dark); }
-.showcase-item:hover { transform: translateY(-3px); }
-.showcase-item .showcase-icon { width: 100%; height: 70px; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-.showcase-item:nth-child(2n) .showcase-icon { background: var(--orange); }
-.showcase-item:nth-child(3n) .showcase-icon { background: var(--gold); }
-.showcase-item .showcase-body { padding: 18px 22px; }
-.showcase-item h4 { font-size: 17px; font-weight: 800; color: var(--teal); margin-bottom: 6px; }
-.showcase-item p { font-size: 14px; color: #666; line-height: 1.6; }
-.stats { background: var(--teal); padding: 50px 20px; text-align: center; }
-.stats-grid { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; }
-.stat-item .stat-num { font-size: 44px; font-weight: 900; color: var(--gold-light); margin-bottom: 4px; }
-.stat-item .stat-label { font-size: 15px; color: rgba(255,255,255,0.85); }
-.footer { background: var(--navy-dark); padding: 40px 20px; text-align: center; }
-.footer .footer-logo { color: white; font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-.footer .footer-info { color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.8; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-.fade-up { animation: fadeUp 0.6s ease-out; }
-.fade-up-delay-1 { animation: fadeUp 0.6s ease-out 0.15s both; }
-@media (max-width: 768px) {
-  .hero-main h1 { font-size: 28px; }
-  .hero-main .hero-tagline { font-size: 16px; }
-  .kiosk-body { grid-template-columns: 1fr; }
-  .kiosk-col { border-left: none; border-bottom: 1px solid #ddd6c5; }
-  .section-title { font-size: 26px; }
-  .demo-links { grid-template-columns: 1fr; }
+.hero::before{content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 20% 30%,rgba(13,148,136,.25) 0%,transparent 50%),
+    radial-gradient(circle at 80% 70%,rgba(30,58,95,.30) 0%,transparent 50%);
+  z-index:0;
 }
+.hero-content{position:relative;z-index:2;max-width:780px}
+.hero .badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.25);
+  backdrop-filter:blur(8px);padding:8px 20px;border-radius:999px;
+  font-size:.85rem;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:28px;
+}
+.hero .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-light);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-logo{
+  width:80px;height:80px;border-radius:20px;
+  background:linear-gradient(160deg,#fff,rgba(255,255,255,.85));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 24px;font-size:42px;font-weight:900;
+  color:var(--brand);box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.hero h1{font-size:clamp(2.8rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:20px}
+.hero h1 .accent{background:linear-gradient(135deg,var(--brand-light),#5eead4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(255,255,255,.85);max-width:560px;margin:0 auto 36px;font-weight:400}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.btn-primary{
+  padding:16px 40px;border-radius:999px;font-size:1.1rem;font-weight:700;
+  background:#fff;color:var(--brand-dark);transition:.25s;box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.btn-secondary{
+  padding:16px 40px;border-radius:999px;font-size:1.1rem;font-weight:700;
+  background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.3);
+  backdrop-filter:blur(8px);transition:.25s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.16);transform:translateY(-2px)}
+.hero-nav{position:absolute;top:0;left:0;right:0;padding:24px 40px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+.hero-nav .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem}
+.hero-nav .brand .icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px}
+.hero-nav .partner{font-size:.82rem;color:rgba(255,255,255,.55);font-weight:500}
+
+/* USE CASES STRIP */
+.usecases{padding:80px 24px;background:var(--paper-2)}
+.section-head{text-align:center;margin-bottom:48px}
+.section-head .tag{font-size:.82rem;font-weight:700;letter-spacing:.18em;color:var(--brand);text-transform:uppercase;margin-bottom:10px}
+.section-head h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:900;color:var(--ink);margin-bottom:12px}
+.section-head p{font-size:1.1rem;color:var(--ink-soft);max-width:520px;margin:0 auto}
+.cases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1100px;margin:0 auto}
+.case-card{
+  background:var(--paper-2);border:1px solid var(--paper-edge);border-radius:var(--r);
+  padding:28px 24px;text-align:center;transition:.25s;
+}
+.case-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--brand-light)}
+.case-card .emoji{font-size:38px;margin-bottom:14px}
+.case-card h3{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.case-card p{font-size:.9rem;color:var(--ink-soft);line-height:1.5}
+
+/* HOW IT WORKS */
+.howitworks{padding:80px 24px;background:var(--paper)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:1000px;margin:0 auto}
+.step{position:relative;padding:32px 28px;background:var(--paper-2);border-radius:var(--r);border:1px solid var(--paper-edge);box-shadow:var(--shadow)}
+.step .num{
+  position:absolute;top:-18px;right:24px;width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;
+  box-shadow:0 4px 12px rgba(13,148,136,.3);
+}
+.step h3{font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:8px;margin-top:6px}
+.step p{font-size:.95rem;color:var(--ink-soft);line-height:1.6}
+
+/* FEATURES */
+.features{padding:80px 24px;background:var(--paper-2)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+.feat-card{
+  display:flex;gap:16px;padding:28px;background:var(--paper);border-radius:var(--r);
+  border:1px solid var(--paper-edge);transition:.25s;
+}
+.feat-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.feat-icon{
+  width:48px;height:48px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-light));color:#fff;
+}
+.feat-card h3{font-size:1.05rem;font-weight:700;margin-bottom:4px;color:var(--ink)}
+.feat-card p{font-size:.88rem;color:var(--ink-soft);line-height:1.5}
+
+/* DEMO PREVIEW */
+.demo-section{padding:80px 24px;background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;text-align:center}
+.demo-section h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:900;margin-bottom:16px}
+.demo-section p{font-size:1.1rem;color:rgba(255,255,255,.7);margin-bottom:36px}
+.demo-frame{
+  max-width:700px;margin:0 auto;border-radius:var(--r);overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);border:2px solid rgba(255,255,255,.1);
+}
+.demo-frame img{width:100%;display:block}
+.demo-cta{margin-top:36px}
+
+/* PRICING TEASER */
+.pricing{padding:80px 24px;background:var(--paper)}
+.price-card{
+  max-width:500px;margin:0 auto;text-align:center;
+  background:var(--paper-2);border:2px solid var(--brand);border-radius:var(--r);
+  padding:40px 32px;box-shadow:var(--shadow-lg);
+}
+.price-card .label{font-size:.85rem;font-weight:700;color:var(--brand);letter-spacing:.1em;margin-bottom:12px}
+.price-card .price{font-size:3rem;font-weight:900;color:var(--ink)}
+.price-card .price .per{font-size:1rem;color:var(--ink-soft);font-weight:500}
+.price-card .desc{font-size:.95rem;color:var(--ink-soft);margin:12px 0 28px}
+.price-card ul{list-style:none;text-align:right;margin-bottom:32px}
+.price-card ul li{padding:8px 0;border-bottom:1px solid var(--paper-edge);font-size:.95rem;color:var(--ink)}
+.price-card ul li:last-child{border:none}
+.price-card ul li .check{color:var(--brand);font-weight:900;margin-left:8px}
+
+/* FOOTER */
+.footer{padding:48px 24px;background:#0f172a;color:rgba(255,255,255,.7);text-align:center}
+.footer .logo{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:10px}
+.footer .tagline{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:20px}
+.footer .partner{font-size:.82rem;color:rgba(255,255,255,.35);padding-top:20px;border-top:1px solid rgba(255,255,255,.08)}
+.footer .links{display:flex;gap:20px;justify-content:center;margin-bottom:20px;font-size:.9rem}
+.footer .links a{color:rgba(255,255,255,.7);transition:.2s}
+.footer .links a:hover{color:#fff}
+
+/* Responsive */
+@media(max-width:600px){
+  .hero h1{font-size:2.2rem}
+  .hero .sub{font-size:1rem}
+  .btn-primary,.btn-secondary{width:100%;padding:14px 20px}
+  .hero-nav{padding:16px 20px}
+  .hero-nav .partner{display:none}
+  .cases-grid{grid-template-columns:1fr 1fr}
+  .feat-card{flex-direction:column}
+}
+
+/* Animations */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
 
-<!-- Hero -->
-<div class="hero">
-  <div class="hero-header">
-    <div class="logo-area">
-      <div class="logo-icon" style="overflow:hidden;padding:0"><img src="https://media.base44.com/images/public/69f63b4536d7a2c6688403df/a8e957c4e_generated_image.png" alt="InfoScreen" style="width:100%;height:100%;object-fit:cover"></div>
-      <div>
-        <div class="logo-text">דקל מחשבים</div>
-        <div class="logo-subtitle">ידע. קהילה. השראה.</div>
-      </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-nav">
+    <div class="brand">
+      <div class="icon">📺</div>
+      <span>Info Screen</span>
     </div>
-    <div class="time-badge">📅 ניהול ספריות דיגיטלי</div>
+    <div class="partner">מופעל ע״י דקל מחשבים</div>
   </div>
-  <div class="hero-main">
-    <h1>מערכת ניהול ספריות דיגיטלית</h1>
-    <p class="hero-tagline">הפתרון הטכנולוגי המתקדם לניהול ספריות</p>
-    <p class="hero-subtitle">
-      מסך תצוגה חכם לספריות — אירועים, הודעות ושעות פתיחה<br>
-      מתעדכן לבד, נגיש מכל מקום, פשוט לתפעול.
+  <div class="hero-content">
+    <div class="badge"><span class="dot"></span> מסך חכם · מתעדכן לבד · לכל עסק</div>
+    <div class="hero-logo">i</div>
+    <h1>המסך שלך.<br><span class="accent">ההודעות שלך.</span></h1>
+    <p class="sub">
+      מסך מידע חכם שמתעדכן מרחוק מהטלפון — הודעות, תפריט, אירועים, שעות פתיחה, מבצעים ועוד.
+      פשוט לעדכן. יפה להציג. לכל עסק.
     </p>
-    <div class="hero-badges">
-      <span class="hero-badge">⚡ התאמה מיידית</span>
-      <span class="hero-badge">🎨 התאמה אישית</span>
-      <span class="hero-badge">📱 נגיש מכל מכשיר</span>
-      <span class="hero-badge">🏆 שירות ברמה הגבוהה ביותר</span>
+    <div class="cta">
+      <button class="btn-primary" onclick="document.getElementById('usecases').scrollIntoView({behavior:'smooth'})">למה לי מסך?</button>
+      <button class="btn-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">ראה דוגמה</button>
     </div>
   </div>
-</div>
+</section>
 
-<!-- Kiosk Preview -->
-<div class="kiosk-preview">
-  <a href="https://library-tv.srv1706858.hstgr.cloud/display/demo-lobby-main" target="_blank" style="text-decoration:none;color:inherit;display:block;"><div class="kiosk-frame fade-up" style="cursor:pointer;">
-    <div class="kiosk-top">
-      <span>📚 ספריית רחובות - מרכז קהילתי</span>
-      <span>ברוכים הבאים לספרייה</span>
-      <span>⏰ פתוח עכשיו</span>
-    </div>
-    <div class="kiosk-body">
-      <div class="kiosk-col">
-        <h4>📅 אירועים קרובים</h4>
-        <div class="kiosk-event">
-          <div class="date-circle"><span>12</span><span>אוג</span></div>
-          <div class="event-text">ערב ספר לילדים<br>19:30</div>
-        </div>
-        <div class="kiosk-event">
-          <div class="date-circle"><span>15</span><span>אוג</span></div>
-          <div class="event-text">הרצאה: ספרות עברית<br>20:00</div>
-        </div>
-        <div class="kiosk-event">
-          <div class="date-circle"><span>20</span><span>אוג</span></div>
-          <div class="event-text">סדנת כתיבה<br>18:00</div>
-        </div>
-      </div>
-      <div class="kiosk-center">
-        <div class="big-icon">📚</div>
-        <h3>הספרייה הדיגיטלית 24/7</h3>
-        <p>ספרים קוליים, כתבי עת, מאגרי מידע<br>וקורסים מקוונים — זמינים תמיד</p>
-        <div class="dots">
-          <div class="dot active"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </div>
-      <div class="kiosk-col">
-        <h4>שעות פתיחה</h4>
-        <div class="kiosk-hours">
-          <div class="day"><span>א׳-ה׳</span><span>09:00 - 19:00</span></div>
-          <div class="day"><span>ו׳</span><span>09:00 - 13:00</span></div>
-          <div class="day"><span>שבת</span><span>סגור</span></div>
-        </div>
-        <h4 style="margin-top:12px;">שירותים</h4>
-        <div class="kiosk-services">
-          <div class="kiosk-service"><span class="icon">📶</span>Wi-Fi</div>
-          <div class="kiosk-service"><span class="icon">💻</span>עמדות</div>
-          <div class="kiosk-service"><span class="icon">📖</span>קטלוג</div>
-          <div class="kiosk-service"><span class="icon">🧸</span>ילדים</div>
-          <div class="kiosk-service"><span class="icon">🖨️</span>הדפסה</div>
-          <div class="kiosk-service"><span class="icon">📚</span>השאלה</div>
-        </div>
-      </div>
-    </div>
-    <div class="kiosk-footer">
-      <div class="contact-info">
-        <span>📞 03-555-0142</span>
-        <span>🌐 library.example.org.il</span>
-      </div>
-      <span>אנחנו כאן בשבילכם!</span>
-    </div>
-    <div class="status-bar">🖱️ לחץ כאן לצפייה בדמו החי של ספריית רחובות ←</div>
+<!-- USE CASES -->
+<section class="usecases" id="usecases">
+  <div class="section-head">
+    <div class="tag">לכל עסק</div>
+    <h2>מסך אחד. אינסוף יישומים.</h2>
+    <p>כל עסק שרוצה להציג מידע ללקוחות — מסך Info Screen מתאים לו</p>
   </div>
-</div></a>
+  <div class="cases-grid">
+    <div class="case-card reveal"><div class="emoji">🍔</div><h3>מסעדות ופיצריות</h3><p>תפריט דיגיטלי, מבצעים ומנה היום — מתעדכן בלחיצה</p></div>
+    <div class="case-card reveal"><div class="emoji">📚</div><h3>ספריות ומרכזים</h3><p>אירועים, שעות פתיחה והודעות לקהילה</p></div>
+    <div class="case-card reveal"><div class="emoji">🩺</div><h3>מרפאות וקליניקות</h3><p>תורים, הודעות למטופלים ומידע שירות</p></div>
+    <div class="case-card reveal"><div class="emoji">🏪</div><h3>חנויות ורשתות</h3><p>מבצעים, מוצרים חדשים והטבות ללקוחות</p></div>
+    <div class="case-card reveal"><div class="emoji">🏢</div><h3>לובי ומשרדים</h3><p>הודעות לעובדים, אירועים ומידע כללי</p></div>
+    <div class="case-card reveal"><div class="emoji">💈</div><h3>בעלי מלאכה</h3><p>מחירון שירותים, תורים והודעות ללקוחות</p></div>
+    <div class="case-card reveal"><div class="emoji">🏋️</div><h3>חדרי כושר</h3><p>מערכת שיעורים, הודעות ועדכונים</p></div>
+    <div class="case-card reveal"><div class="emoji">🏫</div><h3>מוסדות חינוך</h3><p>הודעות להורים, אירועים ולוח זמנים</p></div>
+  </div>
+</section>
 
-<!-- Demo Links -->
-<div class="demo-section fade-up-delay-1">
-  <h3>🌐 לינקים לדמו — ספריות חיות</h3>
-  <div class="demo-links">
-    <a class="demo-link-card" href="https://library-tv.srv1706858.hstgr.cloud/display/demo-lobby-main" target="_blank">
-      <div class="demo-icon">📚</div>
-      <div class="demo-name">ספריית רחובות</div>
-      <div class="demo-city">רחוב ביאליק 15, רחובות</div>
-      <span class="demo-btn">צפייה בדמו ←</span>
+<!-- HOW IT WORKS -->
+<section class="howitworks">
+  <div class="section-head">
+    <div class="tag">איך זה עובד</div>
+    <h2>פשוט כמו 1-2-3</h2>
+    <p>אין צורך בידע טכני. כל אחד יכול.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="num">1</div>
+      <h3>מתחברים</h3>
+      <p>נכנסים לאתר הניהול מהטלפון או המחשב — כמו להיכנס לפייסבוק.</p>
+    </div>
+    <div class="step reveal">
+      <div class="num">2</div>
+      <h3>מעדכנים</h3>
+      <p>כותבים הודעה, מעלים תמונה, מוסיפים אירוע או משנים שעות פתיחה — בלחיצה.</p>
+    </div>
+    <div class="step reveal">
+      <div class="num">3</div>
+      <h3>זה מופיע</h3>
+      <p>המסך מתעדכן לבד. לא צריך לגעת בו בכלל. הכל קורה מרחוק.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-head">
+    <div class="tag">יתרונות</div>
+    <h2>למה Info Screen?</h2>
+    <p>כל מה שעסק צריך כדי להציג מידע בצורה מקצועית</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">📱</div>
+      <div><h3>ניהול מהטלפון</h3><p>עורך הודעות, תפריט או אירועים מכל מכשיר — בלי לקום מהכיסא.</p></div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">⚡</div>
+      <div><h3>עדכון מיידי</h3><p>המסך מתעדכן אוטומטית. לא צריך לרענן או לגעת בו.</p></div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🎨</div>
+      <div><h3>עיצוב מקצועי</h3><p>תבניות יפות שמתאימות לכל עסק — ממסעדה ועד מרפאה.</p></div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🖥️</div>
+      <div><h3>כל מסך מתאים</h3><p>טלוויזיה, מסך מחשב או טאבלט — המערכת מסתדרת עם הכל.</p></div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🔒</div>
+      <div><h3>מאובטח ופרטי</h3><p>כל עסק מקבל סביבה נפרדת. רק מי שאתה מרשה רואה ומנהל.</p></div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">💸</div>
+      <div><h3>חיסכון אמיתי</h3><p>בלי להדפיס, בלי להחליף שלטים, בלי להזמין מעצב. הכל דיגיטלי.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section" id="demo">
+  <div class="section-head" style="color:#fff">
+    <div class="tag" style="color:var(--brand-light)">דוגמה חיה</div>
+    <h2>רואים את זה עובד</h2>
+    <p style="color:rgba(255,255,255,.7)">ככה נראה המסך של הלקוח שלך — תמיד מעודכן, תמיד יפה</p>
+  </div>
+  <div class="demo-frame">
+    <a href="https://lior-ailon.github.io/ailon-task-apps/dekel-library/display.html?screen=demo-lobby-main" target="_blank">
+      <img src="https://lior-ailon.github.io/ailon-task-apps/dekel-flyer/demo-preview.png" alt="Info Screen Demo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div style="display:none;min-height:300px;align-items:center;justify-content:center;background:#1e3a5f;font-size:1.2rem;color:#fff;flex-direction:column;gap:12px;padding:40px">
+        <div style="font-size:48px">📺</div>
+        <div>לחץ כאן לצפייה במסך חי</div>
+      </div>
     </a>
-    <a class="demo-link-card" href="https://library-tv.srv1706858.hstgr.cloud/display/demo-lobby-main" target="_blank">
-      <div class="demo-icon">📖</div>
-      <div class="demo-name">ספריית אשקלון</div>
-      <div class="demo-city">רחוב הרצל 25, אשקלון</div>
-      <span class="demo-btn">צפייה בדמו ←</span>
-    </a>
-    <a class="demo-link-card" href="https://library-tv.srv1706858.hstgr.cloud/display/demo-lobby-main" target="_blank">
-      <div class="demo-icon">🏛️</div>
-      <div class="demo-name">ספריית נריה</div>
-      <div class="demo-city">רחוב הלל 8, תל אביב</div>
-      <span class="demo-btn">צפייה בדמו ←</span>
-    </a>
-    <a class="demo-link-card" href="https://library-tv.srv1706858.hstgr.cloud/display/demo-lobby-main" target="_blank">
-      <div class="demo-icon">🌊</div>
-      <div class="demo-name">ספריית עוז</div>
-      <div class="demo-city">שדרות הכרמל 12, חיפה</div>
-      <span class="demo-btn">צפייה בדמו ←</span>
+  </div>
+  <div class="demo-cta">
+    <a href="https://lior-ailon.github.io/ailon-task-apps/dekel-library/display.html?screen=demo-lobby-main" target="_blank">
+      <button class="btn-primary">פתח מסך לדוגמה →</button>
     </a>
   </div>
-</div>
+</section>
 
-<!-- Features -->
-<div class="features">
-  <div class="features-inner">
-    <h2 class="section-title">למה המערכת שלנו?</h2>
-    <p class="section-subtitle">כל היתרונות במקום אחד</p>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="icon-wrap icon-teal">🎯</div>
-        <h3>אינטואיטיבי</h3>
-        <p>ממשק נקי ופשוט שלא דורש הדרכה. כל אחד יכול להפעיל ולנהל מהיום הראשון — בלי רקע טכני.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon-wrap icon-orange">⚙️</div>
-        <h3>טיפול פשוט וקל</h3>
-        <p>ניהול תכנים, אירועים ותצוגות בכמה לחיצות. הוספת ספרים ועדכון מלאי בקלות ובמהירות.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon-wrap icon-gold">🔧</div>
-        <h3>התאמות על פי צורך הלקוח</h3>
-        <p>כל מערכת מותאמת בדיוק לצרכים שלך — עיצוב, שפה, קטגוריות ותהליכי עבודה. המערכת מתאימה אליך, לא להיפך.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon-wrap icon-teal">🚀</div>
-        <h3>התאמה מיידית</h3>
-        <p>שינויים ועדכונים נכנסים לתוקף מיד. אין זמן המתנה, אין תהליכים ארוכים. מה שמשנים — מתעדכן על המקום.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon-wrap icon-orange">📺</div>
-        <h3>תצוגת טלוויזיה חכמה</h3>
-        <p>מסכי תצוגה בספרייה עם תכנים מתחלפים — אירועים, המלצות, הודעות ועוד. נראה מקצועי, פועל אוטונומית.</p>
-      </div>
-    </div>
+<!-- PRICING TEASER -->
+<section class="pricing">
+  <div class="price-card">
+    <div class="label">מתחילים מהר</div>
+    <div class="price">₪99<span class="per">/חודש</span></div>
+    <div class="desc">לכל עסק. בלי התקנות. בלי התחייבות.</div>
+    <ul>
+      <li><span class="check">✓</span> מסך אחד פעיל</li>
+      <li><span class="check">✓</span> ניהול הודעות ואירועים ללא הגבלה</li>
+      <li><span class="check">✓</span> עדכון מיידי מהטלפון</li>
+      <li><span class="check">✓</span> עיצוב מקצועי מובנה</li>
+      <li><span class="check">✓</span> תמיכה בשעות עסקים</li>
+    </ul>
+    <button class="btn-primary" onclick="window.location.href='https://wa.me/972502345678?text=שלום, אני מעוניין ב-Info Screen'">צרו קשר להתחלה</button>
   </div>
-</div>
+</section>
 
-<!-- Showcase -->
-<div class="showcase">
-  <div class="showcase-inner">
-    <h2 class="section-title">מה המערכת כוללת?</h2>
-    <p class="section-subtitle">כל מה שספרייה מודרנית צריכה — במקום אחד</p>
-    <div class="showcase-grid">
-      <div class="showcase-item">
-        <div class="showcase-icon">📚</div>
-        <div class="showcase-body"><h4>ניהול תוכן מלא</h4><p>קטלוג ספרים חכם עם חיפוש, סינון, קטגוריות, מיקום על מדף ותמונות כריכה.</p></div>
-      </div>
-      <div class="showcase-item">
-        <div class="showcase-icon">📅</div>
-        <div class="showcase-body"><h4>ניהול אירועים</h4><p>יצירת אירועים, הרשמה מקוונת, מעקב משתתפים ותצוגה אוטומטית בספרייה.</p></div>
-      </div>
-      <div class="showcase-item">
-        <div class="showcase-icon">☁️</div>
-        <div class="showcase-body"><h4>ענן מאובטח</h4><p>גיבוי מלא ואוטומטי של כל הנתונים. המידע שלך שמור, מוגן וזמין תמיד.</p></div>
-      </div>
-      <div class="showcase-item">
-        <div class="showcase-icon">🌐</div>
-        <div class="showcase-body"><h4>אתר אינטרנט</h4><p>אתר ניהולי ודף תצוגה ציבורי. נגיש מכל מכשיר — מחשב, טאבלט או נייד.</p></div>
-      </div>
-    </div>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="logo">📺 Info Screen</div>
+  <div class="tagline">המסך החכם לכל עסק</div>
+  <div class="links">
+    <a href="https://lior-ailon.github.io/ailon-task-apps/dekel-library/">כניסה למערכת</a>
+    <a href="https://wa.me/972502345678?text=שלום, אני מעוניין ב-Info Screen">צרו קשר</a>
+    <a href="https://lior-ailon.github.io/ailon-task-apps/dekel-library/display.html?screen=demo-lobby-main">מסך לדוגמה</a>
   </div>
-</div>
+  <div class="partner">מופעל ומשווק ע״י דקל מחשבים · פותח ע״י AILON Task</div>
+</footer>
 
-<!-- Stats -->
-<div class="stats">
-  <div class="stats-grid">
-    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">התאמה אישית</div></div>
-    <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">זמינות מערכתית</div></div>
-    <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">צורך בהתקנה</div></div>
-    <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">תכנים ואירועים</div></div>
-  </div>
-</div>
-
-<!-- Footer -->
-<div class="footer">
-  <div class="footer-logo" style="display:flex;align-items:center;justify-content:center;gap:12px"><img src="https://media.base44.com/images/public/69f63b4536d7a2c6688403df/a8e957c4e_generated_image.png" alt="InfoScreen" style="height:40px;border-radius:8px"> דקל מחשבים</div>
-  <div class="footer-info">
-    רחוב קלישר 16, ראשל"צ · ח.פ. 033880246<br>
-    מערכות טכנולוגיות לניהול ספריות
-  </div>
-</div>
+<script>
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
