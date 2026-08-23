@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=portal.html">
-  <title>AILON Task — פורטל הכלים</title>
-  <script>window.location.href = 'portal.html';</script>
+  <title>Info Screen — מערכת ניהול מסכים</title>
+  <script>
+    (function(){
+      var host = window.location.hostname;
+      // If accessed via infoscreen.co.il → Dekel library management
+      if (host.indexOf('infoscreen') !== -1) {
+        window.location.href = 'dekel-library/';
+      } else {
+        // Default: AILON Task portal
+        window.location.href = 'portal.html';
+      }
+    })();
+  </script>
 </head>
 <body>
-  <p>מעביר לפורטל...</p>
-  <a href="portal.html">לחץ כאן אם לא הועברת אוטומטית</a>
+  <p>מעביר...</p>
 </body>
 </html>
