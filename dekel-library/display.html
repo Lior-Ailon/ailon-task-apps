@@ -36,15 +36,25 @@
   --shadow-lg:0 14px 34px rgba(70,55,30,.16);
 }
 
-html,body{height:100%}
+html,body{height:100%;width:100%}
 body{
   font-family:'Heebo',system-ui,sans-serif;color:var(--ink);overflow:hidden;
-  background:#14201c;padding:6px;
+  background:#14201c;margin:0;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ===== TV auto-fit scaling frame — locks design to 1920x1080 and scales
+   to whatever resolution/viewport the TV, streamer or casting app reports,
+   so nothing is ever cropped top/bottom regardless of overscan/letterboxing ===== */
+#tvFrame{
+  width:1920px;height:1080px;flex-shrink:0;
+  transform-origin:center center;
+  padding:6px;box-sizing:border-box;
 }
 
 /* ===== wood-grain backdrop ===== */
 .stage{
-  position:relative;height:100%;border-radius:10px;overflow:hidden;
+  position:relative;width:100%;height:100%;border-radius:10px;overflow:hidden;
   padding:18px 20px 16px;display:flex;flex-direction:column;gap:14px;
   background:
     repeating-linear-gradient(90deg,
@@ -256,6 +266,7 @@ body.eo .col.side{display:none}
 </head>
 <body>
 
+<div id="tvFrame">
 <div class="load" id="load"><div class="b"></div><div>טוען את תצוגת הספרייה…</div></div>
 
 <div class="stage" id="stage" style="display:none">
@@ -655,6 +666,27 @@ setInterval(tick,1000);
 setInterval(loadData,60000);
 setInterval(loadWeather,900000);
 setInterval(renderHours,3600000);
+
+// ===== Auto resolution fit =====
+// Design is built at a fixed 1920x1080 canvas. We scale that canvas to
+// whatever the actual browser/TV/streamer viewport reports, keeping the
+// aspect ratio and centering it — so content is never cropped top/bottom
+// on any resolution, overscan setting, or casting/mirroring app.
+(function(){
+  const frame = document.getElementById('tvFrame');
+  function fitScreen(){
+    const vw = window.innerWidth  || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const scale = Math.min(vw/1920, vh/1080);
+    frame.style.transform = 'scale(' + scale + ')';
+  }
+  fitScreen();
+  window.addEventListener('resize', fitScreen);
+  window.addEventListener('orientationchange', fitScreen);
+  // Some TV/casting browsers don't fire resize reliably — recheck periodically.
+  setInterval(fitScreen, 5000);
+})();
 </script>
+</div><!-- /#tvFrame -->
 </body>
 </html>
