@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="theme-color" content="#0d9488">
+<title>AILON TASK · מערכת CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+--teal:#0d9488;--teal-light:#14b8a6;--teal-dark:#0f766e;--navy:#1e3a5f;
+--bg:#e0f2f1;--bg2:#f0fdfa;--card:#fff;--text:#37474f;--text2:#546e7a;--gray:#90a4ae;
+--border:#e0e7e7;--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6;
+--radius:14px;--shadow:0 2px 12px rgba(0,0,0,.06);--shadow-lg:0 8px 30px rgba(0,0,0,.12);
+--font:'Heebo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+body::-webkit-scrollbar{width:6px}
+body::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px}
+/* LOGIN */
+.login-wrap{display:flex;min-height:100vh}
+.login-left{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#d1eaeb 0%,#e8f7f7 100%);padding:20px}
+.login-card{background:#fff;border-radius:20px;padding:40px;max-width:400px;width:100%;box-shadow:var(--shadow-lg)}
+.login-card h1{font-size:24px;font-weight:700;color:var(--text);margin-bottom:8px}
+.login-card p{font-size:14px;color:var(--text2);margin-bottom:24px}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.login-field input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:15px;font-family:var(--font);transition:border .2s}
+.login-field input:focus{outline:none;border-color:var(--teal)}
+.login-forgot{font-size:13px;color:var(--gray);text-decoration:none;cursor:pointer;margin-bottom:16px;display:block;text-align:left}
+.login-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:transform .2s}
+.login-btn:hover{transform:scale(1.02)}
+.login-btn:active{transform:scale(.98)}
+.login-footer{font-size:13px;color:var(--gray);text-align:center;margin-top:20px}
+.login-right{flex:1.2;background:linear-gradient(135deg,var(--teal-dark),var(--navy));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.login-right::before{content:'';position:absolute;inset:0;background:url('https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ecfc0691-7bd2-40e6-aa3d-fa28cc5a0716/id-preview-d8b66a15--b0e371ee-233f-4a6f-bc84-53966fab0dfa.lovable.app-1783246150207.png') center/cover;opacity:.15}
+.login-right-content{position:relative;text-align:center;color:#fff;padding:40px}
+.login-logo{font-size:32px;font-weight:800;letter-spacing:1px;margin-bottom:4px}
+.login-sub{font-size:14px;letter-spacing:3px;opacity:.7;margin-bottom:40px}
+.login-hero{font-size:42px;font-weight:700;line-height:1.3;margin-bottom:16px}
+.login-hero-sub{font-size:18px;opacity:.8;line-height:1.6;max-width:400px;margin:0 auto}
+.login-copyright{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:12px;opacity:.5}
+/* APP LAYOUT */
+.app{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;right:0;width:260px;height:100vh;background:#fff;box-shadow:-2px 0 12px rgba(0,0,0,.06);display:flex;flex-direction:column;z-index:100}
+.sidebar-header{padding:20px 24px;border-bottom:1px solid var(--border)}
+.sidebar-logo{font-size:20px;font-weight:800;color:var(--text)}
+.sidebar-sub{font-size:11px;letter-spacing:2px;color:var(--gray);margin-top:2px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 14px}
+.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.nav-section{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;padding:14px 12px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:right;font-family:var(--font)}
+.nav-item:hover{background:var(--bg);color:var(--teal)}
+.nav-item.active{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;font-weight:600}
+.nav-item .icon{font-size:18px;width:24px;text-align:center}
+.sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
+.main{margin-right:260px;min-height:100vh}
+.topbar{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);padding:14px 24px;display:flex;align-items:center;gap:16px;z-index:50;border-bottom:1px solid var(--border)}
+.search-wrap{position:relative;flex:1;max-width:400px}
+.search-wrap input{width:100%;padding:10px 40px 10px 40px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);transition:border .2s;background:#fff}
+.search-wrap input:focus{outline:none;border-color:var(--teal)}
+.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:16px}
+.voice-search-btn{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--teal);padding:4px;border-radius:50%;transition:all .2s}
+.voice-search-btn:hover{background:var(--bg)}
+.voice-search-btn.listening{background:var(--red);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.topbar-user{display:flex;align-items:center;gap:10px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.user-name{font-size:14px;font-weight:600;color:var(--text)}
+.content{padding:24px}
+.page-header{margin-bottom:20px}
+.page-title{font-size:28px;font-weight:700;color:var(--text)}
+.page-subtitle{font-size:14px;color:var(--text2);margin-top:4px}
+.page-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+/* CARDS */
+.card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.card-title{font-size:16px;font-weight:600;color:var(--text)}
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+/* BUTTONS */
+.btn{padding:10px 18px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font);display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff}
+.btn-primary:hover{transform:scale(1.03)}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-danger{background:transparent;color:var(--red);border:2px solid transparent}
+.btn-danger:hover{background:#fef2f2}
+/* STAT CARDS */
+.stat-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.stat-value{font-size:28px;font-weight:700;color:var(--text)}
+.stat-label{font-size:13px;color:var(--text2);margin-top:4px}
+.stat-sub{font-size:12px;color:var(--gray);margin-top:2px}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:right;padding:10px 12px;font-weight:600;color:var(--text2);font-size:13px;border-bottom:2px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--bg)}
+/* BADGES */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-new{background:#dbeafe;color:#1e40af}
+.badge-contact{background:#ede9fe;color:#5b21b6}
+.badge-relevant{background:#dcfce7;color:#166534}
+.badge-converted{background:#fef3c7;color:#92400e}
+.badge-lost{background:#fee2e2;color:#991b1b}
+.badge-draft{background:#e0e7ff;color:#3730a3}
+.badge-sent{background:#fef3c7;color:#92400e}
+.badge-approved{background:#dcfce7;color:#166534}
+.badge-active{background:#dcfce7;color:#166534}
+.badge-cancelled{background:#fee2e2;color:#991b1b}
+.badge-overdue{background:#fee2e2;color:#991b1b}
+/* KANBAN */
+.kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px}
+.kanban-col{min-width:240px;flex:1;background:var(--bg);border-radius:var(--radius);padding:12px}
+.kanban-col-header{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.kanban-col-count{font-size:12px;color:var(--gray);font-weight:400}
+.kanban-card{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:grab;transition:box-shadow .2s}
+.kanban-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.kanban-card.dragging{opacity:.5}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px;max-width:500px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-title{font-size:20px;font-weight:700;margin-bottom:16px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--font);transition:border .2s}
+.modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{outline:none;border-color:var(--teal)}
+.modal-field textarea{min-height:80px;resize:vertical}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:var(--text);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+/* VOICE */
+.voice-btn{position:fixed;bottom:16px;left:16px;width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;border:none;box-shadow:0 2px 6px rgba(13,148,136,.3);cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .3s;opacity:.7}
+.voice-btn:hover{transform:scale(1.05);opacity:1}
+.voice-btn.listening{background:var(--red);opacity:1;animation:pulse 1s infinite}
+.voice-modal{display:none;position:fixed;bottom:60px;left:16px;background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow-lg);max-width:320px;z-index:101}
+.voice-modal.active{display:block}
+.voice-transcript{font-size:15px;font-weight:600;color:var(--text);min-height:24px;margin-bottom:10px}
+.voice-suggestions{display:flex;flex-wrap:wrap;gap:6px}
+.voice-suggestion{background:var(--bg);color:var(--teal);padding:4px 10px;border-radius:16px;font-size:12px;cursor:pointer;transition:all .2s}
+.voice-suggestion:hover{background:var(--teal);color:#fff}
+/* MISC */
+.empty{text-align:center;padding:40px;color:var(--gray)}
+.empty-icon{font-size:48px;margin-bottom:8px}
+.hero-banner{background:linear-gradient(135deg,var(--teal-dark),var(--navy));border-radius:var(--radius);padding:32px;color:#fff;text-align:center;margin-bottom:16px}
+.hero-banner h2{font-size:24px;font-weight:700;margin-bottom:8px}
+.quote-card{background:linear-gradient(135deg,var(--bg),#fff);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:16px}
+.quote-card .quote-text{font-size:18px;font-style:italic;color:var(--text);line-height:1.5}
+.quote-card .quote-author{font-size:14px;color:var(--text2);margin-top:8px}
+.quick-actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
+.quick-action{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.quick-action:hover{transform:scale(1.1)}
+.progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:4px;transition:width .5s}
+/* LEAD CARD */
+.lead-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;transition:transform .2s}
+.lead-card:hover{transform:translateY(-2px)}
+.lead-card-actions{position:absolute;top:8px;left:8px;display:flex;gap:4px}
+.lead-card-actions button{background:none;border:none;cursor:pointer;font-size:16px;padding:4px;border-radius:6px;transition:background .2s}
+.lead-card-actions button:hover{background:var(--bg)}
+.lead-card .lead-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;padding-left:60px}
+.lead-card .lead-company{font-size:13px;color:var(--text2);margin-bottom:8px}
+.lead-card .lead-contact{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);margin-bottom:4px}
+.lead-card .lead-value{font-size:18px;font-weight:700;color:var(--teal);margin:8px 0}
+/* SETTINGS TABS */
+.settings-tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border)}
+.settings-tab{padding:10px 20px;border:none;background:none;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;font-family:var(--font)}
+.settings-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+/* API PANEL */
+.api-panel{background:#f0f9fa;border-radius:12px;padding:16px;margin-bottom:16px;font-family:monospace;font-size:13px;line-height:1.6}
+.api-panel code{display:block;padding:8px 12px;background:#fff;border-radius:8px;margin:4px 0;direction:ltr;text-align:left}
+/* CALENDAR */
+.calendar{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.calendar-day-header{text-align:center;font-size:12px;font-weight:600;color:var(--text2);padding:4px}
+.calendar-day{aspect-ratio:1;border-radius:8px;padding:4px;font-size:12px;cursor:pointer;transition:background .2s;display:flex;flex-direction:column}
+.calendar-day:hover{background:var(--bg)}
+.calendar-day.today{background:var(--teal);color:#fff;font-weight:700}
+.calendar-day.has-meeting::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--amber);margin:2px auto}
+.calendar-day.other-month{opacity:.3}
+/* LOADING */
+.loading{text-align:center;padding:40px;color:var(--gray);font-size:16px}
+.spinner{border:3px solid var(--border);border-top:3px solid var(--teal);border-radius:50%;width:32px;height:32px;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* RESPONSIVE */
+@media(max-width:768px){
+.sidebar{transform:translateX(100%);transition:transform .3s}
+.sidebar.open{transform:translateX(0)}
+.main{margin-right:0}
+.menu-toggle{display:block!important}
+.login-right{display:none}
+.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+}
+.menu-toggle{display:none;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+<div class="login-left">
+<div class="login-card">
+<h1>כניסה למערכת</h1>
+<p>השתמש בפרטים שסופקו לך על ידי מנהל המערכת</p>
+<div class="login-field">
+<label>אימייל</label>
+<input type="email" id="loginEmail" placeholder="lior@ailon-task.com">
+</div>
+<div class="login-field">
+<label>סיסמה</label>
+<input type="password" id="loginPassword" placeholder="••••••••">
+</div>
+<a class="login-forgot" onclick="toast('פנה למנהל המערכת')">שכחתי סיסמה</a>
+<button class="login-btn" onclick="doLogin()">כניסה</button>
+<p class="login-footer">אין לך חשבון? פנה למנהל המערכת ליצירת משתמש.</p>
+<div id="loginError" style="color:var(--red);font-size:13px;margin-top:8px;display:none"></div>
+</div>
+</div>
+<div class="login-right">
+<div class="login-right-content">
+<div class="login-logo">AILON TASK</div>
+<div class="login-sub">CRM SYSTEM</div>
+<div class="login-hero">Dream it.<br>Plan it.<br>Achieve it.</div>
+<div class="login-hero-sub">נהל לידים, לקוחות, פרויקטים ומשימות – הכל במקום אחד, מעוצב לעבודה אמיתית.</div>
+</div>
+<div class="login-copyright">AILON TASK · We empower dreamers to build the future 2026 ©</div>
+</div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="sidebar-logo">AILON TASK</div>
+<div class="sidebar-sub">CRM SYSTEM</div>
+</div>
+<nav class="sidebar-nav" id="sidebarNav">
+<button class="nav-item active" data-page="dashboard"><span class="icon">📊</span> דשבורד</button>
+<button class="nav-item" data-page="analytics"><span class="icon">📈</span> אנליטיקה</button>
+<div class="nav-section">מכירות</div>
+<button class="nav-item" data-page="leads"><span class="icon">🎯</span> לידים</button>
+<button class="nav-item" data-page="leadboard"><span class="icon">📋</span> לוח לידים</button>
+<button class="nav-item" data-page="customers"><span class="icon">👥</span> לקוחות</button>
+<button class="nav-item" data-page="quotes"><span class="icon">📄</span> הצעות מחיר</button>
+<button class="nav-item" data-page="meetings"><span class="icon">📅</span> פגישות</button>
+<div class="nav-section">ניהול</div>
+<button class="nav-item" data-page="projects"><span class="icon">📁</span> פרויקטים</button>
+<button class="nav-item" data-page="tasks"><span class="icon">✅</span> משימות</button>
+<button class="nav-item" data-page="ideas"><span class="icon">💡</span> רעיונות</button>
+<div class="nav-section">כספים</div>
+<button class="nav-item" data-page="incomes"><span class="icon">💰</span> הכנסות</button>
+<button class="nav-item" data-page="expenses"><span class="icon">💸</span> הוצאות</button>
+<button class="nav-item" data-page="subscriptions"><span class="icon">🔄</span> מנויים</button>
+<button class="nav-item" data-page="shelf"><span class="icon">📦</span> מוצרי מדף</button>
+<div class="nav-section">מערכת</div>
+<button class="nav-item" data-page="settings"><span class="icon">⚙️</span> הגדרות</button>
+</nav>
+<div class="sidebar-footer">
+<button class="btn btn-outline btn-sm" style="width:100%" onclick="doLogout()">🚪 התנתק</button>
+</div>
+</aside>
+
+<div class="main">
+<div class="topbar">
+<button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+<div class="search-wrap">
+<span class="search-icon">🔍</span>
+<input type="text" id="globalSearch" placeholder="חיפוש..." oninput="debounceSearch(this.value)">
+<button class="voice-search-btn" id="voiceSearchBtn" onclick="voiceSearch()" title="חיפוש קולי">🎙️</button>
+</div>
+<div class="topbar-user">
+<div class="user-avatar" id="userAvatar">L</div>
+<div class="user-name" id="userName">משתמש</div>
+</div>
+</div>
+<div class="content" id="content">
+<div class="loading"><div class="spinner"></div>טוען...</div>
+</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal" id="modal">
+<div class="modal-title" id="modalTitle">כותרת</div>
+<div id="modalBody"></div>
+<div class="modal-actions" id="modalActions"></div>
+</div>
+</div>
+
+<!-- VOICE -->
+<button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Sierra - עוזרת קולית">🎙️</button>
+<div class="voice-modal" id="voiceModal">
+<div class="voice-transcript" id="voiceTranscript">מקשיב...</div>
+<div class="voice-suggestions" id="voiceSuggestions"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== SUPABASE CONFIG ==========
+const SUPABASE_URL = 'https://nmpwsahwalmxplxudndv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tcHdzYWh3YWxteHBseHVkbmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjcxNzIsImV4cCI6MjA5NzkwMzE3Mn0.QvQoCxmSz66dEPx7NWj6OcftgtjhViAytfkgRDL2q9c';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
+let currentPage = 'dashboard';
+let recognition = null;
+let isListening = false;
+let searchTimer = null;
+let calendarDate = new Date();
+
+// ========== AUTH ==========
+async function doLogin() {
+const email = document.getElementById('loginEmail').value;
+const password = document.getElementById('loginPassword').value;
+const errEl = document.getElementById('loginError');
+if(!email || !password){ errEl.textContent = 'נא למלא אימייל וסיסמה'; errEl.style.display='block'; return; }
+errEl.style.display = 'none';
+const { data, error } = await sb.auth.signInWithPassword({ email, password });
+if(error){ errEl.textContent = 'שגיאה: ' + error.message; errEl.style.display='block'; return; }
+currentUser = data.user;
+showApp();
+}
+
+async function doLogout() {
+await sb.auth.signOut();
+document.getElementById('app').style.display = 'none';
+document.getElementById('loginWrap').style.display = 'flex';
+currentUser = null;
+}
+
+async function checkSession() {
+const { data: { session } } = await sb.auth.getSession();
+if(session){
+currentUser = session.user;
+showApp();
+}
+}
+
+function showApp() {
+document.getElementById('loginWrap').style.display = 'none';
+document.getElementById('app').style.display = 'block';
+const name = currentUser.email?.split('@')[0] || 'משתמש';
+document.getElementById('userName').textContent = name;
+document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+initVoice();
+loadPage('dashboard');
+}
+
+// ========== NAVIGATION ==========
+document.querySelectorAll('.nav-item').forEach(item => {
+item.addEventListener('click', () => {
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+item.classList.add('active');
+loadPage(item.dataset.page);
+document.getElementById('sidebar').classList.remove('open');
+});
+});
+
+async function loadPage(page) {
+currentPage = page;
+const content = document.getElementById('content');
+content.innerHTML = '<div class="loading"><div class="spinner"></div>טוען...</div>';
+try {
+switch(page) {
+case 'dashboard': await renderDashboard(); break;
+case 'analytics': await renderAnalytics(); break;
+case 'leads': await renderLeads(); break;
+case 'leadboard': await renderLeadBoard(); break;
+case 'customers': await renderCustomers(); break;
+case 'quotes': await renderQuotes(); break;
+case 'meetings': await renderMeetings(); break;
+case 'projects': await renderProjects(); break;
+case 'tasks': await renderTasks(); break;
+case 'ideas': await renderIdeas(); break;
+case 'incomes': await renderIncomes(); break;
+case 'expenses': await renderExpenses(); break;
+case 'subscriptions': await renderSubscriptions(); break;
+case 'shelf': await renderShelf(); break;
+case 'settings': await renderSettings(); break;
+}
+} catch(e) {
+content.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>שגיאה בטעינת הדף</p></div>';
+console.error(e);
+}
+}
+
+function navigateTo(page) {
+document.querySelectorAll('.nav-item').forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
+loadPage(page);
+}
+
+// ========== DASHBOARD ==========
+async function renderDashboard() {
+const c = document.getElementById('content');
+const quotes = [
+'מה שלא ניתן למדוד לא ניתן לנהל, ומה שלא ניתן לנהל לא ניתן לשפר',
+'הדרך הטובה ביותר לנבא את העתיד היא ליצור אותו',
+'אין דבר העומד בפני הרצון',
+'השפעה היא אש שמתרבה, כוח הוא סכום אפס'
+];
+const authors = ['פיטר דרוקר','פיטר דרוקר','תלמוד','הרב יונתן זקס'];
+const qi = Math.floor(Date.now()/86400000) % quotes.length;
+
+c.innerHTML = `
+<div class="quote-card">
+<div class="quote-text">"${quotes[qi]}"</div>
+<div class="quote-author">– ${authors[qi]}</div>
+</div>
+<div class="hero-banner">
+<h2>Dream it. Plan it. Achieve it.</h2>
+<p style="opacity:.8;font-size:14px;margin-top:4px">AILON TASK CRM</p>
+</div>
+<div class="grid grid-3" style="margin-bottom:16px">
+<div class="stat-card" id="dashGoal"></div>
+<div class="stat-card" id="dashLeads"></div>
+<div class="stat-card" id="dashTasks"></div>
+</div>
+<div class="card">
+<div class="card-header"><div class="card-title">🔔 מעקבים דחופים · 7 ימים הקרובים</div></div>
+<div id="urgentList"><div class="loading"><div class="spinner"></div></div></div>
+</div>
+<div class="quick-actions">
+<button class="quick-action" style="background:#f97316" onclick="navigateTo('leads');setTimeout(()=>openLeadModal(),300)" title="ליד חדש">🎯</button>
+<button class="quick-action" style="background:var(--teal)" onclick="navigateTo('meetings');setTimeout(()=>openMeetingModal(),300)" title="פגישה חדשה">📅</button>
+<button class="quick-action" style="background:var(--blue)" onclick="navigateTo('tasks');setTimeout(()=>openTaskModal(),300)" title="משימה חדשה">✅</button>
+<button class="quick-action" style="background:var(--purple)" onclick="navigateTo('quotes');setTimeout(()=>openQuoteModal(),300)" title="הצעת מחיר">📄</button>
+</div>
+`;
+
+// Load stats in parallel
+const now = new Date();
+const monthStr = now.toLocaleDateString('he-IL',{month:'long'});
+// Goal
+const { data: goalData } = await sb.from('settings').select('*').eq('key','monthly_goal').single();
+const goal = goalData?.value || 0;
+const { data: leadsData } = await sb.from('leads').select('*');
+const convertedLeads = leadsData?.filter(l => l.status === 'converted' || l.status === 'הפך ללקוח') || [];
+const totalValue = convertedLeads.reduce((s,l) => s + (l.deal_value||0), 0);
+const pct = goal > 0 ? Math.min(100, Math.round(totalValue/goal*100)) : 0;
+document.getElementById('dashGoal').innerHTML = `
+<div class="stat-icon" style="background:#dcfce7">🎯</div>
+<div class="stat-value">${pct}%</div>
+<div class="stat-label">יעד מכירות · ${monthStr}</div>
+<div class="stat-sub">${goal > 0 ? `${totalValue.toLocaleString()} / ${goal.toLocaleString()} ₪` : 'לא הוגדר יעד'}</div>
+<div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+`;
+// Leads count
+const newLeads = leadsData?.filter(l => l.status === 'new' || l.status === 'חדש') || [];
+document.getElementById('dashLeads').innerHTML = `
+<div class="stat-icon" style="background:#dbeafe">🎯</div>
+<div class="stat-value">${leadsData?.length || 0}</div>
+<div class="stat-label">סך לידים</div>
+<div class="stat-sub">${newLeads.length} חדשים</div>
+`;
+// Tasks
+const { data: tasksData } = await sb.from('tasks').select('*');
+const openTasks = tasksData?.filter(t => t.status !== 'done' && t.status !== 'הושלם') || [];
+document.getElementById('dashTasks').innerHTML = `
+<div class="stat-icon" style="background:#fef3c7">✅</div>
+<div class="stat-value">${openTasks.length}</div>
+<div class="stat-label">משימות פתוחות</div>
+<div class="stat-sub">${tasksData?.length || 0} סה"כ</div>
+`;
+// Urgent follow-ups
+const weekFromNow = new Date(Date.now() + 7*24*60*60*1000);
+const urgent = (leadsData||[]).filter(l => {
+if(!l.follow_up_date) return false;
+const d = new Date(l.follow_up_date);
+return d <= weekFromNow;
+}).sort((a,b) => new Date(a.follow_up_date) - new Date(b.follow_up_date));
+
+if(urgent.length === 0) {
+document.getElementById('urgentList').innerHTML = '<div class="empty"><p>אין מעקבים דחופים 🎉</p></div>';
+} else {
+document.getElementById('urgentList').innerHTML = urgent.map(l => {
+const overdue = new Date(l.follow_up_date) < now;
+return `<div class="lead-card" style="margin-bottom:8px" onclick="navigateTo('leads')">
+<span class="badge ${overdue?'badge-overdue':'badge-draft'}">${overdue?'באיחור':'מעקב'}</span>
+<div class="lead-name">${l.name||'ללא שם'}</div>
+<div class="lead-company">${l.company||l.field||''}</div>
+<div class="lead-contact">📅 ${formatDate(l.follow_up_date)}</div>
+</div>`;
+}).join('');
+}
+}
+
+// ========== ANALYTICS ==========
+async function renderAnalytics() {
+const c = document.getElementById('content');
+c.innerHTML = `
+<div class="page-header"><div class="page-title">📈 אנליטיקה ומכירות</div><div class="page-subtitle">מדדי הביצועים המרכזיים של העסק</div></div>
+<div class="grid grid-3" id="kpiGrid"><div class="loading"><div class="spinner"></div></div></div>
+<div class="card"><div class="card-header"><div class="card-title">משפך מכירות</div></div><div id="pipelineChart"></div></div>
+<div class="card"><div class="card-header"><div class="card-title">יעד מכירות חודשי</div></div><div id="goalChart"></div></div>
+`;
+const [leads, customers, quotes, incomes, expenses] = await Promise.all([
+sb.from('leads').select('*'),
+sb.from('customers').select('*'),
+sb.from('quotes').select('*'),
+sb.from('incomes').select('*'),
+sb.from('expenses').select('*')
+]);
+const l = leads.data||[], cu = customers.data||[], q = quotes.data||[], inc = incomes.data||[], exp = expenses.data||[];
+const pipelineValue = l.filter(x=>x.status!=='lost'&&x.status!=='לא רלוונטי').reduce((s,x)=>s+(x.deal_value||0),0);
+const conversionRate = l.length > 0 ? Math.round(cu.length/l.length*100*10)/10 : 0;
+const approvedQuotes = q.filter(x=>x.status==='approved'||x.status==='אושר');
+const quoteSuccess = q.length > 0 ? Math.round(approvedQuotes.length/q.length*100*10)/10 : 0;
+const totalIncome = inc.reduce((s,x)=>s+(x.amount||0),0);
+const totalExpense = exp.reduce((s,x)=>s+(x.amount||0),0);
+const netProfit = totalIncome - totalExpense;
+
+document.getElementById('kpiGrid').innerHTML = [
+{v:quoteSuccess+'%',l:'הצלחת הצעות',s:'הצעות מחיר שאושרו',i:'🏆',c:'#ede9fe'},
+{v:pipelineValue.toLocaleString()+' ₪',l:'שווי צנת"ר',s:'לידים פתוחים',i:'🎯',c:'#dbeafe'},
+{v:conversionRate+'%',l:'שיעור המרה',s:'לידים → לקוחות',i:'📊',c:'#dcfce7'},
+{v:netProfit.toLocaleString()+' ₪',l:'רווח נטו',s:'הכנסות פחות הוצאות',i:netProfit>=0?'📈':'📉',c:netProfit>=0?'#dcfce7':'#fee2e2'},
+{v:totalExpense.toLocaleString()+' ₪',l:'הוצאות',s:'סה"כ הוצאות',i:'💸',c:'#fef3c7'},
+{v:totalIncome.toLocaleString()+' ₪',l:'הכנסות',s:'סה"כ הכנסות',i:'💰',c:'#dcfce7'}
+].map(k=>`<div class="stat-card"><div class="stat-icon" style="background:${k.c}">${k.i}</div><div class="stat-value">${k.v}</div><div class="stat-label">${k.l}</div><div class="stat-sub">${k.s}</div></div>`).join('');
+
+// Pipeline chart (simple bars)
+const statuses = [
+{key:'new',label:'חדש',color:'#dbeafe'},
+{key:'contacted',label:'יצרנו קשר',color:'#ede9fe'},
+{key:'relevant',label:'רלוונטי',color:'#dcfce7'},
+{key:'converted',label:'הפך ללקוח',color:'#fef3c7'},
+{key:'lost',label:'לא רלוונטי',color:'#fee2e2'}
+];
+const maxCount = Math.max(...statuses.map(s=>l.filter(x=>x.status===s.key||x.status===s.label).length),1);
+document.getElementById('pipelineChart').innerHTML = `<div style="display:flex;gap:8px;align-items:flex-end;height:200px;padding:12px 0">
+${statuses.map(s=>{
+const count = l.filter(x=>x.status===s.key||x.status===s.label).length;
+const h = Math.round(count/maxCount*180);
+return `<div style="flex:1;text-align:center"><div style="height:${h}px;background:${s.color};border-radius:8px 8px 0 0;margin:0 auto;transition:height .5s"></div><div style="font-size:12px;margin-top:8px;font-weight:600">${count}</div><div style="font-size:11px;color:var(--text2)">${s.label}</div></div>`;
+}).join('')}
+</div>`;
+
+// Goal
+const { data: goalData } = await sb.from('settings').select('*').eq('key','monthly_goal').single();
+const goal = goalData?.value || 0;
+const convertedValue = l.filter(x=>x.status==='converted'||x.status==='הפך ללקוח').reduce((s,x)=>s+(x.deal_value||0),0);
+const pct = goal > 0 ? Math.min(100, Math.round(convertedValue/goal*100)) : 0;
+document.getElementById('goalChart').innerHTML = `
+<div style="text-align:center;padding:12px">
+<div style="font-size:36px;font-weight:700;color:var(--teal)">${pct}%</div>
+<div style="font-size:14px;color:var(--text2);margin:4px 0">${convertedValue.toLocaleString()} / ${goal.toLocaleString()} ₪</div>
+<div class="progress-bar" style="max-width:400px;margin:12px auto"><div class="progress-fill" style="width:${pct}%"></div></div>
+${goal === 0 ? '<div style="font-size:13px;color:var(--gray)">לא הוגדר יעד. עדכן בהגדרות ← יעדים</div>' : ''}
+</div>`;
+}
+
+// ========== LEADS ==========
+async function renderLeads() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">🎯 לידים</div><div class="page-subtitle">נהל את הלידים שלך ועקוב אחר התקדמותם</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openLeadModal()">+ חדש</button><button class="btn btn-outline" onclick="navigateTo('leadboard')">תצוגת לוח</button><button class="btn btn-outline" onclick="exportCSV('leads')">ייצוא CSV</button></div></div>
+<div id="leadsList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('leads').select('*').order('created_at',{ascending:false});
+window._leads = data||[];
+renderLeadsList(data||[]);
+}
+
+function renderLeadsList(leads) {
+const el = document.getElementById('leadsList');
+if(!leads || leads.length === 0){ el.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>אין לידים עדיין</p></div>'; return; }
+el.innerHTML = `<div class="grid grid-2">${leads.map(l=>`
+<div class="lead-card">
+<div class="lead-card-actions">
+<button onclick="deleteLead(${l.id})" title="מחק">🗑️</button>
+<button onclick="openLeadModal(${l.id})" title="ערוך">✏️</button>
+</div>
+<div class="lead-name">${l.name||'ללא שם'}</div>
+<div class="lead-company">${l.company||l.field||''}</div>
+${l.phone?`<div class="lead-contact">📞 ${l.phone}</div>`:''}
+${l.email?`<div class="lead-contact">✉️ ${l.email}</div>`:''}
+${l.deal_value?`<div class="lead-value">${l.deal_value.toLocaleString()} ₪</div>`:''}
+<span class="badge ${leadBadgeClass(l.status)}">${leadStatusLabel(l.status)}</span>
+${l.follow_up_date?`<div class="lead-contact" style="margin-top:6px">📅 ${formatDate(l.follow_up_date)}</div>`:''}
+${l.status!=='converted'&&l.status!=='הפך ללקוח'?`<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="convertLead(${l.id})">המר ללקוח</button>`:''}
+</div>
+`).join('')}</div>`;
+}
+
+function openLeadModal(id) {
+const l = id ? window._leads.find(x=>x.id==id) : {};
+openModal('ליד חדש', `
+<div class="modal-field"><label>שם</label><input id="lf_name" value="${l.name||''}"></div>
+<div class="modal-field"><label>חברה/תחום</label><input id="lf_company" value="${l.company||''}"></div>
+<div class="modal-field"><label>טלפון</label><input id="lf_phone" value="${l.phone||''}"></div>
+<div class="modal-field"><label>אימייל</label><input id="lf_email" value="${l.email||''}"></div>
+<div class="modal-field"><label>סטטוס</label><select id="lf_status">
+<option value="new" ${l.status==='new'?'selected':''}>חדש</option>
+<option value="contacted" ${l.status==='contacted'?'selected':''}>יצרנו קשר</option>
+<option value="relevant" ${l.status==='relevant'?'selected':''}>רלוונטי</option>
+<option value="converted" ${l.status==='converted'?'selected':''}>הפך ללקוח</option>
+<option value="lost" ${l.status==='lost'?'selected':''}>לא רלוונטי</option>
+</select></div>
+<div class="modal-field"><label>שווי עסקה (₪)</label><input type="number" id="lf_value" value="${l.deal_value||''}"></div>
+<div class="modal-field"><label>תאריך מעקב</label><input type="datetime-local" id="lf_followup" value="${l.follow_up_date?new Date(l.follow_up_date).toISOString().slice(0,16):''}"></div>
+<div class="modal-field"><label>הערות</label><textarea id="lf_notes">${l.notes||''}</textarea></div>
+`, id?'עדכן':'צור', async()=>{
+const data = {
+name:val('lf_name'), company:val('lf_company'), phone:val('lf_phone'),
+email:val('lf_email'), status:val('lf_status'), deal_value:parseInt(val('lf_value'))||0,
+follow_up_date:val('lf_followup')||null, notes:val('lf_notes')
+};
+if(id){ await sb.from('leads').update(data).eq('id',id); toast('ליד עודכן'); }
+else{ await sb.from('leads').insert(data); toast('ליד נוצר'); }
+closeModal(); renderLeads();
+});
+}
+
+async function deleteLead(id){ if(!confirm('למחוק ליד?'))return; await sb.from('leads').delete().eq('id',id); toast('ליד נמחק'); renderLeads(); }
+async function convertLead(id){ await sb.from('leads').update({status:'converted'}).eq('id',id); const l = window._leads.find(x=>x.id==id); if(l){ await sb.from('customers').insert({name:l.name,company:l.company,phone:l.phone,email:l.email}); } toast('ליד הומר ללקוח 🎉'); renderLeads(); }
+
+// ========== LEAD BOARD (KANBAN) ==========
+async function renderLeadBoard() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">📋 לוח לידים</div><div class="page-subtitle">גרור כרטיסים בין שלבים</div>
+<div class="page-actions"><button class="btn btn-outline" onclick="navigateTo('leads')">תצוגת רשימה</button></div></div>
+<div id="kanbanBoard"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('leads').select('*');
+window._leads = data||[];
+const cols = [
+{key:'new',label:'חדש',badge:'badge-new'},
+{key:'contacted',label:'יצרנו קשר',badge:'badge-contact'},
+{key:'relevant',label:'רלוונטי',badge:'badge-relevant'},
+{key:'converted',label:'הפך ללקוח',badge:'badge-converted'},
+{key:'lost',label:'לא רלוונטי',badge:'badge-lost'}
+];
+const board = document.getElementById('kanbanBoard');
+board.innerHTML = `<div class="kanban">${cols.map(col=>{
+const items = (data||[]).filter(l=>l.status===col.key||l.status===col.label);
+const total = items.reduce((s,l)=>s+(l.deal_value||0),0);
+return `<div class="kanban-col" data-status="${col.key}" ondragover="event.preventDefault()" ondrop="dropLead(event,'${col.key}')">
+<div class="kanban-col-header">${col.label}<span class="kanban-col-count">${items.length} לידים${total>0?' · '+total.toLocaleString()+' ₪':''}</span></div>
+${items.map(l=>`<div class="kanban-card" draggable="true" ondragstart="dragLead(event,${l.id})" onclick="openLeadModal(${l.id})">
+<div style="font-weight:600;font-size:14px">${l.name||'ללא שם'}</div>
+<div style="font-size:12px;color:var(--text2)">${l.company||''}</div>
+${l.deal_value?`<div style="font-weight:700;color:var(--teal);font-size:13px;margin-top:4px">${l.deal_value.toLocaleString()} ₪</div>`:''}
+${l.follow_up_date?`<div style="font-size:11px;color:var(--gray);margin-top:4px">📅 ${formatDate(l.follow_up_date)}</div>`:''}
+</div>`).join('')}
+</div>`;
+}).join('')}</div>`;
+}
+
+let draggedLeadId = null;
+function dragLead(e,id){ draggedLeadId = id; e.dataTransfer.effectAllowed='move'; }
+async function dropLead(e,newStatus){ e.preventDefault(); if(!draggedLeadId)return; await sb.from('leads').update({status:newStatus}).eq('id',draggedLeadId); toast('ליד הועבר'); draggedLeadId=null; renderLeadBoard(); }
+
+// ========== CUSTOMERS ==========
+async function renderCustomers() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">👥 לקוחות</div><div class="page-subtitle">ספר הלקוחות המרכזי שלך</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openCustomerModal()">+ חדש</button></div></div>
+<div id="customersList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('customers').select('*').order('created_at',{ascending:false});
+window._customers = data||[];
+if(!data || data.length === 0){ document.getElementById('customersList').innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>אין לקוחות עדיין</p></div>'; return; }
+document.getElementById('customersList').innerHTML = `<div class="grid grid-2">${data.map(c=>`
+<div class="lead-card">
+<div class="lead-card-actions"><button onclick="deleteCustomer(${c.id})">🗑️</button><button onclick="openCustomerModal(${c.id})">✏️</button></div>
+<div class="lead-name">${c.name||'ללא שם'}</div>
+<div class="lead-company">${c.company||''}</div>
+${c.phone?`<div class="lead-contact">📞 ${c.phone} ${c.phone?'<a href="https://wa.me/'+c.phone.replace(/[^0-9]/g,'')+'" target="_blank" style="color:var(--green)">💬</a>':''}</div>`:''}
+${c.email?`<div class="lead-contact">✉️ ${c.email}</div>`:''}
+${c.address?`<div class="lead-contact">📍 ${c.address}</div>`:''}
+</div>
+`).join('')}</div>`;
+}
+
+function openCustomerModal(id) {
+const c = id ? window._customers.find(x=>x.id==id) : {};
+openModal('לקוח', `
+<div class="modal-field"><label>שם</label><input id="cf_name" value="${c.name||''}"></div>
+<div class="modal-field"><label>חברה</label><input id="cf_company" value="${c.company||''}"></div>
+<div class="modal-field"><label>טלפון</label><input id="cf_phone" value="${c.phone||''}"></div>
+<div class="modal-field"><label>אימייל</label><input id="cf_email" value="${c.email||''}"></div>
+<div class="modal-field"><label>כתובת</label><input id="cf_address" value="${c.address||''}"></div>
+<div class="modal-field"><label>הערות</label><textarea id="cf_notes">${c.notes||''}</textarea></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { name:val('cf_name'), company:val('cf_company'), phone:val('cf_phone'), email:val('cf_email'), address:val('cf_address'), notes:val('cf_notes') };
+if(id){ await sb.from('customers').update(data).eq('id',id); toast('לקוח עודכן'); }
+else{ await sb.from('customers').insert(data); toast('לקוח נוצר'); }
+closeModal(); renderCustomers();
+});
+}
+
+async function deleteCustomer(id){ if(!confirm('למחוק לקוח?'))return; await sb.from('customers').delete().eq('id',id); toast('לקוח נמחק'); renderCustomers(); }
+
+// ========== QUOTES ==========
+async function renderQuotes() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">📄 הצעות מחיר</div><div class="page-subtitle">הפק ונהל הצעות מחיר מודולריות ללקוחות</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openQuoteModal()">+ חדש</button></div></div>
+<div id="quotesList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('quotes').select('*').order('created_at',{ascending:false});
+window._quotes = data||[];
+if(!data || data.length === 0){ document.getElementById('quotesList').innerHTML = '<div class="empty"><div class="empty-icon">📄</div><p>אין הצעות מחיר עדיין</p></div>'; return; }
+document.getElementById('quotesList').innerHTML = `<div class="grid grid-2">${data.map(q=>{
+const items = q.items ? (typeof q.items === 'string' ? JSON.parse(q.items) : q.items) : [];
+const total = items.reduce((s,it)=>s+((it.price||0)*(it.qty||1)),0);
+return `<div class="lead-card">
+<div class="lead-card-actions"><button onclick="deleteQuote(${q.id})">🗑️</button><button onclick="openQuoteModal(${q.id})">✏️</button></div>
+<div class="lead-name">${q.title||'הצעת מחיר'}</div>
+${q.customer_name?`<div class="lead-company">${q.customer_name}</div>`:''}
+${q.expires?`<div class="lead-contact">📅 בתוקף עד ${formatDate(q.expires)}</div>`:''}
+<div class="lead-value">${total.toLocaleString()} ₪</div>
+<span class="badge ${q.status==='approved'?'badge-approved':q.status==='sent'?'badge-sent':'badge-draft'}">${quoteStatusLabel(q.status)}</span>
+</div>`;
+}).join('')}</div>`;
+}
+
+let quoteItems = [];
+function openQuoteModal(id) {
+const q = id ? window._quotes.find(x=>x.id==id) : {};
+quoteItems = q.items ? (typeof q.items === 'string' ? JSON.parse(q.items) : q.items) : [];
+openModal('הצעת מחיר', `
+<div class="modal-field"><label>כותרת</label><input id="qf_title" value="${q.title||''}"></div>
+<div class="modal-field"><label>לקוח/ליד</label><input id="qf_customer" value="${q.customer_name||''}"></div>
+<div class="modal-field"><label>תוקף עד</label><input type="date" id="qf_expires" value="${q.expires?q.expires.slice(0,10):''}"></div>
+<div class="modal-field"><label>סטטוס</label><select id="qf_status">
+<option value="draft" ${q.status==='draft'?'selected':''}>טיוטה</option>
+<option value="sent" ${q.status==='sent'?'selected':''}>נשלח</option>
+<option value="approved" ${q.status==='approved'?'selected':''}>אושר</option>
+</select></div>
+<div class="modal-field"><label>פריטים</label>
+<div id="quoteItemsList"></div>
+<button class="btn btn-outline btn-sm" onclick="addQuoteItem()" style="margin-top:8px">+ הוסף פריט</button>
+</div>
+`, id?'עדכן':'צור', async()=>{
+const data = { title:val('qf_title'), customer_name:val('qf_customer'), expires:val('qf_expires')||null, status:val('qf_status'), items:JSON.stringify(quoteItems) };
+if(id){ await sb.from('quotes').update(data).eq('id',id); toast('הצעה עודכנה'); }
+else{ await sb.from('quotes').insert(data); toast('הצעה נוצרה'); }
+closeModal(); renderQuotes();
+}, true);
+renderQuoteItems();
+}
+
+function addQuoteItem(){ quoteItems.push({desc:'',price:0,qty:1}); renderQuoteItems(); }
+function removeQuoteItem(i){ quoteItems.splice(i,1); renderQuoteItems(); }
+function updateQuoteItem(i,field,val){ quoteItems[i][field] = field==='price'||field==='qty' ? (parseInt(val)||0) : val; }
+function renderQuoteItems(){
+const el = document.getElementById('quoteItemsList');
+if(!el) return;
+if(quoteItems.length === 0){ el.innerHTML = '<p style="color:var(--gray);font-size:13px">אין פריטים</p>'; return; }
+el.innerHTML = quoteItems.map((it,i)=>`
+<div style="display:flex;gap:6px;margin-bottom:6px;align-items:center">
+<input placeholder="תיאור" value="${it.desc||''}" oninput="updateQuoteItem(${i},'desc',this.value)" style="flex:2;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px">
+<input type="number" placeholder="מחיר" value="${it.price||0}" oninput="updateQuoteItem(${i},'price',this.value)" style="width:80px;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px">
+<input type="number" placeholder="כמות" value="${it.qty||1}" oninput="updateQuoteItem(${i},'qty',this.value)" style="width:60px;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px">
+<button onclick="removeQuoteItem(${i})" style="background:none;border:none;cursor:pointer;color:var(--red)">✕</button>
+</div>
+`).join('');
+}
+async function deleteQuote(id){ if(!confirm('למחוק הצעה?'))return; await sb.from('quotes').delete().eq('id',id); toast('הצעה נמחקה'); renderQuotes(); }
+
+// ========== MEETINGS ==========
+async function renderMeetings() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">📅 פגישות</div><div class="page-subtitle">נהל את הפגישות שלך</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openMeetingModal()">+ פגישה חדשה</button></div></div>
+<div id="calendarArea"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('meetings').select('*').order('start_time',{ascending:true});
+window._meetings = data||[];
+renderCalendar();
+}
+
+function renderCalendar() {
+const y = calendarDate.getFullYear(), m = calendarDate.getMonth();
+const firstDay = new Date(y,m,1).getDay();
+const daysInMonth = new Date(y,m+1,0).getDate();
+const monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const dayNames = ['א','ב','ג','ד','ה','ו','ש'];
+const today = new Date().toDateString();
+let html = `<div class="calendar">
+<div class="calendar-header">
+<button class="btn btn-outline btn-sm" onclick="changeMonth(-1)">←</button>
+<div style="font-weight:600;font-size:16px">${monthNames[m]} ${y}</div>
+<button class="btn btn-outline btn-sm" onclick="changeMonth(1)">→</button>
+</div>
+<div class="calendar-grid">
+${dayNames.map(d=>`<div class="calendar-day-header">${d}</div>`).join('')}
+`;
+const prevDays = new Date(y,m,0).getDate();
+for(let i=firstDay-1;i>=0;i--) html += `<div class="calendar-day other-month">${prevDays-i}</div>`;
+for(let d=1;d<=daysInMonth;d++){
+const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const hasMeeting = (window._meetings||[]).some(mt=>mt.start_time&&mt.start_time.startsWith(dateStr));
+const isToday = new Date(y,m,d).toDateString() === today;
+html += `<div class="calendar-day ${isToday?'today':''} ${hasMeeting?'has-meeting':''}" onclick="selectDate('${dateStr}')">${d}</div>`;
+}
+html += `</div></div><div id="dayMeetings" style="margin-top:16px"></div>`;
+document.getElementById('calendarArea').innerHTML = html;
+}
+
+function changeMonth(delta){ calendarDate.setMonth(calendarDate.getMonth()+delta); renderCalendar(); }
+
+function selectDate(dateStr){
+const dayMeetings = (window._meetings||[]).filter(m=>m.start_time&&m.start_time.startsWith(dateStr));
+const el = document.getElementById('dayMeetings');
+if(dayMeetings.length===0){ el.innerHTML = `<div class="card"><p style="text-align:center;color:var(--gray)">אין פגישות ביום זה</p><button class="btn btn-primary" style="margin:12px auto;display:block" onclick="openMeetingModal('${dateStr}')">+ קבע פגישה</button></div>`; return; }
+el.innerHTML = dayMeetings.map(m=>`
+<div class="lead-card" style="margin-bottom:8px">
+<div class="lead-name">${m.title||'פגישה'}</div>
+<div class="lead-contact">🕐 ${m.start_time?new Date(m.start_time).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}):''}</div>
+${m.location?`<div class="lead-contact">📍 ${m.location}</div>`:''}
+${m.teams_link?`<div class="lead-contact"><a href="${m.teams_link}" target="_blank" style="color:var(--blue)">🔗 קישור Teams</a></div>`:''}
+<div style="display:flex;gap:6px;margin-top:8px">
+<button class="btn btn-outline btn-sm" onclick="openMeetingModal(null,${m.id})">ערוך</button>
+<button class="btn btn-danger btn-sm" onclick="deleteMeeting(${m.id})">מחק</button>
+</div>
+</div>
+`).join('');
+}
+
+function openMeetingModal(prefillDate, id) {
+const m = id ? window._meetings.find(x=>x.id==id) : {};
+const dt = prefillDate || (m.start_time ? m.start_time.slice(0,16) : new Date().toISOString().slice(0,16));
+openModal('פגישה', `
+<div class="modal-field"><label>כותרת</label><input id="mf_title" value="${m.title||''}"></div>
+<div class="modal-field"><label>תאריך ושעה</label><input type="datetime-local" id="mf_start" value="${dt}"></div>
+<div class="modal-field"><label>מיקום</label><input id="mf_location" value="${m.location||''}"></div>
+<div class="modal-field"><label>משתתפים</label><input id="mf_participants" value="${m.participants||''}" placeholder="שמות מופרדים בפסיק"></div>
+<div class="modal-field"><label>קישור Teams</label><input id="mf_teams" value="${m.teams_link||''}" placeholder="יווצר אוטומטית אם ריק"></div>
+<div class="modal-field"><label>הערות</label><textarea id="mf_notes">${m.notes||''}</textarea></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { title:val('mf_title'), start_time:val('mf_start'), location:val('mf_location'), participants:val('mf_participants'), teams_link:val('mf_teams')||null, notes:val('mf_notes') };
+if(id){ await sb.from('meetings').update(data).eq('id',id); toast('פגישה עודכנה'); }
+else{ await sb.from('meetings').insert(data); toast('פגישה נוצרה'); }
+closeModal(); renderMeetings();
+});
+}
+async function deleteMeeting(id){ if(!confirm('למחוק פגישה?'))return; await sb.from('meetings').delete().eq('id',id); toast('פגישה נמחקה'); renderMeetings(); }
+
+// ========== PROJECTS ==========
+async function renderProjects() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">📁 פרויקטים</div><div class="page-subtitle">עקוב אחר הפרויקטים, התקציבים והלקוחות</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openProjectModal()">+ חדש</button></div></div>
+<div id="projectsList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('projects').select('*').order('created_at',{ascending:false});
+window._projects = data||[];
+if(!data || data.length === 0){ document.getElementById('projectsList').innerHTML = '<div class="empty"><div class="empty-icon">📁</div><p>אין פרויקטים עדיין</p></div>'; return; }
+document.getElementById('projectsList').innerHTML = `<div class="grid grid-2">${data.map(p=>`
+<div class="lead-card">
+<div class="lead-card-actions"><button onclick="deleteProject(${p.id})">🗑️</button><button onclick="openProjectModal(${p.id})">✏️</button></div>
+<div class="lead-name">${p.name||'פרויקט'}</div>
+${p.client_name?`<div class="lead-company">${p.client_name}</div>`:''}
+${p.budget?`<div class="lead-value">${p.budget.toLocaleString()} ₪</div>`:''}
+<span class="badge ${projectBadgeClass(p.status)}">${projectStatusLabel(p.status)}</span>
+${p.description?`<div style="font-size:13px;color:var(--text2);margin-top:8px">${p.description.substring(0,100)}</div>`:''}
+</div>
+`).join('')}</div>`;
+}
+
+function openProjectModal(id) {
+const p = id ? window._projects.find(x=>x.id==id) : {};
+openModal('פרויקט', `
+<div class="modal-field"><label>שם פרויקט</label><input id="pf_name" value="${p.name||''}"></div>
+<div class="modal-field"><label>לקוח</label><input id="pf_client" value="${p.client_name||''}"></div>
+<div class="modal-field"><label>תקציב (₪)</label><input type="number" id="pf_budget" value="${p.budget||''}"></div>
+<div class="modal-field"><label>סטטוס</label><select id="pf_status">
+<option value="active" ${p.status==='active'?'selected':''}>פעיל</option>
+<option value="completed" ${p.status==='completed'?'selected':''}>הושלם</option>
+<option value="paused" ${p.status==='paused'?'selected':''}>מושהה</option>
+<option value="cancelled" ${p.status==='cancelled'?'selected':''}>בוטל</option>
+</select></div>
+<div class="modal-field"><label>תיאור</label><textarea id="pf_desc">${p.description||''}</textarea></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { name:val('pf_name'), client_name:val('pf_client'), budget:parseInt(val('pf_budget'))||0, status:val('pf_status'), description:val('pf_desc') };
+if(id){ await sb.from('projects').update(data).eq('id',id); toast('פרויקט עודכן'); }
+else{ await sb.from('projects').insert(data); toast('פרויקט נוצר'); }
+closeModal(); renderProjects();
+});
+}
+async function deleteProject(id){ if(!confirm('למחוק פרויקט?'))return; await sb.from('projects').delete().eq('id',id); toast('פרויקט נמחק'); renderProjects(); }
+
+// ========== TASKS ==========
+async function renderTasks() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">✅ משימות</div><div class="page-subtitle">כל המשימות הפתוחות שלך</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openTaskModal()">+ חדש</button></div></div>
+<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+<button class="btn btn-outline btn-sm" onclick="filterTasks('all')">הכל</button>
+<button class="btn btn-outline btn-sm" onclick="filterTasks('pending')">ממתין</button>
+<button class="btn btn-outline btn-sm" onclick="filterTasks('in_progress')">בתהליך</button>
+<button class="btn btn-outline btn-sm" onclick="filterTasks('done')">הושלם</button>
+</div>
+<div id="tasksList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('tasks').select('*').order('created_at',{ascending:false});
+window._tasks = data||[];
+window._taskFilter = 'all';
+renderTasksList(data||[]);
+}
+
+function filterTasks(f){ window._taskFilter = f; renderTasksList(window._tasks||[]); }
+function renderTasksList(tasks){
+const f = window._taskFilter || 'all';
+const filtered = f==='all' ? tasks : tasks.filter(t=>t.status===f);
+const el = document.getElementById('tasksList');
+if(filtered.length===0){ el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div><p>אין משימות</p></div>'; return; }
+el.innerHTML = `<table><thead><tr><th>משימה</th><th>סטטוס</th><th>עדיפות</th><th>תאריך יעד</th><th></th></tr></thead><tbody>
+${filtered.map(t=>`<tr>
+<td style="font-weight:600">${t.title||''}</td>
+<td><span class="badge ${t.status==='done'?'badge-approved':'badge-draft'}">${taskStatusLabel(t.status)}</span></td>
+<td><span class="badge ${t.priority==='high'?'badge-overdue':t.priority==='medium'?'badge-sent':'badge-new'}">${priorityLabel(t.priority)}</span></td>
+<td>${t.due_date?formatDate(t.due_date):'-'}</td>
+<td><button class="btn btn-danger btn-sm" onclick="deleteTask(${t.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openTaskModal(${t.id})">✏️</button></td>
+</tr>`).join('')}
+</tbody></table>`;
+}
+
+function openTaskModal(id) {
+const t = id ? window._tasks.find(x=>x.id==id) : {};
+openModal('משימה', `
+<div class="modal-field"><label>כותרת</label><input id="tf_title" value="${t.title||''}"></div>
+<div class="modal-field"><label>תיאור</label><textarea id="tf_desc">${t.description||''}</textarea></div>
+<div class="modal-field"><label>סטטוס</label><select id="tf_status">
+<option value="pending" ${t.status==='pending'?'selected':''}>ממתין</option>
+<option value="in_progress" ${t.status==='in_progress'?'selected':''}>בתהליך</option>
+<option value="done" ${t.status==='done'?'selected':''}>הושלם</option>
+</select></div>
+<div class="modal-field"><label>עדיפות</label><select id="tf_priority">
+<option value="low" ${t.priority==='low'?'selected':''}>נמוכה</option>
+<option value="medium" ${t.priority==='medium'?'selected':''}>בינונית</option>
+<option value="high" ${t.priority==='high'?'selected':''}>גבוהה</option>
+</select></div>
+<div class="modal-field"><label>תאריך יעד</label><input type="date" id="tf_due" value="${t.due_date?t.due_date.slice(0,10):''}"></div>
+<div class="modal-field"><label>אחראי</label><input id="tf_assignee" value="${t.assignee||''}"></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { title:val('tf_title'), description:val('tf_desc'), status:val('tf_status'), priority:val('tf_priority'), due_date:val('tf_due')||null, assignee:val('tf_assignee') };
+if(id){ await sb.from('tasks').update(data).eq('id',id); toast('משימה עודכנה'); }
+else{ await sb.from('tasks').insert(data); toast('משימה נוצרה'); }
+closeModal(); renderTasks();
+});
+}
+async function deleteTask(id){ if(!confirm('למחוק משימה?'))return; await sb.from('tasks').delete().eq('id',id); toast('משימה נמחקה'); renderTasks(); }
+
+// ========== IDEAS ==========
+async function renderIdeas() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">💡 רעיונות</div><div class="page-subtitle">נהל ועקוב אחר רעיונות</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openIdeaModal()">+ חדש</button></div></div>
+<div id="ideasList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('ideas').select('*').order('created_at',{ascending:false});
+window._ideas = data||[];
+if(!data || data.length === 0){ document.getElementById('ideasList').innerHTML = '<div class="empty"><div class="empty-icon">💡</div><p>אין רעיונות עדיין</p></div>'; return; }
+document.getElementById('ideasList').innerHTML = `<div class="grid grid-2">${data.map(i=>`
+<div class="lead-card">
+<div class="lead-card-actions"><button onclick="deleteIdea(${i.id})">🗑️</button><button onclick="openIdeaModal(${i.id})">✏️</button></div>
+<div class="lead-name">${i.title||'רעיון'}</div>
+<div style="font-size:13px;color:var(--text2);margin-top:4px">${i.description||''}</div>
+<span class="badge ${i.status==='approved'?'badge-approved':i.status==='rejected'?'badge-lost':'badge-draft'}">${ideaStatusLabel(i.status)}</span>
+</div>
+`).join('')}</div>`;
+}
+
+function openIdeaModal(id) {
+const i = id ? window._ideas.find(x=>x.id==id) : {};
+openModal('רעיון', `
+<div class="modal-field"><label>כותרת</label><input id="if_title" value="${i.title||''}"></div>
+<div class="modal-field"><label>תיאור</label><textarea id="if_desc">${i.description||''}</textarea></div>
+<div class="modal-field"><label>סטטוס</label><select id="if_status">
+<option value="draft" ${i.status==='draft'?'selected':''}>טיוטה</option>
+<option value="approved" ${i.status==='approved'?'selected':''}>אושר</option>
+<option value="rejected" ${i.status==='rejected'?'selected':''}>נדחה</option>
+</select></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { title:val('if_title'), description:val('if_desc'), status:val('if_status') };
+if(id){ await sb.from('ideas').update(data).eq('id',id); toast('רעיון עודכן'); }
+else{ await sb.from('ideas').insert(data); toast('רעיון נוצר'); }
+closeModal(); renderIdeas();
+});
+}
+async function deleteIdea(id){ if(!confirm('למחוק רעיון?'))return; await sb.from('ideas').delete().eq('id',id); toast('רעיון נמחק'); renderIdeas(); }
+
+// ========== INCOMES ==========
+async function renderIncomes() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">💰 הכנסות</div><div class="page-subtitle">מעקב הכנסות</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openIncomeModal()">+ חדש</button></div></div>
+<div id="incomesList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('incomes').select('*').order('created_at',{ascending:false});
+window._incomes = data||[];
+if(!data || data.length === 0){ document.getElementById('incomesList').innerHTML = '<div class="empty"><div class="empty-icon">💰</div><p>אין הכנסות עדיין</p></div>'; return; }
+const total = data.reduce((s,x)=>s+(x.amount||0),0);
+document.getElementById('incomesList').innerHTML = `
+<div class="card" style="text-align:center;margin-bottom:16px"><div style="font-size:32px;font-weight:700;color:var(--green)">${total.toLocaleString()} ₪</div><div style="color:var(--text2)">סך הכנסות</div></div>
+<table><thead><tr><th>תיאור</th><th>סכום</th><th>תאריך</th><th>קטגוריה</th><th></th></tr></thead><tbody>
+${data.map(x=>`<tr><td style="font-weight:600">${x.description||''}</td><td style="color:var(--green);font-weight:600">${(x.amount||0).toLocaleString()} ₪</td><td>${x.income_date?formatDate(x.income_date):'-'}</td><td>${x.category||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteIncome(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openIncomeModal(${x.id})">✏️</button></td></tr>`).join('')}
+</tbody></table>`;
+}
+
+function openIncomeModal(id) {
+const x = id ? window._incomes.find(i=>i.id==id) : {};
+openModal('הכנסה', `
+<div class="modal-field"><label>תיאור</label><input id="incf_desc" value="${x.description||''}"></div>
+<div class="modal-field"><label>סכום (₪)</label><input type="number" id="incf_amount" value="${x.amount||''}"></div>
+<div class="modal-field"><label>קטגוריה</label><input id="incf_cat" value="${x.category||''}"></div>
+<div class="modal-field"><label>תאריך</label><input type="date" id="incf_date" value="${x.income_date?x.income_date.slice(0,10):''}"></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { description:val('incf_desc'), amount:parseInt(val('incf_amount'))||0, category:val('incf_cat'), income_date:val('incf_date')||null };
+if(id){ await sb.from('incomes').update(data).eq('id',id); toast('הכנסה עודכנה'); }
+else{ await sb.from('incomes').insert(data); toast('הכנסה נוצרה'); }
+closeModal(); renderIncomes();
+});
+}
+async function deleteIncome(id){ if(!confirm('למחוק?'))return; await sb.from('incomes').delete().eq('id',id); toast('נמחק'); renderIncomes(); }
+
+// ========== EXPENSES ==========
+async function renderExpenses() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">💸 הוצאות</div><div class="page-subtitle">מעקב הוצאות</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openExpenseModal()">+ חדש</button></div></div>
+<div id="expensesList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('expenses').select('*').order('created_at',{ascending:false});
+window._expenses = data||[];
+if(!data || data.length === 0){ document.getElementById('expensesList').innerHTML = '<div class="empty"><div class="empty-icon">💸</div><p>אין הוצאות עדיין</p></div>'; return; }
+const total = data.reduce((s,x)=>s+(x.amount||0),0);
+document.getElementById('expensesList').innerHTML = `
+<div class="card" style="text-align:center;margin-bottom:16px"><div style="font-size:32px;font-weight:700;color:var(--red)">${total.toLocaleString()} ₪</div><div style="color:var(--text2)">סך הוצאות</div></div>
+<table><thead><tr><th>תיאור</th><th>סכום</th><th>תאריך</th><th>קטגוריה</th><th></th></tr></thead><tbody>
+${data.map(x=>`<tr><td style="font-weight:600">${x.description||''}</td><td style="color:var(--red);font-weight:600">${(x.amount||0).toLocaleString()} ₪</td><td>${x.expense_date?formatDate(x.expense_date):'-'}</td><td>${x.category||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteExpense(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openExpenseModal(${x.id})">✏️</button></td></tr>`).join('')}
+</tbody></table>`;
+}
+
+function openExpenseModal(id) {
+const x = id ? window._expenses.find(e=>e.id==id) : {};
+openModal('הוצאה', `
+<div class="modal-field"><label>תיאור</label><input id="exf_desc" value="${x.description||''}"></div>
+<div class="modal-field"><label>סכום (₪)</label><input type="number" id="exf_amount" value="${x.amount||''}"></div>
+<div class="modal-field"><label>קטגוריה</label><input id="exf_cat" value="${x.category||''}"></div>
+<div class="modal-field"><label>תאריך</label><input type="date" id="exf_date" value="${x.expense_date?x.expense_date.slice(0,10):''}"></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { description:val('exf_desc'), amount:parseInt(val('exf_amount'))||0, category:val('exf_cat'), expense_date:val('exf_date')||null };
+if(id){ await sb.from('expenses').update(data).eq('id',id); toast('הוצאה עודכנה'); }
+else{ await sb.from('expenses').insert(data); toast('הוצאה נוצרה'); }
+closeModal(); renderExpenses();
+});
+}
+async function deleteExpense(id){ if(!confirm('למחוק?'))return; await sb.from('expenses').delete().eq('id',id); toast('נמחק'); renderExpenses(); }
+
+// ========== SUBSCRIPTIONS ==========
+async function renderSubscriptions() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">🔄 מנויים</div><div class="page-subtitle">ניהול מנויים חוזרים</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openSubModal()">+ חדש</button></div></div>
+<div id="subsList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('subscriptions').select('*').order('created_at',{ascending:false});
+window._subs = data||[];
+if(!data || data.length === 0){ document.getElementById('subsList').innerHTML = '<div class="empty"><div class="empty-icon">🔄</div><p>אין מנויים עדיין</p></div>'; return; }
+const monthlyTotal = data.filter(s=>s.status==='active').reduce((s,x)=>s+(x.amount||0)/(x.billing_cycle==='yearly'?12:1),0);
+document.getElementById('subsList').innerHTML = `
+<div class="card" style="text-align:center;margin-bottom:16px"><div style="font-size:32px;font-weight:700;color:var(--teal)">${monthlyTotal.toLocaleString()} ₪</div><div style="color:var(--text2)">סך חודשי</div></div>
+<table><thead><tr><th>שם</th><th>סכום</th><th>מחזור</th><th>תאריך חידוש</th><th>סטטוס</th><th></th></tr></thead><tbody>
+${data.map(x=>`<tr><td style="font-weight:600">${x.name||''}</td><td>${(x.amount||0).toLocaleString()} ₪</td><td>${x.billing_cycle==='yearly'?'שנתי':'חודשי'}</td><td>${x.renewal_date?formatDate(x.renewal_date):'-'}</td><td><span class="badge ${x.status==='active'?'badge-active':'badge-cancelled'}">${x.status==='active'?'פעיל':'מבוטל'}</span></td><td><button class="btn btn-danger btn-sm" onclick="deleteSub(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openSubModal(${x.id})">✏️</button></td></tr>`).join('')}
+</tbody></table>`;
+}
+
+function openSubModal(id) {
+const x = id ? window._subs.find(s=>s.id==id) : {};
+openModal('מנוי', `
+<div class="modal-field"><label>שם</label><input id="sf_name" value="${x.name||''}"></div>
+<div class="modal-field"><label>סכום (₪)</label><input type="number" id="sf_amount" value="${x.amount||''}"></div>
+<div class="modal-field"><label>מחזור</label><select id="sf_cycle">
+<option value="monthly" ${x.billing_cycle==='monthly'?'selected':''}>חודשי</option>
+<option value="yearly" ${x.billing_cycle==='yearly'?'selected':''}>שנתי</option>
+</select></div>
+<div class="modal-field"><label>תאריך חידוש</label><input type="date" id="sf_renewal" value="${x.renewal_date?x.renewal_date.slice(0,10):''}"></div>
+<div class="modal-field"><label>סטטוס</label><select id="sf_status">
+<option value="active" ${x.status==='active'?'selected':''}>פעיל</option>
+<option value="cancelled" ${x.status==='cancelled'?'selected':''}>מבוטל</option>
+</select></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { name:val('sf_name'), amount:parseInt(val('sf_amount'))||0, billing_cycle:val('sf_cycle'), renewal_date:val('sf_renewal')||null, status:val('sf_status') };
+if(id){ await sb.from('subscriptions').update(data).eq('id',id); toast('מנוי עודכן'); }
+else{ await sb.from('subscriptions').insert(data); toast('מנוי נוצר'); }
+closeModal(); renderSubscriptions();
+});
+}
+async function deleteSub(id){ if(!confirm('למחוק?'))return; await sb.from('subscriptions').delete().eq('id',id); toast('נמחק'); renderSubscriptions(); }
+
+// ========== SHELF PRODUCTS ==========
+async function renderShelf() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">📦 מוצרי מדף</div><div class="page-subtitle">קטלוג מוצרים</div>
+<div class="page-actions"><button class="btn btn-primary" onclick="openShelfModal()">+ חדש</button></div></div>
+<div id="shelfList"><div class="loading"><div class="spinner"></div></div></div>`;
+const { data } = await sb.from('shelf_products').select('*').order('created_at',{ascending:false});
+window._shelf = data||[];
+if(!data || data.length === 0){ document.getElementById('shelfList').innerHTML = '<div class="empty"><div class="empty-icon">📦</div><p>אין מוצרים עדיין</p></div>'; return; }
+document.getElementById('shelfList').innerHTML = `<div class="grid grid-3">${data.map(p=>`
+<div class="lead-card">
+<div class="lead-card-actions"><button onclick="deleteShelf(${p.id})">🗑️</button><button onclick="openShelfModal(${p.id})">✏️</button></div>
+<div class="lead-name">${p.name||'מוצר'}</div>
+${p.price?`<div class="lead-value">${p.price.toLocaleString()} ₪</div>`:''}
+${p.description?`<div style="font-size:13px;color:var(--text2);margin-top:4px">${p.description}</div>`:''}
+<span class="badge ${p.status==='active'?'badge-active':'badge-cancelled'}">${p.status==='active'?'פעיל':'מבוטל'}</span>
+</div>
+`).join('')}</div>`;
+}
+
+function openShelfModal(id) {
+const p = id ? window._shelf.find(x=>x.id==id) : {};
+openModal('מוצר', `
+<div class="modal-field"><label>שם</label><input id="shf_name" value="${p.name||''}"></div>
+<div class="modal-field"><label>מחיר (₪)</label><input type="number" id="shf_price" value="${p.price||''}"></div>
+<div class="modal-field"><label>תיאור</label><textarea id="shf_desc">${p.description||''}</textarea></div>
+<div class="modal-field"><label>סטטוס</label><select id="shf_status">
+<option value="active" ${p.status==='active'?'selected':''}>פעיל</option>
+<option value="inactive" ${p.status==='inactive'?'selected':''}>לא פעיל</option>
+</select></div>
+`, id?'עדכן':'צור', async()=>{
+const data = { name:val('shf_name'), price:parseInt(val('shf_price'))||0, description:val('shf_desc'), status:val('shf_status') };
+if(id){ await sb.from('shelf_products').update(data).eq('id',id); toast('מוצר עודכן'); }
+else{ await sb.from('shelf_products').insert(data); toast('מוצר נוצר'); }
+closeModal(); renderShelf();
+});
+}
+async function deleteShelf(id){ if(!confirm('למחוק?'))return; await sb.from('shelf_products').delete().eq('id',id); toast('נמחק'); renderShelf(); }
+
+// ========== SETTINGS ==========
+async function renderSettings() {
+const c = document.getElementById('content');
+c.innerHTML = `<div class="page-header"><div class="page-title">⚙️ הגדרות</div><div class="page-subtitle">ניהול הגדרות המערכת</div></div>
+<div class="settings-tabs">
+<button class="settings-tab active" onclick="settingsTab('users',this)">משתמשים</button>
+<button class="settings-tab" onclick="settingsTab('integrations',this)">אינטגרציות</button>
+<button class="settings-tab" onclick="settingsTab('goals',this)">יעדים</button>
+<button class="settings-tab" onclick="settingsTab('api',this)">API</button>
+</div>
+<div id="settingsContent"><div class="loading"><div class="spinner"></div></div></div>`;
+settingsTab('users');
+}
+
+async function settingsTab(tab) {
+const el = document.getElementById('settingsContent');
+if(tab === 'users') {
+const { data } = await sb.from('profiles').select('*');
+el.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">משתמשי מערכת</div><button class="btn btn-primary btn-sm" onclick="toast('פנה למנהל המערכת')">+ משתמש חדש</button></div>
+${(data||[]).length===0?'<p style="color:var(--gray)">אין משתמשים נוספים</p>':`<table><thead><tr><th>שם</th><th>אימייל</th><th>תפקיד</th><th>סטטוס</th></tr></thead><tbody>${data.map(u=>`<tr><td>${u.full_name||u.email||'-'}</td><td>${u.email||'-'}</td><td>${u.role||'user'}</td><td><span class="badge badge-active">פעיל</span></td></tr>`).join('')}</tbody></table>`}
+</div>`;
+}
+else if(tab === 'goals') {
+const { data: goalData } = await sb.from('settings').select('*').eq('key','monthly_goal').single();
+const goal = goalData?.value || 0;
+el.innerHTML = `<div class="card">
+<div class="card-header"><div class="card-title">🎯 יעד מכירות חודשי</div></div>
+<p style="color:var(--text2);font-size:14px;margin-bottom:12px">היעד יושווה אל סך הערך המוערך של הלידים שהומרו ללקוחות בחודש הנוכחי.</p>
+<div class="modal-field"><label>יעד (₪)</label><input type="number" id="goalInput" value="${goal}"></div>
+<button class="btn btn-primary" onclick="saveGoal()">שמור יעד</button>
+</div>`;
+}
+else if(tab === 'api') {
+el.innerHTML = `<div class="card">
+<div class="card-header"><div class="card-title">API חיצוני</div></div>
+<div class="api-panel">
+<code>Base URL: https://ailon-task.com/api/v1/{table}</code>
+<code>Header: Authorization: Bearer &lt;key&gt;</code>
+<code>POST https://ailon-task.com/api/public/leads (לכידת לידים ציבורית)</code>
+</div>
+</div>`;
+}
+else if(tab === 'integrations') {
+el.innerHTML = `<div class="card"><div class="card-header"><div class="card-title">אינטגרציות</div></div>
+<div style="padding:12px 0">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+<div><strong>Microsoft Teams</strong><br><span style="font-size:13px;color:var(--text2)">יצירת פגישות Teams אוטומטית</span></div>
+<span class="badge badge-active">מחובר</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+<div><strong>Supabase</strong><br><span style="font-size:13px;color:var(--text2)">מסד נתונים ואימות</span></div>
+<span class="badge badge-active">מחובר</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
+<div><strong>GitHub Pages</strong><br><span style="font-size:13px;color:var(--text2)">אחסון ופריסה</span></div>
+<span class="badge badge-active">מחובר</span>
+</div>
+</div>
+</div>`;
+}
+}
+
+async function saveGoal(){
+const v = parseInt(document.getElementById('goalInput').value)||0;
+const { error } = await sb.from('settings').upsert({key:'monthly_goal',value:v});
+if(error && error.code==='42P01'){ await sb.from('settings').insert({key:'monthly_goal',value:v}); }
+toast('יעד נשמר');
+}
+
+// ========== VOICE SEARCH ==========
+function voiceSearch() {
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(!SR){ toast('הדפדפן לא תומך בזיהוי קולי'); return; }
+const rec = new SR();
+rec.lang = 'he-IL';
+rec.continuous = false;
+rec.interimResults = false;
+document.getElementById('voiceSearchBtn').classList.add('listening');
+document.getElementById('globalSearch').value = '';
+document.getElementById('globalSearch').placeholder = 'מקשיב...';
+rec.onresult = (e) => {
+const text = e.results[0][0].transcript.trim();
+document.getElementById('globalSearch').value = text;
+document.getElementById('globalSearch').placeholder = 'חיפוש...';
+doSearch(text);
+};
+rec.onerror = () => {
+document.getElementById('voiceSearchBtn').classList.remove('listening');
+document.getElementById('globalSearch').placeholder = 'חיפוש...';
+toast('שגיאה בזיהוי קולי');
+};
+rec.onend = () => {
+document.getElementById('voiceSearchBtn').classList.remove('listening');
+document.getElementById('globalSearch').placeholder = 'חיפוש...';
+};
+rec.start();
+}
+
+function debounceSearch(term) {
+clearTimeout(searchTimer);
+searchTimer = setTimeout(() => doSearch(term), 300);
+}
+
+async function doSearch(term) {
+if(!term || term.trim().length < 2) return;
+const tables = ['leads','customers','tasks','projects','meetings','quotes','ideas','incomes','expenses','subscriptions','shelf_products'];
+const results = [];
+for(const table of tables) {
+const { data } = await sb.from(table).select('*');
+if(data) data.forEach(item => {
+const str = JSON.stringify(item).toLowerCase();
+if(str.includes(term.toLowerCase())) results.push({ table, item });
+});
+}
+if(results.length === 0) {
+document.getElementById('content').innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>לא נמצאו תוצאות עבור "${term}"</p><button class="btn btn-outline" onclick="navigateTo('dashboard')">חזרה</button></div>`;
+return;
+}
+document.getElementById('content').innerHTML = `<div class="page-header"><div class="page-title">🔍 תוצאות חיפוש: "${term}"</div></div><div class="grid grid-2">
+${results.map(r => `<div class="lead-card" onclick="navigateTo('${tableToPage(r.table)}')">
+<div class="lead-name">${r.item.name || r.item.title || r.item.description || 'פריט'}</div>
+<div class="lead-company">${tableLabel(r.table)}</div>
+</div>`).join('')}
+</div>`;
+}
+
+function tableToPage(t){ return {leads:'leads',customers:'customers',tasks:'tasks',projects:'projects',meetings:'meetings',quotes:'quotes',ideas:'ideas',incomes:'incomes',expenses:'expenses',subscriptions:'subscriptions',shelf_products:'shelf'}[t]||'dashboard'; }
+function tableLabel(t){ return {leads:'ליד',customers:'לקוח',tasks:'משימה',projects:'פרויקט',meetings:'פגישה',quotes:'הצעת מחיר',ideas:'רעיון',incomes:'הכנסה',expenses:'הוצאה',subscriptions:'מנוי',shelf_products:'מוצר'}[t]||t; }
+
+// ========== SIERRA VOICE ASSISTANT ==========
+function initVoice() {
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(!SR){ document.getElementById('voiceBtn').style.display='none'; return; }
+recognition = new SR();
+recognition.lang = 'he-IL';
+recognition.continuous = false;
+recognition.interimResults = true;
+recognition.onresult = (e) => {
+let t = '';
+for(let i=0;i<e.results.length;i++) t += e.results[i][0].transcript;
+document.getElementById('voiceTranscript').textContent = t;
+if(e.results[e.results.length-1].isFinal) processVoiceCommand(t.trim());
+};
+recognition.onerror = (e) => { document.getElementById('voiceTranscript').textContent = 'שגיאה: '+e.error; stopListening(); };
+recognition.onend = () => stopListening();
+}
+
+function toggleVoice() {
+if(!recognition){ toast('הדפדפן לא תומך בזיהוי קולי'); return; }
+if(isListening){ recognition.stop(); stopListening(); } else { startListening(); }
+}
+
+function startListening() {
+isListening = true;
+document.getElementById('voiceBtn').classList.add('listening');
+document.getElementById('voiceModal').classList.add('active');
+document.getElementById('voiceTranscript').textContent = 'מקשיב...';
+document.getElementById('voiceSuggestions').innerHTML = ['צור ליד','צור משימה','צור פגישה','צור לקוח','צור פרויקט','חפש ליד','פתח דשבורד','פתח פגישות'].map(s=>`<span class="voice-suggestion" onclick="quickVoiceCmd('${s}')">${s}</span>`).join('');
+recognition.start();
+}
+
+function stopListening() {
+isListening = false;
+document.getElementById('voiceBtn').classList.remove('listening');
+setTimeout(() => { const m=document.getElementById('voiceModal'); if(m) m.classList.remove('active'); }, 3000);
+}
+
+function quickVoiceCmd(text){ document.getElementById('voiceTranscript').textContent = text; processVoiceCommand(text); }
+
+function processVoiceCommand(text) {
+const cmd = text.toLowerCase().trim();
+let matched = false;
+const navCmds = {'דשבורד':'dashboard','לידים':'leads','משימות':'tasks','לקוחות':'customers','פרויקטים':'projects','הוצאות':'expenses','הכנסות':'incomes','פגישות':'meetings','אנליטיקה':'analytics','הגדרות':'settings','רעיונות':'ideas','הצעות':'quotes','מנויים':'subscriptions'};
+for(const [k,p] of Object.entries(navCmds)) {
+if(cmd.includes('פתח '+k)||cmd.includes('עבור ל'+k)||cmd===k||cmd.includes('ל'+k)){ navigateTo(p); toast('עברתי ל'+k); matched=true; break; }
+}
+if(matched) return;
+const createCmds = [
+{kw:['צור ליד','הוסף ליד','ליד חדש'],act:()=>{navigateTo('leads');setTimeout(()=>openLeadModal(),500);}},
+{kw:['צור משימה','הוסף משימה','משימה חדשה'],act:()=>{navigateTo('tasks');setTimeout(()=>openTaskModal(),500);}},
+{kw:['צור פגישה','הוסף פגישה','פגישה חדשה','קבע פגישה'],act:()=>{navigateTo('meetings');setTimeout(()=>openMeetingModal(),500);}},
+{kw:['צור לקוח','הוסף לקוח','לקוח חדש'],act:()=>{navigateTo('customers');setTimeout(()=>openCustomerModal(),500);}},
+{kw:['צור פרויקט','הוסף פרויקט','פרויקט חדש'],act:()=>{navigateTo('projects');setTimeout(()=>openProjectModal(),500);}},
+{kw:['צור הוצאה','הוסף הוצאה','הוצאה חדשה'],act:()=>{navigateTo('expenses');setTimeout(()=>openExpenseModal(),500);}},
+{kw:['צור הכנסה','הוסף הכנסה','הכנסה חדשה'],act:()=>{navigateTo('incomes');setTimeout(()=>openIncomeModal(),500);}}
+];
+for(const p of createCmds) {
+for(const kw of p.kw) { if(cmd.includes(kw)){ p.act(); toast('יוצר '+kw.replace('צור ','').replace('הוסף ','')); matched=true; break; } }
+if(matched) break;
+}
+if(matched) return;
+if(cmd.includes('חפש')||cmd.includes('מצא')) {
+const term = cmd.replace('חפש ','').replace('חפש','').replace('מצא ','').replace('מצא','').trim();
+if(term){ doSearch(term); matched=true; }
+}
+if(!matched) document.getElementById('voiceTranscript').innerHTML = 'לא הבנתי את "'+text+'"<br><span style="font-size:14px;color:var(--gray)">נסה: צור ליד, חפש לקוח, פתח פגישות</span>';
+}
+
+// ========== UTILITIES ==========
+function openModal(title, body, btnText, onSave, isLarge) {
+document.getElementById('modalTitle').textContent = title;
+document.getElementById('modalBody').innerHTML = body;
+document.getElementById('modalActions').innerHTML = `<button class="btn btn-outline" onclick="closeModal()">ביטול</button><button class="btn btn-primary" id="modalSave">${btnText}</button>`;
+document.getElementById('modalOverlay').classList.add('active');
+document.getElementById('modalSave').onclick = onSave;
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+document.getElementById('modalOverlay').addEventListener('click',(e)=>{ if(e.target.id==='modalOverlay') closeModal(); });
+function val(id){ const el=document.getElementById(id); return el?el.value:''; }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+function formatDate(d){ if(!d) return '-'; const dt=new Date(d); return dt.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+dt.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); }
+function leadBadgeClass(s){ return {new:'badge-new',contacted:'badge-contact',relevant:'badge-relevant',converted:'badge-converted',lost:'badge-lost','חדש':'badge-new','יצרנו קשר':'badge-contact','רלוונטי':'badge-relevant','הפך ללקוח':'badge-converted','לא רלוונטי':'badge-lost'}[s]||'badge-new'; }
+function leadStatusLabel(s){ return {new:'חדש',contacted:'יצרנו קשר',relevant:'רלוונטי',converted:'הפך ללקוח',lost:'לא רלוונטי','חדש':'חדש','יצרנו קשר':'יצרנו קשר','רלוונטי':'רלוונטי','הפך ללקוח':'הפך ללקוח','לא רלוונטי':'לא רלוונטי'}[s]||s||'חדש'; }
+function projectBadgeClass(s){ return {active:'badge-relevant',completed:'badge-approved',paused:'badge-sent',cancelled:'badge-lost'}[s]||'badge-draft'; }
+function projectStatusLabel(s){ return {active:'פעיל',completed:'הושלם',paused:'מושהה',cancelled:'בוטל'}[s]||s; }
+function quoteStatusLabel(s){ return {draft:'טיוטה',sent:'נשלח',approved:'אושר'}[s]||s||'טיוטה'; }
+function taskStatusLabel(s){ return {pending:'ממתין',in_progress:'בתהליך',done:'הושלם'}[s]||s; }
+function priorityLabel(p){ return {low:'נמוכה',medium:'בינונית',high:'גבוהה'}[p]||p; }
+function ideaStatusLabel(s){ return {draft:'טיוטה',approved:'אושר',rejected:'נדחה'}[s]||s||'טיוטה'; }
+function exportCSV(table) {
+if(!window['_'+table] || window['_'+table].length===0){ toast('אין נתונים לייצוא'); return; }
+const data = window['_'+table];
+const headers = Object.keys(data[0]);
+const csv = [headers.join(',')].concat(data.map(r=>headers.map(h=>`"${String(r[h]||'').replace(/"/g,'""')}"`).join(','))).join('\n');
+const blob = new Blob(['\ufef'+csv],{type:'text/csv;charset=utf-8'});
+const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=table+'.csv'; a.click();
+toast('ייוצא קובץ CSV');
+}
+
+// Enter key login
+document.getElementById('loginPassword').addEventListener('keypress',(e)=>{ if(e.key==='Enter') doLogin(); });
+
+// Start
+checkSession();
+</script>
+</body>
+</html>
