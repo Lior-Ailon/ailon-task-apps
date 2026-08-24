@@ -308,6 +308,18 @@ tr:hover td{background:var(--bg)}
 <div class="voice-suggestions" id="voiceSuggestions"></div>
 </div>
 
+<!-- 2FA OVERLAY -->
+<div class="modal-overlay" id="twofaOverlay">
+<div class="modal" style="max-width:360px;text-align:center">
+<div style="font-size:48px;margin-bottom:12px">🔐</div>
+<div class="modal-title">אימות דו-שלבי</div>
+<p style="color:var(--text2);font-size:14px;margin-bottom:16px">הזן את הקוד מאפליקציית האימות שלך</p>
+<input type="text" id="twofaCode" placeholder="000000" maxlength="6" style="width:100%;padding:14px;text-align:center;font-size:24px;letter-spacing:8px;border:2px solid var(--border);border-radius:12px;font-family:var(--font);margin-bottom:12px" onkeypress="if(event.key==='Enter')verify2FA()">
+<div id="twofaError" style="color:var(--red);font-size:13px;margin-bottom:8px;display:none"></div>
+<button class="btn btn-primary" style="width:100%" id="twofaBtn" onclick="verify2FA()">אישור</button>
+<button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="cancel2FA()">ביטול</button>
+</div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -323,6 +335,7 @@ let searchTimer = null;
 let calendarDate = new Date();
 
 // ========== AUTH ==========
+let pendingSession=null,pendingFactorId=null;
 async function doLogin() {
 const email = document.getElementById('loginEmail').value;
 const password = document.getElementById('loginPassword').value;
@@ -331,8 +344,46 @@ if(!email || !password){ errEl.textContent = 'נא למלא אימייל וסי�
 errEl.style.display = 'none';
 const { data, error } = await sb.auth.signInWithPassword({ email, password });
 if(error){ errEl.textContent = 'שגיאה: ' + error.message; errEl.style.display='block'; return; }
-currentUser = data.user;
+const { data: factors } = await sb.auth.mfa.listFactors();
+const totpFactor = factors?.totp?.find(f => f.status === 'verified');
+if(totpFactor){ pendingSession=data; pendingFactorId=totpFactor.id; show2FAChallenge(); }
+else { currentUser = data.user; showApp(); }
+}
+function show2FAChallenge(){
+document.getElementById('twofaOverlay').classList.add('active');
+setTimeout(()=>document.getElementById('twofaCode').focus(),100);
+}
+async function verify2FA(){
+const code=document.getElementById('twofaCode').value.trim();
+const errEl=document.getElementById('twofaError');
+if(code.length!==6||!/^\d{6}$/.test(code)){errEl.textContent='נא להזין 6 ספרות';errEl.style.display='block';return;}
+errEl.style.display='none';
+document.getElementById('twofaBtn').disabled=true;
+document.getElementById('twofaBtn').textContent='מאמת...';
+try{
+const { data: challenge, error: chErr } = await sb.auth.mfa.challenge({ factorId: pendingFactorId });
+if(chErr) throw chErr;
+const { error: verifyErr } = await sb.auth.mfa.verify({ factorId: pendingFactorId, challengeId: challenge.id, code });
+if(verifyErr) throw verifyErr;
+document.getElementById('twofaOverlay').classList.remove('active');
+document.getElementById('twofaBtn').disabled=false;
+document.getElementById('twofaBtn').textContent='אישור';
+currentUser=pendingSession.user;
+pendingSession=null;pendingFactorId=null;
 showApp();
+}catch(err){
+errEl.textContent='קוד שגוי. נסה שוב.';
+errEl.style.display='block';
+document.getElementById('twofaBtn').disabled=false;
+document.getElementById('twofaBtn').textContent='אישור';
+document.getElementById('twofaCode').value='';
+document.getElementById('twofaCode').focus();
+}
+}
+function cancel2FA(){
+document.getElementById('twofaOverlay').classList.remove('active');
+pendingSession=null;pendingFactorId=null;
+sb.auth.signOut();
 }
 
 async function doLogout() {
