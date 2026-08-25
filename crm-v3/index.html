@@ -348,6 +348,12 @@ let calendarDate = new Date();
 // ========== AUTH ==========
 let pendingSession=null,pendingFactorId=null;
 async function doLogin() {
+console.log('doLogin called!');
+document.getElementById('loginError').textContent = 'מנסה להתחבר...';
+document.getElementById('loginError').style.display = 'block';
+document.getElementById('loginError').style.background = '#fef3c7';
+document.getElementById('loginError').style.padding = '10px';
+document.getElementById('loginError').style.borderRadius = '8px';
 const email = document.getElementById('loginEmail').value;
 const password = document.getElementById('loginPassword').value;
 const errEl = document.getElementById('loginError');
