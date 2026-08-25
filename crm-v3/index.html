@@ -224,7 +224,7 @@ tr:hover td{background:var(--bg)}
 <input type="password" id="loginPassword" placeholder="••••••••">
 </div>
 <a class="login-forgot" onclick="toast('פנה למנהל המערכת')">שכחתי סיסמה</a>
-<button type="button" class="login-btn" onclick="doLogin()" onmousedown="document.getElementById('loginError').textContent='CLICK DETECTED'; document.getElementById('loginError').style.display='block'; document.getElementById('loginError').style.background='#fef3c7'; document.getElementById('loginError').style.padding='10px';">כניסה</button>
+<button type="button" class="login-btn" onclick="doLogin()">כניסה</button>
 <p class="login-footer">אין לך חשבון? פנה למנהל המערכת ליצירת משתמש.</p>
 <div id="loginError" style="color:var(--red);font-size:13px;margin-top:8px;display:none"></div>
 </div>
@@ -323,17 +323,6 @@ tr:hover td{background:var(--bg)}
 <div class="toast" id="toast"></div>
 
 <script>
-// Debug: catch any JS errors
-window.onerror = function(msg,url,line,col,err) {
-  console.error('JS ERROR:', msg, 'at', url+':'+line+':'+col, err);
-  var d = document.createElement('div');
-  d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:red;color:#fff;padding:8px;font-size:12px;z-index:9999;text-align:center';
-  d.textContent = 'JS Error: ' + msg + ' (line ' + line + ')';
-  document.body.appendChild(d);
-  return false;
-};
-console.log('Script starting...');
-
 // ========== SUPABASE CONFIG ==========
 const SUPABASE_URL = 'https://nmpwsahwalmxplxudndv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tcHdzYWh3YWxteHBseHVkbmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjcxNzIsImV4cCI6MjA5NzkwMzE3Mn0.QvQoCxmSz66dEPx7NWj6OcftgtjhViAytfkgRDL2q9c';
@@ -348,21 +337,13 @@ let calendarDate = new Date();
 // ========== AUTH ==========
 let pendingSession=null,pendingFactorId=null;
 async function doLogin() {
-console.log('doLogin called!');
-document.getElementById('loginError').textContent = 'מנסה להתחבר...';
-document.getElementById('loginError').style.display = 'block';
-document.getElementById('loginError').style.background = '#fef3c7';
-document.getElementById('loginError').style.padding = '10px';
-document.getElementById('loginError').style.borderRadius = '8px';
 const email = document.getElementById('loginEmail').value;
 const password = document.getElementById('loginPassword').value;
 const errEl = document.getElementById('loginError');
 if(!email || !password){ errEl.textContent = 'נא למלא אימייל וסיסמה'; errEl.style.display='block'; return; }
 errEl.style.display = 'none';
-console.log('Login attempt:', email);
 try {
 const { data, error } = await sb.auth.signInWithPassword({ email, password });
-console.log('Login result:', error ? 'ERROR' : 'SUCCESS');
 if(error){ errEl.textContent = 'שגיאה: ' + error.message; errEl.style.display='block'; return; }
 const { data: factors } = await sb.auth.mfa.listFactors();
 const totpFactor = factors?.totp?.find(f => f.status === 'verified');
@@ -1434,7 +1415,7 @@ if(!window['_'+table] || window['_'+table].length===0){ toast('אין נתוני
 const data = window['_'+table];
 const headers = Object.keys(data[0]);
 const csv = [headers.join(',')].concat(data.map(r=>headers.map(h=>`"${String(r[h]||'').replace(/"/g,'""')}"`).join(','))).join('\n');
-const blob = new Blob(['\ufef'+csv],{type:'text/csv;charset=utf-8'});
+const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
 const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=table+'.csv'; a.click();
 toast('ייוצא קובץ CSV');
 }
@@ -1443,10 +1424,7 @@ toast('ייוצא קובץ CSV');
 document.getElementById('loginPassword').addEventListener('keypress',(e)=>{ if(e.key==='Enter') doLogin(); });
 
 // Start
-console.log('Supabase loaded:', typeof supabase);
-console.log('sb defined:', typeof sb);
-try { checkSession(); } catch(e) { console.error('checkSession error:', e); }
-console.log('Script loaded OK');
+checkSession();
 </script>
 </body>
 </html>
