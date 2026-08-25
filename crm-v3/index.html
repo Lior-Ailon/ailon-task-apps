@@ -224,7 +224,7 @@ tr:hover td{background:var(--bg)}
 <input type="password" id="loginPassword" placeholder="••••••••">
 </div>
 <a class="login-forgot" onclick="toast('פנה למנהל המערכת')">שכחתי סיסמה</a>
-<button type="button" class="login-btn" onclick="doLogin()">כניסה</button>
+<button type="button" class="login-btn" onclick="if(typeof doLogin==='function'){document.getElementById('loginError').textContent='doLogin exists, calling...';document.getElementById('loginError').style.display='block';document.getElementById('loginError').style.color='blue';doLogin();}else{document.getElementById('loginError').textContent='doLogin NOT defined!';document.getElementById('loginError').style.display='block';document.getElementById('loginError').style.color='red';}">כניסה</button>
 <p class="login-footer">אין לך חשבון? פנה למנהל המערכת ליצירת משתמש.</p>
 <div id="loginError" style="color:var(--red);font-size:13px;margin-top:8px;display:none"></div>
 </div>
