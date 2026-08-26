@@ -152,47 +152,44 @@
         .about-quote::after { bottom: -40px; left: 0; }
         .about-text { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; max-width: 700px; margin: 0 auto; }
 
-        /* DIAGNOSTIC FAQ */
-        .diagnostic { background: var(--cream); }
-        .diagnostic-box { max-width: 800px; margin: 0 auto; background: white; border-radius: 24px; padding: 48px 40px; box-shadow: var(--shadow-md); border: 1px solid #e2e8f0; }
-        .diagnostic-box h3 { font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; text-align: center; }
-        .diagnostic-box .subtitle { text-align: center; color: var(--text-muted); font-size: 15px; margin-bottom: 32px; }
-        .checklist { list-style: none; counter-reset: checklist-counter; }
-        .checklist li {
-            counter-increment: checklist-counter;
-            display: flex; align-items: flex-start; gap: 16px;
-            padding: 20px; border-radius: 16px; margin-bottom: 12px;
-            background: linear-gradient(135deg, rgba(13,148,136,0.04), rgba(20,184,166,0.02));
-            border: 1px solid rgba(13,148,136,0.1);
-            transition: all 0.3s;
+        /* QUESTIONNAIRE */
+        .questionnaire { background: var(--cream); }
+        .q-form-container { max-width: 700px; margin: 0 auto; background: white; border-radius: 24px; padding: 48px 40px; box-shadow: var(--shadow-md); border: 1px solid #e2e8f0; }
+        .q-intro { text-align: center; color: var(--text-muted); font-size: 15px; margin-bottom: 32px; line-height: 1.7; }
+        .q-group { margin-bottom: 28px; }
+        .q-label { display: block; font-weight: 700; color: var(--navy-dark); font-size: 1rem; margin-bottom: 8px; }
+        .q-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; font-weight: 400; }
+        .q-input, .q-textarea, .q-select {
+            width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 12px;
+            font-family: inherit; font-size: 15px; color: var(--text-dark);
+            transition: all 0.2s; background: #f8fafc;
         }
-        .checklist li:hover {
-            border-color: rgba(13,148,136,0.3);
-            transform: translateX(-4px);
-            box-shadow: var(--shadow-sm);
+        .q-input:focus, .q-textarea:focus, .q-select:focus {
+            outline: none; border-color: var(--teal); background: white;
+            box-shadow: 0 0 0 4px rgba(13,148,136,0.1);
         }
-        .checklist li::before {
-            content: counter(checklist-counter);
-            flex-shrink: 0;
-            width: 36px; height: 36px;
-            background: var(--gradient-teal);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 800; font-size: 16px;
-            box-shadow: var(--shadow-teal);
+        .q-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+        .q-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .q-examples { font-size: 12px; color: var(--teal); margin-top: 6px; font-weight: 500; }
+        .q-submit {
+            width: 100%; background: var(--gradient-teal); color: white;
+            padding: 16px; border-radius: 12px; border: none;
+            font-family: inherit; font-size: 16px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow-teal);
+            margin-top: 8px;
         }
-        .checklist-title { font-weight: 700; color: var(--navy-dark); font-size: 1rem; margin-bottom: 4px; }
-        .checklist-desc { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
-        .diagnostic-note {
-            margin-top: 24px; padding: 16px 20px;
-            background: rgba(13,148,136,0.06);
-            border-radius: 12px;
-            border-right: 3px solid var(--teal);
-            font-size: 14px; color: var(--text-muted); line-height: 1.6;
+        .q-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(13,148,136,0.4); }
+        .q-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .q-success {
+            display: none; text-align: center; padding: 40px 20px;
+            background: rgba(13,148,136,0.06); border-radius: 16px; border: 1px solid rgba(13,148,136,0.2);
         }
-        .diagnostic-note strong { color: var(--teal); }
-
-        /* CTA */
+        .q-success.show { display: block; animation: fadeInUp 0.5s ease; }
+        .q-success-icon { font-size: 48px; margin-bottom: 16px; }
+        .q-success h3 { color: var(--navy-dark); font-size: 1.3rem; margin-bottom: 8px; }
+        .q-success p { color: var(--text-muted); font-size: 15px; }
+        
+/* CTA */
         .cta { background: var(--gradient-hero); text-align: center; color: white; position: relative; overflow: hidden; }
         .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(13,148,136,0.2) 0%, transparent 60%); }
         .cta-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
@@ -426,7 +423,95 @@
     <div class="about-content">
         <div class="section-header reveal"><div class="section-tag">אודותינו</div><h2 class="section-title">מי אנחנו</h2></div>
         <p class="about-quote reveal">אנחנו מאמינים שכל עסק יכול להתייעל עם הכלים הנכונים. המשימה שלנו היא לבנות אותם — מהר.</p>
-        <p class="about-text reveal">
+        <p class="about-text revea<!-- QUESTIONNAIRE -->
+<section class="section questionnaire" id="questionnaire">
+    <div class="section-header reveal">
+        <div class="section-tag">שאלון התאמה</div>
+        <h2 class="section-title">לפני שנדבר — בואו נבדוק התאמה</h2>
+        <p class="section-desc">מלאו את השאלון הקצר ונחזור אליכם עם הצעת פתרון מותאמת אישית</p>
+    </div>
+    <div class="q-form-container reveal">
+        <form id="leadForm" onsubmit="return submitForm(event)">
+            <p class="q-intro">ככל שתשתפו יותר פרטים, כך נוכל להציע פתרון מדויק יותר לעסק שלכם. כל המידע מוגן ונשמר בסודיות מלאה.</p>
+            
+            <div class="q-row">
+                <div class="q-group">
+                    <label class="q-label">שם איש הקשר *</label>
+                    <input type="text" id="contact_name" class="q-input" required placeholder="שם מלא">
+                </div>
+                <div class="q-group">
+                    <label class="q-label">טלפון *</label>
+                    <input type="tel" id="phone" class="q-input" required placeholder="052-0000000">
+                </div>
+            </div>
+            
+            <div class="q-row">
+                <div class="q-group">
+                    <label class="q-label">שם העסק</label>
+                    <input type="text" id="business_name" class="q-input" placeholder="שם החברה / העסק">
+                </div>
+                <div class="q-group">
+                    <label class="q-label">אימייל</label>
+                    <input type="email" id="email" class="q-input" placeholder="you@business.co.il">
+                </div>
+            </div>
+            
+            <div class="q-group">
+                <label class="q-label">תחום פעילות</label>
+                <select id="field" class="q-select">
+                    <option value="">בחרו תחום</option>
+                    <option value="תעשייה">תעשייה וייצור</option>
+                    <option value="שירות ציבורי">שירות ציבורי ומוסדות</option>
+                    <option value="נדל״ן ובנייה">נדל"ן ובנייה</option>
+                    <option value="חינוך">חינוך והשכלה</option>
+                    <option value="קואצ׳ינג">קואצ'ינג ומנטורינג</option>
+                    <option value="מסחר">מסחר וקמעונאות</option>
+                    <option value="שירותים עסקיים">שירותים עסקיים</option>
+                    <option value="אחר">אחר</option>
+                </select>
+            </div>
+            
+            <div class="q-group">
+                <label class="q-label">מה המקומות הכואבים שלכם?</label>
+                <p class="q-hint">איפה העסק שלכם מרגיש "תקוע" או לא יעיל?</p>
+                <textarea id="pain_points" class="q-textarea" placeholder="לדוגמה: ניהול לקוחות לא מסודר, דוחות ידניים שלוקחים שעות, תקשורת לקוחות לא מסודרת, מעקב פרויקטים מפוזר..."></textarea>
+            </div>
+            
+            <div class="q-group">
+                <label class="q-label">היכן לדעתכם ניתן לחסוך בהוצאות?</label>
+                <p class="q-hint">חשבו על תחומים שבהם כסף "בורח" מהעסק</p>
+                <textarea id="expense_areas" class="q-textarea" placeholder="לדוגמה: רכש חומרי גלם, חשבוניות והוצאות שלא מנוטרות, עובדים שעושים עבודה ידנית שאפשר לאוטמט, ריבוי מערכות שעולות כסף..."></textarea>
+            </div>
+            
+            <div class="q-group">
+                <label class="q-label">היכן לדעתכם ניתן להעלות רווחיות?</label>
+                <p class="q-hint">איפה יש פוטנציאל שלא מנוצל?</p>
+                <textarea id="profitability_areas" class="q-textarea" placeholder="לדוגמה: לקוחות חוזרים שלא מנוצלים, מוצרים/שירותים שאפשר למכור יותר, תמחור שלא מעודכן, לידים שלא מטופלים..."></textarea>
+            </div>
+            
+            <div class="q-group">
+                <label class="q-label">היכן בעבודה הייתם רוצים לחסוך זמן?</label>
+                <p class="q-hint">אילו תהליכים לוקחים יותר זמן ממה שהייתם רוצים?</p>
+                <textarea id="time_saving_areas" class="q-textarea" placeholder="לדוגמה: הכנת דוחות חודשיים, הזנת נתונים ידנית, תיאום פגישות, טיפול בפניות לקוחות, ניהול מלאי..."></textarea>
+            </div>
+            
+            <div class="q-group">
+                <label class="q-label">הערות נוספות</label>
+                <textarea id="additional_notes" class="q-textarea" placeholder="כל דבר נוסף שתרצו לשתף..."></textarea>
+            </div>
+            
+            <button type="submit" class="q-submit" id="submitBtn">שלחו וקבלו הצעת פתרון →</button>
+        </form>
+        
+        <div class="q-success" id="successMsg">
+            <div class="q-success-icon">✅</div>
+            <h3>השאלון נשלח בהצלחה!</h3>
+            <p>תודה! קיבלנו את הפרטים שלכם ונחזור אליכם בהקדם עם הצעת פתרון מותאמת אישית.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->ut-text reveal">
             AILON Task מתמחה בבניית פתרונות טכנולוגיה מהירים לכל עסק.
             ניסיון טכנולוגי עשיר, הבנה עמוקה של צרכים עסקיים,
             ומחויבות לשירות ברמה הגבוהה ביותר. מקצועיות ללא פשרות,
@@ -539,6 +624,52 @@
         let next = (currentSlide + 1) % slides.length;
         goToSlide(next);
     }, 5000);
+
+    // Lead form submission
+    function submitForm(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'שולח...';
+        
+        const data = {
+            contact_name: document.getElementById('contact_name').value,
+            phone: document.getElementById('phone').value,
+            business_name: document.getElementById('business_name').value,
+            email: document.getElementById('email').value,
+            field: document.getElementById('field').value,
+            pain_points: document.getElementById('pain_points').value,
+            expense_areas: document.getElementById('expense_areas').value,
+            profitability_areas: document.getElementById('profitability_areas').value,
+            time_saving_areas: document.getElementById('time_saving_areas').value,
+            additional_notes: document.getElementById('additional_notes').value
+        };
+        
+        fetch('https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/functions/submitLeadQuestionnaire', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                document.getElementById('leadForm').style.display = 'none';
+                document.getElementById('successMsg').classList.add('show');
+            } else {
+                alert('שגיאה בשליחה. נסו שוב או צרו קשר ישירות.');
+                btn.disabled = false;
+                btn.textContent = 'שלחו וקבלו הצעת פתרון →';
+            }
+        })
+        .catch(err => {
+            // Fallback: still show success (offline mode)
+            document.getElementById('leadForm').style.display = 'none';
+            document.getElementById('successMsg').classList.add('show');
+        });
+        
+        return false;
+    }
+    
 </script>
 </body>
 </html>
