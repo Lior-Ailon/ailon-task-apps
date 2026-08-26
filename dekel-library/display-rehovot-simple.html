@@ -62,7 +62,7 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 .news-card .event-date{display:inline-block;background:#fef3c7;color:#92400e;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:4px}
 .news-bar{height:56px;flex-shrink:0;display:flex;align-items:center;gap:12px;border-radius:var(--r);background:linear-gradient(135deg,var(--green),var(--green-dark));box-shadow:0 4px 14px rgba(0,0,0,.10);padding:0 20px;overflow:hidden}
 .news-label{display:flex;align-items:center;gap:6px;flex-shrink:0;color:#fff;font-weight:800;font-size:1rem;border-left:2px solid rgba(255,255,255,.3);padding-left:12px}
-.news-ticker{flex:1;overflow:hidden;height:100%;display:flex;align-items:center}
+.news-ticker{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;direction:ltr}
 .news-track{display:flex;gap:36px;white-space:nowrap;direction:ltr;will-change:transform}
 .news-track{cursor:default}
 
@@ -174,11 +174,22 @@ function renderLibrary(items){
 
 function renderPositiveNews(items){
   if(!items||items.length===0)items=CONTENT.positive_news;
-  // Duplicate items for seamless infinite scroll
   const html=items.map(item=>`<div class="news-item"><span class="dot"></span><span>${item.title}</span></div>`).join('');
-  document.getElementById('newsTrack').innerHTML=html+html;
+  const track=document.getElementById('newsTrack');
+  track.innerHTML=html+html;
+  // JS-driven left-to-right animation — always visible
+  if(window._tickerRAF)cancelAnimationFrame(window._tickerRAF);
+  let pos=0;
+  const speed=0.4;
+  function animateTicker(){
+    pos+=speed;
+    const halfWidth=track.scrollWidth/2;
+    if(halfWidth>0&&pos>=halfWidth)pos=0;
+    track.style.transform='translateX('+pos+'px)';
+    window._tickerRAF=requestAnimationFrame(animateTicker);
+  }
+  setTimeout(animateTicker,100);
 }
-
 function renderPhotos(items){
   if(!items||items.length===0)items=CONTENT.photos;
   if(!items||items.length===0)return;
