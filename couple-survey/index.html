@@ -106,6 +106,24 @@ input:focus,select:focus,textarea:focus{
 @media (max-width:768px){
   button,.btn,.submit-btn{min-height:48px;min-width:48px;font-size:16px}
 }
+
+/* Homework section */
+.hw-section{background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 4px 20px rgba(0,0,0,.06);margin-bottom:24px}
+.hw-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.hw-icon{font-size:32px}
+.hw-title{font-size:20px;font-weight:900;color:#7c4a4a}
+.hw-date{font-size:13px;color:#aaa;margin-bottom:16px}
+.hw-group{margin-bottom:18px}
+.hw-group-title{font-size:15px;font-weight:700;color:#7c4a4a;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #f0e6e6}
+.hw-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f5f0f0}
+.hw-item:last-child{border-bottom:none}
+.hw-check{width:22px;height:22px;border:2px solid #d4b0b0;border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#7c4a4a;transition:all .2s}
+.hw-check.done{background:#7c4a4a;color:#fff;border-color:#7c4a4a}
+.hw-text{font-size:15px;line-height:1.5;color:#444;flex:1}
+.hw-text strong{color:#7c4a4a}
+.hw-toggle{text-align:center;margin-top:12px}
+.hw-toggle button{background:transparent;border:none;color:#7c4a4a;font-weight:700;font-size:15px;cursor:pointer;padding:8px 16px}
+.hw-collapsed{display:none}
 </style>
 </head>
 <body>
@@ -115,6 +133,39 @@ input:focus,select:focus,textarea:focus{
 <h1>שאלון זוגיות</h1>
 <p>מרחב בטוח לחשיבה כנה</p>
 </div>
+<!-- Homework from coaching session -->
+<div class="hw-section" id="hwSection">
+<div class="hw-header">
+<div class="hw-icon">📋</div>
+<div class="hw-title">משימות ושיעורי בית — מהפגישה</div>
+</div>
+<div class="hw-date">פגישת קואצ׳ינג זוגי | 26.08.2026 | מאמן: ליאור סופר</div>
+
+<div class="hw-group">
+<div class="hw-group-title">🤝 משימות משותפות</div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>תירום ציפיות</strong> — להמשיך ולשפר יחד. זה עובד ומביא תוצאות.</div></div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>חיבוקים</strong> — למרות שלפעמים זה קשה, חיבוקים מחזקים את החיבור הזוגי וגם מהווים דוגמא לילדים.</div></div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>פעילות משותפת</strong> — למצוא משהו שאתם אוהבים לעשות ביחד. נושא משותף שיעשה לכם טוב ויחבר ביניכם.</div></div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>אמון</strong> — לבנות את האמון. לומר במילים שסומכים אחד על השני. לא לפקפק באם מישהו אמר כן או לא.</div></div>
+</div>
+
+<div class="hw-group">
+<div class="hw-group-title">👨 משימות ליניר</div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>פחות ביקורת, יותר מילים חיוביות</strong> — לשים לב לסמנטיקה של המילים.</div></div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>שיטת הסלאמי</strong> — כשיש ביקורת: פרגון → ביקורת → פרגון. כך הצד השני יכול להקשיב באמת.</div></div>
+</div>
+
+<div class="hw-group">
+<div class="hw-group-title">👩 משימות לזוהר</div>
+<div class="hw-item"><div class="hw-check" onclick="this.classList.toggle('done')">✓</div><div class="hw-text"><strong>פרגון ישיר</strong> — הפרגון בכתב השתפר מאוד! האתגר הבא: לפרגן פנים אל פנים, בארבע עיניים, בצורה ישירה. יניר מעריך שיחה ישירה ובעל פה הרבה יותר מהודעה.</div></div>
+</div>
+
+<div class="hw-toggle">
+<button onclick="var h=document.getElementById('hwSection');var b=this;if(h.querySelector('.hw-group').style.display==='none'){h.querySelectorAll('.hw-group,.hw-date').forEach(function(e){e.style.display=''});b.textContent='הסתר פרטים'}else{h.querySelectorAll('.hw-group,.hw-date').forEach(function(e){e.style.display='none'});b.textContent='הצג פרטים'}">הסתר פרטים</button>
+</div>
+</div>
+<!-- End homework -->
+
 <div class="intro-card" id="intro">
 <p>ברוכים הבאים לשאלון אישי ומרחב בטוח.</p>
 <p style="margin-top:10px">השאלון נועד לעזור לכם לחשוב על הקשר בצורה מעמיקה.</p>
@@ -260,5 +311,23 @@ async function submitSurvey(){
 }
 </script>
 <!-- Back to Mentor-IT --><div style="position:fixed;bottom:16px;left:16px;z-index:9999;"><a href="../mentorlon/dashboard.html" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;font-family:Segoe UI,Arial,sans-serif;box-shadow:0 4px 16px rgba(13,148,136,0.35);">← Mentor-IT</a></div>
-<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script></body>
+<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#0d9488;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div><style>@keyframes ailon-spin{to{transform:rotate(360deg)}}
+/* Homework section */
+.hw-section{background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 4px 20px rgba(0,0,0,.06);margin-bottom:24px}
+.hw-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.hw-icon{font-size:32px}
+.hw-title{font-size:20px;font-weight:900;color:#7c4a4a}
+.hw-date{font-size:13px;color:#aaa;margin-bottom:16px}
+.hw-group{margin-bottom:18px}
+.hw-group-title{font-size:15px;font-weight:700;color:#7c4a4a;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #f0e6e6}
+.hw-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f5f0f0}
+.hw-item:last-child{border-bottom:none}
+.hw-check{width:22px;height:22px;border:2px solid #d4b0b0;border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#7c4a4a;transition:all .2s}
+.hw-check.done{background:#7c4a4a;color:#fff;border-color:#7c4a4a}
+.hw-text{font-size:15px;line-height:1.5;color:#444;flex:1}
+.hw-text strong{color:#7c4a4a}
+.hw-toggle{text-align:center;margin-top:12px}
+.hw-toggle button{background:transparent;border:none;color:#7c4a4a;font-weight:700;font-size:15px;cursor:pointer;padding:8px 16px}
+.hw-collapsed{display:none}
+</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script></body>
 </html>
