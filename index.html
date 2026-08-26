@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Info Screen — מערכת ניהול מסכים</title>
+  <title>AILON Task</title>
   <script>
     (function(){
       var host = window.location.hostname;
-      // If accessed via infoscreen.co.il → Dekel library management
+      // If accessed via infoscreen.co.il → redirect to Dekel library
       if (host.indexOf('infoscreen') !== -1) {
         window.location.href = 'dekel-library/';
-      } else {
-        // Default: AILON Task portal
-        window.location.href = 'portal.html';
       }
     })();
   </script>
 </head>
 <body>
-  <p>מעביר...</p>
+  <p>מעביר לדף התדמית...</p>
+  <script>
+    // Redirect to landing page
+    if (!window.location.hostname.match(/infoscreen/)) {
+      window.location.href = 'landing/';
+    }
+  </script>
 </body>
 </html>

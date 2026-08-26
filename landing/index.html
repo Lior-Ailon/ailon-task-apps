@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="theme-color" content="#0d9488">
+    <title>AILON Task · פתרונות AI לעולם העסקי</title>
+    <meta name="description" content="AILON Task — Dream it. Plan it. Achieve it. פתרונות AI מותאמים לחברות בתעשייה ובשירות הציבורי. בניית פלטפורמות בזמן מהיר, עלייה לאוויר אחרי פיילוט, שירות ברמה גבוהה ומקצועיות ללא פשרות.">
+    <meta property="og:title" content="AILON Task · פתרונות AI לעולם העסקי">
+    <meta property="og:description" content="Dream it. Plan it. Achieve it. פתרונות AI לחברות בתעשייה ובשירות הציבורי.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #0d9488;
+            --teal-light: #14b8a6;
+            --teal-lighter: #5eead4;
+            --navy: #1e3a5f;
+            --navy-dark: #0f2942;
+            --navy-darker: #0a1f33;
+            --cream: #f0fdfa;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --gradient-teal: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+            --gradient-navy: linear-gradient(135deg, #1e3a5f 0%, #0f2942 100%);
+            --gradient-hero: linear-gradient(135deg, #0a1f33 0%, #1e3a5f 40%, #0d9488 100%);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            --shadow-teal: 0 8px 32px rgba(13, 148, 136, 0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 31, 51, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 40px; height: 40px;
+            background: var(--gradient-teal);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 22px;
+            box-shadow: var(--shadow-teal);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--teal-lighter); }
+
+        .nav-cta {
+            background: var(--gradient-teal);
+            color: white !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-teal);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.4);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            min-height: 100vh;
+            background: var(--gradient-hero);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            padding: 100px 5% 60px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(circle at 80% 20%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(30, 58, 95, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-particles {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(94, 234, 212, 0.15);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(13, 148, 136, 0.2);
+            border: 1px solid rgba(13, 148, 136, 0.4);
+            color: var(--teal-lighter);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge-dot {
+            width: 8px; height: 8px;
+            background: var(--teal-light);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-slogan {
+            color: rgba(255,255,255,0.9);
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            font-weight: 400;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            font-weight: 300;
+            margin-bottom: 40px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--gradient-teal);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-teal);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(13, 148, 136, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-3px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat { text-align: center; }
+
+        .hero-stat-num {
+            color: var(--teal-lighter);
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* ========== SECTIONS ========== */
+        .section {
+            padding: 100px 5%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            color: var(--teal);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            color: var(--navy-dark);
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* ========== SERVICES ========== */
+        .services { background: var(--cream); }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 24px;
+            padding: 36px 32px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-teal);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(13, 148, 136, 0.2);
+        }
+
+        .service-card:hover::before { transform: scaleX(1); }
+
+        .service-icon {
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(20, 184, 166, 0.05));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 28px;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 12px;
+        }
+
+        .service-desc {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ========== PROCESS ========== */
+        .process {
+            background: var(--gradient-navy);
+            color: white;
+        }
+
+        .process .section-title { color: white; }
+        .process .section-desc { color: rgba(255,255,255,0.7); }
+        .process .section-tag { color: var(--teal-lighter); }
+
+        .process-timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .process-step-num {
+            width: 72px; height: 72px;
+            background: rgba(13, 148, 136, 0.15);
+            border: 2px solid var(--teal-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--teal-lighter);
+            transition: all 0.3s;
+        }
+
+        .process-step:hover .process-step-num {
+            background: var(--teal);
+            border-color: var(--teal);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .process-step h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .process-step p {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ========== INDUSTRIES ========== */
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .industry-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .industry-card:hover {
+            border-color: var(--teal-light);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .industry-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .industry-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 8px;
+        }
+
+        .industry-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ========== ABOUT ========== */
+        .about { background: var(--cream); }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-quote {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 600;
+            color: var(--navy-dark);
+            line-height: 1.5;
+            margin-bottom: 32px;
+            position: relative;
+            padding: 0 40px;
+        }
+
+        .about-quote::before,
+        .about-quote::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--teal);
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        .about-quote::before { top: -20px; right: 0; }
+        .about-quote::after { bottom: -40px; left: 0; }
+
+        .about-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .about-values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .value-item {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .value-icon {
+            width: 56px; height: 56px;
+            background: var(--gradient-teal);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+            box-shadow: var(--shadow-teal);
+        }
+
+        .value-item h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 8px;
+        }
+
+        .value-item p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ========== CTA ========== */
+        .cta {
+            background: var(--gradient-hero);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(13, 148, 136, 0.2) 0%, transparent 60%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+        }
+
+        .cta-contact-info {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .cta-contact-item {
+            color: rgba(255,255,255,0.7);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: var(--navy-darker);
+            color: rgba(255,255,255,0.6);
+            padding: 60px 5% 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand-icon {
+            width: 40px; height: 40px;
+            background: var(--gradient-teal);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 22px;
+        }
+
+        .footer-brand-name {
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .footer-slogan {
+            color: var(--teal-lighter);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .footer h5 {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--teal-lighter); }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-toggle { display: block; }
+            .hero-stats { gap: 30px; }
+            .hero-stat-num { font-size: 2rem; }
+            .footer-content { grid-template-columns: 1fr; gap: 30px; }
+            .nav-links.mobile-open {
+                display: flex;
+                position: absolute;
+                top: 100%;
+                left: 0; right: 0;
+                flex-direction: column;
+                background: rgba(10, 31, 51, 0.98);
+                padding: 24px;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<nav class="navbar" id="navbar">
+    <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">A</div>
+        <span>AILON Task</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+        <a href="#services">שירותים</a>
+        <a href="#process">תהליך</a>
+        <a href="#industries">תחומים</a>
+        <a href="#about">אודות</a>
+        <a href="#contact" class="nav-cta">צרו קשר</a>
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('mobile-open')">☰</button>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <div class="hero-badge-dot"></div>
+            פתרונות AI מותאמים לעולם העסקי
+        </div>
+        <h1>AILON <span>Task</span></h1>
+        <p class="hero-slogan">Dream it. Plan it. Achieve it.</p>
+        <p class="hero-subtitle">
+            נותנים פתרונות AI לכל סוגי החברות בעולמות התעשייה והשירות הציבורי.
+            בניית פלטפורמות בזמן מהיר, עלייה לאוויר אחרי פיילוט,
+            שירות ברמה גבוהה ומקצועיות ללא פשרות.
+        </p>
+        <div class="hero-buttons">
+            <a href="#contact" class="btn-primary">קבעו פגישת ייעוץ</a>
+            <a href="#services" class="btn-secondary">הכירו את השירותים</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-num">20+</div>
+                <div class="hero-stat-label">פלטפורמות שהועלו לאוויר</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">3</div>
+                <div class="hero-stat-label">תחומי התמחות</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">100%</div>
+                <div class="hero-stat-label">שביעות רצון לקוחות</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section class="section services" id="services">
+    <div class="section-header reveal">
+        <div class="section-tag">השירותים שלנו</div>
+        <h2 class="section-title">פתרונות AI שמשנים כללי המשחק</h2>
+        <p class="section-desc">מהרעיון ועד העלייה לאוויר — אנחנו כאן להפוך את החזון שלכם למציאות</p>
+    </div>
+    <div class="services-grid">
+        <div class="service-card reveal">
+            <div class="service-icon">🤖</div>
+            <h3 class="service-title">פתרונות AI מותאמים</h3>
+            <p class="service-desc">פיתוח מערכות AI מותאמות אישית לצרכי הארגון — אוטומציה של תהליכים, ניתוח נתונים, ומערכות חכמות שחוסכות זמן וכסף.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">⚡</div>
+            <h3 class="service-title">בניית פלטפורמות במהירות</h3>
+            <p class="service-desc">מפרוטוטייפ לפלטפורמה מלאה בזמן מאוד קצר. מערכות web-based שעולות לאוויר מהר ועובדות מהיום הראשון.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">🎯</div>
+            <h3 class="service-title">פיילוט ועלייה לאוויר</h3>
+            <p class="service-desc">תהליך מסודר: אפיון, פיילוט, עלייה לאוויר. כל שלב נבדק ונמדד, כדי שהתוצאה הסופית תהיה מדויקת ותואמת את הצרכים שלכם.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">📊</div>
+            <h3 class="service-title">ניהול נתונים חכם</h3>
+            <p class="service-desc">מערכות CRM, מעקב לקוחות, ניהול פרויקטים, ודוחות חכמים — הכל במקום אחד, נגיש מכל מקום, עם אבטחה ברמה גבוהה.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">📱</div>
+            <h3 class="service-title">מערכות לניהול שירות</h3>
+            <p class="service-desc">מערכות לניהול ספריות, מוסדות, וארגונים ציבוריים. פתרונות display דיגיטליים, ניהול תוכן, וממשקי משתמש ידידותיים.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">🛡️</div>
+            <h3 class="service-title">אבטחה ואמינות</h3>
+            <p class="service-desc">כל המערכות פועלות על תשתיות מאובטחות, עם גיבוי נתונים שוטף, הצפנה מלאה, וניהול הרשאות מדויק לכל משתמש.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ========== PROCESS ========== -->
+<section class="section process" id="process">
+    <div class="section-header reveal">
+        <div class="section-tag">איך עובדים</div>
+        <h2 class="section-title">מהרעיון למציאות — ב-4 צעדים</h2>
+        <p class="section-desc">תהליך מסודר ומוכח שמבטיח תוצאות מהירות ומדויקות</p>
+    </div>
+    <div class="process-timeline">
+        <div class="process-step reveal">
+            <div class="process-step-num">1</div>
+            <h3>אפיון והבנת צרכים</h3>
+            <p>שיחת היכרות, מיפוי הצרכים של הארגון, והגדרת מטרות ברורות לפרויקט.</p>
+        </div>
+        <div class="process-step reveal">
+            <div class="process-step-num">2</div>
+            <h3>פרוטוטייפ מהיר</h3>
+            <p>בניית אב-טיפוס ראשוני בזמן קצר — כדי שתראו את המערכת בפעולה לפני ההשקעה המלאה.</p>
+        </div>
+        <div class="process-step reveal">
+            <div class="process-step-num">3</div>
+            <h3>פיילוט ובדיקות</h3>
+            <p>הפעלת המערכת בסביבת פיילוט, איסוף פידבק, וכיוונון עד לתוצאה המושלמת.</p>
+        </div>
+        <div class="process-step reveal">
+            <div class="process-step-num">4</div>
+            <h3>עלייה לאוויר</h3>
+            <p>הפצת המערכת לכל המשתמשים, הדרכה מלאה, וליווי שוטף גם אחרי ההשקה.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ========== INDUSTRIES ========== -->
+<section class="section" id="industries">
+    <div class="section-header reveal">
+        <div class="section-tag">תחומי התמחות</div>
+        <h2 class="section-title">לכל עולם — הפתרון שלו</h2>
+        <p class="section-desc">מתמחים במתן פתרונות AI למגוון רחב של תחומים</p>
+    </div>
+    <div class="industries-grid">
+        <div class="industry-card reveal">
+            <div class="industry-icon">🏭</div>
+            <h3>תעשייה</h3>
+            <p>מערכות ניהול ייצור, מעקב תהליכים, ואוטומציה של קווי ייצור</p>
+        </div>
+        <div class="industry-card reveal">
+            <div class="industry-icon">🏛️</div>
+            <h3>שירות ציבורי</h3>
+            <p>מערכות למוסדות, ספריות, רשויות, וארגונים ציבוריים</p>
+        </div>
+        <div class="industry-card reveal">
+            <div class="industry-icon">🏢</div>
+            <h3>עסקים</h3>
+            <p>מערכות CRM, ניהול לקוחות, מעקב פרויקטים, ודוחות חכמים</p>
+        </div>
+        <div class="industry-card reveal">
+            <div class="industry-icon">📚</div>
+            <h3>חינוך</h3>
+            <p>פלטפורמות למידה, מערכות ניהול מוסדות, וכלים דיגיטליים לחינוך</p>
+        </div>
+    </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="section about" id="about">
+    <div class="about-content">
+        <div class="section-header reveal">
+            <div class="section-tag">אודותינו</div>
+            <h2 class="section-title">מי אנחנו</h2>
+        </div>
+        <p class="about-quote reveal">
+            אנחנו מאמינים שכל ארגון יכול להתקדם עם הכלים הנכונים.
+            המשימה שלנו היא לבנות אותם.
+        </p>
+        <p class="about-text reveal">
+            AILON Task מתמחה בפיתוח פתרונות AI ופלטפורמות דיגיטליות לעולם העסקי.
+            אנחנו מביאים ניסיון טכנולוגי עשיר, הבנה עמוקה של צרכים עסקיים,
+            ומחויבות לשירות ברמה הגבוהה ביותר. מקצועיות ללא פשרות, זמן אספקה קצר,
+            ועלייה לאוויר אחרי פיילוט מצטיין.
+        </p>
+        <div class="about-values">
+            <div class="value-item reveal">
+                <div class="value-icon">⚡</div>
+                <h4>מהירות</h4>
+                <p>פרוטוטייפ בימים, לא בחודשים</p>
+            </div>
+            <div class="value-item reveal">
+                <div class="value-icon">🎯</div>
+                <h4>דיוק</h4>
+                <p>אפיון מדויק לכל צורך עסקי</p>
+            </div>
+            <div class="value-item reveal">
+                <div class="value-icon">🤝</div>
+                <h4>שירות</h4>
+                <p>ליווי אישי גם אחרי ההשקה</p>
+            </div>
+            <div class="value-item reveal">
+                <div class="value-icon">🔒</div>
+                <h4>אמינות</h4>
+                <p>תשתיות מאובטחות וגיבוי שוטף</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CTA / CONTACT ========== -->
+<section class="section cta" id="contact">
+    <div class="cta-content">
+        <h2>מוכנים להתקדם?</h2>
+        <p>קבעו פגישת ייעוץ ראשונית ללא עלות — ונראה איך AI יכול לקדם את הארגון שלכם</p>
+        <div class="hero-buttons">
+            <a href="mailto:liors@ailon-task.com" class="btn-primary">צרו קשר</a>
+            <a href="https://wa.me/972526600958" class="btn-secondary">WhatsApp</a>
+        </div>
+        <div class="cta-contact-info">
+            <div class="cta-contact-item">📧 liors@ailon-task.com</div>
+            <div class="cta-contact-item">📱 052-6600958</div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <div class="footer-content">
+        <div>
+            <div class="footer-brand">
+                <div class="footer-brand-icon">A</div>
+                <span class="footer-brand-name">AILON Task</span>
+            </div>
+            <p class="footer-slogan">Dream it. Plan it. Achieve it.</p>
+            <p class="footer-text">
+                פתרונות AI לחברות בתעשייה ובשירות הציבורי.
+                בניית פלטפורמות בזמן מהיר, עלייה לאוויר אחרי פיילוט,
+                שירות ברמה גבוהה ומקצועיות ללא פשרות.
+            </p>
+        </div>
+        <div>
+            <h5>שירותים</h5>
+            <ul class="footer-links">
+                <li><a href="#services">פתרונות AI</a></li>
+                <li><a href="#services">בניית פלטפורמות</a></li>
+                <li><a href="#services">ניהול נתונים</a></li>
+                <li><a href="#services">מערכות שירות</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5>צרו קשר</h5>
+            <ul class="footer-links">
+                <li><a href="mailto:liors@ailon-task.com">liors@ailon-task.com</a></li>
+                <li><a href="https://wa.me/972526600958">WhatsApp</a></li>
+                <li><a href="#contact">פגישת ייעוץ</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        © 2026 AILON Task. כל הזכויות שמורות. Dream it. Plan it. Achieve it.
+    </div>
+</footer>
+
+<script>
+    // Particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 60 + 20;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 8 + 's';
+        p.style.animationDuration = (Math.random() * 6 + 6) + 's';
+        particlesContainer.appendChild(p);
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            navbar.style.padding = '10px 5%';
+            navbar.style.background = 'rgba(10, 31, 51, 0.95)';
+        } else {
+            navbar.style.padding = '16px 5%';
+            navbar.style.background = 'rgba(10, 31, 51, 0.85)';
+        }
+    });
+</script>
+
+</body>
+</html>
