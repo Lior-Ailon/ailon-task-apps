@@ -6,10 +6,10 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta name="theme-color" content="#0d9488">
-    <title>AILON Task · פתרונות AI לעולם העסקי</title>
-    <meta name="description" content="AILON Task — Dream it. Plan it. Achieve it. פתרונות AI מותאמים לחברות בתעשייה ובשירות הציבורי. בניית פלטפורמות בזמן מהיר, עלייה לאוויר אחרי פיילוט, שירות ברמה גבוהה ומקצועיות ללא פשרות.">
-    <meta property="og:title" content="AILON Task · פתרונות AI לעולם העסקי">
-    <meta property="og:description" content="Dream it. Plan it. Achieve it. פתרונות AI לחברות בתעשייה ובשירות הציבורי.">
+    <title>AILON Task · פתרונות טכנולוגיה מהירים לכל עסק</title>
+    <meta name="description" content="AILON Task — Dream it. Plan it. Achieve it. פתרונות טכנולוגיה מהירים לכל עסק, בכל תחום, לכל מגזר. התייעלות בהוצאות, עלייה ברווחיות, וחיסכון בזמן. 30+ פלטפורמות שהועלו לאוויר.">
+    <meta property="og:title" content="AILON Task · פתרונות טכנולוגיה מהירים לכל עסק">
+    <meta property="og:description" content="Dream it. Plan it. Achieve it. פתרונות טכנולוגיה מהירים לכל עסק ובכל תחום.">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,733 +34,158 @@
             --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
             --shadow-teal: 0 8px 32px rgba(13, 148, 136, 0.25);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        body { font-family: 'Heebo', -apple-system, sans-serif; background: var(--white); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
 
-        body {
-            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--white);
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* ========== NAVBAR ========== */
-        .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            padding: 16px 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(10, 31, 51, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-weight: 800;
-            font-size: 20px;
-            letter-spacing: -0.5px;
-            text-decoration: none;
-        }
-
-        .nav-logo-icon {
-            width: 40px; height: 40px;
-            background: var(--gradient-teal);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 900;
-            font-size: 22px;
-            box-shadow: var(--shadow-teal);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: color 0.2s;
-        }
-
+        /* NAVBAR */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; background: rgba(10,31,51,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); transition: all 0.3s; }
+        .nav-logo { display: flex; align-items: center; gap: 12px; color: white; font-weight: 800; font-size: 20px; text-decoration: none; }
+        .nav-logo-icon { width: 40px; height: 40px; background: var(--gradient-teal); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 22px; box-shadow: var(--shadow-teal); }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.2s; }
         .nav-links a:hover { color: var(--teal-lighter); }
+        .nav-cta { background: var(--gradient-teal) !important; color: white !important; padding: 10px 24px; border-radius: 50px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow-teal); }
+        .nav-cta:hover { transform: translateY(-2px); }
+        .nav-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
 
-        .nav-cta {
-            background: var(--gradient-teal);
-            color: white !important;
-            padding: 10px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-teal);
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.4);
-        }
-
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* ========== HERO ========== */
-        .hero {
-            min-height: 100vh;
-            background: var(--gradient-hero);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            overflow: hidden;
-            padding: 100px 5% 60px;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: 
-                radial-gradient(circle at 80% 20%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(30, 58, 95, 0.3) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .hero-particles {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(94, 234, 212, 0.15);
-            animation: float 8s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-30px) translateX(20px); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 900px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(13, 148, 136, 0.2);
-            border: 1px solid rgba(13, 148, 136, 0.4);
-            color: var(--teal-lighter);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 24px;
-        }
-
-        .hero-badge-dot {
-            width: 8px; height: 8px;
-            background: var(--teal-light);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
-        }
-
-        .hero h1 {
-            color: white;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-slogan {
-            color: rgba(255,255,255,0.9);
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            font-weight: 400;
-            margin-bottom: 16px;
-            letter-spacing: 2px;
-        }
-
-        .hero-subtitle {
-            color: rgba(255,255,255,0.7);
-            font-size: clamp(1rem, 1.5vw, 1.15rem);
-            font-weight: 300;
-            margin-bottom: 40px;
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            background: var(--gradient-teal);
-            color: white;
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 16px;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: var(--shadow-teal);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 48px rgba(13, 148, 136, 0.5);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            text-decoration: none;
-            transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.2);
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.4);
-            transform: translateY(-3px);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 60px;
-            justify-content: center;
-            margin-top: 60px;
-            flex-wrap: wrap;
-        }
-
+        /* HERO */
+        .hero { min-height: 100vh; background: var(--gradient-hero); position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 100px 5% 60px; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(13,148,136,0.15) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(30,58,95,0.3) 0%, transparent 50%); }
+        .hero-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+        .particle { position: absolute; border-radius: 50%; background: rgba(94,234,212,0.15); animation: float 8s infinite ease-in-out; }
+        @keyframes float { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-30px) translateX(20px); } }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(13,148,136,0.2); border: 1px solid rgba(13,148,136,0.4); color: var(--teal-lighter); padding: 8px 20px; border-radius: 50px; font-size: 14px; font-weight: 500; margin-bottom: 24px; }
+        .hero-badge-dot { width: 8px; height: 8px; background: var(--teal-light); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
+        .hero h1 { color: white; font-size: clamp(2.5rem,6vw,4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
+        .hero h1 span { background: linear-gradient(135deg,#5eead4,#14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-slogan { color: rgba(255,255,255,0.9); font-size: clamp(1.1rem,2vw,1.4rem); font-weight: 400; margin-bottom: 16px; letter-spacing: 2px; }
+        .hero-subtitle { color: rgba(255,255,255,0.7); font-size: clamp(1rem,1.5vw,1.15rem); font-weight: 300; margin-bottom: 40px; max-width: 650px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary { background: var(--gradient-teal); color: white; padding: 16px 40px; border-radius: 50px; font-weight: 700; font-size: 16px; text-decoration: none; transition: all 0.3s; box-shadow: var(--shadow-teal); border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(13,148,136,0.5); }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; padding: 16px 40px; border-radius: 50px; font-weight: 600; font-size: 16px; text-decoration: none; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); transform: translateY(-3px); }
+        .hero-stats { display: flex; gap: 60px; justify-content: center; margin-top: 60px; flex-wrap: wrap; }
         .hero-stat { text-align: center; }
+        .hero-stat-num { color: var(--teal-lighter); font-size: 2.5rem; font-weight: 800; line-height: 1; }
+        .hero-stat-label { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 8px; }
 
-        .hero-stat-num {
-            color: var(--teal-lighter);
-            font-size: 2.5rem;
-            font-weight: 800;
-            line-height: 1;
-        }
+        /* SECTIONS */
+        .section { padding: 100px 5%; position: relative; }
+        .section-header { text-align: center; max-width: 700px; margin: 0 auto 60px; }
+        .section-tag { display: inline-block; color: var(--teal); font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .section-title { font-size: clamp(2rem,4vw,2.8rem); font-weight: 800; color: var(--navy-dark); line-height: 1.2; margin-bottom: 16px; }
+        .section-desc { font-size: 1.1rem; color: var(--text-muted); font-weight: 300; }
 
-        .hero-stat-label {
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
-        /* ========== SECTIONS ========== */
-        .section {
-            padding: 100px 5%;
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 60px;
-        }
-
-        .section-tag {
-            display: inline-block;
-            color: var(--teal);
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 800;
-            color: var(--navy-dark);
-            line-height: 1.2;
-            margin-bottom: 16px;
-        }
-
-        .section-desc {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        /* ========== SERVICES ========== */
+        /* SERVICES */
         .services { background: var(--cream); }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 24px;
-            padding: 36px 32px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: var(--gradient-teal);
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(13, 148, 136, 0.2);
-        }
-
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .service-card { background: white; border-radius: 24px; padding: 36px 32px; box-shadow: var(--shadow-sm); transition: all 0.3s; border: 1px solid transparent; position: relative; overflow: hidden; }
+        .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-teal); transform: scaleX(0); transform-origin: right; transition: transform 0.3s; }
+        .service-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: rgba(13,148,136,0.2); }
         .service-card:hover::before { transform: scaleX(1); }
+        .service-icon { width: 64px; height: 64px; background: linear-gradient(135deg,rgba(13,148,136,0.1),rgba(20,184,166,0.05)); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 28px; }
+        .service-title { font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 12px; }
+        .service-desc { color: var(--text-muted); font-size: 15px; line-height: 1.7; }
 
-        .service-icon {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(20, 184, 166, 0.05));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            font-size: 28px;
-        }
-
-        .service-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--navy-dark);
-            margin-bottom: 12px;
-        }
-
-        .service-desc {
-            color: var(--text-muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        /* ========== PROCESS ========== */
-        .process {
-            background: var(--gradient-navy);
-            color: white;
-        }
-
+        /* PROCESS */
+        .process { background: var(--gradient-navy); color: white; }
         .process .section-title { color: white; }
         .process .section-desc { color: rgba(255,255,255,0.7); }
         .process .section-tag { color: var(--teal-lighter); }
+        .process-timeline { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 32px; }
+        .process-step { text-align: center; }
+        .process-step-num { width: 72px; height: 72px; background: rgba(13,148,136,0.15); border: 2px solid var(--teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; font-weight: 800; color: var(--teal-lighter); transition: all 0.3s; }
+        .process-step:hover .process-step-num { background: var(--teal); border-color: var(--teal); color: white; transform: scale(1.1); }
+        .process-step h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: white; }
+        .process-step p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; }
 
-        .process-timeline {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 32px;
-        }
+        /* PORTFOLIO */
+        .portfolio { background: var(--white); }
+        .portfolio-filter { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+        .filter-btn { padding: 10px 24px; border-radius: 50px; border: 1px solid #e2e8f0; background: white; color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .filter-btn:hover { border-color: var(--teal-light); color: var(--teal); }
+        .filter-btn.active { background: var(--gradient-teal); color: white; border-color: transparent; box-shadow: var(--shadow-teal); }
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .portfolio-card { background: white; border-radius: 20px; padding: 28px; box-shadow: var(--shadow-sm); transition: all 0.3s; border: 1px solid #e2e8f0; cursor: pointer; position: relative; overflow: hidden; }
+        .portfolio-card:hover { border-color: var(--teal-light); transform: translateY(-6px); box-shadow: var(--shadow-md); }
+        .portfolio-card.hidden { display: none; }
+        .portfolio-badge { position: absolute; top: 16px; left: 16px; background: #dcfce7; color: #166534; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 50px; }
+        .portfolio-icon { width: 52px; height: 52px; background: linear-gradient(135deg,rgba(13,148,136,0.1),rgba(20,184,166,0.05)); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 24px; }
+        .portfolio-title { font-size: 1.05rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; }
+        .portfolio-desc { color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
+        .portfolio-cat { font-size: 12px; color: var(--teal); font-weight: 600; }
 
-        .process-step {
-            text-align: center;
-            position: relative;
-        }
+        /* INDUSTRIES */
+        .industries-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .industry-card { background: white; border-radius: 20px; padding: 28px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.3s; border: 1px solid #e2e8f0; }
+        .industry-card:hover { border-color: var(--teal-light); transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .industry-icon { font-size: 40px; margin-bottom: 16px; }
+        .industry-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; }
+        .industry-card p { color: var(--text-muted); font-size: 14px; }
 
-        .process-step-num {
-            width: 72px; height: 72px;
-            background: rgba(13, 148, 136, 0.15);
-            border: 2px solid var(--teal-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--teal-lighter);
-            transition: all 0.3s;
-        }
-
-        .process-step:hover .process-step-num {
-            background: var(--teal);
-            border-color: var(--teal);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .process-step h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: white;
-        }
-
-        .process-step p {
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* ========== INDUSTRIES ========== */
-        .industries-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .industry-card {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s;
-            border: 1px solid #e2e8f0;
-        }
-
-        .industry-card:hover {
-            border-color: var(--teal-light);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .industry-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
-        }
-
-        .industry-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--navy-dark);
-            margin-bottom: 8px;
-        }
-
-        .industry-card p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        /* ========== ABOUT ========== */
+        /* ABOUT */
         .about { background: var(--cream); }
-
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .about-quote {
-            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-            font-weight: 600;
-            color: var(--navy-dark);
-            line-height: 1.5;
-            margin-bottom: 32px;
-            position: relative;
-            padding: 0 40px;
-        }
-
-        .about-quote::before,
-        .about-quote::after {
-            content: '"';
-            font-size: 3rem;
-            color: var(--teal);
-            opacity: 0.3;
-            position: absolute;
-        }
-
+        .about-content { max-width: 900px; margin: 0 auto; text-align: center; }
+        .about-quote { font-size: clamp(1.3rem,2.5vw,1.8rem); font-weight: 600; color: var(--navy-dark); line-height: 1.5; margin-bottom: 32px; position: relative; padding: 0 40px; }
+        .about-quote::before, .about-quote::after { content: '"'; font-size: 3rem; color: var(--teal); opacity: 0.3; position: absolute; }
         .about-quote::before { top: -20px; right: 0; }
         .about-quote::after { bottom: -40px; left: 0; }
+        .about-text { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; max-width: 700px; margin: 0 auto; }
+        .about-values { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 24px; margin-top: 48px; }
+        .value-item { text-align: center; padding: 24px; }
+        .value-icon { width: 56px; height: 56px; background: var(--gradient-teal); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; box-shadow: var(--shadow-teal); }
+        .value-item h4 { font-size: 1.1rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; }
+        .value-item p { color: var(--text-muted); font-size: 14px; }
 
-        .about-text {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 0 auto;
-        }
+        /* CTA */
+        .cta { background: var(--gradient-hero); text-align: center; color: white; position: relative; overflow: hidden; }
+        .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%,rgba(13,148,136,0.2) 0%, transparent 60%); }
+        .cta-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+        .cta h2 { font-size: clamp(2rem,4vw,2.8rem); font-weight: 800; margin-bottom: 16px; }
+        .cta p { font-size: 1.2rem; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+        .cta-contact-info { display: flex; gap: 32px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+        .cta-contact-item { color: rgba(255,255,255,0.7); font-size: 15px; display: flex; align-items: center; gap: 8px; }
 
-        .about-values {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin-top: 48px;
-        }
-
-        .value-item {
-            text-align: center;
-            padding: 24px;
-        }
-
-        .value-icon {
-            width: 56px; height: 56px;
-            background: var(--gradient-teal);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 24px;
-            box-shadow: var(--shadow-teal);
-        }
-
-        .value-item h4 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--navy-dark);
-            margin-bottom: 8px;
-        }
-
-        .value-item p {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        /* ========== CTA ========== */
-        .cta {
-            background: var(--gradient-hero);
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(13, 148, 136, 0.2) 0%, transparent 60%);
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 2;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .cta h2 {
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 800;
-            margin-bottom: 16px;
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 40px;
-        }
-
-        .cta-contact-info {
-            display: flex;
-            gap: 32px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .cta-contact-item {
-            color: rgba(255,255,255,0.7);
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ========== FOOTER ========== */
-        .footer {
-            background: var(--navy-darker);
-            color: rgba(255,255,255,0.6);
-            padding: 60px 5% 30px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .footer-brand-icon {
-            width: 40px; height: 40px;
-            background: var(--gradient-teal);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 900;
-            font-size: 22px;
-        }
-
-        .footer-brand-name {
-            color: white;
-            font-weight: 800;
-            font-size: 20px;
-        }
-
-        .footer-slogan {
-            color: var(--teal-lighter);
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-
-        .footer-text {
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .footer h5 {
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-
+        /* FOOTER */
+        .footer { background: var(--navy-darker); color: rgba(255,255,255,0.6); padding: 60px 5% 30px; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .footer-brand-icon { width: 40px; height: 40px; background: var(--gradient-teal); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 22px; }
+        .footer-brand-name { color: white; font-weight: 800; font-size: 20px; }
+        .footer-slogan { color: var(--teal-lighter); font-size: 14px; font-weight: 500; letter-spacing: 1px; margin-bottom: 12px; }
+        .footer-text { font-size: 14px; line-height: 1.7; }
+        .footer h5 { color: white; font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: color 0.2s; }
         .footer-links a:hover { color: var(--teal-lighter); }
+        .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 13px; color: rgba(255,255,255,0.4); }
 
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            font-size: 13px;
-            color: rgba(255,255,255,0.4);
-        }
+        /* ANIMATIONS */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* ========== ANIMATIONS ========== */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .nav-toggle { display: block; }
             .hero-stats { gap: 30px; }
             .hero-stat-num { font-size: 2rem; }
             .footer-content { grid-template-columns: 1fr; gap: 30px; }
-            .nav-links.mobile-open {
-                display: flex;
-                position: absolute;
-                top: 100%;
-                left: 0; right: 0;
-                flex-direction: column;
-                background: rgba(10, 31, 51, 0.98);
-                padding: 24px;
-                gap: 20px;
-            }
+            .nav-links.mobile-open { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(10,31,51,0.98); padding: 24px; gap: 20px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ========== NAVBAR ========== -->
 <nav class="navbar" id="navbar">
-    <a href="#" class="nav-logo">
-        <div class="nav-logo-icon">A</div>
-        <span>AILON Task</span>
-    </a>
+    <a href="#" class="nav-logo"><div class="nav-logo-icon">A</div><span>AILON Task</span></a>
     <div class="nav-links" id="navLinks">
         <a href="#services">שירותים</a>
+        <a href="#portfolio">הפתרונות שלנו</a>
         <a href="#process">תהליך</a>
         <a href="#industries">תחומים</a>
         <a href="#about">אודות</a>
@@ -769,84 +194,275 @@
     <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('mobile-open')">☰</button>
 </nav>
 
-<!-- ========== HERO ========== -->
 <section class="hero">
     <div class="hero-particles" id="particles"></div>
     <div class="hero-content">
-        <div class="hero-badge">
-            <div class="hero-badge-dot"></div>
-            פתרונות AI מותאמים לעולם העסקי
-        </div>
+        <div class="hero-badge"><div class="hero-badge-dot"></div>פתרונות טכנולוגיה מהירים לכל עסק</div>
         <h1>AILON <span>Task</span></h1>
         <p class="hero-slogan">Dream it. Plan it. Achieve it.</p>
         <p class="hero-subtitle">
-            נותנים פתרונות AI לכל סוגי החברות בעולמות התעשייה והשירות הציבורי.
-            בניית פלטפורמות בזמן מהיר, עלייה לאוויר אחרי פיילוט,
-            שירות ברמה גבוהה ומקצועיות ללא פשרות.
+            בונים ובנינו פתרונות טכנולוגיה מהירים לכל עסק, בכל תחום, לכל מגזר.
+            התייעלות בהוצאות, עלייה ברווחיות, וחיסכון בזמן.
+            מקצועיות ללא פשרות, עלייה לאוויר אחרי פיילוט מצטיין.
         </p>
         <div class="hero-buttons">
             <a href="#contact" class="btn-primary">קבעו פגישת ייעוץ</a>
-            <a href="#services" class="btn-secondary">הכירו את השירותים</a>
+            <a href="#portfolio" class="btn-secondary">ראו 30+ פתרונות</a>
         </div>
         <div class="hero-stats">
-            <div class="hero-stat">
-                <div class="hero-stat-num">20+</div>
-                <div class="hero-stat-label">פלטפורמות שהועלו לאוויר</div>
-            </div>
-            <div class="hero-stat">
-                <div class="hero-stat-num">3</div>
-                <div class="hero-stat-label">תחומי התמחות</div>
-            </div>
-            <div class="hero-stat">
-                <div class="hero-stat-num">100%</div>
-                <div class="hero-stat-label">שביעות רצון לקוחות</div>
-            </div>
+            <div class="hero-stat"><div class="hero-stat-num">30+</div><div class="hero-stat-label">פלטפורמות שהועלו לאוויר</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">5</div><div class="hero-stat-label">תחומי התמחות</div></div>
+            <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">שביעות רצון לקוחות</div></div>
         </div>
     </div>
 </section>
 
-<!-- ========== SERVICES ========== -->
 <section class="section services" id="services">
     <div class="section-header reveal">
-        <div class="section-tag">השירותים שלנו</div>
-        <h2 class="section-title">פתרונות AI שמשנים כללי המשחק</h2>
-        <p class="section-desc">מהרעיון ועד העלייה לאוויר — אנחנו כאן להפוך את החזון שלכם למציאות</p>
+        <div class="section-tag">מה אנחנו עושים</div>
+        <h2 class="section-title">פתרונות שמייעלים עסקים</h2>
+        <p class="section-desc">מהרעיון ועד העלייה לאוויר — פתרונות טכנולוגיה מהירים שחוסכים זמן, מקטינים הוצאות, ומעלים רווחיות</p>
     </div>
     <div class="services-grid">
         <div class="service-card reveal">
+            <div class="service-icon">🚀</div>
+            <h3 class="service-title">פתרונות מהירים לכל עסק</h3>
+            <p class="service-desc">בניית פלטפורמות ומערכות web-based בזמן מאוד קצר. פרוטוטייפ בימים, עלייה לאוויר אחרי פיילוט. לכל עסק, בכל תחום, לכל מגזר.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">💰</div>
+            <h3 class="service-title">התייעלות וחיסכון</h3>
+            <p class="service-desc">מערכות שמקטינות הוצאות תפעוליות, מייעלות תהליכים ידניים, וחוסכות שעות עבודה. אוטומציה של דוחות, מעקב נתונים, וניהול מלאי.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">📈</div>
+            <h3 class="service-title">עלייה ברווחיות</h3>
+            <p class="service-desc">פתרונות CRM, ניהול לקוחות ולידים, מעקב הכנסות והוצאות, ודוחות חכמים שנותנים תמונת מצב אמיתית ומאפשרים קבלת החלטות מדויקת.</p>
+        </div>
+        <div class="service-card reveal">
+            <div class="service-icon">⏱️</div>
+            <h3 class="service-title">חיסכון בזמן</h3>
+            <p class="service-desc">אוטומציה של תהליכים חוזרים, מערכות self-service ללקוחות ועובדים, וממשקים ידידותיים שמקצרים זמני עבודה ומשחררים משאבים אנושיים.</p>
+        </div>
+        <div class="service-card reveal">
             <div class="service-icon">🤖</div>
-            <h3 class="service-title">פתרונות AI מותאמים</h3>
-            <p class="service-desc">פיתוח מערכות AI מותאמות אישית לצרכי הארגון — אוטומציה של תהליכים, ניתוח נתונים, ומערכות חכמות שחוסכות זמן וכסף.</p>
-        </div>
-        <div class="service-card reveal">
-            <div class="service-icon">⚡</div>
-            <h3 class="service-title">בניית פלטפורמות במהירות</h3>
-            <p class="service-desc">מפרוטוטייפ לפלטפורמה מלאה בזמן מאוד קצר. מערכות web-based שעולות לאוויר מהר ועובדות מהיום הראשון.</p>
-        </div>
-        <div class="service-card reveal">
-            <div class="service-icon">🎯</div>
-            <h3 class="service-title">פיילוט ועלייה לאוויר</h3>
-            <p class="service-desc">תהליך מסודר: אפיון, פיילוט, עלייה לאוויר. כל שלב נבדק ונמדד, כדי שהתוצאה הסופית תהיה מדויקת ותואמת את הצרכים שלכם.</p>
-        </div>
-        <div class="service-card reveal">
-            <div class="service-icon">📊</div>
-            <h3 class="service-title">ניהול נתונים חכם</h3>
-            <p class="service-desc">מערכות CRM, מעקב לקוחות, ניהול פרויקטים, ודוחות חכמים — הכל במקום אחד, נגיש מכל מקום, עם אבטחה ברמה גבוהה.</p>
+            <h3 class="service-title">AI ואינטליגנציה</h3>
+            <p class="service-desc">מערכות AI מותאמות — ניתוח נתונים, חיזוי, המלצות אוטומטיות, ועוזרים חכמים. טכנולוגיה שעובדת בשבילך 24/7.</p>
         </div>
         <div class="service-card reveal">
             <div class="service-icon">📱</div>
-            <h3 class="service-title">מערכות לניהול שירות</h3>
-            <p class="service-desc">מערכות לניהול ספריות, מוסדות, וארגונים ציבוריים. פתרונות display דיגיטליים, ניהול תוכן, וממשקי משתמש ידידותיים.</p>
-        </div>
-        <div class="service-card reveal">
-            <div class="service-icon">🛡️</div>
-            <h3 class="service-title">אבטחה ואמינות</h3>
-            <p class="service-desc">כל המערכות פועלות על תשתיות מאובטחות, עם גיבוי נתונים שוטף, הצפנה מלאה, וניהול הרשאות מדויק לכל משתמש.</p>
+            <h3 class="service-title">מערכות למוסדות</h3>
+            <p class="service-desc">פתרונות display דיגיטליים, ניהול ספריות, מערכות לרשויות ומוסדות ציבוריים. ממשקי משתמש ידידותיים עם נגישות מלאה.</p>
         </div>
     </div>
 </section>
 
-<!-- ========== PROCESS ========== -->
+<section class="section portfolio" id="portfolio">
+    <div class="section-header reveal">
+        <div class="section-tag">הפתרונות שלנו</div>
+        <h2 class="section-title">30+ פלטפורמות שעלו לאוויר</h2>
+        <p class="section-desc">מערכות חיות שעובדות עכשיו — בכל תחום, לכל מגזר</p>
+    </div>
+    <div class="portfolio-filter reveal">
+        <button class="filter-btn active" onclick="filterPortfolio('all')">הכל</button>
+        <button class="filter-btn" onclick="filterPortfolio('business')">עסקים</button>
+        <button class="filter-btn" onclick="filterPortfolio('mentoring')">קואצ'ינג ומנטורינג</button>
+        <button class="filter-btn" onclick="filterPortfolio('education')">חינוך</button>
+        <button class="filter-btn" onclick="filterPortfolio('enterprise')">ארגונים</button>
+        <button class="filter-btn" onclick="filterPortfolio('public')">מוסדות וציבור</button>
+        <button class="filter-btn" onclick="filterPortfolio('tools')">כלים</button>
+    </div>
+    <div class="portfolio-grid" id="portfolioGrid">
+
+        <!-- BUSINESS -->
+        <div class="portfolio-card reveal" data-cat="business">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📊</div>
+            <div class="portfolio-title">CRM — AILON Task</div>
+            <div class="portfolio-desc">מערכת mini CRM לניהול לידים, לקוחות, פרויקטים, משימות, הכנסות והוצאות עם RLS ו-auth.</div>
+            <div class="portfolio-cat">עסקים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="business">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🏗️</div>
+            <div class="portfolio-title">ניהול נדל"ן — Wigan</div>
+            <div class="portfolio-desc">אפליקציית ניהול נדל"ן לקבלנים: רכש, אחזקה, בטיחות, לוגיסטיקה, דיירים, פיננסים ורגולציה. 30→120 דיירים.</div>
+            <div class="portfolio-cat">עסקים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="business">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📅</div>
+            <div class="portfolio-title">DJ יהל כהן — הזמנות</div>
+            <div class="portfolio-desc">מערכת הזמנת פגישות עם תזכורות WhatsApp אוטומטיות 24 שעות לפני.</div>
+            <div class="portfolio-cat">עסקים</div>
+        </div>
+
+        <!-- MENTORING -->
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🎓</div>
+            <div class="portfolio-title">MentorLON</div>
+            <div class="portfolio-desc">פלטפורמת מנטורינג מרכזית — ניהול רגשות, חשיבה חיובית, חינוך ילדים, ניהול זוגיות. כלי אימון מקצועיים.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">💊</div>
+            <div class="portfolio-title">AILON Capsule</div>
+            <div class="portfolio-desc">אפליקציית העל למאמנים — צירוף מתאמנים, בחירת כלים, אישור פרטיות, ודשבורד מאמן.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🔄</div>
+            <div class="portfolio-title">ש.ק.ו.פ — הטמעת הרגלים</div>
+            <div class="portfolio-desc">אפליקציית 21 ימים להטמעת הרגלים חדשים או הסרת הרגלים ישנים. מבוססת עיקרון שיפורים קטנים ובלתי פוסקים.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">💑</div>
+            <div class="portfolio-title">סקר זוגי</div>
+            <div class="portfolio-desc">שאלון אינטראקטיבי עם 14 שאלות להערכת מערכת יחסים זוגית. ממשק נקי עם שמירת נתונים.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🧭</div>
+            <div class="portfolio-title">מצפן הקריירה</div>
+            <div class="portfolio-desc">אפליקציית התאמה מקצועית עם לוגיקת Yes/No/Maybe ודשבורד מאמן.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🗓️</div>
+            <div class="portfolio-title">לוז שבועי — Loaz Shavuai</div>
+            <div class="portfolio-desc">ניהול לו"ז שבועי למתאמנים עם דירוג מוטיבציה 1-10 לכל שעה.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="mentoring">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🧩</div>
+            <div class="portfolio-title">מעבדת הפתרונות</div>
+            <div class="portfolio-desc">5 מודלים אינטראקטיביים: E+R=O, אפקט הליצן, 3 מעגלים, צבירת ידע, מפת סיכונים. כולל מנוע פתרונות בן 7 שלבים.</div>
+            <div class="portfolio-cat">קואצ'ינג</div>
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="portfolio-card reveal" data-cat="education">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">☀️</div>
+            <div class="portfolio-title">Summer Learning PWA</div>
+            <div class="portfolio-desc">אפליקציית למידת קיץ לילדים עם PWA אמיתי, משחקיות, תגמול, ומעקב התקדמות. רמות: גן, כיתה א', כיתה ב'.</div>
+            <div class="portfolio-cat">חינוך</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="education">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🔤</div>
+            <div class="portfolio-title">English Quest</div>
+            <div class="portfolio-desc">משחק לימוד אנגלית עם שלבים, ניקוד, ומעקב התקדמות.</div>
+            <div class="portfolio-cat">חינוך</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="education">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📝</div>
+            <div class="portfolio-title">מבחן רישוי תיווך נדל"ן</div>
+            <div class="portfolio-desc">מבחן אימון עם 25 שאלות אקראיות, ציון אוטומטי והסברים משפטיים.</div>
+            <div class="portfolio-cat">חינוך</div>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div class="portfolio-card reveal" data-cat="enterprise">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🏭</div>
+            <div class="portfolio-title">Puratos Bakery Report</div>
+            <div class="portfolio-desc">מערכת ניהול דוחות מעבדה לתעשיית מזון — פרויקטים, ניסויים, נתוני תהליך, מדדים, מסקנות וצעדים הבאים.</div>
+            <div class="portfolio-cat">ארגונים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="enterprise">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🗺️</div>
+            <div class="portfolio-title">Puratos Data Mapping</div>
+            <div class="portfolio-desc">מיפוי פערי נתונים ובקשות פלטפורמה דיגיטלית לכל מחלקות הארגון. חלק מיוזמת אימוץ AI.</div>
+            <div class="portfolio-cat">ארגונים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="enterprise">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📚</div>
+            <div class="portfolio-title">Puratos Training Requests</div>
+            <div class="portfolio-desc">מערכת בקשות הדרכה והסמכות עובדים — מעקב קורסים, עלויות, מחלקות, ואישורים.</div>
+            <div class="portfolio-cat">ארגונים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="enterprise">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🚗</div>
+            <div class="portfolio-title">Puratos Car Policy</div>
+            <div class="portfolio-desc">מערכת ניהול מדיניות רכבים ארגונית.</div>
+            <div class="portfolio-cat">ארגונים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="enterprise">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🔬</div>
+            <div class="portfolio-title">Puratos Lab Form</div>
+            <div class="portfolio-desc">טופס דיגיטלי למעבדה — חלק מאינטגרציית IT של Puratos Israel.</div>
+            <div class="portfolio-cat">ארגונים</div>
+        </div>
+
+        <!-- PUBLIC INSTITUTIONS -->
+        <div class="portfolio-card reveal" data-cat="public">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📺</div>
+            <div class="portfolio-title">Info Screen — ניהול ספריות</div>
+            <div class="portfolio-desc">פלטפורמת ניהול ספריות ולובים רב-משתמשית: ניהול תוכן, אירועים, תצוגת טלוויזיה ללובי. דומיין ייעודי.</div>
+            <div class="portfolio-cat">מוסדות</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="public">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📄</div>
+            <div class="portfolio-title">פלייר דיגיטלי</div>
+            <div class="portfolio-desc">דף נחיתה ושיווק דיגיטלי לעסקים. עיצוב מודרני, מותאם לכל מסך.</div>
+            <div class="portfolio-cat">מוסדות</div>
+        </div>
+
+        <!-- TOOLS -->
+        <div class="portfolio-card reveal" data-cat="tools">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📋</div>
+            <div class="portfolio-title">Sefri Board — לוח ספרים</div>
+            <div class="portfolio-desc">לוח ניהול ספרים אינטראקטיבי.</div>
+            <div class="portfolio-cat">כלים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="tools">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📦</div>
+            <div class="portfolio-title">Shemrit Order</div>
+            <div class="portfolio-desc">מערכת ניהול הזמנות ומשלוחים.</div>
+            <div class="portfolio-cat">כלים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="tools">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🎯</div>
+            <div class="portfolio-title">Exit Strategy</div>
+            <div class="portfolio-desc">כלי אינטראקטיבי לתכנון אסטרטגיית יציאה עסקית.</div>
+            <div class="portfolio-cat">כלים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="tools">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">🃏</div>
+            <div class="portfolio-title">Match Card</div>
+            <div class="portfolio-desc">כלי אינטראקטיבי להתאמות מקצועיות.</div>
+            <div class="portfolio-cat">כלים</div>
+        </div>
+        <div class="portfolio-card reveal" data-cat="tools">
+            <div class="portfolio-badge">פעיל</div>
+            <div class="portfolio-icon">📊</div>
+            <div class="portfolio-title">פורטל AILON Task</div>
+            <div class="portfolio-desc">דף פורטל אחד שמאגד את כל האפליקציות עם חיפוש, קטגוריות, dark mode ו-PWA.</div>
+            <div class="portfolio-cat">כלים</div>
+        </div>
+    </div>
+</section>
+
 <section class="section process" id="process">
     <div class="section-header reveal">
         <div class="section-tag">איך עובדים</div>
@@ -854,107 +470,52 @@
         <p class="section-desc">תהליך מסודר ומוכח שמבטיח תוצאות מהירות ומדויקות</p>
     </div>
     <div class="process-timeline">
-        <div class="process-step reveal">
-            <div class="process-step-num">1</div>
-            <h3>אפיון והבנת צרכים</h3>
-            <p>שיחת היכרות, מיפוי הצרכים של הארגון, והגדרת מטרות ברורות לפרויקט.</p>
-        </div>
-        <div class="process-step reveal">
-            <div class="process-step-num">2</div>
-            <h3>פרוטוטייפ מהיר</h3>
-            <p>בניית אב-טיפוס ראשוני בזמן קצר — כדי שתראו את המערכת בפעולה לפני ההשקעה המלאה.</p>
-        </div>
-        <div class="process-step reveal">
-            <div class="process-step-num">3</div>
-            <h3>פיילוט ובדיקות</h3>
-            <p>הפעלת המערכת בסביבת פיילוט, איסוף פידבק, וכיוונון עד לתוצאה המושלמת.</p>
-        </div>
-        <div class="process-step reveal">
-            <div class="process-step-num">4</div>
-            <h3>עלייה לאוויר</h3>
-            <p>הפצת המערכת לכל המשתמשים, הדרכה מלאה, וליווי שוטף גם אחרי ההשקה.</p>
-        </div>
+        <div class="process-step reveal"><div class="process-step-num">1</div><h3>אפיון והבנת צרכים</h3><p>שיחת היכרות, מיפוי צרכי הארגון, הגדרת מטרות ברורות. מה הבעיה? מה הפתרון האופטימלי?</p></div>
+        <div class="process-step reveal"><div class="process-step-num">2</div><h3>פרוטוטייפ מהיר</h3><p>בניית אב-טיפוס בזמן קצר — כדי שתראו את המערכת בפעולה לפני ההשקעה המלאה.</p></div>
+        <div class="process-step reveal"><div class="process-step-num">3</div><h3>פיילוט ובדיקות</h3><p>הפעלה בסביבת פיילוט, איסוף פידבק, וכיוונון עד לתוצאה המושלמת. פיילוט מצטיין.</p></div>
+        <div class="process-step reveal"><div class="process-step-num">4</div><h3>עלייה לאוויר</h3><p>הפצה לכל המשתמשים, הדרכה מלאה, וליווי שוטף גם אחרי ההשקה. שירות ברמה גבוהה.</p></div>
     </div>
 </section>
 
-<!-- ========== INDUSTRIES ========== -->
 <section class="section" id="industries">
     <div class="section-header reveal">
         <div class="section-tag">תחומי התמחות</div>
         <h2 class="section-title">לכל עולם — הפתרון שלו</h2>
-        <p class="section-desc">מתמחים במתן פתרונות AI למגוון רחב של תחומים</p>
+        <p class="section-desc">פתרונות טכנולוגיה מהירים לכל מגזר ולכל תחום</p>
     </div>
     <div class="industries-grid">
-        <div class="industry-card reveal">
-            <div class="industry-icon">🏭</div>
-            <h3>תעשייה</h3>
-            <p>מערכות ניהול ייצור, מעקב תהליכים, ואוטומציה של קווי ייצור</p>
-        </div>
-        <div class="industry-card reveal">
-            <div class="industry-icon">🏛️</div>
-            <h3>שירות ציבורי</h3>
-            <p>מערכות למוסדות, ספריות, רשויות, וארגונים ציבוריים</p>
-        </div>
-        <div class="industry-card reveal">
-            <div class="industry-icon">🏢</div>
-            <h3>עסקים</h3>
-            <p>מערכות CRM, ניהול לקוחות, מעקב פרויקטים, ודוחות חכמים</p>
-        </div>
-        <div class="industry-card reveal">
-            <div class="industry-icon">📚</div>
-            <h3>חינוך</h3>
-            <p>פלטפורמות למידה, מערכות ניהול מוסדות, וכלים דיגיטליים לחינוך</p>
-        </div>
+        <div class="industry-card reveal"><div class="industry-icon">🏭</div><h3>תעשייה</h3><p>ניהול ייצור, מעקב תהליכים, דוחות מעבדה, אוטומציה</p></div>
+        <div class="industry-card reveal"><div class="industry-icon">🏛️</div><h3>שירות ציבורי</h3><p>מערכות למוסדות, ספריות, רשויות, ארגונים ציבוריים</p></div>
+        <div class="industry-card reveal"><div class="industry-icon">🏢</div><h3>עסקים</h3><p>CRM, ניהול לקוחות, מעקב פרויקטים, דוחות חכמים</p></div>
+        <div class="industry-card reveal"><div class="industry-icon">📚</div><h3>חינוך</h3><p>פלטפורמות למידה, מערכות ניהול, כלים דיגיטליים</p></div>
+        <div class="industry-card reveal"><div class="industry-icon">🏗️</div><h3>נדל"ן ובנייה</h3><p>ניהול פרויקטים, רכש, אחזקה, דיירים, תקציב</p></div>
+        <div class="industry-card reveal"><div class="industry-icon">🧠</div><h3>קואצ'ינג ומנטורינג</h3><p>פלטפורמות אימון, כלים פסיכולוגיים, מעקב מתאמנים</p></div>
     </div>
 </section>
 
-<!-- ========== ABOUT ========== -->
 <section class="section about" id="about">
     <div class="about-content">
-        <div class="section-header reveal">
-            <div class="section-tag">אודותינו</div>
-            <h2 class="section-title">מי אנחנו</h2>
-        </div>
-        <p class="about-quote reveal">
-            אנחנו מאמינים שכל ארגון יכול להתקדם עם הכלים הנכונים.
-            המשימה שלנו היא לבנות אותם.
-        </p>
+        <div class="section-header reveal"><div class="section-tag">אודותינו</div><h2 class="section-title">מי אנחנו</h2></div>
+        <p class="about-quote reveal">אנחנו מאמינים שכל עסק יכול להתייעל עם הכלים הנכונים. המשימה שלנו היא לבנות אותם — מהר.</p>
         <p class="about-text reveal">
-            AILON Task מתמחה בפיתוח פתרונות AI ופלטפורמות דיגיטליות לעולם העסקי.
+            AILON Task מתמחה בבניית פתרונות טכנולוגיה מהירים לכל עסק.
+            30+ פלטפורמות שעלו לאוויר בתחומים: תעשייה, שירות ציבורי, נדל"ן, חינוך, וקואצ'ינג.
             אנחנו מביאים ניסיון טכנולוגי עשיר, הבנה עמוקה של צרכים עסקיים,
-            ומחויבות לשירות ברמה הגבוהה ביותר. מקצועיות ללא פשרות, זמן אספקה קצר,
-            ועלייה לאוויר אחרי פיילוט מצטיין.
+            ומחויבות לשירות ברמה הגבוהה ביותר. מקצועיות ללא פשרות, עלייה לאוויר אחרי פיילוט מצטיין.
         </p>
         <div class="about-values">
-            <div class="value-item reveal">
-                <div class="value-icon">⚡</div>
-                <h4>מהירות</h4>
-                <p>פרוטוטייפ בימים, לא בחודשים</p>
-            </div>
-            <div class="value-item reveal">
-                <div class="value-icon">🎯</div>
-                <h4>דיוק</h4>
-                <p>אפיון מדויק לכל צורך עסקי</p>
-            </div>
-            <div class="value-item reveal">
-                <div class="value-icon">🤝</div>
-                <h4>שירות</h4>
-                <p>ליווי אישי גם אחרי ההשקה</p>
-            </div>
-            <div class="value-item reveal">
-                <div class="value-icon">🔒</div>
-                <h4>אמינות</h4>
-                <p>תשתיות מאובטחות וגיבוי שוטף</p>
-            </div>
+            <div class="value-item reveal"><div class="value-icon">⚡</div><h4>מהירות</h4><p>פרוטוטייפ בימים, לא בחודשים</p></div>
+            <div class="value-item reveal"><div class="value-icon">💰</div><h4>חיסכון</h4><p>הקטנת הוצאות וייעול תהליכים</p></div>
+            <div class="value-item reveal"><div class="value-icon">📈</div><h4>רווחיות</h4><p>עלייה ברווחים דרך נתונים חכמים</p></div>
+            <div class="value-item reveal"><div class="value-icon">🤝</div><h4>שירות</h4><p>ליווי אישי גם אחרי ההשקה</p></div>
         </div>
     </div>
 </section>
 
-<!-- ========== CTA / CONTACT ========== -->
 <section class="section cta" id="contact">
     <div class="cta-content">
-        <h2>מוכנים להתקדם?</h2>
-        <p>קבעו פגישת ייעוץ ראשונית ללא עלות — ונראה איך AI יכול לקדם את הארגון שלכם</p>
+        <h2>מוכנים להתייעל?</h2>
+        <p>קבעו פגישת ייעוץ ראשונית ללא עלות — ונראה איך טכנולוגיה יכולה לחסוך לכם זמן וכסף</p>
         <div class="hero-buttons">
             <a href="mailto:liors@ailon-task.com" class="btn-primary">צרו קשר</a>
             <a href="https://wa.me/972526600958" class="btn-secondary">WhatsApp</a>
@@ -966,28 +527,21 @@
     </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
 <footer class="footer">
     <div class="footer-content">
         <div>
-            <div class="footer-brand">
-                <div class="footer-brand-icon">A</div>
-                <span class="footer-brand-name">AILON Task</span>
-            </div>
+            <div class="footer-brand"><div class="footer-brand-icon">A</div><span class="footer-brand-name">AILON Task</span></div>
             <p class="footer-slogan">Dream it. Plan it. Achieve it.</p>
-            <p class="footer-text">
-                פתרונות AI לחברות בתעשייה ובשירות הציבורי.
-                בניית פלטפורמות בזמן מהיר, עלייה לאוויר אחרי פיילוט,
-                שירות ברמה גבוהה ומקצועיות ללא פשרות.
-            </p>
+            <p class="footer-text">פתרונות טכנולוגיה מהירים לכל עסק, בכל תחום, לכל מגזר. התייעלות בהוצאות, עלייה ברווחיות, וחיסכון בזמן. 30+ פלטפורמות שעלו לאוויר.</p>
         </div>
         <div>
-            <h5>שירותים</h5>
+            <h5>תחומים</h5>
             <ul class="footer-links">
-                <li><a href="#services">פתרונות AI</a></li>
-                <li><a href="#services">בניית פלטפורמות</a></li>
-                <li><a href="#services">ניהול נתונים</a></li>
-                <li><a href="#services">מערכות שירות</a></li>
+                <li><a href="#portfolio">עסקים וניהול</a></li>
+                <li><a href="#portfolio">קואצ'ינג ומנטורינג</a></li>
+                <li><a href="#portfolio">חינוך</a></li>
+                <li><a href="#portfolio">ארגונים ותעשייה</a></li>
+                <li><a href="#portfolio">מוסדות וציבור</a></li>
             </ul>
         </div>
         <div>
@@ -999,50 +553,33 @@
             </ul>
         </div>
     </div>
-    <div class="footer-bottom">
-        © 2026 AILON Task. כל הזכויות שמורות. Dream it. Plan it. Achieve it.
-    </div>
+    <div class="footer-bottom">© 2026 AILON Task. כל הזכויות שמורות. Dream it. Plan it. Achieve it.</div>
 </footer>
 
 <script>
     // Particles
-    const particlesContainer = document.getElementById('particles');
+    const pc = document.getElementById('particles');
     for (let i = 0; i < 20; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const size = Math.random() * 60 + 20;
-        p.style.width = size + 'px';
-        p.style.height = size + 'px';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.top = Math.random() * 100 + '%';
-        p.style.animationDelay = Math.random() * 8 + 's';
-        p.style.animationDuration = (Math.random() * 6 + 6) + 's';
-        particlesContainer.appendChild(p);
+        const p = document.createElement('div'); p.className = 'particle';
+        const s = Math.random()*60+20; p.style.width=s+'px'; p.style.height=s+'px';
+        p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%';
+        p.style.animationDelay=Math.random()*8+'s'; p.style.animationDuration=(Math.random()*6+6)+'s';
+        pc.appendChild(p);
     }
-
     // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
+    const ob = new IntersectionObserver((e)=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('active')})},{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>ob.observe(el));
+    // Navbar
+    window.addEventListener('scroll',()=>{const n=document.getElementById('navbar');if(window.scrollY>50){n.style.padding='10px 5%';n.style.background='rgba(10,31,51,0.95)'}else{n.style.padding='16px 5%';n.style.background='rgba(10,31,51,0.85)'}});
+    // Portfolio filter
+    function filterPortfolio(cat){
+        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        event.target.classList.add('active');
+        document.querySelectorAll('.portfolio-card').forEach(c=>{
+            if(cat==='all'||c.dataset.cat===cat)c.classList.remove('hidden');
+            else c.classList.add('hidden');
         });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-        const navbar = document.getElementById('navbar');
-        if (window.scrollY > 50) {
-            navbar.style.padding = '10px 5%';
-            navbar.style.background = 'rgba(10, 31, 51, 0.95)';
-        } else {
-            navbar.style.padding = '16px 5%';
-            navbar.style.background = 'rgba(10, 31, 51, 0.85)';
-        }
-    });
+    }
 </script>
-
 </body>
 </html>
