@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ניהול תצוגת ספריית רחובות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#3b82f6;--blue-dark:#2563eb;--orange:#f59e0b;--orange-dark:#f97316;--green:#22c55e;--green-dark:#16a34a;--purple:#8b5cf6;--purple-dark:#7c3aed;--ink:#1e293b;--bg:#f1f5f9;--card:#fff;--border:#e2e8f0}
+body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:20px;min-height:100vh}
+
+.login-wrap{max-width:400px;margin:80px auto;background:var(--card);border-radius:20px;padding:32px;box-shadow:0 10px 30px rgba(0,0,0,.1);text-align:center}
+.login-wrap h1{font-size:1.5rem;font-weight:900;margin-bottom:8px}
+.login-wrap p{color:#64748b;margin-bottom:20px;font-size:.9rem}
+.login-wrap input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:12px;font-size:1rem;font-family:inherit;margin-bottom:12px}
+.login-wrap input:focus{outline:none;border-color:var(--blue)}
+.login-wrap button{width:100%;padding:12px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit}
+.login-wrap button:hover{opacity:.9}
+.error{color:#ef4444;font-size:.85rem;margin-top:8px}
+
+.admin{display:none;max-width:1200px;margin:0 auto}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.admin-header h1{font-size:1.5rem;font-weight:900}
+.admin-header .links{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.admin-header a{color:var(--blue);text-decoration:none;font-size:.85rem;font-weight:700;padding:6px 14px;border:2px solid var(--blue);border-radius:10px}
+.admin-header a:hover{background:var(--blue);color:#fff}
+.btn-logout{background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:700;font-size:.85rem}
+
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;border-radius:12px;background:var(--card);border:2px solid var(--border);cursor:pointer;font-weight:700;font-family:inherit;font-size:.9rem;transition:all .2s}
+.tab.active{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border-color:transparent}
+.tab:hover:not(.active){border-color:var(--blue)}
+
+.items-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.item-card{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:2px solid transparent;transition:border-color .2s}
+.item-card:hover{border-color:var(--blue)}
+.item-card .info{flex:1}
+.item-card .info .title{font-weight:700;font-size:1rem;margin-bottom:4px}
+.item-card .info .desc{color:#64748b;font-size:.85rem}
+.item-card .info .meta{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.item-card .info .meta span{background:#f1f5f9;padding:2px 8px;border-radius:6px;font-size:.75rem;color:#475569}
+.item-card .info .meta .date-badge{background:#fef3c7;color:#92400e}
+.item-card .info .meta .status-active{background:#dcfce7;color:#166534}
+.item-card .info .meta .status-inactive{background:#fee2e2;color:#991b1b}
+.item-card .actions{display:flex;gap:6px;flex-shrink:0}
+.item-card .actions button{padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700}
+.btn-edit{background:#dbeafe;color:#1e40af}
+.btn-edit:hover{background:var(--blue);color:#fff}
+.btn-delete{background:#fee2e2;color:#991b1b}
+.btn-delete:hover{background:#ef4444;color:#fff}
+.btn-toggle{background:#f3f4f6;color:#374151}
+.btn-toggle:hover{background:#e5e7eb}
+
+.btn-add{padding:10px 20px;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:700;font-size:.9rem;margin-bottom:16px}
+.btn-add:hover{opacity:.9}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:20px;padding:24px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal h2{font-size:1.2rem;font-weight:900;margin-bottom:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-weight:700;font-size:.85rem;margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--blue)}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions button{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:.9rem}
+.btn-save{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff}
+.btn-cancel{background:#f1f5f9;color:#475569}
+
+.toast{position:fixed;bottom:20px;right:20px;background:#166534;color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.toast.show{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:600px){
+  .admin-header h1{font-size:1.2rem}
+  .item-card{flex-direction:column}
+  .item-card .actions{justify-content:flex-end}
+  .form-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginWrap">
+  <h1>📚 ניהול תצוגת ספרייה</h1>
+  <p>הזן סיסמת ניהול כדי לערוך את התוכן</p>
+  <input type="password" id="adminKey" placeholder="סיסמת ניהול" onkeypress="if(event.key==='Enter')doLogin()">
+  <button onclick="doLogin()">כניסה</button>
+  <div class="error" id="loginError"></div>
+</div>
+
+<div class="admin" id="adminPanel">
+  <div class="admin-header">
+    <h1>📚 ניהול תצוגת ספריית רחובות</h1>
+    <div class="links">
+      <a href="display-rehovot-simple.html" target="_blank">צפה בתצוגה ↗</a>
+      <button class="btn-logout" onclick="logout()">יציאה</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-section="new_in_library" onclick="switchTab('new_in_library')">חדש בספרייה</div>
+    <div class="tab" data-section="positive_news" onclick="switchTab('positive_news')">חדשות חיוביות</div>
+    <div class="tab" data-section="photos" onclick="switchTab('photos')">תמונות</div>
+  </div>
+
+  <button class="btn-add" onclick="openModal()">+ הוסף פריט חדש</button>
+
+  <div class="items-list" id="itemsList"></div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">הוסף פריט חדש</h2>
+    <input type="hidden" id="editId">
+    <div class="form-group">
+      <label>כותרת</label>
+      <input type="text" id="fTitle" placeholder="לדוגמה: סופר עמוס עומד להגיע">
+    </div>
+    <div class="form-group">
+      <label>תיאור (אופציונלי)</label>
+      <textarea id="fDesc" placeholder="פרטים נוספים..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>תאריך / מועד</label>
+        <input type="text" id="fDate" placeholder="לדוגמה: 15.09.2026">
+      </div>
+      <div class="form-group">
+        <label>סדר תצוגה</label>
+        <input type="number" id="fOrder" value="0" min="0">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>אייקון (אמוג'י)</label>
+        <input type="text" id="fIcon" value="📚" maxlength="2">
+      </div>
+      <div class="form-group">
+        <label>צבע תג</label>
+        <select id="fBadge">
+          <option value="blue">כחול</option>
+          <option value="orange">כתום</option>
+          <option value="green">ירוק</option>
+          <option value="purple">סגול</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" id="photoUrlGroup" style="display:none">
+      <label>כתובת תמונה (URL)</label>
+      <input type="text" id="fImageUrl" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label>סטטוס</label>
+      <select id="fStatus">
+        <option value="active">פעיל</option>
+        <option value="inactive">מוסתר</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">ביטול</button>
+      <button class="btn-save" onclick="saveItem()">שמור</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL='https://app.base44.com/api/apps/69f63b4536d7a2c6688403df/functions/manageLibraryContent';
+let ADMIN_KEY='';
+let currentSection='new_in_library';
+let allItems=[];
+
+function doLogin(){
+  const key=document.getElementById('adminKey').value;
+  if(!key)return;
+  ADMIN_KEY=key;
+  // Test by loading items
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list',admin_key:key})})
+    .then(r=>{if(!r.ok)throw new Error('Unauthorized');return r.json()})
+    .then(data=>{
+      document.getElementById('loginWrap').style.display='none';
+      document.getElementById('adminPanel').style.display='block';
+      allItems=data.data||[];
+      renderItems();
+    })
+    .catch(()=>{
+      document.getElementById('loginError').textContent='סיסמה שגויה';
+      ADMIN_KEY='';
+    });
+}
+
+function logout(){
+  ADMIN_KEY='';
+  document.getElementById('loginWrap').style.display='block';
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('adminKey').value='';
+  document.getElementById('loginError').textContent='';
+}
+
+function switchTab(section){
+  currentSection=section;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.section===section));
+  document.getElementById('photoUrlGroup').style.display=section==='photos'?'block':'none';
+  renderItems();
+}
+
+function renderItems(){
+  const filtered=allItems.filter(i=>{
+    const section=i.data?.section||i.section;
+    return section===currentSection;
+  }).sort((a,b)=>(a.data?.sort_order||0)-(b.data?.sort_order||0));
+  
+  const list=document.getElementById('itemsList');
+  if(filtered.length===0){
+    list.innerHTML='<p style="text-align:center;color:#94a3b8;padding:20px">אין פריטים. לחץ "הוסף פריט חדש" כדי להתחיל.</p>';
+    return;
+  }
+  
+  list.innerHTML=filtered.map(item=>{
+    const d=item.data||{};
+    const section=d.section||item.section;
+    const status=d.status||item.status||'active';
+    return `<div class="item-card">
+      <div class="info">
+        <div class="title">${d.icon||'📚'} ${d.title||item.title||'ללא כותרת'}</div>
+        ${d.description?`<div class="desc">${d.description}</div>`:''}
+        <div class="meta">
+          <span>סדר: ${d.sort_order||0}</span>
+          ${d.event_date?`<span class="date-badge">📅 ${d.event_date}</span>`:''}
+          <span class="${status==='active'?'status-active':'status-inactive'}">${status==='active'?'פעיל':'מוסתר'}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn-toggle" onclick="toggleStatus('${item.id}','${status}')">${status==='active'?'הסתר':'הצג'}</button>
+        <button class="btn-edit" onclick="editItem('${item.id}')">ערוך</button>
+        <button class="btn-delete" onclick="deleteItem('${item.id}')">מחק</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openModal(id){
+  document.getElementById('editId').value=id||'';
+  document.getElementById('modalTitle').textContent=id?'עריכת פריט':'הוסף פריט חדש';
+  if(id){
+    const item=allItems.find(i=>i.id===id);
+    const d=item.data||{};
+    document.getElementById('fTitle').value=d.title||'';
+    document.getElementById('fDesc').value=d.description||'';
+    document.getElementById('fDate').value=d.event_date||'';
+    document.getElementById('fOrder').value=d.sort_order||0;
+    document.getElementById('fIcon').value=d.icon||'📚';
+    document.getElementById('fBadge').value=d.badge_color||'blue';
+    document.getElementById('fImageUrl').value=d.image_url||'';
+    document.getElementById('fStatus').value=d.status||'active';
+  }else{
+    document.getElementById('fTitle').value='';
+    document.getElementById('fDesc').value='';
+    document.getElementById('fDate').value='';
+    document.getElementById('fOrder').value=allItems.filter(i=>(i.data?.section||i.section)===currentSection).length+1;
+    document.getElementById('fIcon').value='📚';
+    document.getElementById('fBadge').value='blue';
+    document.getElementById('fImageUrl').value='';
+    document.getElementById('fStatus').value='active';
+  }
+  document.getElementById('photoUrlGroup').style.display=currentSection==='photos'?'block':'none';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+
+function saveItem(){
+  const id=document.getElementById('editId').value;
+  const item={
+    library_id:'rehovot',
+    section:currentSection,
+    title:document.getElementById('fTitle').value,
+    description:document.getElementById('fDesc').value,
+    event_date:document.getElementById('fDate').value,
+    sort_order:parseInt(document.getElementById('fOrder').value)||0,
+    icon:document.getElementById('fIcon').value||'📚',
+    badge_color:document.getElementById('fBadge').value,
+    image_url:document.getElementById('fImageUrl').value,
+    status:document.getElementById('fStatus').value
+  };
+  if(!item.title){showToast('נא להזין כותרת');return}
+  
+  const body=id?{action:'update',item_id:id,item,admin_key:ADMIN_KEY}:{action:'create',item,admin_key:ADMIN_KEY};
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.data){
+        if(id){
+          const idx=allItems.findIndex(i=>i.id===id);
+          if(idx>=0)allItems[idx]=data.data;
+        }else{
+          allItems.push(data.data);
+        }
+        renderItems();
+        closeModal();
+        showToast(id?'פריט עודכן ✓':'פריט נוסף ✓');
+      }
+    })
+    .catch(()=>showToast('שגיאה בשמירה'));
+}
+
+function editItem(id){openModal(id)}
+
+function deleteItem(id){
+  if(!confirm('למחוק פריט זה?'))return;
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',item_id:id,admin_key:ADMIN_KEY})})
+    .then(r=>r.json())
+    .then(()=>{
+      allItems=allItems.filter(i=>i.id!==id);
+      renderItems();
+      showToast('פריט נמחק ✓');
+    })
+    .catch(()=>showToast('שגיאה במחיקה'));
+}
+
+function toggleStatus(id,currentStatus){
+  const item=allItems.find(i=>i.id===id);
+  if(!item)return;
+  const d=item.data||{};
+  const newStatus=currentStatus==='active'?'inactive':'active';
+  const body={action:'update',item_id:id,item:{library_id:d.library_id||'rehovot',section:d.section||currentSection,title:d.title||'',description:d.description||'',event_date:d.event_date||'',sort_order:d.sort_order||0,icon:d.icon||'📚',badge_color:d.badge_color||'blue',image_url:d.image_url||'',status:newStatus},admin_key:ADMIN_KEY};
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.data){
+        const idx=allItems.findIndex(i=>i.id===id);
+        if(idx>=0)allItems[idx]=data.data;
+        renderItems();
+        showToast(newStatus==='active'?'פריט הופעל ✓':'פריט הוסתר ✓');
+      }
+    });
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+</script>
+</body>
+</html>
