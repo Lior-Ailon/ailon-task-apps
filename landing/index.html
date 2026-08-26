@@ -152,6 +152,46 @@
         .about-quote::after { bottom: -40px; left: 0; }
         .about-text { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; max-width: 700px; margin: 0 auto; }
 
+        /* DIAGNOSTIC FAQ */
+        .diagnostic { background: var(--cream); }
+        .diagnostic-box { max-width: 800px; margin: 0 auto; background: white; border-radius: 24px; padding: 48px 40px; box-shadow: var(--shadow-md); border: 1px solid #e2e8f0; }
+        .diagnostic-box h3 { font-size: 1.3rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; text-align: center; }
+        .diagnostic-box .subtitle { text-align: center; color: var(--text-muted); font-size: 15px; margin-bottom: 32px; }
+        .checklist { list-style: none; counter-reset: checklist-counter; }
+        .checklist li {
+            counter-increment: checklist-counter;
+            display: flex; align-items: flex-start; gap: 16px;
+            padding: 20px; border-radius: 16px; margin-bottom: 12px;
+            background: linear-gradient(135deg, rgba(13,148,136,0.04), rgba(20,184,166,0.02));
+            border: 1px solid rgba(13,148,136,0.1);
+            transition: all 0.3s;
+        }
+        .checklist li:hover {
+            border-color: rgba(13,148,136,0.3);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-sm);
+        }
+        .checklist li::before {
+            content: counter(checklist-counter);
+            flex-shrink: 0;
+            width: 36px; height: 36px;
+            background: var(--gradient-teal);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 16px;
+            box-shadow: var(--shadow-teal);
+        }
+        .checklist-title { font-weight: 700; color: var(--navy-dark); font-size: 1rem; margin-bottom: 4px; }
+        .checklist-desc { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+        .diagnostic-note {
+            margin-top: 24px; padding: 16px 20px;
+            background: rgba(13,148,136,0.06);
+            border-radius: 12px;
+            border-right: 3px solid var(--teal);
+            font-size: 14px; color: var(--text-muted); line-height: 1.6;
+        }
+        .diagnostic-note strong { color: var(--teal); }
+
         /* CTA */
         .cta { background: var(--gradient-hero); text-align: center; color: white; position: relative; overflow: hidden; }
         .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(13,148,136,0.2) 0%, transparent 60%); }
@@ -396,6 +436,43 @@
 </section>
 
 <!-- CTA -->
+<!-- DIAGNOSTIC CHECKLIST -->
+<section class="section diagnostic" id="checklist">
+    <div class="section-header reveal">
+        <div class="section-tag">לפני שפונים אלינו</div>
+        <h2 class="section-title">3 דברים לבדוק לפני שמזמינים אותנו</h2>
+        <p class="section-desc">חומת סינון ראשונית — חוסכת לכם זמן וכסף</p>
+    </div>
+    <div class="diagnostic-box reveal">
+        <h3>רשימת בדיקה מהירה (כדי לחסוך כסף)</h3>
+        <p class="subtitle">בדקו את הסעיפים הבאים לפני יצירת קשר — לעיתים הפתרון פשוט יותר ממה שנראה</p>
+        <ol class="checklist">
+            <li>
+                <div>
+                    <div class="checklist-title">בדקו שהמערכת מחוברת לרשת</div>
+                    <div class="checklist-desc">ודאו שהמכשיר/השרת מחובר לחשמל ולאינטרנט. בדקו חיבורים פיזיים, כבלי רשת, ונוריות חיבור. נסו לגלוש לאתר אחר כדי לוודא שהרשת תקינה.</div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="checklist-title">אפסו את הנתב (Router) והמכשיר</div>
+                    <div class="checklist-desc">כבו את הנתב ל-30 שניות והדליקו מחדש. כבו והדליקו גם את המכשיר המבוקש. לעיתים קרובות זה פותר בעיות תקשורת, הקצאת IP, ותקלות זיכרון זמניות.</div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <div class="checklist-title">ודאו שאין חסימה או שיבוש במערכת</div>
+                    <div class="checklist-desc">בדקו האם יש עדכון ממתין, האם אנטי-וירוס חוסם גישה, או האם יש הודעת שגיאה ספציפית. נסו לגשת מדפדפן אחר או ממכשיר אחר כדי לשלול בעיה מקומית.</div>
+                </div>
+            </li>
+        </ol>
+        <div class="diagnostic-note">
+            <strong>עברתם את כל הבדיקות והבעיה נמשכת?</strong> זה בדיוק הרגע לפנות אלינו. אנחנו מתמחים בפתרון תקלות מורכבות שדורשות מומחיות טכנולוגית — מערכות CRM, פלטפורמות AI, ותשתיות דיגיטליות לעסקים.
+        </div>
+    </div>
+</section>
+
+
 <section class="section cta" id="contact">
     <div class="cta-content">
         <h2>מוכנים להתייעל?</h2>
