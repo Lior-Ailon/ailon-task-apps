@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>בריאות המערכת | AILON Task</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --navy: #1e3a5f;
+  --navy-dark: #0f2942;
+  --gold: #c8954a;
+  --cream: #f5f1ea;
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #f59e0b;
+  --gray: #64748b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--cream);
+  color: #1a202c;
+  min-height: 100vh;
+  padding: 16px;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+.header {
+  background: linear-gradient(135deg, var(--navy-dark), var(--teal));
+  border-radius: 20px;
+  padding: 24px 28px;
+  color: white;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(13,148,136,0.2);
+}
+.header h1 { font-size: 22px; font-weight: 900; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+.header .meta { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.meta-tag {
+  background: rgba(255,255,255,0.15);
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.summary-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.summary-card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px 20px;
+  flex: 1;
+  min-width: 140px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  text-align: center;
+}
+.summary-card .num { font-size: 28px; font-weight: 900; }
+.summary-card .label { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.summary-card .num.green { color: var(--green); }
+.summary-card .num.blue { color: #3b82f6; }
+.summary-card .num.amber { color: var(--orange); }
+.summary-card .num.gray { color: var(--gray); }
+.summary-card .num.red { color: var(--red); }
+
+.section { margin-bottom: 24px; }
+.section-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-wrap {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 700px;
+}
+th {
+  background: var(--teal);
+  color: white;
+  padding: 12px 10px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+}
+td {
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+
+.status-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.status-ok { background: #d1fae5; color: #065f46; }
+.status-warn { background: #fef3c7; color: #92400e; }
+.status-bad { background: #fee2e2; color: #991b1b; }
+.status-na { background: #e2e8f0; color: #64748b; }
+
+.app-link { color: var(--teal); text-decoration: none; font-weight: 700; }
+.app-link:hover { text-decoration: underline; }
+
+.last-audit {
+  background: white;
+  border-radius: 16px;
+  padding: 18px 22px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+.last-audit h3 { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.last-audit p { font-size: 13px; color: #475569; line-height: 1.6; }
+
+@media (max-width: 650px) {
+  th, td { font-size: 11px; padding: 8px 6px; }
+  .header h1 { font-size: 18px; }
+  .summary-card { min-width: 100px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div>
+    <h1>🏥 בריאות המערכת — AILON Task</h1>
+    <div class="subtitle">דשבורד ניטור ארכיטקטורה | עדכון אחרון: 26.08.2026</div>
+  </div>
+  <div class="meta">
+    <span class="meta-tag">📊 קרדיטים: 67/250 הודעות</span>
+    <span class="meta-tag">🔌 אינטגרציות: 33.6/10000</span>
+    <span class="meta-tag">📅 ביקורת הבאה: 1.09.26</span>
+  </div>
+</div>
+
+<div class="summary-bar">
+  <div class="summary-card"><div class="num green" id="totalApps">14</div><div class="label">סה"כ אפליקציות</div></div>
+  <div class="summary-card"><div class="num green" id="healthyApps">11</div><div class="label">תקינות</div></div>
+  <div class="summary-card"><div class="num amber" id="warnApps">2</div><div class="label">דרוש שיפור</div></div>
+  <div class="summary-card"><div class="num red" id="badApps">1</div><div class="label">בעייתי</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span>📱</span> סטטוס אפליקציות</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>אפליקציה</th>
+          <th>אחסון</th>
+          <th>Branding</th>
+          <th>Cache-Busting</th>
+          <th>אבטחה</th>
+          <th>סטטוס</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/crm-v3/">CRM v3</a></td>
+          <td><span class="status-pill status-ok">Supabase</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">RLS + Auth</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/coaching-tracker/">Coaching Tracker</a></td>
+          <td><span class="status-pill status-warn">localStorage</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">סיסמא</span></td>
+          <td><span class="status-pill status-warn">דרוש שיפור</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/couple-survey/">Couple Survey</a></td>
+          <td><span class="status-pill status-ok">Supabase</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">Session Code</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/dekel-library/">Dekel Info Screen</a></td>
+          <td><span class="status-pill status-ok">Supabase</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">Admin Auth</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/landing/">Landing Page</a></td>
+          <td><span class="status-pill status-ok">Supabase</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">API</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/mentorlon/">Mentor-IT</a></td>
+          <td><span class="status-pill status-warn">localStorage</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">Auth</span></td>
+          <td><span class="status-pill status-warn">דרוש שיפור</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/shkuf-habits/">Shkuf Habits</a></td>
+          <td><span class="status-pill status-ok">Supabase</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">Auth</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/summer-learning/">Summer Learning</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-na">N/A</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/wheel-of-life/">Wheel of Life</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-na">N/A</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/coaching-session/">Coaching Session</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-na">N/A</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/theory-of-solutions/">Theory of Solutions</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-na">N/A</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/strengths-finder/">Strengths Finder</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-na">N/A</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/puratos-data-mapping/">Puratos Data Mapping</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-ok">API</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+        <tr>
+          <td><a class="app-link" href="https://lior-ailon.github.io/ailon-task-apps/exit-strategy/">Exit Strategy</a></td>
+          <td><span class="status-pill status-ok">Entity</span></td>
+          <td><span class="status-pill status-ok">✓ תקין</span></td>
+          <td><span class="status-pill status-ok">✓</span></td>
+          <td><span class="status-pill status-na">N/A</span></td>
+          <td><span class="status-pill status-ok">תקין</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title"><span>📋</span> פערים מול Best Practices (Mikey No Code)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>נושא</th>
+          <th>סטטוס</th>
+          <th>הערה</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Systems Thinking</td>
+          <td><span class="status-pill status-ok">✓ מיושם</span></td>
+          <td>מתכנן ישויות וזרימת נתונים לפני UI</td>
+        </tr>
+        <tr>
+          <td>ניהול קרדיטים + Batching</td>
+          <td><span class="status-pill status-ok">✓ מיושם</span></td>
+          <td>Batching של קריאות, דוח שבועי פעיל</td>
+        </tr>
+        <tr>
+          <td>שימוש בתבניות</td>
+          <td><span class="status-pill status-ok">✓ מיושם</span></td>
+          <td>בונה מאפס עם branding מקורי</td>
+        </tr>
+        <tr>
+          <td>שכבת נתונים ראשונה</td>
+          <td><span class="status-pill status-warn">חלקית</span></td>
+          <td>לפעמים ממהר ל-UI לפני סכמה מלאה</td>
+        </tr>
+        <tr>
+          <td>אבטחה והרשאות מוקדם</td>
+          <td><span class="status-pill status-ok">✓ מיושם</span></td>
+          <td>RLS, סיסמאות, Service Role Key</td>
+        </tr>
+        <tr>
+          <td>ארגון אינטגרציות</td>
+          <td><span class="status-pill status-warn">חלקית</span></td>
+          <td>חלק מהאפליקציות עדיין על localStorage</td>
+        </tr>
+        <tr>
+          <td>תכנון ארכיטקטורה ומסע משתמש</td>
+          <td><span class="status-pill status-ok">✓ מיושם</span></td>
+          <td>מתוכנן לפני בנייה</td>
+        </tr>
+        <tr>
+          <td>מעקב קרדיטים שיטתי</td>
+          <td><span class="status-pill status-bad">❌ לא מיושם</span></td>
+          <td>דרוש dashboard וניתוח תקופתי</td>
+        </tr>
+        <tr>
+          <td>אופטימיזציה אקטיבית של עלויות</td>
+          <td><span class="status-pill status-bad">❌ לא מיושם</span></td>
+          <td>אין ניתוח תקופתי של הוצאות</td>
+        </tr>
+        <tr>
+          <td>ניטור ביצועים</td>
+          <td><span class="status-pill status-ok">✓ נבנה</span></td>
+          <td>דשבורד זה + ביקורת חודשית אוטומטית</td>
+        </tr>
+        <tr>
+          <td>אוטומציות Cascade מתקדמות</td>
+          <td><span class="status-pill status-warn">חלקית</span></td>
+          <td>יש workflows אבל לא ברמת cascade מתקדמת</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="last-audit">
+  <h3>📝 ביקורת אחרונה — 26.08.2026</h3>
+  <p>
+    נבנה בעקבות סרטון "How to Use Base44 Better than 99% of People" של Mikey No Code.<br>
+    נמצאו 3 פערים עיקריים: מעקב קרדיטים שיטתי, אופטימיזציה אקטיבית של עלויות, וניטור ביצועים.<br>
+    נוצרו: ביקורת ארכיטקטורה חודשית אוטומטית (1 לחודש) + דשבורד זה.<br>
+    אפליקציות שדרושות מעבר מ-localStorage ל-Supabase: Coaching Tracker, Mentor-IT.
+  </p>
+</div>
+
+</div>
+</body>
+</html>
