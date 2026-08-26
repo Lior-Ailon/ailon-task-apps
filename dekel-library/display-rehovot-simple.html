@@ -12,34 +12,26 @@
   --blue:#3b82f6;--blue-dark:#2563eb;
   --orange:#f59e0b;--orange-dark:#f97316;
   --green:#22c55e;--green-dark:#16a34a;
+  --purple:#8b5cf6;--purple-dark:#7c3aed;
   --r:20px;
 }
 html{height:100%}
 body{
   font-family:'Heebo',system-ui,sans-serif;
-  background:linear-gradient(135deg,#f0f4f8,#e6f0fa);
+  background:linear-gradient(135deg,#eef2f7,#e0e7f0);
   color:#1e293b;min-height:100vh;
   -webkit-overflow-scrolling:touch;
 }
-
-/* TV mode: lock to 1920x1080, scale to fit, no scroll */
+/* TV mode */
 body.tv-mode{overflow:hidden;height:100vh}
-body.tv-mode #frame{
-  width:1920px;height:1080px;flex-shrink:0;margin:0 auto;
-  transform-origin:top center;
-}
-
-/* Normal mode: fluid layout, allow scroll */
+body.tv-mode #frame{width:1920px;height:1080px;margin:0 auto;transform-origin:top center}
+/* Normal mode */
 body:not(.tv-mode){overflow-y:auto;overflow-x:hidden}
 body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 
-.wrap{
-  width:100%;height:100%;
-  display:flex;flex-direction:column;gap:10px;
-  padding:10px;
-}
+.wrap{width:100%;height:100%;display:flex;flex-direction:column;gap:10px;padding:10px}
 
-/* Two colorful header rectangles */
+/* Header — two colorful rectangles */
 .top-row{display:flex;gap:10px;flex-shrink:0}
 .rect{
   flex:1;border-radius:var(--r);padding:24px 28px;
@@ -53,67 +45,99 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 .rect .txt h2{font-size:1.8rem;font-weight:900;line-height:1.1}
 .rect .txt p{font-size:.95rem;opacity:.85;margin-top:4px}
 
-/* Main area — images */
-.main{
-  flex:1;border-radius:var(--r);overflow:hidden;
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
-  position:relative;background:#1e293b;min-height:300px;
+/* Body — two panels */
+.body-grid{flex:1;display:flex;gap:10px;min-height:300px}
+
+/* Left — rotating photos */
+.photo-panel{
+  flex:1;border-radius:var(--r);overflow:hidden;position:relative;
+  background:#1e293b;box-shadow:0 8px 24px rgba(0,0,0,.12);min-height:300px;
 }
-.main img{width:100%;height:100%;object-fit:cover}
-.main .placeholder{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100%;min-height:300px;color:rgba(255,255,255,.5);gap:12px;
-}
-.main .placeholder .ic{font-size:52px;opacity:.4}
-.main .placeholder .t{font-size:1.2rem;font-weight:700;color:#fff}
-.main .caption{
-  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+.photo-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease;display:flex;align-items:center;justify-content:center}
+.photo-slide.on{opacity:1}
+.photo-slide img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.5);gap:12px}
+.photo-placeholder .ic{font-size:52px;opacity:.4}
+.photo-placeholder .t{font-size:1.2rem;font-weight:700;color:#fff}
+.photo-caption{
+  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
   background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;
   padding:10px 28px;border-radius:50px;font-size:1.1rem;font-weight:700;
-  box-shadow:0 4px 14px rgba(0,0,0,.3);white-space:nowrap;max-width:90vw;
-  text-overflow:ellipsis;overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,.3);white-space:nowrap;z-index:5;
+  max-width:90vw;overflow:hidden;text-overflow:ellipsis;
 }
+.photo-dots{position:absolute;top:14px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:5}
+.photo-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);transition:all .3s;cursor:pointer}
+.photo-dot.active{background:#fff;width:22px;border-radius:4px}
+
+/* Right — חדש בספרייה */
+.news-panel{
+  flex:1;border-radius:var(--r);overflow:hidden;
+  display:flex;flex-direction:column;min-height:300px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.news-panel-head{
+  padding:18px 24px;flex-shrink:0;text-align:center;
+  background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;
+}
+.news-panel-head h2{font-size:1.5rem;font-weight:900}
+.news-panel-body{flex:1;overflow:hidden;padding:16px 20px;background:linear-gradient(180deg,#fafbff,#eef2f9);position:relative}
+.news-panel-body::before,.news-panel-body::after{
+  content:"";position:absolute;left:0;right:0;height:30px;z-index:2;pointer-events:none;
+}
+.news-panel-body::before{top:0;background:linear-gradient(180deg,#fafbff,transparent)}
+.news-panel-body::after{bottom:0;background:linear-gradient(0deg,#eef2f9,transparent)}
+.news-scroll{display:flex;flex-direction:column;gap:12px;animation:scrollUp 40s linear infinite}
+.news-scroll:hover{animation-play-state:paused}
+@keyframes scrollUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.news-card{
+  background:#fff;border-radius:14px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.news-card .badge{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;
+}
+.news-card .badge.b1{background:linear-gradient(135deg,var(--blue),var(--blue-dark))}
+.news-card .badge.b2{background:linear-gradient(135deg,var(--orange),var(--orange-dark))}
+.news-card .badge.b3{background:linear-gradient(135deg,var(--green),var(--green-dark))}
+.news-card .badge.b4{background:linear-gradient(135deg,var(--purple),var(--purple-dark))}
+.news-card .txt{font-size:.95rem;font-weight:600;color:#1e293b;line-height:1.4}
+.news-card .src{font-size:.75rem;font-weight:800;margin-bottom:2px}
 
 /* Bottom — positive news ticker */
-.news{
+.news-bar{
   height:68px;flex-shrink:0;display:flex;align-items:center;gap:14px;
   border-radius:var(--r);background:linear-gradient(135deg,var(--green),var(--green-dark));
   box-shadow:0 6px 18px rgba(0,0,0,.12);padding:0 24px;overflow:hidden;
 }
-.news-label{
-  display:flex;align-items:center;gap:8px;flex-shrink:0;
-  color:#fff;font-weight:800;font-size:1.1rem;
-  border-left:2px solid rgba(255,255,255,.3);padding-left:14px;
-}
+.news-label{display:flex;align-items:center;gap:8px;flex-shrink:0;color:#fff;font-weight:800;font-size:1.1rem;border-left:2px solid rgba(255,255,255,.3);padding-left:14px}
 .news-ticker{flex:1;overflow:hidden;height:100%;display:flex;align-items:center}
-.news-track{display:flex;gap:36px;white-space:nowrap;animation:scroll 55s linear infinite}
+.news-track{display:flex;gap:36px;white-space:nowrap;animation:scrollH 55s linear infinite}
 .news-track:hover{animation-play-state:paused}
-@keyframes scroll{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes scrollH{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
 .news-item{display:inline-flex;align-items:center;gap:8px;color:#fff;font-size:1rem;font-weight:500}
 .news-item .dot{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7;flex-shrink:0}
 .news-item .source{background:rgba(255,255,255,.25);font-weight:800;font-size:.8rem;padding:2px 8px;border-radius:6px}
 
-/* LAPTOP: 1280-1920 */
+/* Responsive */
 @media(min-width:1280px) and (max-width:1919px){
   body:not(.tv-mode) #frame{max-width:1600px;margin:0 auto}
   .rect{padding:22px 26px}
   .rect .txt h2{font-size:1.6rem}
   .rect .ic{font-size:38px}
 }
-
-/* TABLET: 768-1279 */
 @media(min-width:768px) and (max-width:1279px){
   body:not(.tv-mode) #frame{max-width:1024px;margin:0 auto}
   .rect{padding:18px 22px}
   .rect .txt h2{font-size:1.4rem}
   .rect .txt p{font-size:.85rem}
   .rect .ic{font-size:34px}
-  .news{height:60px}
+  .news-panel-head h2{font-size:1.3rem}
+  .news-bar{height:60px}
   .news-label{font-size:1rem}
   .news-item{font-size:.9rem}
 }
-
-/* MOBILE: < 768 */
 @media(max-width:767px){
   body:not(.tv-mode){padding:6px}
   body:not(.tv-mode) #frame{width:100%}
@@ -122,31 +146,29 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
   .rect .txt h2{font-size:1.3rem}
   .rect .txt p{font-size:.8rem}
   .rect .ic{font-size:30px}
-  .main{min-height:200px}
-  .main .placeholder .ic{font-size:40px}
-  .main .caption{font-size:.95rem;padding:8px 18px;bottom:12px}
-  .news{height:auto;min-height:50px;flex-wrap:wrap;padding:10px 16px;gap:8px}
+  .body-grid{flex-direction:column;min-height:auto}
+  .photo-panel{min-height:200px}
+  .news-panel{min-height:200px}
+  .photo-placeholder .ic{font-size:40px}
+  .photo-caption{font-size:.95rem;padding:8px 18px;bottom:12px}
+  .news-bar{height:auto;min-height:50px;flex-wrap:wrap;padding:10px 16px;gap:8px}
   .news-label{font-size:.95rem;border-left:none;padding-left:0}
   .news-item{font-size:.85rem}
   .news-track{animation-duration:35s}
 }
-
-/* VERY SMALL PHONE: < 380 */
 @media(max-width:379px){
   .rect{padding:12px 16px}
   .rect .txt h2{font-size:1.1rem}
   .rect .ic{font-size:26px}
-  .main .caption{font-size:.85rem;padding:6px 14px}
+  .photo-caption{font-size:.85rem;padding:6px 14px}
 }
-
-/* LANDSCAPE PHONE — compact */
 @media(max-height:500px) and (orientation:landscape) and (max-width:1000px){
   .top-row{flex-direction:row}
   .rect{padding:12px 18px}
   .rect .txt h2{font-size:1.1rem}
   .rect .ic{font-size:28px}
-  .main{min-height:160px}
-  .news{height:48px}
+  .photo-panel,.news-panel{min-height:160px}
+  .news-bar{height:48px}
 }
 </style>
 </head>
@@ -154,7 +176,7 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 <div id="frame">
 <div class="wrap">
 
-  <!-- Two colorful rectangles — which library is this -->
+  <!-- Header — two colorful rectangles -->
   <div class="top-row">
     <div class="rect rect-1">
       <div class="ic">📚</div>
@@ -166,14 +188,27 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
     </div>
   </div>
 
-  <!-- Main — rotating images -->
-  <div class="main" id="main">
-    <div class="placeholder"><div class="ic">🖼️</div><div class="t">תמונות מהספרייה</div></div>
-    <div class="caption" id="caption">ברוכים הבאים</div>
+  <!-- Body — photos (left) + חדש בספרייה (right) -->
+  <div class="body-grid">
+    <!-- LEFT: rotating photos -->
+    <div class="photo-panel" id="photoPanel">
+      <div class="photo-dots" id="photoDots"></div>
+      <div class="photo-caption" id="caption">ברוכים הבאים</div>
+    </div>
+
+    <!-- RIGHT: חדש בספרייה -->
+    <div class="news-panel">
+      <div class="news-panel-head"><h2>חדש בספרייה</h2></div>
+      <div class="news-panel-body">
+        <div class="news-scroll" id="newsScroll">
+          <div class="news-card"><div class="badge b1">📚</div><div><div class="src">עדכון</div><div class="txt">טוען עדכונים...</div></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Bottom — positive news -->
-  <div class="news">
+  <div class="news-bar">
     <div class="news-label"><span>😊</span><span>חדשות חיוביות</span></div>
     <div class="news-ticker">
       <div class="news-track" id="newsTrack">
@@ -186,32 +221,23 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 </div>
 
 <script>
-// DETECT TV MODE: large landscape screens → lock to 1920x1080 with scaling
+// TV mode detection
 function checkTVMode(){
-  const isTV = window.innerWidth >= 1280 && window.innerWidth > window.innerHeight && screen.width >= 1280;
-  if(isTV){
-    document.body.classList.add('tv-mode');
-  }else{
-    document.body.classList.remove('tv-mode');
-  }
+  const isTV=window.innerWidth>=1280&&window.innerWidth>window.innerHeight&&screen.width>=1280;
+  if(isTV){document.body.classList.add('tv-mode')}else{document.body.classList.remove('tv-mode')}
 }
-checkTVMode();
-window.addEventListener('resize',checkTVMode);
-
-// SCALE for TV
 function scaleFrame(){
   if(document.body.classList.contains('tv-mode')){
     const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);
     document.getElementById('frame').style.transform='scale('+s+')';
     document.getElementById('frame').style.transformOrigin='top center';
-  }else{
-    document.getElementById('frame').style.transform='none';
-  }
+  }else{document.getElementById('frame').style.transform='none'}
 }
-scaleFrame();window.addEventListener('resize',scaleFrame);
-window.addEventListener('orientationchange',()=>{setTimeout(()=>{checkTVMode();scaleFrame();},100)});
+checkTVMode();scaleFrame();
+window.addEventListener('resize',()=>{checkTVMode();scaleFrame()});
+window.addEventListener('orientationchange',()=>{setTimeout(()=>{checkTVMode();scaleFrame()},100)});
 
-// CLOCK
+// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('clock').textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
@@ -221,8 +247,83 @@ function updateClock(){
 }
 updateClock();setInterval(updateClock,1000);
 
-// POSITIVE NEWS
-async function loadNews(){
+// Rotating photos
+const photos=[
+  {title:'ספריית רחובות',url:''},
+  {title:'סדנת כתיבה יוצרת · 15.9',url:''},
+  {title:'מפגש סופרים · 22.9',url:''}
+];
+const photoPanel=document.getElementById('photoPanel');
+const photoDots=document.getElementById('photoDots');
+let curPhoto=0;
+function renderPhotos(){
+  document.querySelectorAll('.photo-slide').forEach(s=>s.remove());
+  photos.forEach((p,i)=>{
+    const slide=document.createElement('div');
+    slide.className='photo-slide'+(i===0?' on':'');
+    if(p.url){
+      slide.innerHTML=`<img src="${p.url}" alt="${p.title}">`;
+    }else{
+      const emojis=['📚','✍️','📖','🎨','🎭'];
+      slide.innerHTML=`<div class="photo-placeholder"><div class="ic">${emojis[i%emojis.length]}</div><div class="t">תמונות מהספרייה</div></div>`;
+    }
+    photoPanel.insertBefore(slide,photoDots);
+  });
+  photoDots.innerHTML='';
+  photos.forEach((_,i)=>{
+    const dot=document.createElement('div');
+    dot.className='photo-dot'+(i===0?' active':'');
+    dot.onclick=()=>gotoPhoto(i);
+    photoDots.appendChild(dot);
+  });
+  document.getElementById('caption').textContent=photos[0].title;
+}
+function gotoPhoto(n){
+  curPhoto=n;
+  document.querySelectorAll('.photo-slide').forEach((s,i)=>s.classList.toggle('on',i===n));
+  document.querySelectorAll('.photo-dot').forEach((d,i)=>d.classList.toggle('active',i===n));
+  document.getElementById('caption').textContent=photos[n].title;
+}
+renderPhotos();
+setInterval(()=>gotoPhoto((curPhoto+1)%photos.length),7000);
+
+// חדש בספרייה — content list
+async function loadLibraryNews(){
+  const staticItems=[
+    {icon:'📚',badge:'b1',src:'ספרייה',text:'מאגרי מידע לשימושכם — הכניסה דרך מחשבי הספרייה בלבד'},
+    {icon:'📖',badge:'b2',src:'ספרייה',text:'מאגר חיפה למאמרים בעברית'},
+    {icon:'✍️',badge:'b3',src:'ספרייה',text:'סדנת כתיבה יוצרת — 15 בספטמבר'},
+    {icon:'🎭',badge:'b4',src:'ספרייה',text:'מפגש סופרים — 22 בספטמבר'},
+    {icon:'📚',badge:'b1',src:'ספרייה',text:'פרויקט השו״ת המקוון זמין כעת'},
+    {icon:'📖',badge:'b2',src:'ספרייה',text:'מילון רב-מילים — חיפוש מתקדם'},
+    {icon:'🎨',badge:'b3',src:'ספרייה',text:'סדנת איור לילדים — כניסה חופשית'},
+    {icon:'📚',badge:'b4',src:'ספרייה',text:'קדן — קטלוג הספרייה המקוון'}
+  ];
+  try{
+    const res=await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.ynet.co.il/Integration/StoryRss2.xml');
+    const data=await res.json();
+    if(data.status==='ok'&&data.items&&data.items.length>0){
+      const live=data.items.slice(0,6).map((item,i)=>({
+        icon:'📰',badge:'b'+((i%4)+1),src:'Ynet',
+        text:item.title.replace(/<[^>]*>/g,'').substring(0,90)
+      }));
+      const all=[...staticItems,...live];
+      const html=all.map(item=>
+        `<div class="news-card"><div class="badge ${item.badge}">${item.icon}</div><div><div class="src">${item.src}</div><div class="txt">${item.text}</div></div></div>`
+      ).join('');
+      document.getElementById('newsScroll').innerHTML=html+html;
+      return;
+    }
+  }catch(e){}
+  const html=staticItems.map(item=>
+    `<div class="news-card"><div class="badge ${item.badge}">${item.icon}</div><div><div class="src">${item.src}</div><div class="txt">${item.text}</div></div></div>`
+  ).join('');
+  document.getElementById('newsScroll').innerHTML=html+html;
+}
+loadLibraryNews();setInterval(loadLibraryNews,300000);
+
+// Bottom — positive news
+async function loadPositiveNews(){
   const feeds=[
     {url:'https://api.rss2json.com/v1/api.json?rss_url=https://www.thepositiv.com/feed/',source:'חדשות טובות',filter:true},
     {url:'https://api.rss2json.com/v1/api.json?rss_url=https://www.ynet.co.il/Integration/StoryRss2.xml',source:'Ynet',filter:false}
@@ -233,7 +334,7 @@ async function loadNews(){
       const data=await res.json();
       if(data.status==='ok'&&data.items&&data.items.length>0){
         let items=data.items;
-        if(feed.filter){items=items.filter(i=>!i.title.includes('תוכן ממומן')&&!i.title.includes('פרסומות')&&!i.title.includes('ספונסר')&&!i.title.includes('שיתופי פעולה'));}
+        if(feed.filter){items=items.filter(i=>!i.title.includes('תוכן ממומן')&&!i.title.includes('פרסומות')&&!i.title.includes('ספונסר')&&!i.title.includes('שיתופי פעולה'))}
         if(items.length===0)continue;
         document.getElementById('newsTrack').innerHTML=items.slice(0,15).map(item=>{
           const t=item.title.replace(/<[^>]*>/g,'').replace(/&[#a-zA-Z0-9]+;/g,'').substring(0,120);
@@ -246,7 +347,7 @@ async function loadNews(){
   const fb=['בישראל: עלייה במספר המתנדבים','מחקר חדש: תוחלת חיים בעלייה','רשות הטבע: עלייה בבעלי חיים מוגנים','סטודנטים ישראלים זכו במקום ראשון'];
   document.getElementById('newsTrack').innerHTML=fb.map(t=>`<div class="news-item"><span class="dot"></span><span class="source">חדשות טובות</span><span>${t}</span></div>`).join('');
 }
-loadNews();setInterval(loadNews,300000);
+loadPositiveNews();setInterval(loadPositiveNews,300000);
 </script>
 </body>
 </html>
