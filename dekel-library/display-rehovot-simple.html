@@ -8,13 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --blue:#3b82f6;--blue-dark:#2563eb;
-  --orange:#f59e0b;--orange-dark:#f97316;
-  --green:#22c55e;--green-dark:#16a34a;
-  --purple:#8b5cf6;--purple-dark:#7c3aed;
-  --r:18px;
-}
+:root{--blue:#3b82f6;--blue-dark:#2563eb;--orange:#f59e0b;--orange-dark:#f97316;--green:#22c55e;--green-dark:#16a34a;--purple:#8b5cf6;--purple-dark:#7c3aed;--r:18px}
 html{height:100%}
 body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(135deg,#eef2f7,#e0e7f0);color:#1e293b;min-height:100vh;-webkit-overflow-scrolling:touch}
 body.tv-mode{overflow:hidden;height:100vh}
@@ -37,7 +31,7 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 .rect-clock .clock-date{font-size:.8rem;opacity:.9}
 .body-grid{flex:1;display:flex;gap:8px;min-height:0}
 .photo-panel{flex:1.3;border-radius:var(--r);overflow:hidden;position:relative;background:#1e293b;box-shadow:0 6px 18px rgba(0,0,0,.12);min-height:200px}
-.photo-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease;display:flex;align-items:center;justify-content:center}
+.photo-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;display:flex;align-items:center;justify-content:center}
 .photo-slide.on{opacity:1}
 .photo-slide img{width:100%;height:100%;object-fit:cover}
 .photo-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.5);gap:10px}
@@ -109,37 +103,66 @@ body:not(.tv-mode) #frame{width:100%;min-height:100vh}
 </div>
 </div>
 <script>
-const API_URL='https://app.base44.com/api/apps/69f63b4536d7a2c6688403df/functions/getLibraryContent';
+// === EMBEDDED CONTENT (fallback + default) ===
+const CONTENT={
+  photos:[
+    {title:"שעת סיפור לילדים",image_url:"https://media.base44.com/images/public/69f63b4536d7a2c6688403df/75932f941_generated_image.png"},
+    {title:"סופר אורח — חתימות וקריאה",image_url:"https://media.base44.com/images/public/69f63b4536d7a2c6688403df/b90828b91_generated_image.png"},
+    {title:"סדנת כתיבה יוצרת",image_url:"https://media.base44.com/images/public/69f63b4536d7a2c6688403df/6f43d3d33_generated_image.png"},
+    {title:"סדנת איור לילדים",image_url:"https://media.base44.com/images/public/69f63b4536d7a2c6688403df/3e5595a5c_generated_image.png"}
+  ],
+  new_in_library:[
+    {title:"סופר עמוס עומד להגיע",description:"מפגש עם הסופר עמוס עוז במסגרת פסטיבל הספר",event_date:"15.09.2026",icon:"✍️",badge_color:"blue"},
+    {title:"סדנת כתיבה יוצרת",description:"סדנה בהנחיית דפנה שלום — מספר מקומות מוגבל",event_date:"22.09.2026",icon:"📝",badge_color:"orange"},
+    {title:"חוג קריאה לילדים",description:"חוג קריאה בהנחיית מירי כהן — כניסה חופשית",event_date:"כל יום שלישי 16:00",icon:"📖",badge_color:"green"},
+    {title:"מאגרי מידע חדשים",description:"מאגר חיפה + פרויקט השו״ת — זמינים כעת",event_date:"",icon:"🔍",badge_color:"purple"},
+    {title:"מפגש סופרים — שירה וסיפור",description:"ערב ספרותי עם סופרים מהארץ ומחוץ לארץ",event_date:"29.09.2026",icon:"🎭",badge_color:"blue"},
+    {title:"סדנת איור לילדים",description:"למדו לצייר ולאייר — כניסה חופשית",event_date:"05.10.2026",icon:"🎨",badge_color:"orange"},
+    {title:"קדן — קטלוג מקוון",description:"חיפוש ספרים, הזמנה וחידוש",event_date:"",icon:"💻",badge_color:"green"},
+    {title:"מילון רב-מילים",description:"חיפוש מתקדם — עברית, אנגלית, ערבית",event_date:"",icon:"📚",badge_color:"purple"}
+  ],
+  positive_news:[
+    {title:"בישראל: עלייה במספר המתנדבים"},
+    {title:"מחקר חדש: תוחלת חיים בעלייה"},
+    {title:"רשות הטבע: עלייה בבעלי חיים מוגנים"},
+    {title:"סטודנטים ישראלים זכו במקום ראשון בתחרות בינלאומית"},
+    {title:"שיא חדש בגיוס תרומות למען נזקקים"},
+    {title:"נבחרת ישראל בכדורסל עלתה לדרג ב' האירופי"}
+  ]
+};
 
+// TV mode
 function checkTVMode(){const isTV=window.innerWidth>=1280&&window.innerWidth>window.innerHeight&&screen.width>=1280;if(isTV){document.body.classList.add('tv-mode')}else{document.body.classList.remove('tv-mode')}}
 function scaleFrame(){if(document.body.classList.contains('tv-mode')){const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);document.getElementById('frame').style.transform='scale('+s+')';document.getElementById('frame').style.transformOrigin='top center'}else{document.getElementById('frame').style.transform='none'}}
 checkTVMode();scaleFrame();window.addEventListener('resize',()=>{checkTVMode();scaleFrame()});window.addEventListener('orientationchange',()=>{setTimeout(()=>{checkTVMode();scaleFrame()},200)});
 
+// Clock
 function updateClock(){const now=new Date();document.getElementById('clock').textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];const months=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];document.getElementById('dateStr').textContent='יום '+days[now.getDay()]+' '+now.getDate()+' ב'+months[now.getMonth()]}
 updateClock();setInterval(updateClock,1000);
 
-// Fallback content if API fails
-const FALLBACK_LIBRARY=[{title:'סופר עמוס עומד להגיע',description:'מפגש עם הסופר',event_date:'15.09',icon:'✍️',badge_color:'blue'},{title:'סדנת כתיבה יוצרת',description:'הרשמה מראש',event_date:'22.09',icon:'📝',badge_color:'orange'},{title:'חוג קריאה לילדים',description:'כניסה חופשית',event_date:'ימי שלישי 16:00',icon:'📖',badge_color:'green'},{title:'קדן — קטלוג מקוון',description:'חיפוש והזמנת ספרים',event_date:'',icon:'💻',badge_color:'purple'}];
-const FALLBACK_NEWS=['בישראל: עלייה במספר המתנדבים','מחקר חדש: תוחלת חיים בעלייה','רשות הטבע: עלייה בבעלי חיים מוגנים','סטודנטים ישראלים זכו במקום ראשון'];
+// Try to load from API, fallback to embedded content
+const API_URL='https://app.base44.com/api/apps/69f63b4536d7a2c6688403df/functions/getLibraryContent';
 
 async function loadContent(){
   try{
-    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({library_id:'rehovot'})});
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({library_id:'rehovot'}),signal:AbortSignal.timeout(5000)});
     const result=await res.json();
-    if(result.data){
-      renderLibrary(result.data.new_in_library||FALLBACK_LIBRARY);
-      renderPositiveNews(result.data.positive_news||[]);
-      renderPhotos(result.data.photos||[]);
+    if(result.success&&result.data){
+      const d=result.data;
+      renderLibrary(d.new_in_library&&d.new_in_library.length>0?d.new_in_library:CONTENT.new_in_library);
+      renderPositiveNews(d.positive_news&&d.positive_news.length>0?d.positive_news:CONTENT.positive_news);
+      renderPhotos(d.photos&&d.photos.length>0?d.photos:CONTENT.photos);
       return;
     }
-  }catch(e){console.log('API failed, using fallback',e)}
-  renderLibrary(FALLBACK_LIBRARY);
-  renderPositiveNews(FALLBACK_NEWS.map(t=>({title:t})));
-  renderPhotos([]);
+  }catch(e){console.log('API unavailable, using embedded content')}
+  // Fallback to embedded
+  renderLibrary(CONTENT.new_in_library);
+  renderPositiveNews(CONTENT.positive_news);
+  renderPhotos(CONTENT.photos);
 }
 
 function renderLibrary(items){
-  if(!items||items.length===0)items=FALLBACK_LIBRARY;
+  if(!items||items.length===0)items=CONTENT.new_in_library;
   const html=items.map(item=>{
     const badge='b-'+(item.badge_color||'blue');
     const dateHtml=item.event_date?`<div class="event-date">📅 ${item.event_date}</div>`:'';
@@ -150,42 +173,58 @@ function renderLibrary(items){
 }
 
 function renderPositiveNews(items){
-  if(!items||items.length===0){
-    document.getElementById('newsTrack').innerHTML=FALLBACK_NEWS.map(t=>`<div class="news-item"><span class="dot"></span><span>${t}</span></div>`).join('');
-    return;
-  }
+  if(!items||items.length===0)items=CONTENT.positive_news;
   document.getElementById('newsTrack').innerHTML=items.map(item=>`<div class="news-item"><span class="dot"></span><span>${item.title}</span></div>`).join('');
 }
 
 function renderPhotos(items){
+  if(!items||items.length===0)items=CONTENT.photos;
   if(!items||items.length===0)return;
   const photoPanel=document.getElementById('photoPanel');
   const photoDots=document.getElementById('photoDots');
+  // Remove existing slides
   document.querySelectorAll('.photo-slide').forEach(s=>s.remove());
+  // Create slides
   items.forEach((p,i)=>{
     const slide=document.createElement('div');
     slide.className='photo-slide'+(i===0?' on':'');
-    if(p.image_url){slide.innerHTML=`<img src="${p.image_url}" alt="${p.title||''}">`}
-    else{slide.innerHTML=`<div class="photo-ph"><div class="ic">🖼️</div><div class="t">${p.title||'תמונות מהספרייה'}</div></div>`}
+    if(p.image_url){
+      slide.innerHTML=`<img src="${p.image_url}" alt="${p.title||''}">`;
+    }else{
+      slide.innerHTML=`<div class="photo-ph"><div class="ic">🖼️</div><div class="t">${p.title||'תמונות מהספרייה'}</div></div>`;
+    }
     photoPanel.insertBefore(slide,photoDots);
   });
+  // Create dots
   photoDots.innerHTML='';
   items.forEach((_,i)=>{
     const dot=document.createElement('div');
     dot.className='photo-dot'+(i===0?' active':'');
+    dot.onclick=()=>gotoPhoto(i,items);
     photoDots.appendChild(dot);
   });
   document.getElementById('caption').textContent=items[0].title||'ברוכים הבאים';
+  // Auto-rotate
+  if(window._photoInterval)clearInterval(window._photoInterval);
   let curPhoto=0;
-  setInterval(()=>{
+  window._photoInterval=setInterval(()=>{
     curPhoto=(curPhoto+1)%items.length;
-    document.querySelectorAll('.photo-slide').forEach((s,i)=>s.classList.toggle('on',i===curPhoto));
-    document.querySelectorAll('.photo-dot').forEach((d,i)=>d.classList.toggle('active',i===curPhoto));
-    document.getElementById('caption').textContent=items[curPhoto].title||'';
+    gotoPhoto(curPhoto,items);
   },7000);
 }
 
-loadContent();setInterval(loadContent,60000);
+function gotoPhoto(n,items){
+  document.querySelectorAll('.photo-slide').forEach((s,i)=>s.classList.toggle('on',i===n));
+  document.querySelectorAll('.photo-dot').forEach((d,i)=>d.classList.toggle('active',i===n));
+  if(items&&items[n])document.getElementById('caption').textContent=items[n].title||'';
+}
+
+// Load immediately with embedded content, then try API
+renderLibrary(CONTENT.new_in_library);
+renderPositiveNews(CONTENT.positive_news);
+renderPhotos(CONTENT.photos);
+loadContent();
+setInterval(loadContent,60000);
 </script>
 </body>
 </html>
