@@ -85,6 +85,18 @@ body {
 .summary-card .num.amber { color: var(--orange); }
 .summary-card .num.gray { color: var(--gray); }
 
+/* Session badge */
+.session-badge {
+  display: inline-block;
+  background: var(--teal);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 50px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.session-badge.s2 { background: var(--gold); }
+
 /* Section */
 .section { margin-bottom: 24px; }
 .section-title {
@@ -127,6 +139,7 @@ td {
   vertical-align: top;
 }
 tr:last-child td { border-bottom: none; }
+tr.new-session td { background: rgba(245,158,11,0.04); }
 
 /* Person badges */
 .person {
@@ -139,6 +152,7 @@ tr:last-child td { border-bottom: none; }
 }
 .person-yanir { background: #e0f2fe; color: #0c4a6e; }
 .person-zohar { background: #fce7f3; color: #9f1239; }
+.person-shared { background: #fef3c7; color: #92400e; }
 
 /* Status select */
 .status-select {
@@ -221,13 +235,14 @@ tr:last-child td { border-bottom: none; }
   <div class="header-top">
     <div>
       <h1>📋 טבלת מעקב אימון זוגי — יניר וזוהר</h1>
-      <div class="subtitle">מאמן: ליאור סופר | פגישה ראשונה: 17.8.26</div>
+      <div class="subtitle">מאמן: ליאור סופר | פגישה 1: 17.8.26 | פגישה 2: 26.8.26</div>
     </div>
     <button class="save-btn" onclick="saveAll()">💾 שמור עדכונים</button>
   </div>
   <div class="meta">
     <span class="meta-tag">⏰ יניר חוזר ~18:00</span>
-    <span class="meta-tag">☕ פגישה: קינמון</span>
+    <span class="meta-tag">☕ פגישה 1: קינמון</span>
+    <span class="meta-tag">☕ פגישה 2: קינמון</span>
     <span class="meta-tag">📅 פגישה הבאה: טרם נקבעה</span>
   </div>
 </div>
@@ -238,6 +253,25 @@ tr:last-child td { border-bottom: none; }
   <div class="summary-card"><div class="num amber" id="pendingTasks">0</div><div class="label">ממתין</div></div>
   <div class="summary-card"><div class="num blue" id="progressTasks">0</div><div class="label">בתהליך</div></div>
   <div class="summary-card"><div class="num green" id="doneTasks">0</div><div class="label">בוצע</div></div>
+</div>
+
+<!-- Shared Tasks -->
+<div class="section">
+  <div class="section-title"><span class="icon">🤝</span> משימות משותפות</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th style="width:160px">משימה</th>
+          <th>פירוט</th>
+          <th style="width:120px">סטטוס</th>
+          <th style="width:180px">הערות</th>
+        </tr>
+      </thead>
+      <tbody id="sharedBody"></tbody>
+    </table>
+  </div>
 </div>
 
 <!-- Yanir Tasks -->
@@ -297,7 +331,7 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
-<!-- Session Notes -->
+<!-- Session 1 Notes -->
 <div class="section">
   <div class="section-title"><span class="icon">📝</span> נקודות מהפגישה הראשונה (17.8.26 — קינמון)</div>
   <div class="notes-card">
@@ -317,21 +351,46 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+<!-- Session 2 Notes -->
+<div class="section">
+  <div class="section-title"><span class="icon">📝</span> נקודות מהפגישה השנייה (26.8.26 — קינמון)</div>
+  <div class="notes-card">
+    <ul>
+      <li><b>התקדמות כללית:</b> תירום ציפיות עובד — מביא תוצאות, להמשיך</li>
+      <li><b>יניר:</b> חיבוקים — למרות שלפעמים קשה, מחזקים חיבור זוגי + דוגמא לילדים</li>
+      <li><b>משותף:</b> למצוא פעילות משותפת — נושא שאוהבים לעשות ביחד</li>
+      <li><b>משותף:</b> אמון — לבנות אמון, לומר במילים שסומכים אחד על השני, לא לפקפק</li>
+      <li><b>יניר:</b> פחות ביקורת, יותר מילים חיוביות — לשים לב לסמנטיקה של המילים</li>
+      <li><b>יניר:</b> שיטת הסלאמי — כשיש ביקורת: פרגון → ביקורת → פרגון. כך הצד השני יכול להקשיב באמת</li>
+      <li><b>זוהר:</b> פרגון ישיר — הפרגון בכתב השתפר מאוד! האתגר הבא: לפרגן פנים אל פנים, בארבע עיניים, בצורה ישירה. יניר מעריך שיחה ישירה ובעל פה הרבה יותר מהודעה</li>
+    </ul>
+  </div>
+</div>
+
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 const tasks = {
+  shared: [
+    { id: 's1', task: 'תירום ציפיות', detail: 'להמשיך ולשפר יחד. זה עובד ומביא תוצאות.', status: 'progress', notes: 'פגישה 2', session: 2 },
+    { id: 's2', task: 'חיבוקים', detail: 'למרות שלפעמים זה קשה, חיבוקים מחזקים את החיבור הזוגי וגם מהווים דוגמא לילדים.', status: 'progress', notes: 'פגישה 2', session: 2 },
+    { id: 's3', task: 'פעילות משותפת', detail: 'למצוא משהו שאתם אוהבים לעשות ביחד. נושא משותף שיעשה לכם טוב ויחבר ביניכם.', status: 'pending', notes: 'פגישה 2', session: 2 },
+    { id: 's4', task: 'אמון', detail: 'לבנות את האמון. לומר במילים שסומכים אחד על השני. לא לפקפק באם מישהו אמר כן או לא.', status: 'pending', notes: 'פגישה 2', session: 2 }
+  ],
   yanir: [
-    { id: 'y1', task: 'לקיחת אחריות ובקשת סליחה', detail: 'להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.', status: 'pending', notes: '' },
-    { id: 'y2', task: 'לחשוב לפני תגובה (שידור מת)', detail: 'לא להגיב בחום הרגע. לחכות, לחשוב, ואז לפרגן במה שהיא אוהבת.', status: 'pending', notes: '' },
-    { id: 'y3', task: 'להימנע מביקורת', detail: 'נקודת מוצא לא אפקטיבית. לעצור את הביקורת לפני שיוצאת מהפה.', status: 'pending', notes: '' },
-    { id: 'y4', task: 'לעזור בבית — 2 שעות בלי טלפון', detail: 'להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.', status: 'pending', notes: '' }
+    { id: 'y1', task: 'לקיחת אחריות ובקשת סליחה', detail: 'להראות חיבה — חיבוק, נשיקה, הערכה. לא מספיק להגיד, צריך להרגיש.', status: 'pending', notes: '', session: 1 },
+    { id: 'y2', task: 'לחשוב לפני תגובה (שידור מת)', detail: 'לא להגיב בחום הרגע. לחכות, לחשוב, ואז לפרגן במה שהיא אוהבת.', status: 'pending', notes: '', session: 1 },
+    { id: 'y3', task: 'להימנע מביקורת', detail: 'נקודת מוצא לא אפקטיבית. לעצור את הביקורת לפני שיוצאת מהפה.', status: 'pending', notes: '', session: 1 },
+    { id: 'y4', task: 'לעזור בבית — 2 שעות בלי טלפון', detail: 'להגיע מהעבודה (~18:00) וישר לקחת את יהונתן. לתת לזוהר לישון ולצבור אנרגיה. שעתיים לילדים בלבד.', status: 'pending', notes: '', session: 1 },
+    { id: 'y5', task: 'פחות ביקורת, יותר מילים חיוביות', detail: 'לשים לב לסמנטיקה של המילים — לבחור מילים חיוביות במקום ביקורתיות.', status: 'pending', notes: 'פגישה 2', session: 2 },
+    { id: 'y6', task: 'שיטת הסלאמי', detail: 'כשיש ביקורת: פרגון → ביקורת → פרגון. כך הצד השני יכול להקשיב באמת ולא להתבצר.', status: 'pending', notes: 'פגישה 2', session: 2 }
   ],
   zohar: [
-    { id: 'z1', task: 'לפרגן ליניר על דברים קטנים', detail: 'גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.', status: 'pending', notes: '' },
-    { id: 'z2', task: 'פחות ציניות, יותר חיוב', detail: 'לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.', status: 'pending', notes: '' }
+    { id: 'z1', task: 'לפרגן ליניר על דברים קטנים', detail: 'גם על מה שנראה מובן מאליו — תודה על כל דבר קטן.', status: 'pending', notes: '', session: 1 },
+    { id: 'z2', task: 'פחות ציניות, יותר חיוב', detail: 'לשנות גישה — ראיה חיובית, דיבור טוב ומקדם.', status: 'pending', notes: '', session: 1 },
+    { id: 'z3', task: 'פרגון ישיר (פנים אל פנים)', detail: 'הפרגון בכתב השתפר מאוד! האתגר הבא: לפרגן פנים אל פנים, בארבע עיניים, בצורה ישירה. יניר מעריך שיחה ישירה ובעל פה הרבה יותר מהודעה.', status: 'pending', notes: 'פגישה 2', session: 2 }
   ],
   improvement: [
     { id: 'i1', person: 'yanir', task: 'להימנע מביקורת', detail: 'לא אפקטיבי כנקודת מוצא — לבנות במקום לבקר.', status: 'pending', notes: '' },
@@ -358,6 +417,7 @@ function loadData() {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
+      if (parsed.shared) tasks.shared = parsed.shared;
       if (parsed.yanir) tasks.yanir = parsed.yanir;
       if (parsed.zohar) tasks.zohar = parsed.zohar;
       if (parsed.improvement) tasks.improvement = parsed.improvement;
@@ -365,43 +425,46 @@ function loadData() {
   }
 }
 
-function renderRow(row, showPerson) {
+function renderRow(row, showPerson, isShared) {
   const statusCls = row.status || 'pending';
-  const optionsHtml = statusOptions.map(s => 
-    `<option value="${s.value}" ${s.value === statusCls ? 'selected' : ''}>${s.label}</option>`
-  ).join('');
-  
-  const personHtml = showPerson ? 
-    `<td><span class="person ${personLabels[row.person].cls}">${personLabels[row.person].label}</span></td>` : '';
-  
-  return `<tr>
-    ${showPerson ? personHtml : '<td style="text-align:center;font-weight:700;color:var(--gray)">' + row.id.replace(/[a-z]/,'') + '</td>'}
-    <td style="font-weight:700;color:var(--navy)">${row.task}</td>
-    <td style="color:#555;line-height:1.5">${row.detail}</td>
-    <td>
-      <select class="status-select ${statusCls}" onchange="updateStatus('${row.id}', this.value, this)">
-        ${optionsHtml}
-      </select>
-    </td>
-    <td>
-      <textarea class="notes-input" onchange="updateNotes('${row.id}', this.value)" placeholder="הערות...">${row.notes || ''}</textarea>
-    </td>
-  </tr>`;
+  const optionsHtml = statusOptions.map(function(s) {
+    return '<option value="' + s.value + '"' + (s.value === statusCls ? ' selected' : '') + '>' + s.label + '</option>';
+  }).join('');
+
+  var sessionBadge = row.session === 2 ? '<span class="session-badge s2">פגישה 2</span>' : '<span class="session-badge">פגישה 1</span>';
+  var rowCls = row.session === 2 ? 'new-session' : '';
+
+  var personHtml = showPerson
+    ? '<td><span class="person ' + personLabels[row.person].cls + '">' + personLabels[row.person].label + '</span></td>'
+    : '';
+
+  var numCell = isShared
+    ? '<td style="text-align:center"><span class="person person-shared">משותף</span></td>'
+    : '<td style="text-align:center;font-weight:700;color:var(--gray)">' + row.id.replace(/[a-z]/g, '') + '</td>';
+
+  return '<tr class="' + rowCls + '">' +
+    (showPerson ? personHtml : numCell) +
+    '<td style="font-weight:700;color:var(--navy)">' + row.task + '<br><div style="margin-top:3px">' + sessionBadge + '</div></td>' +
+    '<td style="color:#555;line-height:1.5">' + row.detail + '</td>' +
+    '<td><select class="status-select ' + statusCls + '" onchange="updateStatus(\'' + row.id + '\', this.value, this)">' + optionsHtml + '</select></td>' +
+    '<td><textarea class="notes-input" onchange="updateNotes(\'' + row.id + '\', this.value)" placeholder="הערות...">' + (row.notes || '') + '</textarea></td>' +
+    '</tr>';
 }
 
 function renderAll() {
-  document.getElementById('yanirBody').innerHTML = tasks.yanir.map(r => renderRow(r, false)).join('');
-  document.getElementById('zoharBody').innerHTML = tasks.zohar.map(r => renderRow(r, false)).join('');
-  document.getElementById('improvementBody').innerHTML = tasks.improvement.map(r => renderRow(r, true)).join('');
+  document.getElementById('sharedBody').innerHTML = tasks.shared.map(function(r) { return renderRow(r, false, true); }).join('');
+  document.getElementById('yanirBody').innerHTML = tasks.yanir.map(function(r) { return renderRow(r, false, false); }).join('');
+  document.getElementById('zoharBody').innerHTML = tasks.zohar.map(function(r) { return renderRow(r, false, false); }).join('');
+  document.getElementById('improvementBody').innerHTML = tasks.improvement.map(function(r) { return renderRow(r, true, false); }).join('');
   updateSummary();
 }
 
 function updateSummary() {
-  const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
-  const pending = all.filter(t => t.status === 'pending').length;
-  const progress = all.filter(t => t.status === 'progress').length;
-  const done = all.filter(t => t.status === 'done').length;
-  
+  var all = tasks.shared.concat(tasks.yanir, tasks.zohar, tasks.improvement);
+  var pending = all.filter(function(t) { return t.status === 'pending'; }).length;
+  var progress = all.filter(function(t) { return t.status === 'progress'; }).length;
+  var done = all.filter(function(t) { return t.status === 'done'; }).length;
+
   document.getElementById('totalTasks').textContent = all.length;
   document.getElementById('pendingTasks').textContent = pending;
   document.getElementById('progressTasks').textContent = progress;
@@ -409,8 +472,8 @@ function updateSummary() {
 }
 
 function updateStatus(id, value, select) {
-  const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
-  const task = all.find(t => t.id === id);
+  var all = tasks.shared.concat(tasks.yanir, tasks.zohar, tasks.improvement);
+  var task = all.find(function(t) { return t.id === id; });
   if (task) task.status = value;
   select.className = 'status-select ' + value;
   updateSummary();
@@ -418,8 +481,8 @@ function updateStatus(id, value, select) {
 }
 
 function updateNotes(id, value) {
-  const all = [...tasks.yanir, ...tasks.zohar, ...tasks.improvement];
-  const task = all.find(t => t.id === id);
+  var all = tasks.shared.concat(tasks.yanir, tasks.zohar, tasks.improvement);
+  var task = all.find(function(t) { return t.id === id; });
   if (task) task.notes = value;
   showToast('הערה נשמרה ✓');
 }
@@ -430,10 +493,10 @@ function saveAll() {
 }
 
 function showToast(msg) {
-  const toast = document.getElementById('toast');
+  var toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
 }
 
 loadData();
