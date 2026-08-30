@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="version" content="1.0">
+<title>ניהול פרויקטי נדל"ן — AILON Task</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0d9488;--teal-dark:#0f766e;--teal-light:#ccfbf1;--navy:#1e3a5f;--navy-light:#e0ecf5;--amber:#f59e0b;--red:#ef4444;--green:#22c55e;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--r:12px;--r-sm:8px;--shadow:0 4px 16px rgba(15,23,42,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--gray-100);color:var(--gray-800);line-height:1.5;padding-bottom:60px;-webkit-tap-highlight-color:transparent}
+
+/* Header */
+.header{background:linear-gradient(135deg,var(--navy),var(--teal-dark));color:#fff;padding:18px 24px;box-shadow:0 4px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:100}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.header-top h1{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+.header-nav{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.nav-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-family:inherit;transition:all .2s}
+.nav-btn:hover{background:rgba(255,255,255,.2)}
+.nav-btn.active{background:#fff;color:var(--teal-dark);border-color:#fff;font-weight:700}
+
+/* Container */
+.container{max-width:1100px;margin:20px auto 0;padding:0 16px}
+
+/* Cards */
+.card{background:#fff;border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:var(--shadow);border:1px solid var(--gray-200)}
+.card-title{font-size:18px;font-weight:700;color:var(--teal-dark);margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--teal-light);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card-title .actions-inline{display:flex;gap:6px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:var(--r);padding:20px;box-shadow:var(--shadow);border:1px solid var(--gray-200);text-align:center}
+.stat-card .num{font-size:32px;font-weight:900;color:var(--teal-dark)}
+.stat-card .label{font-size:13px;color:var(--gray-500);margin-top:4px;font-weight:600}
+.stat-card .sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+
+/* Tables */
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th{background:var(--gray-100);padding:12px 14px;font-weight:700;text-align:right;border:1px solid var(--gray-200);white-space:nowrap}
+.data-table td{padding:10px 14px;border:1px solid var(--gray-200)}
+.data-table tr:hover{background:var(--gray-50)}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block}
+.badge-planning{background:#fef3c7;color:#92400e}
+.badge-active{background:#dcfce7;color:#166534}
+.badge-completed{background:#e0e7ff;color:#3730a3}
+.badge-on_hold{background:#fee2e2;color:#991b1b}
+.badge-not_started{background:var(--gray-100);color:var(--gray-500)}
+.badge-in_progress{background:#dbeafe;color:#1e40af}
+
+/* Form elements */
+.form-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.form-field{flex:1;min-width:180px}
+.form-field.full{flex:100%}
+label{display:block;font-size:13.5px;font-weight:600;color:var(--gray-700);margin-bottom:6px}
+input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--gray-300);border-radius:var(--r-sm);font-size:14.5px;font-family:inherit;transition:border-color .2s;background:#fff;color:var(--gray-800)}
+input:focus,textarea:focus,select:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3.5px rgba(13,148,136,.12)}
+textarea{resize:vertical;min-height:70px}
+
+/* Buttons */
+.btn{padding:12px 24px;border-radius:var(--r-sm);font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-dark)}
+.btn-secondary{background:#fff;color:var(--gray-700);border:1.5px solid var(--gray-300)}
+.btn-secondary:hover{background:var(--gray-100)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{opacity:.9}
+.btn-sm{padding:8px 14px;font-size:13px}
+.actions{display:flex;gap:12px;justify-content:center;padding:16px 0;flex-wrap:wrap}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal h2{font-size:20px;font-weight:800;color:var(--teal-dark);margin-bottom:16px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px}
+.btn-save{background:var(--teal);color:#fff}
+.btn-cancel{background:var(--gray-100);color:var(--gray-600)}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--teal-dark);color:#fff;padding:14px 24px;border-radius:12px;font-weight:700;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.toast.show{display:block;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Floor card */
+.floor-card{background:#fff;border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--gray-200);border-right:4px solid var(--teal)}
+.floor-card.in_progress{border-right-color:var(--amber)}
+.floor-card.completed{border-right-color:var(--green)}
+.floor-card.not_started{border-right-color:var(--gray-300)}
+.floor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.floor-header h3{font-size:16px;font-weight:700}
+.floor-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--gray-500);margin-bottom:10px}
+.floor-meta span{display:flex;align-items:center;gap:4px}
+
+/* Material catalog */
+.mat-search{margin-bottom:16px}
+.mat-group{margin-bottom:20px}
+.mat-group h4{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--gray-200)}
+.mat-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r-sm);background:var(--gray-50);margin-bottom:8px;border:1px solid var(--gray-100)}
+.mat-item:hover{border-color:var(--teal)}
+.mat-code{background:var(--teal-light);color:var(--teal-dark);padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;min-width:60px;text-align:center}
+.mat-name{flex:1;font-weight:600;font-size:14px}
+.mat-desc{font-size:12px;color:var(--gray-500)}
+.mat-unit{font-size:12px;color:var(--gray-400);min-width:40px;text-align:center}
+
+/* Empty state */
+.empty{text-align:center;color:var(--gray-400);padding:40px;font-size:15px}
+
+/* View toggle */
+.view-toggle{display:flex;gap:8px;margin-bottom:16px}
+.view-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);font-family:inherit}
+.view-btn.active{background:var(--gray-700);color:#fff;border-color:var(--gray-700)}
+
+@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.form-row{flex-direction:column}.data-table{font-size:12px}.data-table th,.data-table td{padding:6px 8px}}
+@media print{.header{position:static}.header-nav{display:none}.actions{display:none}.btn{display:none}.modal-overlay{display:none}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>🏗️ ניהול פרויקטי נדל"ן</h1>
+    <span style="font-size:12px;opacity:.7">AILON Task v1.0</span>
+  </div>
+  <div class="header-nav">
+    <button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button>
+    <button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button>
+    <button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג חומרים</button>
+    <button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+<div id="viewDash">
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="num" id="statProjects">—</div><div class="label">פרויקטים פעילים</div></div>
+    <div class="stat-card"><div class="num" id="statFloors">—</div><div class="label">קומות בעבודה</div></div>
+    <div class="stat-card"><div class="num" id="statMaterials">—</div><div class="label">פריטים בקטלוג</div></div>
+    <div class="stat-card"><div class="num" id="statBudget">—</div><div class="label">תקציב כולל ₪</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 סקירת פרויקטים</div>
+    <div id="dashProjects"></div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div id="viewProjects" style="display:none">
+  <div class="card">
+    <div class="card-title">
+      <span>🏢 פרויקטים</span>
+      <div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openProjectModal()">+ פרויקט חדש</button></div>
+    </div>
+    <div id="projectsList"></div>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<div id="viewCatalog" style="display:none">
+  <div class="card">
+    <div class="card-title">
+      <span>📋 קטלוג חומרי גלם</span>
+      <div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ הוסף חומר</button></div>
+    </div>
+    <div class="mat-search"><input type="text" id="matSearch" placeholder="חיפוש חומר..." oninput="renderCatalog()"></div>
+    <div id="catalogList"></div>
+  </div>
+</div>
+
+<!-- INSIGHTS -->
+<div id="viewInsights" style="display:none">
+  <div class="card">
+    <div class="card-title">🤖 תובנות AI</div>
+    <div class="info-label" style="color:var(--gray-500);font-size:14px;margin-bottom:16px">המערכת לומדת מנתוני קומות שהושלמו ומפיקה המלצות לחיסכון בעלויות.</div>
+    <div id="insightsList"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- Project Modal -->
+<div class="modal-overlay" id="projectModal">
+  <div class="modal">
+    <h2 id="projectModalTitle">פרויקט חדש</h2>
+    <input type="hidden" id="projId">
+    <div class="form-row">
+      <div class="form-field full"><label>שם הפרויקט</label><input id="projName" placeholder="לדוגמה: מגדל מגורים הרצליה"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>כתובת</label><input id="projAddress" placeholder="כתובת"></div>
+      <div class="form-field"><label>לקוח</label><input id="projClient" placeholder="שם הלקוח"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>טלפון לקוח</label><input id="projPhone" placeholder="טלפון"></div>
+      <div class="form-field"><label>סטטוס</label><select id="projStatus"><option value="planning">תכנון</option><option value="active">פעיל</option><option value="completed">הושלם</option><option value="on_hold">מושהה</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>מספר קומות</label><input type="number" id="projFloors" placeholder="מספר"></div>
+      <div class="form-field"><label>מ"ר לקומה</label><input type="number" id="projSqm" placeholder="מטרים"></div>
+      <div class="form-field"><label>תקציב (₪)</label><input type="number" id="projBudget" placeholder="תקציב"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>תאריך התחלה</label><input type="date" id="projStart"></div>
+      <div class="form-field"><label>תאריך סיום משוער</label><input type="date" id="projEnd"></div>
+    </div>
+    <div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="projNotes" placeholder="הערות כלליות..."></textarea></div></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('projectModal')">ביטול</button><button class="btn-save" onclick="saveProject()">שמור</button></div>
+  </div>
+</div>
+
+<!-- Floor Modal -->
+<div class="modal-overlay" id="floorModal">
+  <div class="modal">
+    <h2 id="floorModalTitle">קומה חדשה</h2>
+    <input type="hidden" id="flrId">
+    <input type="hidden" id="flrProjectId">
+    <div class="form-row">
+      <div class="form-field"><label>מספר קומה</label><input type="number" id="flrNumber" placeholder="1"></div>
+      <div class="form-field"><label>סוג קומה</label><select id="flrType"><option>דירת גן</option><option>דירה רגילה</option><option>פנטהאוז</option><option>קומת מסחר</option><option>אחר</option></select></div>
+      <div class="form-field"><label>מ"ר</label><input type="number" id="flrSqm" placeholder="מטרים"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>סטטוס</label><select id="flrStage"><option value="not_started">טרם התחילה</option><option value="in_progress">בעבודה</option><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div>
+      <div class="form-field"><label>ימים משוערים</label><input type="number" id="flrEstDays" placeholder="ימים"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>עובדים (סוגים וכמויות)</label><textarea id="flrWorkers" placeholder="לדוגמה: 3 טפסנים, 2 עוזרים, 1 חשמלאי"></textarea></div>
+      <div class="form-field"><label>חומרי גלם</label><textarea id="flrMaterials" placeholder="בחר מהקטלוג או הזן ידנית"></textarea></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>תאריך התחלה</label><input type="date" id="flrStart"></div>
+      <div class="form-field"><label>תאריך סיום</label><input type="date" id="flrEnd"></div>
+    </div>
+    <div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="flrNotes" placeholder="הערות על הקומה..."></textarea></div></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('floorModal')">ביטול</button><button class="btn-save" onclick="saveFloor()">שמור</button></div>
+  </div>
+</div>
+
+<!-- Material Modal -->
+<div class="modal-overlay" id="materialModal">
+  <div class="modal">
+    <h2 id="matModalTitle">חומר חדש</h2>
+    <input type="hidden" id="matId">
+    <div class="form-row">
+      <div class="form-field"><label>קטגוריה</label><input id="matCategory" placeholder="ריצוף / חדרים רטובים / טיח..."></div>
+      <div class="form-field"><label>קוד מוצר</label><input id="matCode" placeholder="506"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field full"><label>שם המוצר</label><input id="matName" placeholder="דבק גב אריח"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field full"><label>תיאור</label><input id="matDesc" placeholder="תיאור השימוש"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>יחידה</label><input id="matUnit" placeholder="שק / ליטר / מטר"></div>
+      <div class="form-field"><label>מחיר מוערך (₪)</label><input type="number" id="matPrice" placeholder="מחיר"></div>
+    </div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('materialModal')">ביטול</button><button class="btn-save" onclick="saveMaterial()">שמור</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API='https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities';
+let projects=[],floors=[],materials=[],currentView='dash';
+
+// ===== View switching =====
+function showView(v){
+  currentView=v;
+  ['dash','projects','catalog','insights'].forEach(x=>{
+    document.getElementById('view'+x.charAt(0).toUpperCase()+x.slice(1)).style.display=x===v?'block':'none';
+  });
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav'+v.charAt(0).toUpperCase()+v.slice(1)).classList.add('active');
+}
+
+// ===== Fetch data =====
+async function fetchAll(){
+  try{
+    const [pRes,fRes,mRes]=await Promise.all([
+      fetch(API+'/RealEstateProject?limit=200').then(r=>r.json()),
+      fetch(API+'/RealEstateFloor?limit=500').then(r=>r.json()),
+      fetch(API+'/RealEstateMaterial?limit=200').then(r=>r.json())
+    ]);
+    projects=pRes.data||[];
+    floors=fRes.data||[];
+    materials=mRes.data||[];
+  }catch(e){
+    projects=[];floors=[];materials=[];
+  }
+  renderAll();
+}
+
+// ===== Dashboard =====
+function renderDashboard(){
+  document.getElementById('statProjects').textContent=projects.filter(p=>(p.status||p.data?.status)==='active').length;
+  document.getElementById('statFloors').textContent=floors.filter(f=>(f.stage||f.data?.stage)==='in_progress').length;
+  document.getElementById('statMaterials').textContent=materials.length;
+  const totalBudget=projects.reduce((s,p)=>s+((p.budget||p.data?.budget)||0),0);
+  document.getElementById('statBudget').textContent=totalBudget>0?totalBudget.toLocaleString():'—';
+
+  const list=document.getElementById('dashProjects');
+  if(projects.length===0){list.innerHTML='<div class="empty">אין פרויקטים עדיין. עבור לטאב "פרויקטים" כדי ליצור.</div>';return;}
+  list.innerHTML=projects.map(p=>{
+    const d=p.data||p;
+    const pFloors=floors.filter(f=>(f.project_id||f.data?.project_id)===(p.id||p._id));
+    const completed=pFloors.filter(f=>(f.stage||f.data?.stage)==='completed').length;
+    const inProg=pFloors.filter(f=>(f.stage||f.data?.stage)==='in_progress').length;
+    return `<div class="floor-card" style="border-right-color:var(--teal);cursor:pointer" onclick="showView('projects');openProject('${p.id||p._id}')">
+      <div class="floor-header">
+        <h3>${esc(d.project_name||'ללא שם')}</h3>
+        <span class="badge badge-${d.status||'planning'}">${statusLabel(d.status)}</span>
+      </div>
+      <div class="floor-meta">
+        <span>🏢 ${d.num_floors||0} קומות</span>
+        <span>✅ ${completed} הושלמו</span>
+        <span>🔄 ${inProg} בעבודה</span>
+        ${d.budget?'<span>💰 ₪'+d.budget.toLocaleString()+'</span>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== Projects =====
+function renderProjects(){
+  const list=document.getElementById('projectsList');
+  if(projects.length===0){list.innerHTML='<div class="empty">אין פרויקטים. לחץ "+ פרויקט חדש" כדי להתחיל.</div>';return;}
+  list.innerHTML=projects.map(p=>{
+    const d=p.data||p;
+    const id=p.id||p._id;
+    const pFloors=floors.filter(f=>(f.project_id||f.data?.project_id)===id);
+    return `<div class="card" style="margin-bottom:14px">
+      <div class="floor-header">
+        <h3 style="font-size:18px">🏢 ${esc(d.project_name||'ללא שם')}</h3>
+        <span class="badge badge-${d.status||'planning'}">${statusLabel(d.status)}</span>
+      </div>
+      <div class="floor-meta">
+        ${d.address?'<span>📍 '+esc(d.address)+'</span>':''}
+        ${d.client_name?'<span>👤 '+esc(d.client_name)+'</span>':''}
+        <span>🏢 ${d.num_floors||0} קומות</span>
+        ${d.sqm_per_floor?'<span>📐 '+d.sqm_per_floor+' מ"ר/קומה</span>':''}
+        ${d.budget?'<span>💰 ₪'+(d.budget||0).toLocaleString()+'</span>':''}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="openProject('${id}')">פרטים וקומות</button>
+        <button class="btn btn-secondary btn-sm" onclick="openFloorModal('${id}')">+ קומה</button>
+        <button class="btn btn-secondary btn-sm" onclick="editProject('${id}')">ערוך</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProject('${id}')">מחק</button>
+      </div>
+      ${pFloors.length>0?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים משוער</th><th>ימים בפועל</th></tr></thead><tbody>'+pFloors.map(f=>{
+        const fd=f.data||f;
+        return '<tr><td>'+fd.floor_number+'</td><td>'+esc(fd.floor_type||'')+'</td><td>'+(fd.sqm||'')+'</td><td><span class="badge badge-'+(fd.stage||'not_started')+'">'+stageLabel(fd.stage)+'</span></td><td>'+(fd.estimated_days||'')+'</td><td>'+(fd.actual_days||'')+'</td></tr>';
+      }).join('')+'</tbody></table></div>':''}
+    </div>`;
+  }).join('');
+}
+
+let currentProjectId=null;
+
+function openProject(id){
+  currentProjectId=id;
+  showView('projects');
+  const p=projects.find(x=>(x.id||x._id)===id);
+  if(!p)return;
+  const d=p.data||p;
+  // Show floor detail
+  const pFloors=floors.filter(f=>(f.project_id||f.data?.project_id)===id);
+  if(pFloors.length===0){return;}
+  // Already rendered in the project card
+}
+
+function openProjectModal(){
+  document.getElementById('projId').value='';
+  document.getElementById('projectModalTitle').textContent='פרויקט חדש';
+  ['projName','projAddress','projClient','projPhone','projFloors','projSqm','projBudget','projStart','projEnd','projNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('projStatus').value='planning';
+  document.getElementById('projectModal').classList.add('show');
+}
+
+function editProject(id){
+  const p=projects.find(x=>(x.id||x._id)===id);
+  const d=p.data||p;
+  document.getElementById('projId').value=id;
+  document.getElementById('projectModalTitle').textContent='עריכת פרויקט';
+  document.getElementById('projName').value=d.project_name||'';
+  document.getElementById('projAddress').value=d.address||'';
+  document.getElementById('projClient').value=d.client_name||'';
+  document.getElementById('projPhone').value=d.client_phone||'';
+  document.getElementById('projFloors').value=d.num_floors||'';
+  document.getElementById('projSqm').value=d.sqm_per_floor||'';
+  document.getElementById('projBudget').value=d.budget||'';
+  document.getElementById('projStart').value=d.start_date||'';
+  document.getElementById('projEnd').value=d.estimated_end||'';
+  document.getElementById('projStatus').value=d.status||'planning';
+  document.getElementById('projNotes').value=d.notes||'';
+  document.getElementById('projectModal').classList.add('show');
+}
+
+async function saveProject(){
+  const id=document.getElementById('projId').value;
+  const data={
+    project_name:val('projName'),
+    address:val('projAddress'),
+    client_name:val('projClient'),
+    client_phone:val('projPhone'),
+    num_floors:parseInt(val('projFloors'))||0,
+    sqm_per_floor:parseInt(val('projSqm'))||0,
+    budget:parseInt(val('projBudget'))||0,
+    start_date:val('projStart'),
+    estimated_end:val('projEnd'),
+    status:val('projStatus'),
+    notes:val('projNotes'),
+    total_sqm:(parseInt(val('projFloors'))||0)*(parseInt(val('projSqm'))||0)
+  };
+  if(!data.project_name){showToast('נא למלא שם פרויקט');return;}
+  
+  const url=id?API+'/RealEstateProject/'+id:API+'/RealEstateProject';
+  const method=id?'PUT':'POST';
+  try{
+    await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    closeModal('projectModal');
+    showToast(id?'פרויקט עודכן ✓':'פרויקט נוצר ✓');
+    await fetchAll();
+  }catch(e){showToast('שגיאה בשמירה');}
+}
+
+async function deleteProject(id){
+  if(!confirm('למחוק פרויקט זה?'))return;
+  try{
+    await fetch(API+'/RealEstateProject/'+id,{method:'DELETE'});
+    showToast('פרויקט נמחק ✓');
+    await fetchAll();
+  }catch(e){showToast('שגיאה במחיקה');}
+}
+
+// ===== Floors =====
+function openFloorModal(projectId){
+  document.getElementById('flrId').value='';
+  document.getElementById('flrProjectId').value=projectId;
+  document.getElementById('floorModalTitle').textContent='קומה חדשה';
+  ['flrNumber','flrSqm','flrEstDays','flrStart','flrEnd','flrWorkers','flrMaterials','flrNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('flrStage').value='not_started';
+  document.getElementById('floorModal').classList.add('show');
+}
+
+async function saveFloor(){
+  const id=document.getElementById('flrId').value;
+  const projectId=document.getElementById('flrProjectId').value;
+  const project=projects.find(p=>(p.id||p._id)===projectId);
+  const projName=project?(project.data||project).project_name:'';
+  const data={
+    project_id:projectId,
+    project_name:projName,
+    floor_number:parseInt(val('flrNumber'))||0,
+    floor_type:val('flrType'),
+    sqm:parseInt(val('flrSqm'))||0,
+    stage:val('flrStage'),
+    estimated_days:parseInt(val('flrEstDays'))||0,
+    workers:val('flrWorkers'),
+    materials:val('flrMaterials'),
+    start_date:val('flrStart'),
+    end_date:val('flrEnd'),
+    notes:val('flrNotes')
+  };
+  if(!data.project_id){showToast('שגיאה: חסר פרויקט');return;}
+  const url=id?API+'/RealEstateFloor/'+id:API+'/RealEstateFloor';
+  const method=id?'PUT':'POST';
+  try{
+    await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    closeModal('floorModal');
+    showToast(id?'קומה עודכנה ✓':'קומה נוצרה ✓');
+    await fetchAll();
+  }catch(e){showToast('שגיאה בשמירה');}
+}
+
+// ===== Materials Catalog =====
+function renderCatalog(){
+  const search=(document.getElementById('matSearch')?.value||'').toLowerCase();
+  let filtered=materials.filter(m=>{
+    const d=m.data||m;
+    const text=((d.product_name||'')+' '+(d.product_code||'')+' '+(d.category||'')+' '+(d.description||'')).toLowerCase();
+    return !search||text.includes(search);
+  });
+  
+  // Group by category
+  const groups={};
+  filtered.forEach(m=>{
+    const d=m.data||m;
+    const cat=d.category||'כללי';
+    if(!groups[cat])groups[cat]=[];
+    groups[cat].push(m);
+  });
+  
+  const list=document.getElementById('catalogList');
+  if(filtered.length===0){list.innerHTML='<div class="empty">אין חומרים בקטלוג.</div>';return;}
+  
+  list.innerHTML=Object.keys(groups).map(cat=>{
+    return '<div class="mat-group"><h4>'+esc(cat)+'</h4>'+groups[cat].map(m=>{
+      const d=m.data||m;
+      const id=m.id||m._id;
+      return '<div class="mat-item"><span class="mat-code">'+esc(d.product_code||'')+'</span><div class="mat-name">'+esc(d.product_name||'')+(d.description?'<div class="mat-desc">'+esc(d.description)+'</div>':'')+'</div><span class="mat-unit">'+esc(d.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\''+id+'\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\''+id+'\')">✕</button></div>';
+    }).join('')+'</div>';
+  }).join('');
+}
+
+function openMaterialModal(){
+  document.getElementById('matId').value='';
+  document.getElementById('matModalTitle').textContent='חומר חדש';
+  ['matCategory','matCode','matName','matDesc','matUnit','matPrice'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('materialModal').classList.add('show');
+}
+
+function editMaterial(id){
+  const m=materials.find(x=>(x.id||x._id)===id);
+  const d=m.data||m;
+  document.getElementById('matId').value=id;
+  document.getElementById('matModalTitle').textContent='עריכת חומר';
+  document.getElementById('matCategory').value=d.category||'';
+  document.getElementById('matCode').value=d.product_code||'';
+  document.getElementById('matName').value=d.product_name||'';
+  document.getElementById('matDesc').value=d.description||'';
+  document.getElementById('matUnit').value=d.unit||'';
+  document.getElementById('matPrice').value=d.estimated_price||'';
+  document.getElementById('materialModal').classList.add('show');
+}
+
+async function saveMaterial(){
+  const id=document.getElementById('matId').value;
+  const data={
+    category:val('matCategory'),
+    product_code:val('matCode'),
+    product_name:val('matName'),
+    description:val('matDesc'),
+    unit:val('matUnit'),
+    estimated_price:parseFloat(val('matPrice'))||0
+  };
+  if(!data.product_name){showToast('נא למלא שם מוצר');return;}
+  const url=id?API+'/RealEstateMaterial/'+id:API+'/RealEstateMaterial';
+  const method=id?'PUT':'POST';
+  try{
+    await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    closeModal('materialModal');
+    showToast(id?'חומר עודכן ✓':'חומר נוסף ✓');
+    await fetchAll();
+  }catch(e){showToast('שגיאה בשמירה');}
+}
+
+async function deleteMaterial(id){
+  if(!confirm('למחוק חומר זה?'))return;
+  try{
+    await fetch(API+'/RealEstateMaterial/'+id,{method:'DELETE'});
+    showToast('חומר נמחק ✓');
+    await fetchAll();
+  }catch(e){showToast('שגיאה במחיקה');}
+}
+
+// ===== Insights =====
+function renderInsights(){
+  const list=document.getElementById('insightsList');
+  const completed=floors.filter(f=>(f.stage||f.data?.stage)==='completed');
+  
+  let html='';
+  
+  if(completed.length===0){
+    html='<div class="empty">עדיין אין קומות שהושלמו. כשתסיים קומות, המערכת תפיק תובנות אוטומטיות.</div>';
+  }else{
+    // Time analysis
+    const timeData=completed.map(f=>{
+      const d=f.data||f;
+      return{est:d.estimated_days||0,act:d.actual_days||0,project:d.project_name||''};
+    });
+    const avgEst=timeData.reduce((s,x)=>s+x.est,0)/timeData.length;
+    const avgAct=timeData.reduce((s,x)=>s+x.act,0)/timeData.length;
+    const variance=((avgAct-avgEst)/Math.max(avgEst,1)*100).toFixed(0);
+    
+    html+='<div class="floor-card"><div class="floor-header"><h3>⏱️ ניתוח זמנים</h3></div>';
+    html+='<div class="floor-meta"><span>ימים משוערים ממוצע: '+avgEst.toFixed(1)+'</span>';
+    html+='<span>ימים בפועל ממוצע: '+avgAct.toFixed(1)+'</span>';
+    html+='<span>סטייה: '+variance+'%</span></div></div>';
+    
+    // Waste analysis
+    const wasteData=completed.filter(f=>(f.data||f).waste_materials);
+    if(wasteData.length>0){
+      html+='<div class="floor-card"><div class="floor-header"><h3>♻️ ניתוח בזבוז חומרים</h3></div>';
+      html+='<div style="font-size:14px;color:var(--gray-600)">'+wasteData.map(f=>{const d=f.data||f;return 'קומה '+(d.floor_number||'')+': '+esc(d.waste_materials||'')}).join('<br>')+'</div></div>';
+    }
+    
+    // Idle time
+    const idleData=completed.filter(f=>(f.data||f).idle_time_hours);
+    if(idleData.length>0){
+      const totalIdle=idleData.reduce((s,f)=>s+((f.data||f).idle_time_hours||0),0);
+      html+='<div class="floor-card"><div class="floor-header"><h3>😴 זמנים מתים</h3></div>';
+      html+='<div class="floor-meta"><span>סה"כ שעות מתות: '+totalIdle+'</span>';
+      html+='<span>ממוצע לקומה: '+(totalIdle/idleData.length).toFixed(1)+'</span></div></div>';
+    }
+    
+    // Budget
+    const budgetData=completed.filter(f=>(f.data||f).budget_overrun);
+    if(budgetData.length>0){
+      const totalOverrun=budgetData.reduce((s,f)=>s+((f.data||f).budget_overrun||0),0);
+      html+='<div class="floor-card" style="border-right-color:var(--red)"><div class="floor-header"><h3>💰 חריגות תקציב</h3></div>';
+      html+='<div class="floor-meta"><span>סה"כ חריגה: ₪'+totalOverrun.toLocaleString()+'</span></div></div>';
+    }
+  }
+  
+  // AI recommendations placeholder
+  html+='<div class="floor-card" style="border-right-color:var(--teal)"><div class="floor-header"><h3>🤖 המלצות AI</h3></div>';
+  if(completed.length>=3){
+    html+='<div style="font-size:14px;line-height:1.8">';
+    html+='• בהתבסס על '+completed.length+' קומות שהושלמו, ניתן לשפר את הערכות הזמן ב-'+Math.abs(variance)+'%<br>';
+    html+='• מומלץ להקצות פועלים נוספים בשלב הטיח<br>';
+    html+='• חומרי מליטה: יש להזמין 5% עודף מעבר לחישוב התיאורטי<br>';
+    html+='</div>';
+  }else{
+    html+='<div style="font-size:14px;color:var(--gray-500)">יש צורך בלפחות 3 קומות שהושלמו כדי להתחיל להפיק תובנות. כרגע יש '+completed.length+'.</div>';
+  }
+  html+='</div>';
+  
+  list.innerHTML=html;
+}
+
+// ===== Helpers =====
+function val(id){return document.getElementById(id).value;}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function statusLabel(s){return {planning:'תכנון',active:'פעיל',completed:'הושלם',on_hold:'מושהה'}[s]||s||'';}
+function stageLabel(s){return {not_started:'טרם התחילה',in_progress:'בעבודה',completed:'הושלמה',on_hold:'מושהית'}[s]||s||'';}
+
+function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
+function checkClicks(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');}
+
+fetchAll();
+</script>
+<div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;z-index:9999"><div style="text-align:center"><div style="width:40px;height:40px;border:4px solid #0d9488;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px"></div><p style="color:#0d9488;font-family:Heebo;font-weight:600;font-size:14px">טוען...</p></div></div>
+<style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style>
+<script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}})</script>
+</body>
+</html>
