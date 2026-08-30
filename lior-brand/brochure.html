@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="2026-08-30-v1">
+<title>ליאור סופר · מנטור ומאמן בשיטת NLP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0f172a; --ink-soft:#64748b;
+  --blue:#2563eb; --blue-light:#3b82f6;
+  --paper:#f8fafc; --paper-2:#ffffff; --paper-edge:#e2e8f0;
+  --r:16px; --r-sm:10px;
+}
+body{font-family:'Heebo',system-ui,sans-serif;color:var(--ink);background:#0a1128;line-height:1.6}
+button{font-family:inherit;cursor:pointer;border:none}
+</style>
+<script>
+const WHATSAPP_NUMBER = '972500000000'; // TODO: replace with Lior's real WhatsApp number
+const WHATSAPP_TEXT = encodeURIComponent('שלום ליאור, ראיתי את הפלייר ואני מעוניין/ת בשיחת ייעוץ ראשונית');
+function openWA(){ window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`; }
+</script>
+<style>
+.tap-overlay{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:.3s;
+}
+.tap-overlay.show{opacity:1;pointer-events:auto}
+.tap-overlay .tap-msg{
+  background:#25d366;color:#fff;font-weight:800;font-size:1.3rem;
+  padding:24px 48px;border-radius:999px;box-shadow:0 12px 40px rgba(37,211,102,.5);
+}
+.flyer-wrap{
+  max-width:480px;margin:0 auto;background:var(--paper-2);
+  min-height:100vh;position:relative;box-shadow:0 0 60px rgba(0,0,0,.3);
+}
+.fh{
+  background:linear-gradient(160deg,#0a1128 0%,#0f1c3f 45%,#1e3a8a 100%);
+  color:#fff;padding:36px 26px 30px;text-align:center;
+}
+.fh .name{font-size:1.4rem;font-weight:900;margin-bottom:4px}
+.fh .role{font-size:.85rem;color:#93c5fd;font-weight:600;margin-bottom:20px}
+.fh-photo{
+  width:130px;height:130px;border-radius:50%;object-fit:cover;object-position:center 20%;
+  border:4px solid rgba(255,255,255,.15);box-shadow:0 10px 30px rgba(0,0,0,.4);
+  margin:0 auto 16px;display:block;
+}
+.fh h1{font-size:1.5rem;font-weight:900;line-height:1.25;margin-bottom:14px}
+.fh h1 .accent{
+  background:linear-gradient(135deg,#60a5fa,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.fh .sub{font-size:.88rem;opacity:.88;line-height:1.6}
+
+.fb{padding:22px 22px}
+.badge-trust{
+  display:flex;align-items:flex-start;gap:10px;
+  background:#eff6ff;border:1px solid #bfdbfe;
+  border-radius:var(--r-sm);padding:14px 16px;font-size:.82rem;
+  margin-bottom:20px;line-height:1.5;color:#1e40af;font-weight:600;
+}
+
+.sec-t{font-size:.95rem;font-weight:800;margin-bottom:10px;color:var(--ink)}
+.cards{display:grid;gap:8px;margin-bottom:20px}
+.svc{
+  display:flex;align-items:center;gap:10px;
+  background:var(--paper);border:1px solid var(--paper-edge);
+  border-radius:var(--r-sm);padding:12px 14px;font-size:.85rem;font-weight:700;
+}
+.svc .ico{font-size:1.3rem;flex-shrink:0}
+
+.warrior{
+  background:linear-gradient(135deg,#0a1128,#1e3a8a);color:#fff;
+  border-radius:var(--r-sm);padding:16px 18px;text-align:center;margin-bottom:20px;
+}
+.warrior h3{font-size:1rem;font-weight:800;margin-bottom:4px}
+.warrior p{font-size:.82rem;opacity:.9;margin-bottom:10px}
+.warrior .steps{display:flex;gap:6px;justify-content:center;font-size:.78rem;font-weight:700;color:#93c5fd}
+.warrior .steps span{background:rgba(255,255,255,.1);padding:4px 12px;border-radius:999px}
+
+.cta-block{text-align:center;padding:10px 0 24px}
+.free-note{font-size:.82rem;color:var(--blue);font-weight:700;margin-bottom:14px}
+.btn-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25d366;color:#fff;font-weight:800;font-size:1.05rem;
+  padding:15px 36px;border-radius:999px;width:100%;justify-content:center;
+  box-shadow:0 8px 24px rgba(37,211,102,.35);
+}
+
+.ff{text-align:center;padding:16px 22px;background:#f1f5f9;border-top:1px solid var(--paper-edge)}
+.ff .ln{font-size:.76rem;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<div class="flyer-wrap" onclick="(function(e){if(!e.target.closest('button')){document.getElementById('tapOverlay').classList.add('show');setTimeout(openWA,300)}})(event)">
+
+  <div class="fh">
+    <img class="fh-photo" src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/b2cb61d90_lior-photo-crop.jpg" alt="ליאור סופר">
+    <div class="name">ליאור סופר</div>
+    <div class="role">מנטור ומאמן בשיטת NLP</div>
+    <h1>הגיע הזמן לעשות את<br><span class="accent">הצעד הבא שלך</span></h1>
+    <p class="sub">ליווי אישי, ממוקד ופרקטי ליצירת שינוי, צמיחה והתקדמות בחיים האישיים והמקצועיים</p>
+  </div>
+
+  <div class="fb">
+    <div class="badge-trust">🛡️ מוכר במסגרת הסכם עם משרד הביטחון ללוחמים בשיקום ובתוכנית עמית</div>
+
+    <div class="sec-t">תחומי ליווי</div>
+    <div class="cards">
+      <div class="svc"><div class="ico">👤</div>מנטורינג ופיתוח אישי</div>
+      <div class="svc"><div class="ico">👥</div>ניהול ומנהיגות</div>
+      <div class="svc"><div class="ico">🏠</div>זוגיות ושלום בית</div>
+      <div class="svc"><div class="ico">📈</div>ליווי ופיתוח עסקים קטנים</div>
+    </div>
+
+    <div class="warrior">
+      <h3>🌱 ליווי אישי ללוחמים ולמשוחררי מילואים</h3>
+      <p>להתאושש. להתחזק. להתקדם.</p>
+      <div class="steps"><span>להתאושש</span><span>להתחזק</span><span>להתקדם</span></div>
+    </div>
+  </div>
+
+  <div class="cta-block">
+    <div class="free-note">שיחת ייעוץ ראשונית ללא עלות</div>
+    <button class="btn-wa" onclick="openWA()">💬 דברו איתי בוואטסאפ</button>
+  </div>
+
+  <div class="ff"><div class="ln">ליאור סופר · מנטור ומאמן בשיטת NLP</div></div>
+</div>
+
+<div class="tap-overlay" id="tapOverlay"><div class="tap-msg">💬 פותח וואטסאפ...</div></div>
+
+</body>
+</html>

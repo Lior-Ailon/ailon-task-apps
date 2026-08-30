@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="2026-08-30-v1">
+<title>ליאור סופר · מנטור ומאמן בשיטת NLP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0f172a; --ink-soft:#64748b;
+  --blue:#2563eb; --blue-light:#3b82f6; --blue-dark:#1e40af;
+  --navy:#0a1128; --navy2:#0f1c3f;
+  --paper:#f8fafc; --paper-2:#ffffff; --paper-edge:#e2e8f0;
+  --r:16px; --r-sm:10px;
+  --shadow:0 4px 16px rgba(15,23,42,.06);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.10);
+}
+body{font-family:'Heebo',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h2,h3{letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:none}
+a{color:inherit;text-decoration:none}
+section{padding:clamp(40px,6vw,80px) 24px;max-width:960px;margin:0 auto}
+
+/* WHATSAPP LINK — UPDATE THIS NUMBER */
+</style>
+<script>
+const WHATSAPP_NUMBER = '972500000000'; // TODO: replace with Lior's real WhatsApp number
+const WHATSAPP_TEXT = encodeURIComponent('שלום ליאור, ראיתי את הפלייר ואני מעוניין/ת בשיחת ייעוץ ראשונית');
+function openWA(){ window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`; }
+</script>
+<style>
+/* HERO */
+.hero{
+  position:relative;min-height:92vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 24px;overflow:hidden;
+  background:linear-gradient(160deg,#0a1128 0%,#0f1c3f 45%,#1e3a8a 100%);
+  color:#fff;
+}
+.hero::before{content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(59,130,246,.25) 0%,transparent 50%),
+    radial-gradient(circle at 85% 60%,rgba(37,99,235,.22) 0%,transparent 50%);
+  z-index:0;
+}
+.hero-content{position:relative;z-index:2;max-width:780px}
+.hero .name{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:900;margin-bottom:6px}
+.hero .role{font-size:1rem;color:#93c5fd;font-weight:600;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:10px}
+.hero .role::before,.hero .role::after{content:"";width:32px;height:1px;background:rgba(147,197,253,.5)}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:900;line-height:1.15;margin-bottom:8px}
+.hero h1 .accent{
+  background:linear-gradient(135deg,#60a5fa,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero .subtitle{font-size:clamp(1rem,2.2vw,1.2rem);opacity:.88;margin:20px auto 32px;max-width:600px;line-height:1.7}
+.badge-trust{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);
+  padding:12px 22px;border-radius:14px;font-size:.88rem;font-weight:600;
+  margin-bottom:32px;backdrop-filter:blur(8px);max-width:520px;line-height:1.5;
+}
+.badge-trust .ico{font-size:1.3rem;flex-shrink:0}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25d366;color:#fff;font-weight:800;font-size:1.1rem;
+  padding:16px 40px;border-radius:999px;
+  box-shadow:0 8px 28px rgba(37,211,102,.4);transition:.25s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(37,211,102,.5)}
+.hero-note{margin-top:16px;font-size:.85rem;color:#93c5fd;font-weight:600}
+.hero-photo{
+  width:180px;height:180px;border-radius:50%;object-fit:cover;object-position:center 20%;
+  border:4px solid rgba(255,255,255,.15);box-shadow:0 12px 40px rgba(0,0,0,.4);
+  margin:0 auto 24px;display:block;
+}
+
+/* SECTIONS */
+.section-head{text-align:center;margin-bottom:40px}
+.section-head .tag{font-size:.82rem;font-weight:700;letter-spacing:.18em;color:var(--blue);text-transform:uppercase;margin-bottom:10px}
+.section-head h2{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900}
+.section-head p{font-size:1.05rem;color:var(--ink-soft);max-width:600px;margin:10px auto 0}
+
+/* SERVICES */
+.card-grid{display:grid;gap:20px}
+@media(min-width:640px){.card-grid{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--paper-2);border:1px solid var(--paper-edge);
+  border-radius:var(--r);padding:28px 24px;
+  box-shadow:var(--shadow);transition:.25s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--blue-light)}
+.card .ico{font-size:2.2rem;margin-bottom:12px}
+.card h3{font-size:1.15rem;font-weight:800;margin-bottom:8px}
+.card p{font-size:.95rem;color:var(--ink-soft);line-height:1.55}
+
+/* WARRIOR SPECIAL CARD */
+.warrior-card{
+  background:linear-gradient(135deg,#0a1128,#1e3a8a);
+  color:#fff;border-radius:var(--r);padding:32px 28px;
+  text-align:center;margin-top:20px;box-shadow:var(--shadow-lg);
+}
+.warrior-card .ico{font-size:2.4rem;margin-bottom:12px}
+.warrior-card h3{font-size:1.3rem;font-weight:900;margin-bottom:10px}
+.warrior-card p{font-size:1rem;opacity:.9;margin-bottom:6px}
+.warrior-card .steps{
+  display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap;
+  font-size:.9rem;font-weight:700;color:#93c5fd;
+}
+.warrior-card .steps span{background:rgba(255,255,255,.1);padding:6px 16px;border-radius:999px}
+
+/* CTA */
+.cta-section{text-align:center}
+.cta-box{
+  background:linear-gradient(160deg,#0a1128 0%,#0f1c3f 45%,#1e3a8a 100%);
+  color:#fff;border-radius:var(--r);padding:clamp(36px,5vw,56px) 32px;
+  box-shadow:var(--shadow-lg);
+}
+.cta-box h2{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:12px}
+.cta-box p{font-size:1.1rem;opacity:.9;margin-bottom:8px}
+.cta-box .free-note{color:#93c5fd;font-weight:700;font-size:.95rem;margin-bottom:28px}
+
+/* FOOTER */
+.footer{padding:48px 24px;background:#0a1128;color:rgba(255,255,255,.7);text-align:center}
+.footer .logo{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:10px}
+.footer .tagline{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:20px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:.6s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:640px){
+  .hero-cta{flex-direction:column;align-items:center}
+  .btn-primary{width:100%;max-width:320px;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" style="max-width:none">
+  <div class="hero-content">
+    <img class="hero-photo" src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/b2cb61d90_lior-photo-crop.jpg" alt="ליאור סופר">
+    <div class="name">ליאור סופר</div>
+    <div class="role">מנטור ומאמן בשיטת NLP</div>
+    <h1>הגיע הזמן לעשות את<br><span class="accent">הצעד הבא שלך</span></h1>
+    <p class="subtitle">ליווי אישי, ממוקד ופרקטי ליצירת שינוי, צמיחה והתקדמות בחיים האישיים והמקצועיים</p>
+    <div class="badge-trust">
+      <div class="ico">🛡️</div>
+      <div>מוכר במסגרת הסכם עם משרד הביטחון ללוחמים בשיקום ובתוכנית עמית</div>
+    </div>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="openWA()">💬 דברו איתי בוואטסאפ</button>
+    </div>
+    <div class="hero-note">שיחת ייעוץ ראשונית ללא עלות</div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="tag">תחומי ליווי</div>
+    <h2>איך אני יכול לעזור לך?</h2>
+  </div>
+  <div class="card-grid">
+    <div class="card"><div class="ico">👤</div><h3>מנטורינג ופיתוח אישי</h3><p>ליווי אישי ממוקד לזיהוי מטרות, פריצת חסמים והתקדמות משמעותית בחיים.</p></div>
+    <div class="card"><div class="ico">👥</div><h3>ניהול ומנהיגות</h3><p>כלים וגישות מעשיות למנהלים ולמובילי צוותים — מהתקשורת ועד קבלת ההחלטות.</p></div>
+    <div class="card"><div class="ico">🏠</div><h3>זוגיות ושלום בית</h3><p>ליווי זוגות לחיזוק התקשורת, הבנה הדדית ובניית בית שקט ואוהב.</p></div>
+    <div class="card"><div class="ico">📈</div><h3>ליווי ופיתוח עסקים קטנים</h3><p>ייעוץ מעשי לבעלי עסקים קטנים לצמיחה, מיקוד ותוצאות.</p></div>
+  </div>
+
+  <div class="warrior-card">
+    <div class="ico">🌱</div>
+    <h3>ליווי אישי ללוחמים ולמשוחררי מילואים</h3>
+    <p>להתאושש. להתחזק. להתקדם.</p>
+    <div class="steps">
+      <span>להתאושש</span>
+      <span>להתחזק</span>
+      <span>להתקדם</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="reveal cta-section">
+  <div class="cta-box">
+    <h2>רוצים לבדוק אם זה מתאים לכם?</h2>
+    <p class="free-note">שיחת ייעוץ ראשונית ללא עלות</p>
+    <button class="btn-primary" onclick="openWA()">💬 דברו איתי בוואטסאפ</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="logo">ליאור סופר</div>
+  <div class="tagline">מנטור ומאמן בשיטת NLP</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
