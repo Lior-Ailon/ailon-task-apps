@@ -525,7 +525,7 @@ function currentLibId(){ const l=currentLib(); return l.id||null; }
 
 function pgManage(){
   const lib=currentLib();
-  const tabs=[['events','<i class="ph ph-calendar-blank"></i> אירועים'],['books','<i class="ph ph-books"></i> ספרים מומלצים'],['msg','<i class="ph ph-megaphone"></i> הודעות'],['settings','<i class="ph ph-gear"></i> שעות ופרטי קשר']];
+  const tabs=[['newlib','<i class="ph ph-sparkle"></i> חדש בספרייה'],['news','<i class="ph ph-newspaper"></i> חדשות טובות'],['photos','<i class="ph ph-images-square"></i> תמונות וסרטונים'],['events','<i class="ph ph-calendar-blank"></i> אירועים'],['msg','<i class="ph ph-megaphone"></i> הודעות'],['settings','<i class="ph ph-gear"></i> שעות ופרטי קשר']];
   $('main').innerHTML = `
     <button class="back" onclick="go('${isAdmin()?'libs':'hub'}')">→ חזרה</button>
     <h2 class="ptitle">ניהול · ${esc(lib.name||'')}</h2>
@@ -537,7 +537,153 @@ function pgManage(){
 function setTab(t){ S.tab=t; pgManage(); }
 
 function renderTab(){
-  ({events:tabEvents, books:tabBooks, msg:tabMsg, settings:tabSettings}[S.tab]||tabEvents)();
+  ({newlib:tabNewLib, news:tabNews, photos:tabPhotos, events:tabEvents, books:tabBooks, msg:tabMsg, settings:tabSettings}[S.tab]||tabNewLib)();
+}
+
+
+/* ---------- חדש בספרייה ---------- */
+async function tabNewLib(){
+  const rows = await loadSection('new_in_library');
+  $('tabBody').innerHTML = `
+    <div class="card">
+      <div class="card-h"><h3>חדש בספרייה</h3><button class="btn-add" onclick="formSection('new_in_library')">+ פריט חדש</button></div>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">מופיע בצד שמאל של מסך התצוגה</p>
+      ${rows.length? `<table><thead><tr><th>כותרת</th><th>תיאור</th><th>תאריך</th><th>סטטוס</th><th></th></tr></thead><tbody>
+        ${rows.map(r=>sectionRow(r)).join('')}</tbody></table>`
+      : `<div class="empty"><span class="i"><i class="ph ph-sparkle"></i></span>אין פריטים. הוסיפו את הראשון.</div>`}
+    </div>`;
+}
+
+/* ---------- חדשות טובות ---------- */
+async function tabNews(){
+  const rows = await loadSection('positive_news');
+  $('tabBody').innerHTML = `
+    <div class="card">
+      <div class="card-h"><h3>חדשות טובות</h3><button class="btn-add" onclick="formSection('positive_news')">+ פריט חדש</button></div>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">מופיע בפס התחתון של מסך התצוגה</p>
+      ${rows.length? `<table><thead><tr><th>כותרת</th><th>סטטוס</th><th></th></tr></thead><tbody>
+        ${rows.map(r=>sectionRow(r)).join('')}</tbody></table>`
+      : `<div class="empty"><span class="i"><i class="ph ph-newspaper"></i></span>אין חדשות טובות. הוסיפו את הראשונה.</div>`}
+    </div>`;
+}
+
+/* ---------- תמונות וסרטונים ---------- */
+async function tabPhotos(){
+  const rows = await loadSection('photos');
+  $('tabBody').innerHTML = `
+    <div class="card">
+      <div class="card-h"><h3>תמונות וסרטונים</h3><button class="btn-add" onclick="formPhoto()">+ תמונה/סרטון חדש</button></div>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">מופיע בקרוסלה המרכזית של מסך התצוגה</p>
+      ${rows.length? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
+        ${rows.map(r=>{
+          const isVideo = (r.image_url||'').match(/\.(mp4|webm|mov|avi|mkv)$/i) || (r.description||'').includes('video:');
+          const thumb = isVideo 
+            ? '<div style="width:100%;height:120px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff">🎬</div>'
+            : (r.image_url ? `<img src="${esc(r.image_url)}" style="width:100%;height:120px;object-fit:cover;border-radius:8px">` : '<div style="width:100%;height:120px;background:#e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem">🖼️</div>');
+          return `<div style="background:#fff;border:1px solid var(--paper-edge);border-radius:10px;padding:10px">
+            ${thumb}
+            <div style="font-weight:700;margin-top:8px;font-size:.9rem">${esc(r.title||'')}</div>
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <button class="ba ed" onclick="formPhoto('${r.id}')">ערוך</button>
+              <button class="ba del" onclick="delSection('${r.id}','למחוק?')">מחק</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`
+      : `<div class="empty"><span class="i"><i class="ph ph-images-square"></i></span>אין תמונות. הוסיפו את הראשונה.</div>`}
+    </div>`;
+}
+
+/* ---------- פונקציות עזר ל-section ---------- */
+async function loadSection(section){
+  const r = await api('content','list',{section:section},null,currentLibId());
+  return (r.success && r.data) ? r.data.filter(x=>x.section===section) : [];
+}
+
+function sectionRow(r){
+  return `<tr>
+    <td><b>${esc(r.title||'')}</b></td>
+    <td>${esc((r.description||'').slice(0,60))}</td>
+    <td>${esc(r.event_date||'-')}</td>
+    <td><span class="pill ${r.status==='active'?'ok':'off'}">${r.status==='active'?'פעיל':'מוסתר'}</span></td>
+    <td style="white-space:nowrap">
+      <button class="ba ed" onclick="formSection('${r.section}','${r.id}')">ערוך</button>
+      <button class="ba del" onclick="delSection('${r.id}','למחוק?')">מחק</button></td>
+  </tr>`;
+}
+
+async function formSection(section,id){
+  let r={};
+  if(id){ const rows=await loadSection(section); r=rows.find(x=>x.id===id)||{}; }
+  const isNews = section==='positive_news';
+  showModal(`
+    <h2>${id?'עריכה':'פריט חדש'} · ${isNews?'חדשות טובות':'חדש בספרייה'}</h2>
+    <div class="fg"><label>כותרת</label><input id="sc_title" value="${esc(r.title||'')}" placeholder="${isNews?'מחקר חדש: תוחלת חיים בעלייה':'סופר עמוס עומד להגיע'}"></div>
+    ${!isNews?`<div class="fg"><label>תיאור</label><textarea id="sc_desc" placeholder="כמה מילים שיופיעו על המסך">${esc(r.description||'')}</textarea></div>`:''}
+    ${!isNews?`<div class="fg"><label>תאריך (אופציונלי)</label><input id="sc_date" value="${esc(r.event_date||'')}" placeholder="15.09.2026"></div>`:''}
+    ${!isNews?`<div class="frow">
+      <div class="fg"><label>אייקון (אמוג'י)</label><input id="sc_icon" value="${esc(r.icon||'📚')}" placeholder="📚"></div>
+      <div class="fg"><label>צבע תג</label><select id="sc_badge">
+        <option value="blue" ${(r.badge_color||'blue')==='blue'?'selected':''}>כחול</option>
+        <option value="orange" ${r.badge_color==='orange'?'selected':''}>כתום</option>
+        <option value="green" ${r.badge_color==='green'?'selected':''}>ירוק</option>
+        <option value="purple" ${r.badge_color==='purple'?'selected':''}>סגול</option>
+      </select></div>
+    </div>`:''}
+    <div class="fg"><label>סטטוס</label><select id="sc_status">
+      <option value="active" ${(r.status||'active')==='active'?'selected':''}>פעיל</option>
+      <option value="hidden" ${r.status==='hidden'?'selected':''}>מוסתר</option>
+    </select></div>
+    <div class="facts"><button class="btn-save" onclick="saveSection('${section}','${id||''}')">שמור</button>
+      <button class="btn-cancel" onclick="closeModal()">ביטול</button></div>`);
+}
+
+async function saveSection(section,id){
+  const d={ library_id:currentLibId(), section:section, title:$('sc_title').value.trim(),
+    status:$('sc_status').value, sort_order:0 };
+  if(section!=='positive_news'){
+    d.description=$('sc_desc')?$('sc_desc').value.trim():'';
+    d.event_date=$('sc_date')?$('sc_date').value.trim():'';
+    d.icon=$('sc_icon')?$('sc_icon').value.trim():'📚';
+    d.badge_color=$('sc_badge')?$('sc_badge').value:'blue';
+  }
+  if(!d.title) return toast('נא להזין כותרת');
+  const r = id? await api('content','update',d,id) : await api('content','create',d,null,currentLibId());
+  if(r.success){ closeModal(); toast('נשמר ✓'); renderTab(); } else toast(r.message||'שגיאה');
+}
+
+async function delSection(id,msg){
+  if(!confirm(msg)) return;
+  const r = await api('content','delete',{},id);
+  if(r.success){ toast('נמחק'); renderTab(); } else toast(r.message||'שגיאה');
+}
+
+/* ---------- טופס תמונה/סרטון ---------- */
+async function formPhoto(id){
+  let r={};
+  if(id){ const rows=await loadSection('photos'); r=rows.find(x=>x.id===id)||{}; }
+  showModal(`
+    <h2>${id?'עריכת':'הוספת'} תמונה/סרטון</h2>
+    <div class="fg"><label>כותרת (מופיעה מתחת לתמונה)</label><input id="ph_title" value="${esc(r.title||'')}" placeholder="שעת סיפור לילדים"></div>
+    <div class="fg"><label>קישור לתמונה או סרטון (URL)</label><input id="ph_url" value="${esc(r.image_url||'')}" dir="ltr" placeholder="https://… (תמונה: jpg/png, סרטון: mp4)"></div>
+    <div class="fg"><label>תיאור (אופציונלי)</label><textarea id="ph_desc" placeholder="טקסט נוסף">${esc(r.description||'')}</textarea></div>
+    <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:10px">תמונות: jpg, png, gif | סרטונים: mp4, webm, mov — המערכת מזהה אוטומטית</p>
+    <div class="fg"><label>סטטוס</label><select id="ph_status">
+      <option value="active" ${(r.status||'active')==='active'?'selected':''}>פעיל</option>
+      <option value="hidden" ${r.status==='hidden'?'selected':''}>מוסתר</option>
+    </select></div>
+    <div class="facts"><button class="btn-save" onclick="savePhoto('${id||''}')">שמור</button>
+      <button class="btn-cancel" onclick="closeModal()">ביטול</button></div>`);
+}
+
+async function savePhoto(id){
+  const d={ library_id:currentLibId(), section:'photos',
+    title:$('ph_title').value.trim(), image_url:$('ph_url').value.trim(),
+    description:$('ph_desc').value.trim(), status:$('ph_status').value, sort_order:0 };
+  if(!d.title) return toast('נא להזין כותרת');
+  if(!d.image_url) return toast('נא להזין קישור לתמונה או סרטון');
+  const r = id? await api('content','update',d,id) : await api('content','create',d,null,currentLibId());
+  if(r.success){ closeModal(); toast('נשמר ✓'); tabPhotos(); } else toast(r.message||'שגיאה');
 }
 
 /* ---------- אירועים ---------- */
