@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>תצוגת ספרייה — רחובות v2</title>
+<title>תצוגת ספרייה — רחובות</title>
 <link rel="icon" href="https://media.base44.com/images/public/69f63b4536d7a2c6688403df/a8e957c4e_generated_image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,29 +82,46 @@ body{
 }
 .card.green .ttl{color:#fff}
 
-/* HEADER */
-.top{display:grid;grid-template-columns:360px 1fr 360px;gap:14px}
-.brand{display:flex;align-items:center;gap:16px}
-.brand-art{
-  width:74px;height:64px;border-radius:14px;flex-shrink:0;
-  background:linear-gradient(180deg,#fff,#f3ece0);border:1px solid var(--edge);
-  display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:10px 8px;
-}
-.brand-art i{display:block;width:11px;border-radius:3px 3px 1px 1px}
-.brand-art i:nth-child(1){height:34px;background:var(--green-deep)}
-.brand-art i:nth-child(2){height:42px;background:#c0563f}
-.brand-art i:nth-child(3){height:28px;background:var(--gold)}
-.brand-art i:nth-child(4){height:38px;background:var(--sage)}
-.brand .nm{font-size:1.7rem;font-weight:900;color:var(--green-deep);line-height:1.1}
-.brand .tg{font-size:.92rem;color:var(--ink-soft);margin-top:3px}
-.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}
-.welcome .h{font-size:3rem;font-weight:900;color:var(--green-deep);line-height:1}
-.welcome .s{font-size:1.5rem;color:var(--green);font-weight:500;margin-top:2px}
+/* ===== HEADER — New Layout ===== */
+/* Right=Date+Time | Center=Library Name+Logo | Left=InfoScreen Logo */
+.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:stretch}
+
+/* RIGHT: Date + Time */
 .timec{display:flex;align-items:center;justify-content:center;gap:18px;padding:10px 18px}
 .timec .t{font-size:3.6rem;font-weight:900;color:var(--green-deep);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .timec .meta{text-align:right;border-right:1px solid var(--edge);padding-right:16px}
 .timec .d1{font-size:.95rem;color:var(--ink-soft)}
 .timec .d2{font-size:.95rem;color:var(--green);font-weight:700;margin-top:2px}
+
+/* CENTER: Library Name + Logo */
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;gap:6px}
+.welcome .lib-logo{
+  width:64px;height:64px;border-radius:14px;flex-shrink:0;overflow:hidden;
+  background:linear-gradient(180deg,#fff,#f3ece0);border:1px solid var(--edge);
+  display:flex;align-items:center;justify-content:center;margin-bottom:4px;
+}
+.welcome .lib-logo img{width:100%;height:100%;object-fit:cover}
+.welcome .lib-logo .placeholder{
+  font-size:1.8rem;color:var(--sage);
+}
+.welcome .h{font-size:2.4rem;font-weight:900;color:var(--green-deep);line-height:1;letter-spacing:-.02em}
+.welcome .s{font-size:1.3rem;color:var(--green);font-weight:500;margin-top:2px}
+
+/* LEFT: Info Screen Logo */
+.brand{display:flex;align-items:center;gap:16px;justify-content:flex-end;padding:10px 18px}
+.brand .is-logo{
+  width:74px;height:74px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(160deg,var(--green),var(--green-deep));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(30,74,61,.3),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.brand .is-logo .i-icon{
+  font-size:2.4rem;font-weight:900;color:var(--gold);
+  font-style:italic;line-height:1;
+}
+.brand .is-logo img{width:100%;height:100%;object-fit:cover;border-radius:16px}
+.brand .nm{font-size:1.5rem;font-weight:900;color:var(--green-deep);line-height:1.1;text-align:right}
+.brand .tg{font-size:.88rem;color:var(--ink-soft);margin-top:3px;text-align:right}
 
 /* BODY GRID — 2 left + 1 large right */
 .body-grid{flex:1;display:grid;grid-template-columns:340px 1fr;gap:14px;min-height:0}
@@ -211,7 +228,7 @@ body{
 @media(max-width:1100px){
   .top{grid-template-columns:1fr}
   .body-grid{grid-template-columns:1fr}
-  .welcome .h{font-size:2rem}
+  .welcome .h{font-size:1.8rem}
   .timec .t{font-size:2.5rem}
   .rss-bar{height:auto;min-height:60px;flex-wrap:wrap;padding:12px}
 }
@@ -221,25 +238,35 @@ body{
 <div id="tvFrame">
 <div class="stage">
 
-  <!-- HEADER -->
+  <!-- HEADER: Right=Date+Time | Center=Library Name+Logo | Left=InfoScreen Logo -->
   <div class="top">
-    <div class="card brand">
-      <div class="brand-art"><i></i><i></i><i></i><i></i></div>
-      <div>
-        <div class="nm">ספריית רחובות</div>
-        <div class="tg">Info Screen · Dekel Computers</div>
-      </div>
-    </div>
-    <div class="card welcome">
-      <div class="h">ברוכים הבאים 🌿</div>
-      <div class="s">שעות פתיחה ואירועים</div>
-    </div>
+    <!-- RIGHT: Date + Time -->
     <div class="card timec">
       <div class="meta">
         <div class="d1" id="dateStr">--</div>
         <div class="d2" id="dayStr">--</div>
       </div>
       <div class="t" id="clock">--:--</div>
+    </div>
+
+    <!-- CENTER: Library Name + Logo -->
+    <div class="card welcome">
+      <div class="lib-logo" id="libLogoBox">
+        <span class="placeholder">📚</span>
+      </div>
+      <div class="h" id="libName">ספריית רחובות</div>
+      <div class="s" id="libSubtitle">ברוכים הבאים 🌿</div>
+    </div>
+
+    <!-- LEFT: Info Screen Logo -->
+    <div class="card brand">
+      <div>
+        <div class="nm">Info Screen</div>
+        <div class="tg">Dekel Computers</div>
+      </div>
+      <div class="is-logo" id="isLogoBox">
+        <span class="i-icon">i</span>
+      </div>
     </div>
   </div>
 
@@ -301,6 +328,52 @@ body{
 </div>
 
 <script>
+// ===== LOAD LIBRARY SETTINGS =====
+async function loadSettings(){
+  try{
+    const res = await fetch('https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities/LibraryContent?limit=50&filter=library_id:eq:rehovot,section:eq:settings');
+    const data = await res.json();
+    if(data.data && data.data.length > 0){
+      const s = data.data[0].data;
+      if(s.library_name) document.getElementById('libName').textContent = s.library_name;
+      if(s.library_subtitle) document.getElementById('libSubtitle').textContent = s.library_subtitle;
+      if(s.library_logo){
+        document.getElementById('libLogoBox').innerHTML = '<img src="'+s.library_logo+'" alt="לוגו">';
+      }
+      if(s.infoscreen_logo){
+        document.getElementById('isLogoBox').innerHTML = '<img src="'+s.infoscreen_logo+'" alt="Info Screen">';
+      }
+    }
+  }catch(e){console.log('Settings not loaded yet');}
+}
+loadSettings();
+
+// ===== LOAD HOURS =====
+async function loadHours(){
+  try{
+    const res=await fetch("https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities/LibraryContent?limit=5&filter=library_id:eq:rehovot,section:eq:hours");
+    const data=await res.json();
+    if(data.data&&data.data.length>0){
+      const h=data.data[0].data;
+      const labels=["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+      const list=document.getElementById("hoursList");
+      list.innerHTML=labels.map((label,i)=>{
+        const val=h["h"+i]||(i===6?"סגור":"");
+        const closed=i===6||val.includes("סגור")?"closed":"";
+        return "<div class=\"hrow "+closed+"\"><span class=\"d\">"+label+"</span><span class=\"h\">"+val+"</span></div>";
+      }).join("");
+      highlightToday();
+    }
+  }catch(e){console.log("Hours not loaded");}
+}
+loadHours();
+
+function highlightToday(){
+  const todayIdx=(new Date().getDay()+6)%7;
+  const rows=document.querySelectorAll(".hrow");
+  rows.forEach((r,i)=>r.classList.toggle("today",i===todayIdx));
+}
+
 // ===== CLOCK =====
 function updateClock(){
   const now=new Date();
@@ -311,8 +384,7 @@ function updateClock(){
   const months=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
   document.getElementById('dateStr').textContent=now.getDate()+' '+months[now.getMonth()];
   document.getElementById('dayStr').textContent='יום '+days[now.getDay()];
-  // highlight today in hours
-  const todayIdx=(now.getDay()+6)%7; // Sunday=0 in JS, our list starts Sunday
+  const todayIdx=(now.getDay()+6)%7;
   const rows=document.querySelectorAll('.hrow');
   rows.forEach((r,i)=>{r.classList.toggle('today',i===todayIdx)});
 }
@@ -357,7 +429,6 @@ async function loadEvents(){
       </div>`;
     }).join('');
   }catch(e){
-    // fallback sample events
     document.getElementById('eventList').innerHTML=`
       <div class="ev"><div class="blob"></div><div class="b">
         <div class="t">סדנת כתיבה יוצרת</div>
@@ -380,23 +451,36 @@ async function loadEvents(){
 loadEvents();
 
 // ===== IMAGE SHOWCASE =====
-// Images can be set via admin or localStorage. For now, uses sample images.
-const sampleImages=[
-  {title:'ספריית רחובות',desc:'בית הספרים המרכזי',url:''},
-  {title:'סדנת כתיבה יוצרת',desc:'15.9 · 18:00',url:''},
-  {title:'מפגש סופרים',desc:'22.9 · 19:00',url:''}
-];
+async function loadImages(){
+  try{
+    const res=await fetch('https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities/LibraryContent?limit=20&filter=library_id:eq:rehovot,section:eq:showcase,status:eq:active');
+    const data=await res.json();
+    if(data.data && data.data.length > 0){
+      return data.data.map(item => ({
+        title: item.data.title || '',
+        desc: item.data.description || '',
+        url: item.data.image_url || ''
+      }));
+    }
+  }catch(e){}
+  return [
+    {title:'ספריית רחובות',desc:'בית הספרים המרכזי',url:''},
+    {title:'סדנת כתיבה יוצרת',desc:'15.9 · 18:00',url:''},
+    {title:'מפגש סופרים',desc:'22.9 · 19:00',url:''}
+  ];
+}
 
 const showcase=document.getElementById('imageShowcase');
 const dotsContainer=document.getElementById('imgDots');
 let currentSlide=0;
+let showcaseImages=[];
 
-function renderShowcase(){
-  // Build slides
+async function renderShowcase(){
+  showcaseImages = await loadImages();
   const existing=showcase.querySelectorAll('.image-slide');
   existing.forEach(s=>s.remove());
 
-  sampleImages.forEach((img,i)=>{
+  showcaseImages.forEach((img,i)=>{
     const slide=document.createElement('div');
     slide.className='image-slide'+(i===0?' on':'');
     slide.dataset.slide=i;
@@ -415,20 +499,20 @@ function renderShowcase(){
     showcase.appendChild(slide);
   });
 
-  // Build dots
   dotsContainer.innerHTML='';
-  sampleImages.forEach((_,i)=>{
+  showcaseImages.forEach((_,i)=>{
     const dot=document.createElement('div');
     dot.className='img-dot'+(i===0?' active':'');
     dot.onclick=()=>goToSlide(i);
     dotsContainer.appendChild(dot);
   });
 
-  // Auto-rotate
   if(window._showcaseTimer)clearInterval(window._showcaseTimer);
-  window._showcaseTimer=setInterval(()=>{
-    goToSlide((currentSlide+1)%sampleImages.length);
-  },7000);
+  if(showcaseImages.length>1){
+    window._showcaseTimer=setInterval(()=>{
+      goToSlide((currentSlide+1)%showcaseImages.length);
+    },7000);
+  }
 }
 
 function goToSlide(n){
@@ -443,10 +527,8 @@ function goToSlide(n){
 
 renderShowcase();
 
-// ===== RSS GOOD NEWS — Hebrew =====
+// ===== RSS GOOD NEWS =====
 async function loadRSS(){
-  // Primary: The Positiv (דה פוזיטיב) — Hebrew positive news
-  // Fallback: Ynet general news
   const feeds = [
     {url: 'https://api.rss2json.com/v1/api.json?rss_url=https://www.thepositiv.com/feed/', source: 'חדשות טובות', filter: true},
     {url: 'https://api.rss2json.com/v1/api.json?rss_url=https://www.ynet.co.il/Integration/StoryRss2.xml', source: 'Ynet', filter: false}
@@ -458,7 +540,6 @@ async function loadRSS(){
       const data=await res.json();
       if(data.status==='ok'&&data.items&&data.items.length>0){
         let items = data.items;
-        // Filter out sponsored content from The Positiv
         if(feed.filter){
           items = items.filter(item => 
             !item.title.includes('תוכן ממומן') && 
@@ -468,7 +549,7 @@ async function loadRSS(){
             !item.categories.includes('תוכן ממומן')
           );
         }
-        if(items.length === 0) continue; // try next feed
+        if(items.length === 0) continue;
 
         const track=document.getElementById('rssTrack');
         track.innerHTML=items.slice(0,15).map(item=>{
@@ -479,14 +560,13 @@ async function loadRSS(){
             <span>${title}</span>
           </div>`;
         }).join('');
-        return; // success, stop trying feeds
+        return;
       }
     }catch(e){
       console.log('RSS feed failed:', feed.url, e.message);
     }
   }
 
-  // Final fallback
   const fallbacks=[
     'בישראל: עלייה בשיעור המתנדבים בעמותות בשנה האחרונה',
     'מחקר חדש: תוחלת חיים בעלייה בעשור האחרון',
@@ -501,7 +581,7 @@ async function loadRSS(){
 }
 
 loadRSS();
-setInterval(loadRSS,300000); // refresh every 5 min
+setInterval(loadRSS,300000);
 </script>
 </body>
 </html>

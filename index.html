@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AILON Task</title>
+  <title>Info Screen · Dekel Computers</title>
   <script>
     (function(){
       var host = window.location.hostname;
-      // If accessed via infoscreen.co.il → redirect to Dekel library
+      var path = window.location.pathname;
+      // If accessed via infoscreen.co.il → show Rehovot display
       if (host.indexOf('infoscreen') !== -1) {
-        window.location.href = 'dekel-library/';
+        if (path.indexOf('admin') !== -1) {
+          window.location.href = 'dekel-library/admin-rehovot.html';
+        } else {
+          window.location.href = 'dekel-library/display-rehovot-v2.html';
+        }
+        return;
       }
+      // Default → landing page
+      window.location.href = 'dekel-library/';
     })();
   </script>
 </head>
 <body>
-  <p>מעביר לדף התדמית...</p>
-  <script>
-    // Redirect to landing page
-    if (!window.location.hostname.match(/infoscreen/)) {
-      window.location.href = 'landing/';
-    }
-  </script>
+  <p style="font-family:sans-serif;text-align:center;padding:40px">מעביר ל-Info Screen...</p>
 </body>
 </html>
