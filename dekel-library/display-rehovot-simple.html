@@ -35,16 +35,23 @@ body{height:100%;font-family:'Heebo',system-ui,sans-serif;background:linear-grad
 #frame{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden}
 .wrap{width:100%;flex:1;display:flex;flex-direction:column;gap:var(--gap);padding:var(--pad);padding-bottom:calc(var(--bar-h) + var(--pad) * 2);min-height:0;overflow:hidden}
 .header{display:flex;gap:var(--gap);flex-shrink:0;align-items:stretch}
-.header-left{display:flex;gap:var(--gap);flex:1}
 .header-right{flex-shrink:0;width:clamp(120px,12vw,240px)}
+.header-center{flex:1;display:flex;gap:var(--gap);align-items:stretch}
+.header-left{flex-shrink:0;width:clamp(100px,10vw,200px)}
 .rect{border-radius:var(--radius);padding:clamp(8px,1.2vw,20px) clamp(12px,1.5vw,24px);display:flex;align-items:center;justify-content:center;gap:clamp(6px,.8vw,12px);box-shadow:0 4px 14px rgba(0,0,0,.10)}
-.rect-logo{flex:0 0 auto;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff}
-.rect-title{flex:1;background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff}
+/* Right = Clock (time + date) */
 .rect-clock{width:100%;height:100%;background:linear-gradient(135deg,var(--orange),var(--orange-dark));color:#fff;flex-direction:column;gap:clamp(3px,.5vw,8px)}
-.rect .ic{font-size:var(--fs-icon);flex-shrink:0}
-.rect .txt{text-align:center}
-.rect .txt h2{font-size:var(--fs-title);font-weight:900;line-height:1.1}
-.rect .txt p{font-size:var(--fs-subtitle);opacity:.85;margin-top:2px}
+/* Center = Library name + optional logo */
+.rect-library{flex:1;background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;gap:clamp(8px,1vw,16px)}
+.rect-library .lib-logo{width:clamp(32px,4vw,64px);height:clamp(32px,4vw,64px);border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,.3)}
+.rect-library .lib-icon{font-size:var(--fs-icon);flex-shrink:0}
+.rect-library .txt{text-align:center}
+.rect-library .txt h2{font-size:var(--fs-title);font-weight:900;line-height:1.1}
+.rect-library .txt p{font-size:var(--fs-subtitle);opacity:.85;margin-top:2px}
+/* Left = Info Screen brand */
+.rect-infoscreen{width:100%;height:100%;background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;flex-direction:column;gap:clamp(2px,.3vw,6px)}
+.rect-infoscreen .is-icon{font-size:clamp(20px,3vw,44px);font-weight:900;line-height:1;font-family:system-ui,sans-serif}
+.rect-infoscreen .is-text{font-size:clamp(.6rem,1vw,1rem);font-weight:700;letter-spacing:.05em;line-height:1.1;text-align:center}
 .rect-clock .clock-num{font-size:var(--fs-clock);font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
 .rect-clock .clock-date{font-size:var(--fs-clock-date);opacity:.9}
 .body-grid{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
@@ -88,8 +95,9 @@ body{height:100%;font-family:'Heebo',system-ui,sans-serif;background:linear-grad
 .news-item .dot{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7;flex-shrink:0}
 @media(max-width:600px) and (orientation:portrait){
   .header{flex-direction:column}
-  .header-left{flex-direction:row}
+  .header-center{flex-direction:row;width:100%}
   .header-right{width:100%}
+  .header-left{width:100%}
   .rect-clock{flex-direction:row;gap:10px}
   .body-grid{flex-direction:column;min-height:0}
   .photo-panel{min-height:25vh;flex:none}
