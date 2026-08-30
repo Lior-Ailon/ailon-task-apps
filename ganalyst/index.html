@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="2026-08-30-v1">
+<title>GANALYST · קורס מסחר בשיטת גאן | יגאל סקולניק</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0f172a; --ink-soft:#64748b;
+  --brand:#0d9488; --brand-light:#14b8a6; --brand-dark:#0f766e;
+  --navy:#1e3a5f; --navy-light:#2e5a8f;
+  --gold:#d9a441; --gold-light:#e8c274;
+  --paper:#f8fafc; --paper-2:#ffffff; --paper-edge:#e2e8f0;
+  --r:16px; --r-sm:10px;
+  --shadow:0 4px 16px rgba(15,23,42,.06);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.10);
+}
+body{font-family:'Heebo',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h2,h3{letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:none}
+a{color:inherit;text-decoration:none}
+section{padding:clamp(40px,6vw,80px) 24px;max-width:960px;margin:0 auto}
+
+/* HERO */
+.hero{
+  position:relative;min-height:92vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 24px;overflow:hidden;
+  background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 35%,#0f766e 70%,#0d9488 100%);
+  color:#fff;
+}
+.hero::before{content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 20% 30%,rgba(13,148,136,.25) 0%,transparent 50%),
+    radial-gradient(circle at 80% 70%,rgba(30,58,95,.30) 0%,transparent 50%);
+  z-index:0;
+}
+.hero-content{position:relative;z-index:2;max-width:780px}
+.hero .badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.25);
+  backdrop-filter:blur(8px);padding:8px 20px;border-radius:999px;
+  font-size:.88rem;font-weight:600;margin-bottom:24px;
+}
+.hero h1{font-size:clamp(2rem,6vw,3.6rem);font-weight:900;line-height:1.1;margin-bottom:16px}
+.hero h1 .accent{
+  background:linear-gradient(135deg,var(--gold-light),#f0d98a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero .subtitle{font-size:clamp(1rem,2.5vw,1.4rem);opacity:.9;margin-bottom:36px;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25d366;color:#fff;font-weight:800;font-size:1.1rem;
+  padding:16px 40px;border-radius:999px;
+  box-shadow:0 8px 28px rgba(37,211,102,.4);transition:.25s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(37,211,102,.5)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-weight:700;font-size:1rem;
+  padding:16px 32px;border-radius:999px;backdrop-filter:blur(8px);transition:.25s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.20);transform:translateY(-2px)}
+
+.hero-instructor{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-top:40px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);border-radius:16px;
+  padding:16px 24px;max-width:480px;margin-left:auto;margin-right:auto;
+  backdrop-filter:blur(8px);
+}
+.hero-instructor img{
+  width:56px;height:56px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(255,255,255,.3);
+}
+.hero-instructor .info{text-align:right}
+.hero-instructor .name{font-weight:800;font-size:1.05rem}
+.hero-instructor .role{font-size:.82rem;opacity:.75}
+
+/* SECTIONS */
+.section-head{text-align:center;margin-bottom:40px}
+.section-head .tag{font-size:.82rem;font-weight:700;letter-spacing:.18em;color:var(--brand);text-transform:uppercase;margin-bottom:10px}
+.section-head h2{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900}
+.section-head p{font-size:1.05rem;color:var(--ink-soft);max-width:600px;margin:10px auto 0}
+
+/* CARDS */
+.card-grid{display:grid;gap:20px}
+@media(min-width:640px){.card-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.card-grid.two-thirds{grid-template-columns:repeat(4,1fr)}}
+
+.card{
+  background:var(--paper-2);border:1px solid var(--paper-edge);
+  border-radius:var(--r);padding:28px 24px;
+  box-shadow:var(--shadow);transition:.25s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--brand-light)}
+.card .ico{font-size:2.2rem;margin-bottom:12px}
+.card h3{font-size:1.15rem;font-weight:800;margin-bottom:8px}
+.card p{font-size:.95rem;color:var(--ink-soft);line-height:1.55}
+
+/* QUOTE */
+.quote-box{
+  background:linear-gradient(135deg,#f0fdfa,#ccfbf1);
+  border:1px solid #99f6e4;border-radius:var(--r);
+  padding:36px 32px;text-align:center;max-width:720px;margin:0 auto;
+}
+.quote-box .mark{font-size:3rem;color:var(--brand-light);line-height:.5;margin-bottom:10px}
+.quote-box p{font-size:1.1rem;font-style:italic;color:var(--brand-dark);line-height:1.7}
+.quote-box .author{font-size:.9rem;font-weight:700;color:var(--brand);margin-top:12px;font-style:normal}
+
+/* TIMELINE / STEPS */
+.steps{display:flex;flex-direction:column;gap:16px;max-width:640px;margin:0 auto}
+.step{
+  display:flex;gap:16px;align-items:flex-start;
+  background:var(--paper-2);border:1px solid var(--paper-edge);
+  border-radius:var(--r);padding:20px 24px;box-shadow:var(--shadow);
+}
+.step .num{
+  flex-shrink:0;width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),var(--brand-dark));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.1rem;
+}
+.step .content h3{font-size:1.05rem;font-weight:800;margin-bottom:4px}
+.step .content p{font-size:.92rem;color:var(--ink-soft)}
+
+/* MODES */
+.modes-grid{display:grid;gap:16px}
+@media(min-width:640px){.modes-grid{grid-template-columns:repeat(3,1fr)}}
+.mode-card{
+  text-align:center;background:var(--paper-2);
+  border:1px solid var(--paper-edge);border-radius:var(--r);
+  padding:28px 20px;box-shadow:var(--shadow);transition:.25s;
+}
+.mode-card:hover{transform:translateY(-4px);border-color:var(--brand-light);box-shadow:var(--shadow-lg)}
+.mode-card .ico{font-size:2.4rem;margin-bottom:10px}
+.mode-card h3{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.mode-card p{font-size:.88rem;color:var(--ink-soft)}
+
+/* CREDENTIALS */
+.credentials{
+  display:grid;gap:12px;max-width:640px;margin:0 auto;
+}
+.cred-item{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:14px 18px;background:var(--paper-2);
+  border:1px solid var(--paper-edge);border-radius:var(--r-sm);
+  box-shadow:var(--shadow);
+}
+.cred-item .check{color:var(--brand);font-size:1.2rem;flex-shrink:0}
+.cred-item p{font-size:.92rem;line-height:1.5}
+.cred-item strong{font-weight:800}
+
+/* CTA */
+.cta-section{text-align:center}
+.cta-box{
+  background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0d9488 100%);
+  color:#fff;border-radius:var(--r);padding:clamp(36px,5vw,56px) 32px;
+  box-shadow:var(--shadow-lg);
+}
+.cta-box h2{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:12px}
+.cta-box p{font-size:1.1rem;opacity:.9;margin-bottom:28px}
+.cta-box .limited{color:var(--gold-light);font-weight:700;font-size:.9rem;margin-bottom:20px}
+.cta-instructor{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-bottom:28px;background:rgba(255,255,255,.08);
+  border-radius:14px;padding:14px 20px;max-width:420px;margin-left:auto;margin-right:auto;
+}
+.cta-instructor img{
+  width:56px;height:56px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(255,255,255,.3);
+}
+.cta-instructor .name{font-weight:800;font-size:1rem}
+.cta-instructor .phone{font-size:.85rem;opacity:.8}
+
+/* FOOTER */
+.footer{padding:48px 24px;background:#0f172a;color:rgba(255,255,255,.7);text-align:center}
+.footer .logo{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:10px}
+.footer .tagline{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:20px}
+.footer .disclaimer{font-size:.78rem;color:rgba(255,255,255,.35);max-width:600px;margin:0 auto;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);margin-top:20px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:.6s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:640px){
+  .hero-cta{flex-direction:column;align-items:center}
+  .btn-primary,.btn-secondary{width:100%;max-width:320px;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" style="max-width:none">
+  <div class="hero-content">
+    <div class="badge">📊 שיטת גאן · W.D. Gann · מאז 2007</div>
+    <h1>תפסיק לנחש את השוק —<br><span class="accent">תתחיל להבין אותו</span></h1>
+    <p class="subtitle">קורס שנותן לך את הכלים לקרוא את השוק ולקבל החלטות בעצמך, בשיטת גאן</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="window.location.href='https://wa.me/972542232352?text=שלום יגאל, אני מעוניין בקורס שיטת גאן'">💬 פנה ליגאל בוואטסאפ</button>
+      <button class="btn-secondary" onclick="window.location.href='tel:0542232352'">📞 054-223-2352</button>
+    </div>
+    <div class="hero-instructor">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/e54001ffb_a88e308ef_whatsapp_image_1582388990244273.jpg" alt="יגאל סקולניק">
+      <div class="info">
+        <div class="name">יגאל סקולניק</div>
+        <div class="role">מייסד GANALYST · מעל 20 שנה בשוק ההון</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="tag">למה בכלל</div>
+    <h2>למה לדעת לנתח את שוק ההון?</h2>
+    <p>הכסף שלך כבר בשוק — פנסיה, קרנות, חסכונות. עדיף שתבין מה קורה איתו.</p>
+  </div>
+  <div class="card-grid">
+    <div class="card"><div class="ico">💰</div><h3>הכסף שלך כבר שם</h3><p>פנסיה, קרנות, חסכונות ופיצויים עובדים בשוק. עדיף שתבין מה קורה איתם.</p></div>
+    <div class="card"><div class="ico">🧭</div><h3>עצמאות</h3><p>להפסיק להיות תלוי ביועצים, בעמלות ובעצות של אחרים, ולקבל החלטות בעצמך.</p></div>
+    <div class="card"><div class="ico">🛡️</div><h3>הגנה</h3><p>מי שמבין את השוק קשה הרבה יותר להטעות אותו.</p></div>
+    <div class="card"><div class="ico">📈</div><h3>הזדמנות</h3><p>ידע שמאפשר לייצר מקור הכנסה נוסף ולהצמיח את ההון שלך.</p></div>
+  </div>
+</section>
+
+<!-- GANN QUOTE -->
+<section class="reveal" style="padding-top:0">
+  <div class="quote-box">
+    <div class="mark">"</div>
+    <p>W.D. Gann, מגדולי הסוחרים של המאה ה-20, גילה עיקרון אחד ששינה הכול:<br><b>מחיר וזמן הם מערכת אחת — שאפשר לחשב מראש.</b></p>
+    <div class="author">למה דווקא שיטת גאן?</div>
+  </div>
+</section>
+
+<!-- WHAT YOU'LL LEARN -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="tag">תוכן הקורס</div>
+    <h2>מה תדע לעשות בסוף הקורס?</h2>
+  </div>
+  <div class="card-grid two-thirds">
+    <div class="card"><div class="ico">📊</div><h3>להכיר את השוק</h3><p>שוק ההון והמכשירים הפיננסיים — מניות, מדדים, סחורות, מט"ח ועוד</p></div>
+    <div class="card"><div class="ico">📈</div><h3>לקרוא כל גרף</h3><p>בכל שוק בעולם — בביטחון מלא</p></div>
+    <div class="card"><div class="ico">🎯</div><h3>לחשב יעד מחיר</h3><p>עוד לפני הכניסה לעסקה</p></div>
+    <div class="card"><div class="ico">🔄</div><h3>לזהות היפוך מגמה</h3><p>בחלון זמן מדויק, לפני שהוא קורה</p></div>
+    <div class="card"><div class="ico">⚖️</div><h3>ניהול סיכונים</h3><p>כניסה מחושבת עם הגנת הפסד</p></div>
+    <div class="card"><div class="ico">🧠</div><h3>ביטחון ושקט נפשי</h3><p>במקום להגיב בפחד, מבינים את המהלך עוד לפני שהוא קורה</p></div>
+    <div class="card"><div class="ico">🔮</div><h3>תחזית עצמאית</h3><p>לבנות תחזית לשוק ולהפסיק להיות תלוי באחרים</p></div>
+    <div class="card"><div class="ico">✅</div><h3>למתחילים ומנוסים</h3><p>מתחילים מאפס — סוחרים מנוסים מקבלים מה שלניתוח הרגיל אין</p></div>
+  </div>
+</section>
+
+<!-- INSTRUCTOR -->
+<section class="reveal" style="background:var(--paper-2)">
+  <div class="section-head">
+    <div class="tag">המדריך</div>
+    <h2>מי מלמד אתכם</h2>
+  </div>
+  <div class="credentials">
+    <div class="cred-item"><div class="check">✅</div><p><strong>יגאל סקולניק</strong> — מייסד GANALYST, מנהל תיקי השקעות וסוחר עצמאי מעל 20 שנה</p></div>
+    <div class="cred-item"><div class="check">✅</div><p>הראשון בישראל שהביא את <strong>שיטת גאן המלאה</strong> — מאז 2007</p></div>
+    <div class="cred-item"><div class="check">✅</div><p>המדריך היחיד בארץ שמלמד את <strong>השיטה המלאה</strong></p></div>
+    <div class="cred-item"><div class="check">✅</div><p><strong>תחזית מוכחת:</strong> תחתית אפריל 2025 — חודש מראש</p></div>
+  </div>
+</section>
+
+<!-- LEARNING MODES -->
+<section class="reveal">
+  <div class="section-head">
+    <div class="tag">מתכונת</div>
+    <h2>איך לומדים?</h2>
+    <p>מסלולים מותאמים לכל רמה — למתחילים ללא ידע קודם ולסוחרים מנוסים</p>
+  </div>
+  <div class="modes-grid">
+    <div class="mode-card">
+      <div class="ico">🏫</div>
+      <h3>לימוד פרונטלי</h3>
+      <p>שיעור בכיתה באשקלון</p>
+    </div>
+    <div class="mode-card">
+      <div class="ico">💻</div>
+      <h3>אונליין בזום</h3>
+      <p>שידור חי מכל מקום</p>
+    </div>
+    <div class="mode-card">
+      <div class="ico">📱</div>
+      <h3>קורס דיגיטלי</h3>
+      <p>מוקלט — בקצב שלך</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="reveal cta-section" style="padding-top:0">
+  <div class="cta-box">
+    <h2>מוכנים להתחיל?</h2>
+    <p>צרו קשר ונגדיר יחד את המסלול המתאים לכם</p>
+    <div class="limited">⚠️ מספר המקומות במחזור מוגבל</div>
+    <div class="cta-instructor">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/e54001ffb_a88e308ef_whatsapp_image_1582388990244273.jpg" alt="יגאל סקולניק">
+      <div style="text-align:right">
+        <div class="name">יגאל סקולניק</div>
+        <div class="phone">054-223-2352 · GANALYST.co.il</div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="window.location.href='https://wa.me/972542232352?text=שלום יגאל, אני מעוניין בקורס שיטת גאן'">💬 פנה ליגאל בוואטסאפ</button>
+    <br>
+    <button class="btn-secondary" style="margin-top:10px" onclick="window.location.href='tel:0542232352'">📞 חייגו: 054-223-2352</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="logo">📊 GANALYST</div>
+  <div class="tagline">קורס מסחר בשיטת גאן · יגאל סקולניק · 054-223-2352</div>
+  <div class="disclaimer">התוכן הינו חינוכי בלבד ואינו מהווה ייעוץ השקעות או המלצה לפעולה. מסחר בשוק ההון כרוך בסיכון.</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
