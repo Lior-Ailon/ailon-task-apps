@@ -6,18 +6,8 @@
   <title>Info Screen · Dekel Computers</title>
   <script>
     (function(){
-      var host = window.location.hostname;
       var path = window.location.pathname;
-      // If accessed via infoscreen.co.il → show Rehovot display
-      if (host.indexOf('infoscreen') !== -1) {
-        if (path.indexOf('admin') !== -1) {
-          window.location.href = 'dekel-library/admin-rehovot.html';
-        } else {
-          window.location.href = 'dekel-library/display-rehovot-v2.html';
-        }
-        return;
-      }
-      // Default → landing page
+      // Always go to the main management interface — login first, then choose display or admin
       window.location.href = 'dekel-library/';
     })();
   </script>

@@ -329,22 +329,44 @@ body{
 
 <script>
 // ===== LOAD LIBRARY SETTINGS =====
+// First try LibraryTenant display_settings (managed via main admin), fallback to LibraryContent settings section
 async function loadSettings(){
+  // Try LibraryTenant first
   try{
-    const res = await fetch('https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities/LibraryContent?limit=50&filter=library_id:eq:rehovot,section:eq:settings');
+    const res = await fetch('https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities/LibraryTenant/6a7cc19fa127f9005c2b4f3f');
+    const data = await res.json();
+    if(data && data.data){
+      const lib = data.data;
+      if(lib.name) document.getElementById('libName').textContent = lib.name;
+      let ds = lib.display_settings;
+      if(typeof ds === 'string'){ try{ ds = JSON.parse(ds); }catch(e){ ds = {}; } }
+      if(ds){
+        if(ds.library_logo){
+          document.getElementById('libLogoBox').innerHTML = '<img src="'+ds.library_logo+'" alt="לוגו">';
+        }
+        if(ds.infoscreen_logo){
+          document.getElementById('isLogoBox').innerHTML = '<img src="'+ds.infoscreen_logo+'" alt="Info Screen">';
+        }
+      }
+    }
+  }catch(e){ console.log('LibraryTenant not loaded, trying settings section'); }
+  
+  // Also try LibraryContent settings for subtitle
+  try{
+    const res = await fetch('https://api.base44.com/api/apps/69f63b4536d7a2c6688403df/entities/LibraryContent?limit=5&filter=library_id:eq:rehovot,section:eq:settings');
     const data = await res.json();
     if(data.data && data.data.length > 0){
       const s = data.data[0].data;
-      if(s.library_name) document.getElementById('libName').textContent = s.library_name;
+      if(s.library_name && !document.getElementById('libName').textContent) document.getElementById('libName').textContent = s.library_name;
       if(s.library_subtitle) document.getElementById('libSubtitle').textContent = s.library_subtitle;
-      if(s.library_logo){
+      if(s.library_logo && !document.getElementById('libLogoBox').querySelector('img')){
         document.getElementById('libLogoBox').innerHTML = '<img src="'+s.library_logo+'" alt="לוגו">';
       }
-      if(s.infoscreen_logo){
+      if(s.infoscreen_logo && !document.getElementById('isLogoBox').querySelector('img')){
         document.getElementById('isLogoBox').innerHTML = '<img src="'+s.infoscreen_logo+'" alt="Info Screen">';
       }
     }
-  }catch(e){console.log('Settings not loaded yet');}
+  }catch(e){ console.log('Settings section not loaded'); }
 }
 loadSettings();
 
