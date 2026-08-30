@@ -4,10 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0">
-<title>Puratos · דוח ניסויים — תחום הלחמים</title>
+<meta name="version" content="4.0">
+<title>Puratos · דוח ניסויים — תחום הלחמים v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,19 +15,26 @@
   --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
   --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b;
   --gray-600: #475569; --gray-700: #334155; --gray-800: #1e293b;
-  --green: #16a34a; --radius-card: 12px; --radius-btn: 10px; --radius-input: 8px;
+  --green: #16a34a; --green-light: #dcfce7; --orange: #f59e0b;
+  --blue: #2563eb; --blue-light: #dbeafe;
+  --radius-card: 12px; --radius-btn: 10px; --radius-input: 8px;
   --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Heebo',sans-serif; background:var(--gray-100); color:var(--gray-800); line-height:1.5; padding-bottom:40px; -webkit-tap-highlight-color:transparent; }
-.header { background:#fff; padding:16px 24px; box-shadow:0 2px 10px rgba(0,0,0,0.05); border-bottom:1px solid var(--gray-200); }
-.header-top { display:flex; align-items:center; justify-content:space-between; }
+body { font-family:'Heebo',sans-serif; background:var(--gray-100); color:var(--gray-800); line-height:1.5; padding-bottom:60px; -webkit-tap-highlight-color:transparent; }
+
+/* Header */
+.header { background:#fff; padding:16px 24px; box-shadow:0 2px 10px rgba(0,0,0,0.05); border-bottom:1px solid var(--gray-200); position:sticky; top:0; z-index:100; }
+.header-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
 .header-left { display:flex; align-items:center; gap:12px; }
-.header-left svg { height:42px; width:auto; }
 .header-right { text-align:left; }
 .header-right h1 { font-size:17px; font-weight:700; color:var(--gray-800); display:flex; align-items:center; gap:8px; }
 .header-right p { font-size:12px; color:var(--gray-500); }
 .header-tag { background:var(--puratos-red); color:#fff; font-size:11px; padding:2px 10px; border-radius:20px; font-weight:700; }
+.header-nav { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px solid var(--gray-100); }
+.nav-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:1.5px solid var(--gray-200); background:#fff; color:var(--gray-600); transition:all 0.2s; font-family:inherit; }
+.nav-btn:hover { border-color:var(--puratos-red); color:var(--puratos-red); }
+.nav-btn.active { background:var(--puratos-red); color:#fff; border-color:var(--puratos-red); }
 .header-meta { display:flex; gap:24px; margin-top:12px; padding-top:10px; border-top:1px solid var(--gray-100); align-items:center; flex-wrap:wrap; }
 .header-meta-item { display:flex; align-items:center; gap:8px; font-size:13px; }
 .header-meta-item label { margin:0; font-weight:700; color:var(--gray-700); white-space:nowrap; }
@@ -37,9 +42,19 @@ body { font-family:'Heebo',sans-serif; background:var(--gray-100); color:var(--g
 .header-meta-item input.locked { background:var(--gray-100); color:var(--gray-600); border-color:var(--gray-200); cursor:not-allowed; }
 .lock-badge { display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--gray-500); background:var(--gray-100); padding:1px 6px; border-radius:4px; border:1px solid var(--gray-200); }
 .unlock-row { display:none; gap:8px; margin-top:8px; }
-.container { max-width:900px; margin:20px auto 0; padding:0 16px; }
+.status-badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; }
+.status-draft { background:#fef3c7; color:#92400e; }
+.status-submitted { background:var(--green-light); color:#15803d; }
+
+/* Container */
+.container { max-width:1000px; margin:20px auto 0; padding:0 16px; }
+
+/* Cards */
 .card { background:#fff; border-radius:var(--radius-card); padding:24px; margin-bottom:20px; box-shadow:var(--shadow-md); border:1px solid var(--gray-200); }
-.card-title { font-size:18px; font-weight:700; color:var(--puratos-red); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--puratos-light); display:flex; align-items:center; gap:8px; }
+.card-title { font-size:18px; font-weight:700; color:var(--puratos-red); margin-bottom:18px; padding-bottom:10px; border-bottom:2px solid var(--puratos-light); display:flex; align-items:center; gap:8px; justify-content:space-between; }
+.card-title .actions-inline { display:flex; gap:6px; }
+
+/* Form elements */
 .form-row { display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
 .form-field { flex:1; min-width:180px; }
 .form-field.full { flex:100%; }
@@ -49,18 +64,39 @@ input:focus, textarea:focus, select:focus { border-color:var(--puratos-red); out
 textarea { resize:vertical; min-height:70px; }
 .section-divider { display:flex; align-items:center; gap:12px; margin:22px 0 14px; font-size:15px; font-weight:700; color:var(--gray-700); }
 .section-divider .line { flex:1; height:1px; background:var(--gray-200); }
+
+/* Experiment tabs */
 .exp-tabs { display:flex; gap:6px; margin-bottom:16px; overflow-x:auto; padding-bottom:6px; }
 .exp-tab { padding:10px 20px; border-radius:var(--radius-btn); font-size:14px; font-weight:600; background:var(--gray-100); color:var(--gray-600); white-space:nowrap; cursor:pointer; border:1.5px solid var(--gray-200); transition:all 0.2s; user-select:none; }
 .exp-tab:hover { color:var(--puratos-red); border-color:rgba(204,9,47,0.3); background:var(--puratos-light); }
 .exp-tab.active { background:var(--puratos-red); border-color:var(--puratos-red); color:#fff; box-shadow:0 2px 8px rgba(204,9,47,0.25); }
+
+/* View toggle */
+.view-toggle { display:flex; gap:8px; margin-bottom:16px; }
+.view-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:1.5px solid var(--gray-200); background:#fff; color:var(--gray-600); font-family:inherit; }
+.view-btn.active { background:var(--gray-700); color:#fff; border-color:var(--gray-700); }
+
+/* Ingredient table */
 .ing-headers { display:flex; gap:10px; margin-bottom:10px; font-size:12.5px; color:var(--gray-500); font-weight:700; padding:0 4px; }
-.ing-headers .ing-name { flex:2.5; } .ing-headers .ing-gram { flex:1; } .ing-headers .ing-pct { flex:1; } .ing-headers .spacer { width:36px; flex-shrink:0; }
+.ing-headers .ing-name { flex:2.5; } .ing-headers .ing-gram { flex:1; } .ing-headers .ing-pct { flex:1; } .ing-headers .ing-type { width:80px; flex-shrink:0; } .ing-headers .spacer { width:36px; flex-shrink:0; }
 .ingredient-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
 .ingredient-row .ing-name { flex:2.5; } .ingredient-row .ing-gram { flex:1; } .ingredient-row .ing-pct { flex:1; }
 .ingredient-row .ing-pct input { background:var(--puratos-light); color:var(--puratos-red); font-weight:600; pointer-events:none; opacity:0.85; }
 .ingredient-row.is-flour .ing-name input { font-weight:700; border-color:var(--puratos-red); background:var(--puratos-light); }
 .ingredient-row .remove-btn { background:#fef2f2; border:1px solid #fecaca; border-radius:8px; width:36px; height:38px; color:#dc2626; cursor:pointer; font-size:16px; font-weight:bold; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .ingredient-row .remove-btn:hover { background:#fee2e2; border-color:#fca5a5; }
+.ing-checkbox-wrap { display:flex; align-items:center; justify-content:center; width:80px; flex-shrink:0; }
+.ing-checkbox-wrap label { font-size:11px; margin:0; text-align:center; line-height:1.2; }
+
+/* Comparison table */
+.compare-table { overflow-x:auto; }
+.compare-table table { width:100%; border-collapse:collapse; font-size:13px; }
+.compare-table th { background:var(--gray-100); padding:10px 12px; font-weight:700; text-align:center; border:1px solid var(--gray-200); white-space:nowrap; }
+.compare-table td { padding:8px 12px; text-align:center; border:1px solid var(--gray-200); }
+.compare-table .ing-col { text-align:right; font-weight:600; }
+.compare-table .flour-row { background:var(--puratos-light); font-weight:700; }
+
+/* Buttons */
 .add-btn { background:var(--gray-50); border:1.5px dashed var(--gray-300); border-radius:var(--radius-btn); padding:10px 20px; color:var(--gray-600); font-size:14px; font-weight:600; cursor:pointer; width:100%; margin-top:8px; font-family:inherit; }
 .add-btn:hover { border-color:var(--puratos-red); color:var(--puratos-red); background:var(--puratos-light); }
 .btn { padding:12px 26px; border-radius:var(--radius-btn); font-size:15px; font-weight:700; border:none; cursor:pointer; transition:all 0.2s; font-family:inherit; display:inline-flex; align-items:center; gap:8px; justify-content:center; }
@@ -68,35 +104,86 @@ textarea { resize:vertical; min-height:70px; }
 .btn-primary:hover { background:var(--puratos-dark); transform:translateY(-1px); }
 .btn-secondary { background:#fff; color:var(--gray-700); border:1.5px solid var(--gray-300); }
 .btn-secondary:hover { background:var(--gray-100); border-color:var(--gray-400); }
+.btn-green { background:var(--green); color:#fff; }
+.btn-green:hover { background:#15803d; }
+.btn-orange { background:var(--orange); color:#fff; }
+.btn-orange:hover { background:#d97706; }
+.btn-sm { padding:8px 14px; font-size:13px; }
 .btn-unlock { background:#fef3c7; color:#92400e; border:1.5px solid #fcd34d; font-size:13px; padding:8px 16px; }
 .btn-unlock:hover { background:#fde68a; }
 .actions { display:flex; gap:12px; justify-content:center; padding:16px 0; flex-wrap:wrap; }
+
+/* Process grid */
 .process-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .process-grid .full { grid-column:1/-1; }
+
+/* Tags */
+.tags-container { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.tag { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--gray-300); background:#fff; color:var(--gray-600); transition:all 0.2s; }
+.tag.active { background:var(--puratos-red); color:#fff; border-color:var(--puratos-red); }
+.tag:hover { border-color:var(--puratos-red); }
+.tag-input { padding:4px 10px; border:1.5px dashed var(--gray-300); border-radius:20px; font-size:12px; width:120px; }
+
+/* Photos */
+.photo-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; margin-top:12px; }
+.photo-item { position:relative; border-radius:10px; overflow:hidden; border:1px solid var(--gray-200); aspect-ratio:1; }
+.photo-item img { width:100%; height:100%; object-fit:cover; }
+.photo-item .remove { position:absolute; top:4px; left:4px; background:rgba(239,68,68,0.9); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:14px; }
+.photo-upload { border:2px dashed var(--gray-300); border-radius:10px; padding:30px; text-align:center; cursor:pointer; color:var(--gray-500); font-size:14px; }
+.photo-upload:hover { border-color:var(--puratos-red); color:var(--puratos-red); }
+
+/* Success message */
 .success-msg { position:fixed; top:84px; left:50%; transform:translateX(-50%); background:var(--green); color:#fff; padding:14px 28px; border-radius:var(--radius-btn); font-size:15px; font-weight:700; box-shadow:0 8px 24px rgba(22,163,74,0.3); z-index:200; display:none; }
 .success-msg.show { display:block; animation:slideIn 0.3s ease; }
 @keyframes slideIn { from{opacity:0;transform:translateX(-50%) translateY(-15px);} to{opacity:1;transform:translateX(-50%) translateY(0);} }
+
+/* Dashboard */
+.dashboard { display:none; }
+.report-item { background:#fff; border:1px solid var(--gray-200); border-radius:10px; padding:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s; }
+.report-item:hover { border-color:var(--puratos-red); box-shadow:0 4px 12px rgba(204,9,47,0.1); }
+.report-item .ri-top { display:flex; justify-content:space-between; align-items:center; }
+.report-item .ri-title { font-weight:700; font-size:15px; color:var(--gray-800); }
+.report-item .ri-meta { font-size:12px; color:var(--gray-500); margin-top:6px; display:flex; gap:16px; flex-wrap:wrap; }
+.report-item .ri-tags { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+.report-item .ri-tags .tag { font-size:10px; padding:2px 8px; }
+.filter-bar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+.filter-bar input, .filter-bar select { padding:8px 14px; border:1.5px solid var(--gray-300); border-radius:8px; font-size:14px; }
+.filter-bar input { flex:1; min-width:200px; }
+
+/* Footer */
 .footer-note { font-size:12.5px; color:var(--gray-400); text-align:center; padding:20px 16px; }
 .info-label { font-size:13.5px; color:var(--gray-500); margin-bottom:14px; }
-@media(max-width:640px) { .header{padding:12px 16px;} .header-right p{display:none;} .process-grid{grid-template-columns:1fr;} .form-row{flex-direction:column;gap:12px;} .actions{flex-direction:column;} .btn{width:100%;} .header-meta{flex-direction:column;gap:8px;} .header-meta-item input{width:100%;} }
+
+/* Copy buttons */
+.copy-btn { padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; border:1.5px solid var(--gray-300); background:#fff; color:var(--gray-600); font-family:inherit; display:inline-flex; align-items:center; gap:4px; }
+.copy-btn:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+
+/* Responsive */
+@media(max-width:640px) { .header{padding:12px 16px;} .header-right p{display:none;} .process-grid{grid-template-columns:1fr;} .form-row{flex-direction:column;gap:12px;} .actions{flex-direction:column;} .btn{width:100%;} .header-meta{flex-direction:column;gap:8px;} .header-meta-item input{width:100%;} .compare-table{font-size:11px;} }
+
+/* Print */
 @media print {
   body { background:#fff; }
   .header { position:static; box-shadow:none; border-bottom:2px solid var(--puratos-red); padding:0 0 12px; }
+  .header-nav { display:none; }
   .header-meta { border-top:1px solid var(--gray-200); }
   .container { margin:0; padding:0; max-width:100%; }
   .card { box-shadow:none; border:1px solid var(--gray-300); page-break-inside:avoid; }
-  .actions, .unlock-row, .footer-note { display:none !important; }
+  .actions, .unlock-row, .footer-note, .view-toggle, .add-btn, .remove-btn, .copy-btn { display:none !important; }
   .exp-tabs { display:none; }
+  .ingredient-row .ing-pct, .ing-headers .ing-pct { display:none; }
   input, textarea, select { border:1px solid var(--gray-300); background:#fff; }
-  .ingredient-row .remove-btn { display:none; }
-  .add-btn { display:none; }
-  .btn { display:none; }
   .print-title { display:block; font-size:20px; font-weight:700; color:var(--puratos-red); margin-bottom:8px; text-align:center; }
+  .empty-print { display:none !important; }
+  .card:has(.empty-print:only-child) { display:none; }
+  /* Hide empty fields in print */
+  .form-field:has(input:not([value]):not([type=checkbox])), .form-field:has(textarea:empty) { display:none; }
 }
 .print-title { display:none; }
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="header-top">
     <div class="header-left">
@@ -111,6 +198,12 @@ textarea { resize:vertical; min-height:70px; }
       <h1>דוח ניסויים — תחום הלחמים <span class="header-tag">R&D</span></h1>
       <p>שייך לנוהל תכן ופיתוח</p>
     </div>
+  </div>
+  <div class="header-nav">
+    <button class="nav-btn active" onclick="showForm()" id="navForm">📝 טופס ניסוי</button>
+    <button class="nav-btn" onclick="showDashboard()" id="navDash">📊 דוחות שמורים</button>
+    <span style="flex:1"></span>
+    <span class="status-badge status-draft" id="statusBadge">טיוטה</span>
   </div>
   <div class="header-meta">
     <div class="header-meta-item">
@@ -130,27 +223,66 @@ textarea { resize:vertical; min-height:70px; }
 </div>
 
 <div class="print-title">דוח ניסויים — תחום הלחמים (Bakery R&D)</div>
+<div class="success-msg" id="successMsg"></div>
 
-<div class="success-msg" id="successMsg">✓ הדוח נשמר בהצלחה</div>
-<div class="container">
+<!-- ============ FORM VIEW ============ -->
+<div class="container" id="formView">
 
+  <!-- General Details -->
   <div class="card">
     <div class="card-title">📋 פרטים כלליים</div>
     <div class="form-row">
-      <div class="form-field full"><label>שם הפרויקט</label><input id="projectName" placeholder="לדוגמה: פיתוח לחם כפרי חדש"></div>
+      <div class="form-field full"><label>שם הפרויקט</label><input id="projectName" placeholder="לדוגמה: פיתוח לחם כפרי חדש" list="projectList"><datalist id="projectList"></datalist></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>שיוך לדו"ח קודם (מספר / שם)</label><input id="linkedReport" placeholder="אופציונלי" list="reportList"><datalist id="reportList"></datalist></div>
+      <div class="form-field"><label>תאריך ביצוע</label><input type="date" id="execDate"></div>
     </div>
     <div class="form-row">
       <div class="form-field full"><label>מטרת הניסוי</label><textarea id="expPurpose" placeholder="תיאור מטרת הניסוי..." style="min-height:60px"></textarea></div>
     </div>
     <div class="form-row">
-      <div class="form-field"><label>שם החוקר/ת</label><input id="researcher" placeholder="שם מלא"></div>
-      <div class="form-field"><label>תאריך ביצוע</label><input type="date" id="execDate"></div>
+      <div class="form-field"><label>שם החוקר/ת</label><select id="researcher"><option value="">בחר...</option><option>ליאור סופר</option><option>עומרי יקירון</option><option>שירה כהן</option><option>מאיר לוי</option><option>נועה אברהם</option><option value="other">אחר...</option></select></div>
+      <div class="form-field" id="researcherOtherWrap" style="display:none"><label>שם ידני</label><input id="researcherOther" placeholder="הזן שם"></div>
+    </div>
+    <!-- Tags -->
+    <div class="form-field full" style="margin-top:14px">
+      <label>תגיות</label>
+      <div class="tags-container" id="tagsContainer">
+        <span class="tag" data-tag="מחמצת" onclick="toggleTag(this)">מחמצת</span>
+        <span class="tag" data-tag="CL" onclick="toggleTag(this)">CL</span>
+        <span class="tag" data-tag="בריוש" onclick="toggleTag(this)">בריוש</span>
+        <span class="tag" data-tag="ללא סוכר" onclick="toggleTag(this)">ללא סוכר</span>
+        <span class="tag" data-tag="קמח מלא" onclick="toggleTag(this)">קמח מלא</span>
+        <input class="tag-input" id="customTagInput" placeholder="+ תגית" onkeypress="if(event.key==='Enter')addCustomTag()">
+      </div>
     </div>
   </div>
 
+  <!-- Fixed Raw Materials -->
   <div class="card">
-    <div class="card-title">🧪 המתכון — חומרי גלם</div>
-    <div class="exp-tabs">
+    <div class="card-title">
+      <span>🧪 חומרי גלם קבועים — משותף לכל הניסויים</span>
+      <div class="actions-inline">
+        <button class="copy-btn" onclick="importFromReport()">📥 ייבוא מדו"ח קודם</button>
+      </div>
+    </div>
+    <div class="info-label">חומרי גלם שזהים בכל הניסויים. ניתן לסמן מספר סוגי קמח — המשקל הכולל ייחשב כ-100%.</div>
+    <div class="ing-headers"><div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% מתוך הקמח</div><div class="ing-type">קמח?</div><div class="spacer"></div></div>
+    <div id="fixedIngContainer"></div>
+  </div>
+
+  <!-- Variable Raw Materials -->
+  <div class="card">
+    <div class="card-title">
+      <span>🧪 חומרי גלם משתנים — לפי ניסוי</span>
+      <div class="actions-inline">
+        <button class="copy-btn" onclick="copyFromExp1()">📋 העתק מניסוי 1</button>
+        <button class="copy-btn" onclick="toggleCompare()">📊 תצוגה משווה</button>
+      </div>
+    </div>
+    <div class="info-label">חומרי גלם שמשתנים בין הניסויים. העתק מניסוי 1 למילוי מהיר.</div>
+    <div class="exp-tabs" id="varExpTabs">
       <div class="exp-tab active" data-exp="1">ניסוי 1</div>
       <div class="exp-tab" data-exp="2">ניסוי 2</div>
       <div class="exp-tab" data-exp="3">ניסוי 3</div>
@@ -158,24 +290,23 @@ textarea { resize:vertical; min-height:70px; }
       <div class="exp-tab" data-exp="5">ניסוי 5</div>
       <div class="exp-tab" data-exp="6">ניסוי 6</div>
     </div>
-    <div id="experimentsContainer"></div>
+    <div id="varIngContainer"></div>
+    <!-- Comparison view -->
+    <div id="compareView" style="display:none">
+      <div class="compare-table" id="compareTable"></div>
+    </div>
   </div>
 
+  <!-- Fixed Process Conditions -->
   <div class="card">
-    <div class="card-title">📝 תיאור התהליך</div>
+    <div class="card-title">📝 תנאים קבועים — משותף לכל הניסויים</div>
     <div class="section-divider"><span>🥖 הכנת הבצק</span><span class="line"></span></div>
     <div class="process-grid">
-      <div class="form-field"><label>זמן לישה (דקות)</label><input type="number" id="kneadTime" placeholder="דקות"></div>
+      <div class="form-field"><label>זמן לישה משוער (דקות)</label><input type="number" id="kneadTimeEst" placeholder="דקות"></div>
       <div class="form-field"><label>טמפ' בצק רצויה (°C)</label><input type="number" id="doughTemp" step="0.1" placeholder="°C"></div>
       <div class="form-field"><label>תפיחה ב-Bulk — זמן</label><input id="bulkFerment" placeholder="לדוגמה: 60 דקות"></div>
       <div class="form-field"><label>משקל יחידת בצק (גרם)</label><input type="number" id="doughWeight" step="1" placeholder="גרם"></div>
-      <div class="form-field full"><label>נתוני מולדר</label><input id="moulder" placeholder="לדוגמה: מהירות 60%"></div>
-    </div>
-    <div class="section-divider"><span>⏳ תפיחה</span><span class="line"></span></div>
-    <div class="process-grid">
-      <div class="form-field"><label>תפיחה סופית — זמן</label><input id="finalFerment" placeholder="לדוגמה: 45 דקות"></div>
-      <div class="form-field"><label>טמפ' תפיחה (°C)</label><input type="number" id="fermentTemp" step="0.1" placeholder="°C"></div>
-      <div class="form-field"><label>לחות בתא התפיחה (%)</label><input type="number" id="fermentHumidity" placeholder="%"></div>
+      <div class="form-field full"><label>נתוני מולדר</label><input id="moulder" placeholder=""></div>
     </div>
     <div class="section-divider"><span>🔥 אפייה</span><span class="line"></span></div>
     <div class="process-grid">
@@ -185,20 +316,51 @@ textarea { resize:vertical; min-height:70px; }
     </div>
   </div>
 
+  <!-- Variable Process Conditions -->
   <div class="card">
-    <div class="card-title">📊 מדדי תהליך במהלך הניסוי</div>
-    <div class="process-grid">
-      <div class="form-field"><label>טמפ' בצק בפועל (°C)</label><input type="number" id="actualDoughTemp" step="0.1" placeholder="°C"></div>
-      <div class="form-field"><label>מרקם הבצק</label><select id="doughTexture"><option value="">בחר...</option><option>רך מדי</option><option>רך</option><option>תקין</option><option>קשה</option><option>קשה מדי</option></select></div>
-      <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="number" id="actualFermentTime" placeholder="דקות"></div>
-      <div class="form-field"><label>נפח ויציבות בסוף התפיחה</label><select id="volumeStability"><option value="">בחר...</option><option>נפח נמוך — לא יציב</option><option>נפח בינוני — יציב חלקית</option><option>נפח טוב — יציב</option><option>נפח גבוה — יציב מאוד</option></select></div>
+    <div class="card-title">⚙️ תנאים משתנים — לפי ניסוי</div>
+    <div class="info-label">תנאים שיכולים להשתנות בין הניסויים (זמן לישה בפועל, תפיחה, טמפ' וכו').</div>
+    <div class="exp-tabs" id="varCondTabs">
+      <div class="exp-tab active" data-exp="1">ניסוי 1</div>
+      <div class="exp-tab" data-exp="2">ניסוי 2</div>
+      <div class="exp-tab" data-exp="3">ניסוי 3</div>
+      <div class="exp-tab" data-exp="4">ניסוי 4</div>
+      <div class="exp-tab" data-exp="5">ניסוי 5</div>
+      <div class="exp-tab" data-exp="6">ניסוי 6</div>
     </div>
+    <div id="varCondContainer"></div>
   </div>
 
+  <!-- Process Metrics -->
+  <div class="card">
+    <div class="card-title">📊 מדדי תהליך במהלך הניסוי — לפי ניסוי</div>
+    <div class="info-label">תיעוד נפרד לכל ניסוי לצורך השוואה מהירה.</div>
+    <div class="exp-tabs" id="metricsTabs">
+      <div class="exp-tab active" data-exp="1">ניסוי 1</div>
+      <div class="exp-tab" data-exp="2">ניסוי 2</div>
+      <div class="exp-tab" data-exp="3">ניסוי 3</div>
+      <div class="exp-tab" data-exp="4">ניסוי 4</div>
+      <div class="exp-tab" data-exp="5">ניסוי 5</div>
+      <div class="exp-tab" data-exp="6">ניסוי 6</div>
+    </div>
+    <div id="metricsContainer"></div>
+  </div>
+
+  <!-- Photos -->
+  <div class="card">
+    <div class="card-title">📷 תמונות</div>
+    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+      📸 לחץ לצירוף תמונות לדו"ח
+    </div>
+    <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
+    <div class="photo-grid" id="photoGrid"></div>
+  </div>
+
+  <!-- Conclusions -->
   <div class="card">
     <div class="card-title">✍️ מסקנות</div>
     <div class="info-label">הזן את כל המסקנות מהניסוי — מרקם, צורה, טעם והערות כלליות.</div>
-    <div class="form-row" style="margin-top:12px">
+    <div class="form-row">
       <div class="form-field full"><label>מסקנות</label><textarea id="conclusions" placeholder="הזן את המסקנות — מרקם הפנים (crumb), צורת הכיכר (crust), טעם, והערות כלליות..." style="min-height:120px"></textarea></div>
     </div>
     <div class="form-row">
@@ -206,225 +368,686 @@ textarea { resize:vertical; min-height:70px; }
     </div>
   </div>
 
+  <!-- Actions -->
   <div class="actions">
-    <button class="btn btn-primary" onclick="saveReport()">💾 שמור דוח</button>
+    <button class="btn btn-secondary" onclick="saveDraft()">💾 שמור טיוטה</button>
+    <button class="btn btn-green" onclick="submitReport()">✓ הגש דו"ח</button>
     <button class="btn btn-secondary" onclick="exportExcel()">📊 ייצא לאקסל</button>
     <button class="btn btn-secondary" onclick="window.print()">🖨️ הדפסה</button>
-    <a class="btn btn-secondary" href="../puratos-bakery-knowledge/" style="text-decoration:none">📚 מאגר דוחות</a>
     <button class="btn btn-secondary" onclick="clearForm()">🗑️ נקה</button>
   </div>
-  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v3.0</div>
+  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.0</div>
+</div>
+
+<!-- ============ DASHBOARD VIEW ============ -->
+<div class="container dashboard" id="dashboardView">
+  <div class="card">
+    <div class="card-title">📊 דוחות שמורים</div>
+    <div class="filter-bar">
+      <input type="text" id="dashFilter" placeholder="חיפוש לפי פרויקט..." oninput="renderDashboard()">
+      <select id="dashSort" onchange="renderDashboard()">
+        <option value="-created_date">חדש ביותר</option>
+        <option value="exec_date">לפי תאריך ביצוע</option>
+        <option value="project_name">לפי שם פרויקט</option>
+      </select>
+    </div>
+    <div id="dashList"><div style="text-align:center;color:var(--gray-400);padding:40px">טוען...</div></div>
+  </div>
 </div>
 
 <script>
-const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','קמח 90% טחון','קמח 70% טחון','קמח קשה','קמח כוסמין','קמח שיבולת שוער','קמח רך','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
-let currentExp=1;
-let experiments={};
-for(let i=1;i<=6;i++){experiments[i]=[];for(let j=0;j<15;j++){experiments[i].push({name:'',gram:'',isFlour:false});}}
-experiments[1][0].isFlour=true;
+// ===== Constants =====
+const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','קמח 90% טחון','קמח 70% טחון','קמח קשה','קמח כוסמין','קמח שיבולת שוער','קמח מלא','קמח רך','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
+const DEFAULT_INGS=['קמח 90% טחון','שמרים טריים','מים'];
+const API_BASE='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+let currentReportId=null;
+let activeTags=[];
+let photos=[];
 
-document.querySelectorAll('.exp-tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.exp-tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    currentExp=parseInt(tab.dataset.exp);
-    renderExperiment(currentExp);
+// ===== State =====
+let fixedIngs=[];
+let varIngs={};
+let varConditions={};
+let processMetrics={};
+let currentVarExp=1;
+let currentCondExp=1;
+let currentMetricsExp=1;
+
+// Initialize with defaults
+function initState(){
+  fixedIngs=[];
+  DEFAULT_INGS.forEach((name,i)=>{
+    fixedIngs.push({name:name,gram:'',isFlour:i===0});
   });
+  for(let i=1;i<=6;i++){
+    varIngs[i]=[];
+    for(let j=0;j<10;j++) varIngs[i].push({name:'',gram:'',isFlour:false});
+    varConditions[i]={actualKneadTime:'',finalFermentTime:'',fermentTemp:'',fermentHumidity:''};
+    processMetrics[i]={actualDoughTemp:'',doughTexture:'',actualFermentTime:'',volumeStability:''};
+  }
+}
+initState();
+
+// ===== Researcher dropdown =====
+document.getElementById('researcher').addEventListener('change',function(){
+  document.getElementById('researcherOtherWrap').style.display=this.value==='other'?'block':'none';
 });
 
-function escapeHtml(s){if(!s)return'';return s.replace(/"/g,'&quot;');}
-function escapeCsv(val){if(!val)return'';val=String(val);if(val.indexOf(',')>=0||val.indexOf('"')>=0||val.indexOf('\n')>=0){return '"'+val.replace(/"/g,'""')+'"';}return val;}
-
-function findFlourIdx(exp){
-  for(var i=0;i<experiments[exp].length;i++){if(experiments[exp][i].isFlour&&parseFloat(experiments[exp][i].gram)>0)return i;}
-  for(var i=0;i<experiments[exp].length;i++){if(experiments[exp][i].name&&experiments[exp][i].name.indexOf('קמח')>=0&&parseFloat(experiments[exp][i].gram)>0)return i;}
-  return -1;
+// ===== Tags =====
+function toggleTag(el){
+  el.classList.toggle('active');
+  updateTags();
 }
-
-function calcPct(exp,idx){
-  var fi=findFlourIdx(exp);
-  if(fi<0)return '—';
-  var fg=parseFloat(experiments[exp][fi].gram);
-  if(!fg||fg<=0)return '—';
-  var ig=parseFloat(experiments[exp][idx].gram);
-  if(!ig||ig<=0)return '';
-  return (ig/fg*100).toFixed(1)+'%';
+function addCustomTag(){
+  const input=document.getElementById('customTagInput');
+  const val=input.value.trim();
+  if(!val)return;
+  const el=document.createElement('span');
+  el.className='tag active';
+  el.textContent=val;
+  el.onclick=function(){toggleTag(this)};
+  document.getElementById('tagsContainer').insertBefore(el,input);
+  input.value='';
+  updateTags();
 }
-
-function renderExperiment(expNum){
-  var container=document.getElementById('experimentsContainer');
-  if(!container)return;
-  container.innerHTML='';
-  var div=document.createElement('div');
-  div.className='exp-content active';
-  var headers=document.createElement('div');
-  headers.className='ing-headers';
-  headers.innerHTML='<div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% ביחס לקמח</div><div class="spacer"></div>';
-  div.appendChild(headers);
-  var ings=experiments[expNum];
-  ings.forEach(function(ing,idx){
-    var row=document.createElement('div');
-    row.className='ingredient-row';
-    if(ing.isFlour)row.classList.add('is-flour');
-    var pv=calcPct(expNum,idx);
-    row.innerHTML='<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="checkbox" '+(ing.isFlour?'checked':'')+' onchange="toggleFlour('+expNum+','+idx+',this.checked)" title="סמן כקמח" style="width:auto"><input type="text" list="ingList" value="'+escapeHtml(ing.name)+'" oninput="updateIng('+expNum+','+idx+',\'name\',this.value)" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="'+(ing.gram||'')+'" oninput="updateIng('+expNum+','+idx+',\'gram\',this.value)" onchange="renderExperiment('+expNum+')" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="'+pv+'" readonly placeholder="—"></div><button class="remove-btn" onclick="removeIng('+expNum+','+idx+')" title="הסר שורה">✕</button>';
-    div.appendChild(row);
+function updateTags(){
+  activeTags=[];
+  document.querySelectorAll('#tagsContainer .tag.active').forEach(t=>activeTags.push(t.dataset.tag||t.textContent));
+}
+function autoTags(){
+  // Auto-suggest tags based on ingredients
+  const allNames=[...fixedIngs.map(i=>i.name),...Object.values(varIngs).flat().map(i=>i.name)].join(' ');
+  const tagEls=document.querySelectorAll('#tagsContainer .tag');
+  tagEls.forEach(el=>{
+    const tag=el.dataset.tag;
+    if(tag==='קמח מלא' && allNames.includes('קמח מלא')){el.classList.add('active');}
+    updateTags();
   });
-  var addBtn=document.createElement('button');
-  addBtn.className='add-btn';
-  addBtn.innerHTML='+ הוסף חומר גלם';
-  addBtn.onclick=function(){experiments[expNum].push({name:'',gram:'',isFlour:false});renderExperiment(expNum);};
-  div.appendChild(addBtn);
-  var dl=document.createElement('datalist');
+}
+
+// ===== Fixed Ingredients =====
+function renderFixedIngs(){
+  const c=document.getElementById('fixedIngContainer');
+  c.innerHTML='';
+  fixedIngs.forEach((ing,idx)=>{
+    const pv=calcPctFixed(idx);
+    const row=document.createElement('div');
+    row.className='ingredient-row'+(ing.isFlour?' is-flour':'');
+    row.innerHTML=`<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="text" list="ingList" value="${esc(ing.name)}" oninput="fixedIngs[${idx}].name=this.value" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="${ing.gram||''}" oninput="fixedIngs[${idx}].gram=this.value" onchange="renderFixedIngs()" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="${pv}" readonly placeholder="—"></div><div class="ing-checkbox-wrap"><label><input type="checkbox" ${ing.isFlour?'checked':''} onchange="toggleFlourFixed(${idx},this.checked)">קמח</label></div><button class="remove-btn" onclick="removeFixedIng(${idx})">✕</button>`;
+    c.appendChild(row);
+  });
+  const dl=document.createElement('datalist');
   dl.id='ingList';
-  INGREDIENTS.forEach(function(i){var o=document.createElement('option');o.value=i;dl.appendChild(o);});
-  div.appendChild(dl);
-  container.appendChild(div);
+  INGREDIENTS.forEach(i=>{const o=document.createElement('option');o.value=i;dl.appendChild(o);});
+  c.appendChild(dl);
+  const addBtn=document.createElement('button');
+  addBtn.className='add-btn';
+  addBtn.textContent='+ הוסף חומר גלם קבוע';
+  addBtn.onclick=()=>{fixedIngs.push({name:'',gram:'',isFlour:false});renderFixedIngs();};
+  c.appendChild(addBtn);
 }
 
-function toggleFlour(exp,idx,checked){
-  if(checked){experiments[exp].forEach(function(ing){ing.isFlour=false;});experiments[exp][idx].isFlour=true;}
-  else{experiments[exp][idx].isFlour=false;}
-  renderExperiment(exp);
+function toggleFlourFixed(idx,checked){
+  fixedIngs[idx].isFlour=checked;
+  renderFixedIngs();
 }
 
-function updateIng(exp,idx,field,val){experiments[exp][idx][field]=val;}
-
-function removeIng(exp,idx){
-  if(experiments[exp][idx].isFlour){if(!confirm('זהו שורת הקמח. מחיקה תבטל את חישוב האחוזים. להמשיך?'))return;}
-  experiments[exp].splice(idx,1);
-  renderExperiment(exp);
+function removeFixedIng(idx){
+  if(fixedIngs[idx].isFlour && fixedIngs.filter(i=>i.isFlour).length<=1){
+    if(!confirm('זהו סוג הקמח האחרון. מחיקה תבטל את חישוב האחוזים. להמשיך?'))return;
+  }
+  fixedIngs.splice(idx,1);
+  renderFixedIngs();
 }
 
-document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
-document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
+// Multiple flour support: sum all flour weights as 100%
+function getTotalFlourWeight(){
+  let total=0;
+  fixedIngs.forEach(ing=>{
+    if(ing.isFlour && parseFloat(ing.gram)>0) total+=parseFloat(ing.gram);
+  });
+  return total;
+}
+
+function calcPctFixed(idx){
+  const totalFlour=getTotalFlourWeight();
+  if(totalFlour<=0)return '—';
+  const g=parseFloat(fixedIngs[idx].gram);
+  if(!g||g<=0)return '';
+  return (g/totalFlour*100).toFixed(1)+'%';
+}
+
+// ===== Variable Ingredients =====
+function renderVarIngs(expNum){
+  const c=document.getElementById('varIngContainer');
+  c.innerHTML='';
+  const headers=document.createElement('div');
+  headers.className='ing-headers';
+  headers.innerHTML='<div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% מתוך הקמח</div><div class="ing-type">קמח?</div><div class="spacer"></div>';
+  c.appendChild(headers);
+  const ings=varIngs[expNum];
+  ings.forEach((ing,idx)=>{
+    const pv=calcPctVar(expNum,idx);
+    const row=document.createElement('div');
+    row.className='ingredient-row'+(ing.isFlour?' is-flour':'');
+    row.innerHTML=`<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="text" list="ingList2" value="${esc(ing.name)}" oninput="varIngs[${expNum}][${idx}].name=this.value" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="${ing.gram||''}" oninput="varIngs[${expNum}][${idx}].gram=this.value" onchange="renderVarIngs(${expNum})" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="${pv}" readonly placeholder="—"></div><div class="ing-checkbox-wrap"><label><input type="checkbox" ${ing.isFlour?'checked':''} onchange="toggleFlourVar(${expNum},${idx},this.checked)">קמח</label></div><button class="remove-btn" onclick="removeVarIng(${expNum},${idx})">✕</button>`;
+    c.appendChild(row);
+  });
+  const dl=document.createElement('datalist');
+  dl.id='ingList2';
+  INGREDIENTS.forEach(i=>{const o=document.createElement('option');o.value=i;dl.appendChild(o);});
+  c.appendChild(dl);
+  const addBtn=document.createElement('button');
+  addBtn.className='add-btn';
+  addBtn.textContent='+ הוסף חומר גלם משתנה';
+  addBtn.onclick=()=>{varIngs[expNum].push({name:'',gram:'',isFlour:false});renderVarIngs(expNum);};
+  c.appendChild(addBtn);
+}
+
+function toggleFlourVar(exp,idx,checked){
+  varIngs[exp][idx].isFlour=checked;
+  renderVarIngs(exp);
+}
+
+function removeVarIng(exp,idx){
+  varIngs[exp].splice(idx,1);
+  renderVarIngs(exp);
+}
+
+function getTotalFlourVar(exp){
+  let total=0;
+  // Include fixed flour + variable flour
+  fixedIngs.forEach(ing=>{if(ing.isFlour&&parseFloat(ing.gram)>0)total+=parseFloat(ing.gram);});
+  varIngs[exp].forEach(ing=>{if(ing.isFlour&&parseFloat(ing.gram)>0)total+=parseFloat(ing.gram);});
+  return total;
+}
+
+function calcPctVar(exp,idx){
+  const totalFlour=getTotalFlourVar(exp);
+  if(totalFlour<=0)return '—';
+  const g=parseFloat(varIngs[exp][idx].gram);
+  if(!g||g<=0)return '';
+  return (g/totalFlour*100).toFixed(1)+'%';
+}
+
+// Copy from experiment 1
+function copyFromExp1(){
+  const target=currentVarExp;
+  if(target===1){alert('נא לעבור לניסוי 2 ומעלה כדי להעתיק מניסוי 1');return;}
+  if(!confirm('להעתיק את חומרי הגלם המשתנים מניסוי 1 לניסוי '+target+'?'))return;
+  varIngs[target]=JSON.parse(JSON.stringify(varIngs[1]));
+  renderVarIngs(target);
+  showMsg('הועתק מניסוי 1 ✓',1500);
+}
+
+// Import from previous report
+async function importFromReport(){
+  const reports=await fetchReports();
+  const projects={};
+  reports.forEach(r=>{
+    const name=r.project_name||r.data?.project_name;
+    if(name)projects[name]=r;
+  });
+  const names=Object.keys(projects);
+  if(names.length===0){alert('אין דוחות שמורים לייבוא');return;}
+  const choice=prompt('בחר פרויקט לייבוא חומרי גלם:\n\n'+names.map((n,i)=>(i+1)+'. '+n).join('\n')+'\n\nהזן מספר:');
+  const idx=parseInt(choice)-1;
+  if(isNaN(idx)||idx<0||idx>=names.length)return;
+  const report=projects[names[idx]];
+  try{
+    const fi=JSON.parse(report.fixed_ingredients||report.data?.fixed_ingredients||'[]');
+    if(fi.length>0){
+      fixedIngs=fi;
+      renderFixedIngs();
+      showMsg('חומרי גלם קבועים הועתקו מ"'+names[idx]+'" ✓',2000);
+    }
+  }catch(e){alert('שגיאה בייבוא');}
+}
+
+// Comparison view
+let compareMode=false;
+function toggleCompare(){
+  compareMode=!compareMode;
+  const v=document.getElementById('compareView');
+  const c=document.getElementById('varIngContainer');
+  const tabs=document.getElementById('varExpTabs');
+  if(compareMode){
+    v.style.display='block';
+    c.style.display='none';
+    tabs.style.display='none';
+    renderCompareTable();
+  }else{
+    v.style.display='none';
+    c.style.display='block';
+    tabs.style.display='flex';
+  }
+}
+
+function renderCompareTable(){
+  // Collect all ingredient names across all experiments + fixed
+  const allNames=[];
+  const nameSet={};
+  fixedIngs.forEach(ing=>{if(ing.name&&!nameSet[ing.name]){nameSet[ing.name]=1;allNames.push(ing.name);}});
+  for(let i=1;i<=6;i++){varIngs[i].forEach(ing=>{if(ing.name&&!nameSet[ing.name]){nameSet[ing.name]=1;allNames.push(ing.name);}});}
+  
+  let html='<table><thead><tr><th>חומר גלם</th>';
+  for(let i=1;i<=6;i++)html+='<th>ניסוי '+i+'</th>';
+  html+='</tr></thead><tbody>';
+  
+  allNames.forEach(name=>{
+    const isFlour=fixedIngs.find(i=>i.name===name&&i.isFlour)||Object.values(varIngs).flat().find(i=>i.name===name&&i.isFlour);
+    html+='<tr'+(isFlour?' class="flour-row"':'')+'><td class="ing-col">'+esc(name)+'</td>';
+    for(let i=1;i<=6;i++){
+      let val='';
+      const fixed=fixedIngs.find(ing=>ing.name===name);
+      if(fixed&&fixed.gram)val=fixed.gram+'g';
+      const variable=varIngs[i].find(ing=>ing.name===name);
+      if(variable&&variable.gram)val=(val?val+'+' :'')+variable.gram+'g';
+      if(!val)val='—';
+      html+='<td>'+val+'</td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('compareTable').innerHTML=html;
+}
+
+// ===== Variable Conditions =====
+function renderVarConditions(expNum){
+  const c=document.getElementById('varCondContainer');
+  const cond=varConditions[expNum];
+  c.innerHTML=`<div class="process-grid">
+    <div class="form-field"><label>זמן לישה בפועל (דקות)</label><input type="number" value="${cond.actualKneadTime||''}" oninput="varConditions[${expNum}].actualKneadTime=this.value" placeholder="דקות"></div>
+    <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="number" value="${cond.finalFermentTime||''}" oninput="varConditions[${expNum}].finalFermentTime=this.value" placeholder="דקות"></div>
+    <div class="form-field"><label>טמפ' תפיחה (°C)</label><input type="number" step="0.1" value="${cond.fermentTemp||''}" oninput="varConditions[${expNum}].fermentTemp=this.value" placeholder="°C"></div>
+    <div class="form-field"><label>לחות בתא התפיחה (%)</label><input type="number" value="${cond.fermentHumidity||''}" oninput="varConditions[${expNum}].fermentHumidity=this.value" placeholder="%"></div>
+  </div>`;
+}
+
+// ===== Process Metrics =====
+function renderMetrics(expNum){
+  const c=document.getElementById('metricsContainer');
+  const m=processMetrics[expNum];
+  c.innerHTML=`<div class="process-grid">
+    <div class="form-field"><label>טמפ' בצק בפועל (°C)</label><input type="number" step="0.1" value="${m.actualDoughTemp||''}" oninput="processMetrics[${expNum}].actualDoughTemp=this.value" placeholder="°C"></div>
+    <div class="form-field"><label>מרקם הבצק (טקסט חופשי)</label><input type="text" value="${esc(m.doughTexture)||''}" oninput="processMetrics[${expNum}].doughTexture=this.value" placeholder="תאר את מרקם הבצק..."></div>
+    <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="number" value="${m.actualFermentTime||''}" oninput="processMetrics[${expNum}].actualFermentTime=this.value" placeholder="דקות"></div>
+    <div class="form-field"><label>נפח ויציבות בסוף התפיחה</label><select onchange="processMetrics[${expNum}].volumeStability=this.value"><option value="">בחר...</option><option ${m.volumeStability==='נפח נמוך — לא יציב'?'selected':''}>נפח נמוך — לא יציב</option><option ${m.volumeStability==='נפח בינוני — יציב חלקית'?'selected':''}>נפח בינוני — יציב חלקית</option><option ${m.volumeStability==='נפח טוב — יציב'?'selected':''}>נפח טוב — יציב</option><option ${m.volumeStability==='נפח גבוה — יציב מאוד'?'selected':''}>נפח גבוה — יציב מאוד</option></select></div>
+  </div>`;
+}
+
+// ===== Tab handlers =====
+function setupTabs(tabsId,onChange){
+  document.querySelectorAll('#'+tabsId+' .exp-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('#'+tabsId+' .exp-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      onChange(parseInt(tab.dataset.exp));
+    });
+  });
+}
+setupTabs('varExpTabs',e=>{currentVarExp=e;renderVarIngs(e);});
+setupTabs('varCondTabs',e=>{currentCondExp=e;renderVarConditions(e);});
+setupTabs('metricsTabs',e=>{currentMetricsExp=e;renderMetrics(e);});
+
+// ===== Photos =====
+function handlePhotos(input){
+  const files=Array.from(input.files);
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const dataUrl=e.target.result;
+      photos.push(dataUrl);
+      renderPhotos();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderPhotos(){
+  const grid=document.getElementById('photoGrid');
+  grid.innerHTML=photos.map((p,i)=>
+    `<div class="photo-item"><img src="${p}"><button class="remove" onclick="photos.splice(${i},1);renderPhotos()">✕</button></div>`
+  ).join('');
+}
+
+// ===== Save/Submit =====
+function collectData(status){
+  return{
+    id:currentReportId,
+    projectName:val('projectName'),
+    expPurpose:val('expPurpose'),
+    researcher:document.getElementById('researcher').value==='other'?val('researcherOther'):document.getElementById('researcher').value,
+    approver:val('approver'),
+    execDate:val('execDate'),
+    updateDate:val('updateDate'),
+    status:status,
+    linkedReportId:val('linkedReport'),
+    tags:activeTags.join(', '),
+    fixedIngredients:fixedIngs,
+    variableIngredients:varIngs,
+    fixedConditions:{
+      kneadTimeEst:val('kneadTimeEst'),
+      doughTemp:val('doughTemp'),
+      bulkFerment:val('bulkFerment'),
+      doughWeight:val('doughWeight'),
+      moulder:val('moulder'),
+      ovenType:val('ovenType'),
+      bakingProgram:val('bakingProgram'),
+      steam:val('steam')
+    },
+    variableConditions:varConditions,
+    processMetrics:processMetrics,
+    photos:photos,
+    conclusions:val('conclusions'),
+    nextSteps:val('nextSteps')
+  };
+}
+
+function saveDraft(){doSave('draft','טיוטה נשמרה ✓');}
+function submitReport(){
+  if(!val('projectName')){alert('נא למלא שם פרויקט');return;}
+  doSave('submitted','הדו"ח הוגש ✓');
+}
+
+function doSave(status,msg){
+  const data=collectData(status);
+  const m=document.getElementById('successMsg');
+  m.textContent='שומר...';m.classList.add('show');
+  fetch(API_BASE+'/saveBakeryReport',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(data)
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.success){
+      currentReportId=res.id;
+      lockApprovedFields();
+      updateStatusBadge(status);
+      m.textContent=msg;m.classList.add('show');
+      setTimeout(()=>m.classList.remove('show'),3000);
+    }else{
+      m.textContent='✗ שגיאה בשמירה';m.classList.add('show');
+      setTimeout(()=>m.classList.remove('show'),3000);
+    }
+  })
+  .catch(()=>{
+    m.textContent='✗ שגיאת רשת';m.classList.add('show');
+    setTimeout(()=>m.classList.remove('show'),3000);
+  });
+}
+
+function updateStatusBadge(status){
+  const b=document.getElementById('statusBadge');
+  b.textContent=status==='submitted'?'הוגש':'טיוטה';
+  b.className='status-badge '+(status==='submitted'?'status-submitted':'status-draft');
+}
+
+// ===== Excel Export =====
+function exportExcel(){
+  const d=collectData('submitted');
+  let csv='\ufeff';
+  csv+='דו״ח ניסויים – תחום הלחמים (Bakery),R&D\n';
+  csv+='שם המאשר:,'+escCsv(d.approver)+',תאריך עדכון:,'+escCsv(d.updateDate)+'\n';
+  csv+='שם הפרויקט:,'+escCsv(d.projectName)+'\n';
+  csv+='מטרת הניסוי:,'+escCsv(d.expPurpose)+'\n';
+  csv+='שם החוקר/ת:,'+escCsv(d.researcher)+',תאריך ביצוע:,'+escCsv(d.execDate)+'\n';
+  csv+='תגיות:,'+escCsv(d.tags)+'\n';
+  if(d.linkedReportId)csv+='שיוך:,'+escCsv(d.linkedReportId)+'\n';
+  csv+='\n';
+  
+  // Fixed ingredients
+  csv+='חומרי גלם קבועים,גרם,% מקמח\n';
+  fixedIngs.forEach(ing=>{
+    if(ing.name||ing.gram){
+      csv+=escCsv(ing.name)+','+escCsv(ing.gram)+','+escCsv(calcPctFixed(fixedIngs.indexOf(ing)))+'\n';
+    }
+  });
+  csv+='\n';
+  
+  // Variable ingredients - all experiments side by side
+  csv+='חומרי גלם משתנים';
+  for(let i=1;i<=6;i++)csv+=',ניסוי '+i+' גר׳,ניסוי '+i+' %';
+  csv+='\n';
+  const allVarNames=[];
+  const nv={};
+  for(let i=1;i<=6;i++){varIngs[i].forEach(ing=>{if(ing.name&&!nv[ing.name]){nv[ing.name]=1;allVarNames.push(ing.name);}});}
+  allVarNames.forEach(name=>{
+    let row=escCsv(name);
+    for(let i=1;i<=6;i++){
+      const ing=varIngs[i].find(x=>x.name===name);
+      if(ing&&ing.gram){
+        row+=','+escCsv(ing.gram);
+        const tf=getTotalFlourVar(i);
+        if(tf>0){const pct=parseFloat(ing.gram)/tf*100;row+=','+(isNaN(pct)?'':pct.toFixed(1)+'%');}else row+=',';
+      }else row+=',,';
+    }
+    csv+=row+'\n';
+  });
+  csv+='\n';
+  
+  // Fixed conditions
+  csv+='תנאים קבועים\n';
+  csv+=',זמן לישה משוער,'+escCsv(d.fixedConditions.kneadTimeEst)+'\n';
+  csv+=',טמפ בצק רצויה,'+escCsv(d.fixedConditions.doughTemp)+'\n';
+  csv+=',תפיחה ב-Bulk,'+escCsv(d.fixedConditions.bulkFerment)+'\n';
+  csv+=',משקל יחידת בצק,'+escCsv(d.fixedConditions.doughWeight)+'\n';
+  csv+=',נתוני מולדר,'+escCsv(d.fixedConditions.moulder)+'\n';
+  csv+=',סוג תנור,'+escCsv(d.fixedConditions.ovenType)+'\n';
+  csv+=',תוכנית אפייה,'+escCsv(d.fixedConditions.bakingProgram)+'\n';
+  csv+=',קיטור,'+escCsv(d.fixedConditions.steam)+'\n\n';
+  
+  // Variable conditions + metrics per experiment
+  csv+='תנאים משתנים ומדדים';
+  for(let i=1;i<=6;i++)csv+=',ניסוי '+i;
+  csv+='\n';
+  csv+='זמן לישה בפועל';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].actualKneadTime);
+  csv+='\n';
+  csv+='זמן תפיחה בפועל';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].finalFermentTime);
+  csv+='\n';
+  csv+='טמפ תפיחה';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].fermentTemp);
+  csv+='\n';
+  csv+='לחות תפיחה';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].fermentHumidity);
+  csv+='\n';
+  csv+='טמפ בצק בפועל';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(processMetrics[i].actualDoughTemp);
+  csv+='\n';
+  csv+='מרקם הבצק';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(processMetrics[i].doughTexture);
+  csv+='\n';
+  csv+='נפח ויציבות';
+  for(let i=1;i<=6;i++)csv+=','+escCsv(processMetrics[i].volumeStability);
+  csv+='\n\n';
+  
+  csv+='מסקנות\n'+escCsv(d.conclusions)+'\n';
+  csv+='Next Steps\n'+escCsv(d.nextSteps)+'\n';
+  
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='דוח_ניסוי_'+(d.projectName||'חדש').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+(d.execDate||'')+'.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ===== Dashboard =====
+async function fetchReports(){
+  try{
+    const res=await fetch(API_BASE+'/saveBakeryReport');
+    const data=await res.json();
+    return data.data||[];
+  }catch(e){return [];}
+}
+
+async function showDashboard(){
+  document.getElementById('formView').style.display='none';
+  document.getElementById('dashboardView').style.display='block';
+  document.getElementById('navForm').classList.remove('active');
+  document.getElementById('navDash').classList.add('active');
+  renderDashboard();
+}
+
+function showForm(){
+  document.getElementById('formView').style.display='block';
+  document.getElementById('dashboardView').style.display='none';
+  document.getElementById('navForm').classList.add('active');
+  document.getElementById('navDash').classList.remove('active');
+}
+
+async function renderDashboard(){
+  const reports=await fetchReports();
+  const filter=val('dashFilter').toLowerCase();
+  const sortBy=document.getElementById('dashSort').value;
+  
+  let filtered=reports.filter(r=>{
+    const name=r.project_name||r.data?.project_name||'';
+    return !filter||name.toLowerCase().includes(filter);
+  });
+  
+  // Group by project if no filter
+  const list=document.getElementById('dashList');
+  if(filtered.length===0){
+    list.innerHTML='<div style="text-align:center;color:var(--gray-400);padding:40px">אין דוחות שמורים</div>';
+    return;
+  }
+  
+  list.innerHTML=filtered.map(r=>{
+    const name=r.project_name||r.data?.project_name||'ללא שם';
+    const researcher=r.researcher||r.data?.researcher||'';
+    const date=r.exec_date||r.data?.exec_date||'';
+    const status=r.status||r.data?.status||'';
+    const tags=(r.tags||r.data?.tags||'').split(',').filter(Boolean);
+    const id=r.id;
+    return `<div class="report-item" onclick="loadReport('${id}')">
+      <div class="ri-top">
+        <span class="ri-title">${esc(name)}</span>
+        <span class="status-badge ${status==='submitted'?'status-submitted':'status-draft'}">${status==='submitted'?'הוגש':'טיוטה'}</span>
+      </div>
+      <div class="ri-meta">
+        ${researcher?'<span>👤 '+esc(researcher)+'</span>':''}
+        ${date?'<span>📅 '+esc(date)+'</span>':''}
+        <span>🆔 '+id.substring(0,8)+'</span>
+      </div>
+      ${tags.length?'<div class="ri-tags">'+tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>':''}
+    </div>`;
+  }).join('');
+  
+  // Update project datalist
+  const projects={};
+  reports.forEach(r=>{const n=r.project_name||r.data?.project_name;if(n)projects[n]=1;});
+  document.getElementById('projectList').innerHTML=Object.keys(projects).map(n=>'<option value="'+esc(n)+'">').join('');
+  document.getElementById('reportList').innerHTML=reports.map(r=>{
+    const n=r.project_name||r.data?.project_name||'';
+    return '<option value="'+r.id+'">'+esc(n)+'</option>';
+  }).join('');
+}
+
+async function loadReport(id){
+  const reports=await fetchReports();
+  const r=reports.find(x=>x.id===id);
+  if(!r)return;
+  currentReportId=id;
+  // Load data into form
+  document.getElementById('projectName').value=r.project_name||r.data?.project_name||'';
+  document.getElementById('expPurpose').value=r.exp_purpose||r.data?.exp_purpose||'';
+  document.getElementById('researcher').value=r.researcher||r.data?.researcher||'';
+  document.getElementById('approver').value=r.approver||r.data?.approver||'';
+  document.getElementById('execDate').value=r.exec_date||r.data?.exec_date||'';
+  document.getElementById('updateDate').value=r.update_date||r.data?.update_date||'';
+  document.getElementById('linkedReport').value=r.linked_report_id||r.data?.linked_report_id||'';
+  document.getElementById('conclusions').value=r.conclusions||r.data?.conclusions||'';
+  document.getElementById('nextSteps').value=r.next_steps||r.data?.next_steps||'';
+  
+  // Parse JSON fields
+  try{fixedIngs=JSON.parse(r.fixed_ingredients||r.data?.fixed_ingredients||'[]');}catch(e){fixedIngs=[];initState();}
+  try{varIngs=JSON.parse(r.variable_ingredients||r.data?.variable_ingredients||'{}');}catch(e){}
+  try{varConditions=JSON.parse(r.variable_conditions||r.data?.variable_conditions||'{}');}catch(e){}
+  try{processMetrics=JSON.parse(r.process_metrics||r.data?.process_metrics||'{}');}catch(e){}
+  try{photos=JSON.parse(r.photos||r.data?.photos||'[]');}catch(e){photos=[];}
+  
+  // Tags
+  const savedTags=(r.tags||r.data?.tags||'').split(',').filter(Boolean);
+  document.querySelectorAll('#tagsContainer .tag').forEach(el=>{
+    el.classList.toggle('active',savedTags.includes(el.dataset.tag));
+  });
+  updateTags();
+  
+  // Fixed conditions
+  try{
+    const fc=JSON.parse(r.fixed_conditions||r.data?.fixed_conditions||'{}');
+    document.getElementById('kneadTimeEst').value=fc.kneadTimeEst||'';
+    document.getElementById('doughTemp').value=fc.doughTemp||'';
+    document.getElementById('bulkFerment').value=fc.bulkFerment||'';
+    document.getElementById('doughWeight').value=fc.doughWeight||'';
+    document.getElementById('moulder').value=fc.moulder||'';
+    document.getElementById('ovenType').value=fc.ovenType||'';
+    document.getElementById('bakingProgram').value=fc.bakingProgram||'';
+    document.getElementById('steam').value=fc.steam||'';
+  }catch(e){}
+  
+  updateStatusBadge(r.status||r.data?.status||'draft');
+  renderFixedIngs();
+  renderVarIngs(1);
+  renderVarConditions(1);
+  renderMetrics(1);
+  renderPhotos();
+  showForm();
+  showMsg('דו"ח נטען ✓',2000);
+}
+
+// ===== Helpers =====
+function val(id){return document.getElementById(id).value;}
+function esc(s){if(!s)return'';return s.replace(/"/g,'&quot;');}
+function escCsv(v){if(!v)return'';v=String(v);if(v.indexOf(',')>=0||v.indexOf('"')>=0||v.indexOf('\n')>=0)return '"'+v.replace(/"/g,'""')+'"';return v;}
+function showMsg(txt,dur){const m=document.getElementById('successMsg');m.textContent=txt;m.classList.add('show');setTimeout(()=>m.classList.remove('show'),dur||2000);}
 
 function lockApprovedFields(){
   var a=document.getElementById('approver'),u=document.getElementById('updateDate');
   if(a.value&&u.value){a.readOnly=true;u.readOnly=true;document.getElementById('unlockRow').style.display='flex';}
 }
-
 function unlockApprovedFields(){
-  if(!confirm('פתיחת שדות המאשר ותאריך עדכון לעריכה (שינוי גרסה)?'))return;
-  var a=document.getElementById('approver'),u=document.getElementById('updateDate');
-  a.readOnly=false;u.readOnly=false;
+  if(!confirm('פתיחת שדות המאשר ותאריך עדכון לעריכה?'))return;
+  document.getElementById('approver').readOnly=false;
+  document.getElementById('updateDate').readOnly=false;
   document.getElementById('unlockRow').style.display='none';
-}
-
-function collectData(){
-  return{
-    projectName:document.getElementById('projectName').value,
-    expPurpose:document.getElementById('expPurpose').value,
-    researcher:document.getElementById('researcher').value,
-    approver:document.getElementById('approver').value,
-    execDate:document.getElementById('execDate').value,
-    updateDate:document.getElementById('updateDate').value,
-    experiments:experiments,
-    process:{kneadTime:document.getElementById('kneadTime').value,doughTemp:document.getElementById('doughTemp').value,bulkFerment:document.getElementById('bulkFerment').value,doughWeight:document.getElementById('doughWeight').value,moulder:document.getElementById('moulder').value,finalFerment:document.getElementById('finalFerment').value,fermentTemp:document.getElementById('fermentTemp').value,fermentHumidity:document.getElementById('fermentHumidity').value,ovenType:document.getElementById('ovenType').value,bakingProgram:document.getElementById('bakingProgram').value,steam:document.getElementById('steam').value},
-    metrics:{actualDoughTemp:document.getElementById('actualDoughTemp').value,doughTexture:document.getElementById('doughTexture').value,actualFermentTime:document.getElementById('actualFermentTime').value,volumeStability:document.getElementById('volumeStability').value},
-    conclusions:document.getElementById('conclusions').value,
-    nextSteps:document.getElementById('nextSteps').value
-  };
-}
-
-var API_BASE='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
-
-function saveReport(){
-  var r=collectData();
-  if(!r.projectName){alert('נא למלא שם פרויקט');return;}
-  var m=document.getElementById('successMsg');
-  if(m){m.textContent='שומר דוח...';m.classList.add('show');}
-  fetch(API_BASE+'/saveBakeryReport',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(r)
-  })
-  .then(function(res){return res.json();})
-  .then(function(data){
-    if(data.success){
-      lockApprovedFields();
-      if(m){m.textContent='✓ הדוח נשמר במאגר הידע';m.classList.add('show');setTimeout(function(){m.classList.remove('show');},3000);}
-    }else{
-      if(m){m.textContent='✗ שגיאה בשמירה';m.classList.add('show');setTimeout(function(){m.classList.remove('show');},3000);}
-    }
-  })
-  .catch(function(err){
-    if(m){m.textContent='✗ שגיאת רשת';m.classList.add('show');setTimeout(function(){m.classList.remove('show');},3000);}
-  });
-}
-
-function exportExcel(){
-  var d=collectData();
-  var csv='\ufeff';
-  csv+='דו״ח ניסויים – תחום הלחמים (Bakery),R&D\n';
-  csv+='שם המאשר:,'+escapeCsv(d.approver)+',תאריך עדכון:,'+escapeCsv(d.updateDate)+'\n';
-  csv+='שם הפרויקט:,'+escapeCsv(d.projectName)+'\n';
-  csv+='מטרת הניסוי:,'+escapeCsv(d.expPurpose)+'\n';
-  csv+='שם החוקר/ת:,'+escapeCsv(d.researcher)+',תאריך ביצוע:,'+escapeCsv(d.execDate)+'\n\n';
-  csv+='המתכון,תיאור התהליך,הערות\n';
-  csv+='חומרי גלם';
-  for(var i=1;i<=6;i++){csv+=',ניסוי '+i+' גר\'‚ניסוי '+i+' %';}
-  csv+='\n';
-  var allNames=[];var ns={};
-  for(var i=1;i<=6;i++){experiments[i].forEach(function(ing){if(ing.name&&!ns[ing.name]){ns[ing.name]=true;allNames.push(ing.name);}});}
-  allNames.forEach(function(name){
-    var row=escapeCsv(name);
-    for(var i=1;i<=6;i++){
-      var ing=experiments[i].find(function(x){return x.name===name;});
-      if(ing&&ing.gram){
-        row+=','+escapeCsv(ing.gram);
-        var fi=findFlourIdx(i);
-        if(fi>=0){var fg=parseFloat(experiments[i][fi].gram);if(fg>0){var pct=parseFloat(ing.gram)/fg*100;row+=','+(isNaN(pct)?'':pct.toFixed(1)+'%');}else{row+=',';}}else{row+=',';}
-      }else{row+=',,';}
-    }
-    csv+=row+'\n';
-  });
-  csv+='\n,הכנת הבצק,\n';
-  csv+=',זמן לישה,'+escapeCsv(d.process.kneadTime)+'\n';
-  csv+=',טמפ\' בצק רצויה,'+escapeCsv(d.process.doughTemp)+'\n';
-  csv+=',תפיחה ב-Bulk,'+escapeCsv(d.process.bulkFerment)+'\n';
-  csv+=',משקל יחידת בצק (גרם),'+escapeCsv(d.process.doughWeight)+'\n';
-  csv+=',נתוני מולדר,'+escapeCsv(d.process.moulder)+'\n';
-  csv+='\n,תפיחה סופית,\n';
-  csv+=',טמפ\' תפיחה,'+escapeCsv(d.process.fermentTemp)+'\n';
-  csv+=',לחות בתא התפיחה,'+escapeCsv(d.process.fermentHumidity)+'\n';
-  csv+=',תפיחה סופית — זמן,'+escapeCsv(d.process.finalFerment)+'\n';
-  csv+='\n,אפייה,\n';
-  csv+=',סוג התנור,'+escapeCsv(d.process.ovenType)+'\n';
-  csv+=',תוכנית אפייה,'+escapeCsv(d.process.bakingProgram)+'\n';
-  csv+=',קיטור,'+escapeCsv(d.process.steam)+'\n\n';
-  csv+='מדדי תהליך במהלך הניסוי\n';
-  csv+='טמפ\' בצק,'+escapeCsv(d.metrics.actualDoughTemp)+'\n';
-  csv+='מרקם הבצק,'+escapeCsv(d.metrics.doughTexture)+'\n';
-  csv+='זמן תפיחה בפועל,'+escapeCsv(d.metrics.actualFermentTime)+'\n';
-  csv+='נפח ויציבות בסוף התפיחה,'+escapeCsv(d.metrics.volumeStability)+'\n\n';
-  csv+='מסקנות\n';
-  csv+='במסקנות יש להתייחס למרקם הפנים (crumb), צורת הכיכר (crust) וטעם\n';
-  csv+=escapeCsv(d.conclusions)+'\n';
-  csv+='Next Steps\n';
-  csv+=escapeCsv(d.nextSteps)+'\n';
-  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;a.download='דוח_ניסוי_'+(d.projectName||'חדש').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+(d.execDate||'')+'.csv';a.click();
-  URL.revokeObjectURL(url);
 }
 
 function clearForm(){
   if(!confirm('האם לנקות את כל הטופס?'))return;
-  document.querySelectorAll('input,textarea,select').forEach(function(el){if(el.type!=='button'&&el.type!=='checkbox')el.value='';});
-  document.querySelectorAll('input[type=checkbox]').forEach(function(el){el.checked=false;});
-  for(var i=1;i<=6;i++){experiments[i]=[];for(var j=0;j<15;j++){experiments[i].push({name:'',gram:'',isFlour:false});}}
-  experiments[1][0].isFlour=true;
-  renderExperiment(1);
+  document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.type!=='button'&&el.type!=='checkbox')el.value='';});
+  document.querySelectorAll('input[type=checkbox]').forEach(el=>el.checked=false);
+  document.querySelectorAll('#tagsContainer .tag').forEach(el=>el.classList.remove('active'));
+  activeTags=[];
+  photos=[];
+  currentReportId=null;
+  initState();
+  renderFixedIngs();
+  renderVarIngs(1);
+  renderVarConditions(1);
+  renderMetrics(1);
+  renderPhotos();
   document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
   document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
   document.getElementById('approver').readOnly=true;
   document.getElementById('updateDate').readOnly=true;
   document.getElementById('unlockRow').style.display='none';
+  updateStatusBadge('draft');
 }
 
-renderExperiment(1);
+// ===== Init =====
+document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
+document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
+document.getElementById('approver').readOnly=true;
+document.getElementById('updateDate').readOnly=true;
+renderFixedIngs();
+renderVarIngs(1);
+renderVarConditions(1);
+renderMetrics(1);
 </script>
 <div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #CC092F;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#CC092F;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div>
 <style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style>
