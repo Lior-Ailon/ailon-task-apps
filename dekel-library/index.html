@@ -309,7 +309,7 @@ const API_BASE  = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/function
 const DISPLAY_URL = location.origin + location.pathname.replace(/index\.html$/,'') + 'display.html';
 const REHOVOT_LIB_ID = '6a7cc19fa127f9005c2b4f3f';
 function getDisplayUrl(libId){
-  if(libId===REHOVOT_LIB_ID) return location.origin + location.pathname.replace(/index\.html$/,'') + 'display-rehovot-v2.html';
+  if(libId===REHOVOT_LIB_ID) return location.origin + location.pathname.replace(/index\.html$/,'') + 'display-rehovot-simple.html';
   return DISPLAY_URL + (libId?`?library_id=${libId}`:'');
 }
 
