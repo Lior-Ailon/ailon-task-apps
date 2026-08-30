@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d9488">
+<title>רשימת קניות — אירוע</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #f0fdfa 0%, #f5f5f4 100%);
+    min-height: 100vh;
+    color: #1c1917;
+    padding: 16px 12px 80px;
+  }
+  .header {
+    text-align: center;
+    padding: 20px 12px 16px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+    color: white;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(13,148,136,0.25);
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header .subtitle { font-size: 14px; opacity: 0.9; }
+  .header .total-info {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 13px;
+  }
+  .header .total-info span { display: flex; align-items: center; gap: 4px; }
+  .header .total-info .num { font-size: 18px; font-weight: 700; }
+  .progress-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+  .sync-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 8px;
+  }
+  .sync-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+  }
+  .sync-dot.syncing { background: #fbbf24; animation: pulse 1s infinite; }
+  .sync-dot.error { background: #f87171; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .category {
+    background: white;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .category-title {
+    background: #f0fdfa;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0d9488;
+    border-bottom: 2px solid #e6fffa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .category-title .cat-count {
+    font-size: 12px;
+    font-weight: 500;
+    background: #0d9488;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f5f5f4;
+    transition: background 0.2s;
+    user-select: none;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:active { background: #f9fafb; }
+  .item.checked { opacity: 0.5; }
+  .item.checked .item-name { text-decoration: line-through; }
+  .checkbox {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #d6d3d1;
+    flex-shrink: 0;
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .item.checked .checkbox {
+    background: #0d9488;
+    border-color: #0d9488;
+  }
+  .checkbox svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: white;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .item.checked .checkbox svg { opacity: 1; }
+  .item-content { flex: 1; }
+  .item-name { font-size: 15px; font-weight: 600; }
+  .item-qty { font-size: 13px; color: #78716c; margin-top: 2px; }
+  .assign-select {
+    flex-shrink: 0;
+    margin-right: 8px;
+    padding: 6px 10px;
+    border: 1.5px solid #d6d3d1;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1917;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 8px center;
+    background-size: 14px;
+    padding-left: 28px;
+    max-width: 110px;
+  }
+  .assign-select:focus {
+    border-color: #0d9488;
+    box-shadow: 0 0 0 2px rgba(13,148,136,0.15);
+  }
+  .assign-select option:first-child { color: #a8a29e; }
+  .item.checked .assign-select { opacity: 0.6; }
+  .actions {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    padding: 12px 16px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: #0d9488; color: white; }
+  .btn-primary:active { background: #0f766e; }
+  .btn-secondary { background: #f5f5f4; color: #1c1917; }
+  .btn-secondary:active { background: #e7e5e4; }
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #78716c;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🛒 רשימת קניות — אירוע</h1>
+  <div class="subtitle">משותף לכולם — כל שינוי נשמר אוטומטית בענן ☁️</div>
+  <div class="total-info">
+    <span>✅ הושלם: <span class="num" id="done-count">0</span></span>
+    <span>⏳ נותר: <span class="num" id="remaining-count">0</span></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="sync-indicator">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span id="sync-text">מסונכרן</span>
+  </div>
+</div>
+
+<div id="list-container">
+  <div class="loading">טוען רשימה...</div>
+</div>
+
+<div class="actions">
+  <button class="btn btn-secondary" onclick="refreshList()">רענן</button>
+  <button class="btn btn-primary" onclick="shareList()">שתף רשימה</button>
+</div>
+
+<script>
+const API_URL = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/eventChecklistApi";
+let items = [];
+
+function setSync(status) {
+  const dot = document.getElementById('sync-dot');
+  const text = document.getElementById('sync-text');
+  dot.className = 'sync-dot ' + status;
+  if (status === 'syncing') text.textContent = 'מסנכרן...';
+  else if (status === 'error') text.textContent = 'שגיאת סנכרון';
+  else text.textContent = 'מסונכרן ☁️';
+}
+
+async function fetchList() {
+  setSync('syncing');
+  try {
+    const res = await fetch(API_URL, { method: 'GET' });
+    const data = await res.json();
+    items = data.items || [];
+    renderList();
+    setSync('');
+  } catch(e) {
+    setSync('error');
+    console.error(e);
+  }
+}
+
+async function updateItem(itemId, updates) {
+  setSync('syncing');
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ item_id: itemId, ...updates })
+    });
+    const data = await res.json();
+    items = data.items || [];
+    renderList();
+    setSync('');
+  } catch(e) {
+    setSync('error');
+    console.error(e);
+  }
+}
+
+function renderList() {
+  const container = document.getElementById('list-container');
+  const categories = {
+    'בשרים': { icon: '🥩', title: 'בשרים — 6-6.5 ק"ג' },
+    'סלטים': { icon: '🥗', title: 'סלטים' },
+    'תוספות': { icon: '🍞', title: 'תוספות' }
+  };
+
+  const people = ['עמיר','ליאור','ציון','שני','לובה','ולדי','מלי','קותי','טל','רעיה'];
+
+  let html = '';
+  for (const [catKey, catInfo] of Object.entries(categories)) {
+    const catItems = items.filter(i => i.category === catKey);
+    const catChecked = catItems.filter(i => i.is_checked).length;
+    html += `<div class="category">
+      <div class="category-title">
+        ${catInfo.icon} ${catInfo.title}
+        <span class="cat-count">${catChecked}/${catItems.length}</span>
+      </div>`;
+    for (const item of catItems) {
+      const qtyHtml = item.quantity ? `<div class="item-qty">${item.quantity}</div>` : '';
+      const optionsHtml = '<option value="">בחר אחראי</option>' +
+        people.map(p => `<option ${item.assigned_to === p ? 'selected' : ''}>${p}</option>`).join('');
+      html += `<div class="item ${item.is_checked ? 'checked' : ''}" data-id="${item.id}">
+        <div class="checkbox" onclick="toggleCheck('${item.id}')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        <div class="item-content">
+          <div class="item-name">${item.item_name}</div>
+          ${qtyHtml}
+        </div>
+        <select class="assign-select" onchange="assignItem('${item.id}', this.value)" onclick="event.stopPropagation()">${optionsHtml}</select>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  container.innerHTML = html;
+  updateCounts();
+}
+
+function updateCounts() {
+  const done = items.filter(i => i.is_checked).length;
+  const total = items.length;
+  const remaining = total - done;
+  document.getElementById('done-count').textContent = done;
+  document.getElementById('remaining-count').textContent = remaining;
+  document.getElementById('progress-fill').style.width = total ? (done / total * 100) + '%' : '0%';
+}
+
+function toggleCheck(itemId) {
+  const item = items.find(i => i.id === itemId);
+  if (!item) return;
+  updateItem(itemId, { is_checked: !item.is_checked });
+}
+
+function assignItem(itemId, value) {
+  updateItem(itemId, { assigned_to: value });
+}
+
+function refreshList() {
+  fetchList();
+}
+
+function shareList() {
+  const categories = ['🥩 בשרים — 6-6.5 ק"ג', '🥗 סלטים', '🍞 תוספות'];
+  const catKeys = ['בשרים', 'סלטים', 'תוספות'];
+  const lines = ['🛒 רשימת קניות — אירוע\n'];
+  for (let c = 0; c < 3; c++) {
+    lines.push(`*${categories[c]}*`);
+    items.filter(i => i.category === catKeys[c]).forEach(item => {
+      const mark = item.is_checked ? '✅' : '⬜';
+      const qty = item.quantity ? ` (${item.quantity})` : '';
+      const who = item.assigned_to ? ` ← ${item.assigned_to}` : '';
+      lines.push(`${mark} ${item.item_name}${qty}${who}`);
+    });
+    lines.push('');
+  }
+  const text = lines.join('\n');
+  if (navigator.share) {
+    navigator.share({ text, title: 'רשימת קניות' });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('הרשימה הועתקה!'));
+  }
+}
+
+// Auto-refresh every 15 seconds to see others' changes
+fetchList();
+setInterval(() => {
+  if (document.getElementById('sync-dot').className !== 'sync-dot syncing') {
+    fetchList();
+  }
+}, 15000);
+</script>
+
+</body>
+</html>
