@@ -431,7 +431,7 @@ function renderProjects(){
       <div style="margin-top:14px">${renderPhotoGallery(p,'project',p.id)}</div>
       ${pFloors.length>0?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים משוער</th><th>ימים בפועל</th><th>תמונות</th><th>פעולות</th></tr></thead><tbody>'+pFloors.sort((a,b)=>(a.floor_number||0)-(b.floor_number||0)).map(f=>{
         const fPhotos=getPhotos(f);
-        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td>'+(fPhotos.length>0?'<button class="btn btn-secondary btn-sm" onclick="showFloorPhotos(\\''+f.id+'\\')">📸 '+fPhotos.length+'</button>':'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\\''+f.id+'\\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\\''+f.id+'\\')">✕</button></td></tr>';
+        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td>'+(fPhotos.length>0?'<button class="btn btn-secondary btn-sm" onclick="showFloorPhotos(\''+f.id+'\')">📸 '+fPhotos.length+'</button>':'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';
       }).join('')+'</tbody></table></div>':''}
     </div>`;
   }).join('');
@@ -577,7 +577,7 @@ function renderCatalog(){
   if(filtered.length===0){list.innerHTML='<div class="empty">אין חומרים בקטלוג.</div>';return;}
   list.innerHTML=Object.keys(groups).sort().map(cat=>{
     return '<div class="mat-group"><h4>'+esc(cat)+' ('+groups[cat].length+')</h4>'+groups[cat].map(m=>{
-      return '<div class="mat-item"><span class="mat-code">'+esc(m.product_code||'')+'</span><div class="mat-name">'+esc(m.product_name||'')+(m.description?'<div class="mat-desc">'+esc(m.description)+'</div>':'')+'</div>'+(m.estimated_price?'<span style="font-size:12px;color:var(--gold);font-weight:600">₪'+m.estimated_price+'</span>':'')+'<span class="mat-unit">'+esc(m.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\\''+m.id+'\\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\\''+m.id+'\\')">✕</button></div>';
+      return '<div class="mat-item"><span class="mat-code">'+esc(m.product_code||'')+'</span><div class="mat-name">'+esc(m.product_name||'')+(m.description?'<div class="mat-desc">'+esc(m.description)+'</div>':'')+'</div>'+(m.estimated_price?'<span style="font-size:12px;color:var(--gold);font-weight:600">₪'+m.estimated_price+'</span>':'')+'<span class="mat-unit">'+esc(m.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\''+m.id+'\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\''+m.id+'\')">✕</button></div>';
     }).join('')+'</div>';
   }).join('');
 }
