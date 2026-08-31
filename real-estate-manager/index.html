@@ -4,77 +4,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="version" content="3.0">
+<meta name="version" content="4.0">
 <title>ציון ישראל — ניהול פרויקטים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0a141c;
-  --bg-2:#0c1920;
-  --bg-3:#101e28;
-  --gold:#c5a059;
-  --gold-dark:#b08d4e;
-  --gold-light:#d4b76a;
-  --gold-soft:rgba(197,160,89,.12);
-  --text:#ffffff;
-  --text-soft:#a0aec0;
-  --text-mute:#5a6c7a;
-  --white:#fff;
-  --green:#22c55e;
-  --amber:#f59e0b;
-  --red:#ef4444;
-  --blue:#3b82f6;
-  --r:12px;
-  --r-sm:8px;
-  --shadow:0 4px 20px rgba(0,0,0,.3);
-  --border:rgba(197,160,89,.15);
-  --border-soft:rgba(255,255,255,.06);
-}
+:root{--bg:#0a141c;--bg-2:#0c1920;--bg-3:#101e28;--gold:#c5a059;--gold-light:#d4b76a;--gold-soft:rgba(197,160,89,.12);--text:#fff;--text-soft:#a0aec0;--text-mute:#5a6c7a;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--r:12px;--r-sm:8px;--shadow:0 4px 20px rgba(0,0,0,.3);--border:rgba(197,160,89,.15);--border-soft:rgba(255,255,255,.06)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:60px;-webkit-tap-highlight-color:transparent}
-
-/* Hero Banner */
-.hero-banner{position:relative;min-height:320px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background:#0a0f14;
-  background-image:linear-gradient(135deg,rgba(10,20,28,.85),rgba(12,25,32,.75)),url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80);
-  background-size:cover;background-position:center;border-bottom:1px solid var(--gold)}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,20,28,.6) 0%,rgba(10,20,28,.9) 100%);pointer-events:none}
-.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:320px;padding:20px 24px}
+.hero-banner{position:relative;min-height:300px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background-image:linear-gradient(135deg,rgba(10,20,28,.85),rgba(12,25,32,.75)),url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80);background-size:cover;background-position:center;border-bottom:1px solid var(--gold)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,20,28,.6),rgba(10,20,28,.9));pointer-events:none}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:300px;padding:20px 24px}
 .hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .header-logo{display:flex;align-items:center;gap:14px}
-.logo-mark{width:52px;height:52px;border:2px solid var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:var(--gold);background:rgba(197,160,89,.1);letter-spacing:-1px;box-shadow:0 4px 14px rgba(197,160,89,.15)}
-.header-logo-text h1{font-size:20px;font-weight:900;color:var(--gold);letter-spacing:.5px;line-height:1.2}
-.header-logo-text span{font-size:11px;color:var(--text-soft);letter-spacing:.22em;font-weight:500;text-transform:uppercase}
+.logo-mark{width:52px;height:52px;border:2px solid var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:var(--gold);background:rgba(197,160,89,.1)}
+.header-logo-text h1{font-size:20px;font-weight:900;color:var(--gold);line-height:1.2}
+.header-logo-text span{font-size:11px;color:var(--text-soft);letter-spacing:.22em}
 .hero-nav{display:flex;gap:6px;flex-wrap:wrap}
 .nav-btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid rgba(197,160,89,.25);background:rgba(10,20,28,.5);color:var(--text-soft);font-family:inherit;transition:all .2s;backdrop-filter:blur(4px)}
 .nav-btn:hover{background:var(--gold-soft);color:var(--gold-light);border-color:var(--gold)}
 .nav-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
 .hero-tagline{text-align:center;padding:40px 0 10px}
-.hero-tagline-text{font-size:clamp(1.5rem,4vw,2.8rem);font-weight:900;color:var(--gold);letter-spacing:.15em;opacity:.9;text-shadow:0 2px 20px rgba(197,160,89,.3)}
-.hero-tagline-sub{font-size:clamp(.9rem,2vw,1.3rem);font-weight:600;color:var(--text-soft);margin-top:8px;letter-spacing:.05em}
-@media(max-width:640px){.hero-content{min-height:260px;padding:16px}.hero-tagline{padding:20px 0 5px}}
-
-/* Layout */
+.hero-tagline-text{font-size:clamp(1.5rem,4vw,2.8rem);font-weight:900;color:var(--gold);letter-spacing:.15em;text-shadow:0 2px 20px rgba(197,160,89,.3)}
+.hero-tagline-sub{font-size:clamp(.9rem,2vw,1.3rem);font-weight:600;color:var(--text-soft);margin-top:8px}
 .container{max-width:1100px;margin:20px auto 0;padding:0 16px}
 .card{background:var(--bg-2);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.card-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .card-title .actions-inline{display:flex;gap:6px}
-
-/* Stats */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
-.stat-card{background:var(--bg-2);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center;transition:transform .2s}
-.stat-card:hover{transform:translateY(-2px)}
+.stat-card{background:var(--bg-2);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center}
 .stat-card .num{font-size:32px;font-weight:900;color:var(--gold)}
-.stat-card .label{font-size:13px;color:var(--text-soft);margin-top:4px;font-weight:600}
-.stat-card .sub{font-size:11px;color:var(--text-mute);margin-top:2px}
-
-/* Table */
+.stat-card .label{font-size:13px;color:var(--text-soft);margin-top:4px}
 .data-table{width:100%;border-collapse:collapse;font-size:14px}
-.data-table th{background:var(--bg-3);padding:12px 14px;font-weight:700;text-align:right;border:1px solid var(--border);white-space:nowrap;color:var(--gold)}
+.data-table th{background:var(--bg-3);padding:12px 14px;font-weight:700;text-align:right;border:1px solid var(--border);color:var(--gold);white-space:nowrap}
 .data-table td{padding:10px 14px;border:1px solid var(--border-soft);color:var(--text-soft)}
 .data-table tr:hover td{background:var(--gold-soft);color:var(--text)}
-
-/* Badges */
 .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block}
 .badge-planning{background:rgba(245,158,11,.15);color:var(--amber)}
 .badge-active{background:rgba(34,197,94,.15);color:var(--green)}
@@ -82,704 +46,155 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);line-
 .badge-on_hold{background:rgba(239,68,68,.15);color:var(--red)}
 .badge-not_started{background:rgba(255,255,255,.06);color:var(--text-mute)}
 .badge-in_progress{background:rgba(245,158,11,.15);color:var(--amber)}
-
-/* Form */
 .form-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .form-field{flex:1;min-width:180px}
 .form-field.full{flex:100%}
 label{display:block;font-size:13.5px;font-weight:600;color:var(--gold);margin-bottom:6px}
-input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14.5px;font-family:inherit;transition:border-color .2s;background:var(--bg-3);color:var(--text)}
+input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14.5px;font-family:inherit;background:var(--bg-3);color:var(--text)}
 input:focus,textarea:focus,select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3.5px rgba(197,160,89,.12)}
-input::placeholder,textarea::placeholder{color:var(--text-mute)}
 textarea{resize:vertical;min-height:70px}
 select option{background:var(--bg-3);color:var(--text)}
-
-/* Buttons */
-.btn{padding:12px 24px;border-radius:var(--r-sm);font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;gap:8px;justify-content:center}
-.btn-primary{background:var(--gold);color:var(--bg)}
-.btn-primary:hover{background:var(--gold-light)}
-.btn-secondary{background:transparent;color:var(--text-soft);border:1.5px solid var(--border)}
-.btn-secondary:hover{background:var(--gold-soft);color:var(--gold-light);border-color:var(--gold)}
-.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1.5px solid rgba(239,68,68,.3)}
-.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn{padding:12px 24px;border-radius:var(--r-sm);font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--gold);color:var(--bg)}.btn-primary:hover{background:var(--gold-light)}
+.btn-secondary{background:transparent;color:var(--text-soft);border:1.5px solid var(--border)}.btn-secondary:hover{background:var(--gold-soft);color:var(--gold-light);border-color:var(--gold)}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1.5px solid rgba(239,68,68,.3)}.btn-danger:hover{background:rgba(239,68,68,.25)}
 .btn-sm{padding:8px 14px;font-size:13px}
 .actions{display:flex;gap:12px;justify-content:center;padding:16px 0;flex-wrap:wrap}
-
-/* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
 .modal{background:var(--bg-2);border-radius:16px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid var(--border)}
 .modal h2{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:16px}
 .modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px}
-.btn-save{background:var(--gold);color:var(--bg)}
-.btn-save:hover{background:var(--gold-light)}
-.btn-cancel{background:var(--bg-3);color:var(--text-soft);border:1px solid var(--border)}
-
-/* Toast */
+.btn-save{background:var(--gold);color:var(--bg)}.btn-cancel{background:var(--bg-3);color:var(--text-soft);border:1px solid var(--border)}
 .toast{position:fixed;bottom:20px;right:20px;background:var(--gold);color:var(--bg);padding:14px 24px;border-radius:12px;font-weight:700;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .toast.show{display:block;animation:slideUp .3s ease}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
-/* Floor cards */
 .floor-card{background:var(--bg-2);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border);border-right:4px solid var(--gold)}
-.floor-card.in_progress{border-right-color:var(--amber)}
-.floor-card.completed{border-right-color:var(--green)}
-.floor-card.not_started{border-right-color:var(--text-mute)}
 .floor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .floor-header h3{font-size:16px;font-weight:700;color:var(--text)}
 .floor-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--text-soft);margin-bottom:10px}
-.floor-meta span{display:flex;align-items:center;gap:4px}
-
-/* Photo gallery */
-.photo-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.photo-thumb{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:border-color .2s}
-.photo-thumb:hover{border-color:var(--gold)}
-.photo-upload-area{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-top:12px}
-.photo-upload-area:hover{border-color:var(--gold);background:var(--gold-soft)}
-.photo-upload-area .upload-icon{font-size:28px;margin-bottom:8px}
-.photo-upload-area .upload-text{font-size:14px;color:var(--text-soft);font-weight:600}
-.photo-actions{display:flex;gap:6px;margin-top:4px}
-.photo-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:none;justify-content:center;align-items:center;padding:20px}
-.photo-modal-overlay.show{display:flex}
-.photo-modal-overlay img{max-width:90%;max-height:90%;border-radius:12px}
-.photo-modal-close{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;width:40px;height:40px;border-radius:50%;cursor:pointer}
-
-/* Materials */
-.mat-search{margin-bottom:16px}
-.mat-group{margin-bottom:20px}
-.mat-group h4{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.mat-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r-sm);background:var(--bg-3);margin-bottom:8px;border:1px solid var(--border-soft);transition:border-color .2s}
-.mat-item:hover{border-color:var(--gold)}
+.mat-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r-sm);background:var(--bg-3);margin-bottom:8px;border:1px solid var(--border-soft)}.mat-item:hover{border-color:var(--gold)}
 .mat-code{background:var(--gold-soft);color:var(--gold-light);padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;min-width:60px;text-align:center}
 .mat-name{flex:1;font-weight:600;font-size:14px;color:var(--text)}
 .mat-desc{font-size:12px;color:var(--text-mute)}
-.mat-unit{font-size:12px;color:var(--text-mute);min-width:40px;text-align:center}
+.mat-group{margin-bottom:20px}
+.mat-group h4{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .empty{text-align:center;color:var(--text-mute);padding:40px;font-size:15px}
-
-/* Loading */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
 .loading-overlay .spinner{width:40px;height:40px;border:4px solid var(--gold);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Footer signature */
+.photo-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.photo-thumb{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid var(--border)}.photo-thumb:hover{border-color:var(--gold)}
+.photo-upload-area{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;margin-top:12px}.photo-upload-area:hover{border-color:var(--gold);background:var(--gold-soft)}
+.photo-upload-area .upload-icon{font-size:28px;margin-bottom:8px}.photo-upload-area .upload-text{font-size:14px;color:var(--text-soft);font-weight:600}
+.photo-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:none;justify-content:center;align-items:center;padding:20px}.photo-modal-overlay.show{display:flex}
+.photo-modal-overlay img{max-width:90%;max-height:90%;border-radius:12px}
+.photo-modal-close{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;width:40px;height:40px;border-radius:50%;cursor:pointer}
 .footer-sig{text-align:center;padding:20px;color:var(--text-mute);font-size:12px;border-top:1px solid var(--border);margin-top:30px}
-.footer-sig a{color:var(--gold);text-decoration:none}
-
-@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.form-row{flex-direction:column}.data-table{font-size:12px}.data-table th,.data-table td{padding:6px 8px}}
-@media print{.header{position:static}.header-nav{display:none}.actions{display:none}.btn{display:none}.modal-overlay{display:none}}
+@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.form-row{flex-direction:column}.data-table{font-size:12px}.hero-content{min-height:260px;padding:16px}.hero-tagline{padding:20px 0 5px}}
+@media print{.hero-nav{display:none}.actions{display:none}.btn{display:none}.modal-overlay{display:none}}
 </style>
 </head>
 <body>
-
-<div class="hero-banner">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-top">
-      <div class="header-logo">
-        <div class="logo-mark">ZI</div>
-        <div class="header-logo-text">
-          <h1>ציון ישראל</h1>
-          <span>ייזום ובנייה · ZION ISRAEL</span>
-        </div>
-      </div>
-      <div class="hero-nav">
-        <button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button>
-        <button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button>
-        <button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג חומרים</button>
-        <button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button>
-      </div>
-    </div>
-    <div class="hero-tagline">
-      <div class="hero-tagline-text">WE BELIEVE · WE DO</div>
-      <div class="hero-tagline-sub">מערכת ניהול פרויקטי בנייה</div>
-    </div>
-  </div>
-</div>
-
+<div class="hero-banner"><div class="hero-overlay"></div><div class="hero-content"><div class="hero-top"><div class="header-logo"><div class="logo-mark">ZI</div><div class="header-logo-text"><h1>ציון ישראל</h1><span>ייזום ובנייה · ZION ISRAEL</span></div></div><div class="hero-nav"><button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button><button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button><button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג</button><button class="nav-btn" onclick="showView('calc')" id="navCalc">🧮 חישוב חומרים</button><button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button></div></div><div class="hero-tagline"><div class="hero-tagline-text">WE BELIEVE · WE DO</div><div class="hero-tagline-sub">מערכת ניהול פרויקטי בנייה</div></div></div></div>
 <div class="container">
-
-<div id="viewDash">
-  <div class="stats-grid">
-    <div class="stat-card"><div class="num" id="statProjects">—</div><div class="label">פרויקטים פעילים</div></div>
-    <div class="stat-card"><div class="num" id="statFloors">—</div><div class="label">קומות בעבודה</div></div>
-    <div class="stat-card"><div class="num" id="statMaterials">—</div><div class="label">פריטים בקטלוג</div></div>
-    <div class="stat-card"><div class="num" id="statBudget">—</div><div class="label">תקציב כולל ₪</div></div>
-  </div>
-  <div class="card">
-    <div class="card-title">📊 סקירת פרויקטים</div>
-    <div id="dashProjects"></div>
-  </div>
+<div id="viewDash"><div class="stats-grid"><div class="stat-card"><div class="num" id="statProjects">—</div><div class="label">פרויקטים פעילים</div></div><div class="stat-card"><div class="num" id="statFloors">—</div><div class="label">קומות בעבודה</div></div><div class="stat-card"><div class="num" id="statMaterials">—</div><div class="label">פריטים בקטלוג</div></div><div class="stat-card"><div class="num" id="statBudget">—</div><div class="label">תקציב כולל ₪</div></div></div><div class="card"><div class="card-title">📊 סקירת פרויקטים</div><div id="dashProjects"></div></div></div>
+<div id="viewProjects" style="display:none"><div class="card"><div class="card-title"><span>🏢 פרויקטים</span><div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openProjectModal()">+ פרויקט חדש</button></div></div><div id="projectsList"></div></div></div>
+<div id="viewCatalog" style="display:none"><div class="card"><div class="card-title"><span>📋 קטלוג חומרי גלם</span><div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="seedDefaultMaterials()">📦 טען חומרי בניין סטנדרטיים</button> <button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ הוסף חומר</button></div></div><div style="margin-bottom:16px"><input type="text" id="matSearch" placeholder="חיפוש חומר..." oninput="renderCatalog()"></div><div id="catalogList"></div></div></div>
+<div id="viewCalc" style="display:none"><div class="card"><div class="card-title">🧮 מחשבון חומרים</div><div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">הזן מידות כל דירה בקומה. המערכת תחשב אוטומטית כמויות חומרים לפי נוסחאות סטנדרטיות.</div><div class="form-row"><div class="form-field"><label>בחר פרויקט</label><select id="calcProject" onchange="updateCalcFloors()"></select></div><div class="form-field"><label>בחר קומה</label><select id="calcFloor" onchange="loadCalcUnits()"></select></div></div><div class="form-row"><div class="form-field"><label>גובה קומה (מ')</label><input type="number" id="calcHeight" value="2.70" step="0.01" oninput="recalcMaterials()"></div><div class="form-field"><label>מקדם קירות</label><input type="number" id="calcWallFactor" value="3.5" step="0.1" oninput="recalcMaterials()"></div><div class="form-field"><label>אחוז בזבוז (%)</label><input type="number" id="calcWaste" value="7" oninput="recalcMaterials()"></div></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">דירות בקומה</div><div id="calcUnits"></div><div style="margin:12px 0"><button class="btn btn-secondary btn-sm" onclick="addCalcUnit()">+ הוסף דירה</button></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">תוצאות חישוב</div><div id="calcResults"></div><div class="actions"><button class="btn btn-primary" onclick="saveCalcToFloor()">💾 שמור חישוב לקומה</button></div></div><div class="card"><div class="card-title">📐 נוסחאות חישוב</div><div style="color:var(--text-soft);font-size:14px;line-height:2"><b style="color:var(--gold-light)">בלוקים:</b> שטח רצפה × מקדם קירות × גובה = שטח קירות ÷ 0.08 = כמות<br><b style="color:var(--gold-light)">רשת מניטה:</b> אורך × רוחב = שטח (מ"ר)<br><b style="color:var(--gold-light)">טיח גבס:</b> (שטח קירות + תקרה) × 16 ק"ג/מ"ר<br><b style="color:var(--gold-light)">דבק קרמיקה:</b> שטח ריצוף × 1.5 ק"ג/מ"ר<br><b style="color:var(--gold-light)">צבע אקרילי:</b> שטח קירות × 0.2 ליטר/מ"ר<br><b style="color:var(--gold-light)">טיט לריצוף:</b> שטח רצפה × 16 ק"ג/מ"ר<br><b style="color:var(--gold-light)">איטום אקרילי:</b> שטח רצפה × 2 ק"ג/מ"ר (חדרים רטובים)</div></div></div>
+<div id="viewInsights" style="display:none"><div class="card"><div class="card-title">🤖 תובנות AI</div><div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">המערכת לומדת מנתוני קומות שהושלמו ומפיקה המלצות לחיסכון בעלויות.</div><div id="insightsList"></div></div></div>
 </div>
-
-<div id="viewProjects" style="display:none">
-  <div class="card">
-    <div class="card-title">
-      <span>🏢 פרויקטים</span>
-      <div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openProjectModal()">+ פרויקט חדש</button></div>
-    </div>
-    <div id="projectsList"></div>
-  </div>
-</div>
-
-<div id="viewCatalog" style="display:none">
-  <div class="card">
-    <div class="card-title">
-      <span>📋 קטלוג חומרי גלם</span>
-      <div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ הוסף חומר</button></div>
-    </div>
-    <div class="mat-search"><input type="text" id="matSearch" placeholder="חיפוש חומר..." oninput="renderCatalog()"></div>
-    <div id="catalogList"></div>
-  </div>
-</div>
-
-<div id="viewInsights" style="display:none">
-  <div class="card">
-    <div class="card-title">🤖 תובנות AI</div>
-    <div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">המערכת לומדת מנתוני קומות שהושלמו ומפיקה המלצות לחיסכון בעלויות.</div>
-    <div id="insightsList"></div>
-  </div>
-</div>
-
-</div>
-
-<!-- Project Modal -->
-<div class="modal-overlay" id="projectModal">
-  <div class="modal">
-    <h2 id="projectModalTitle">פרויקט חדש</h2>
-    <input type="hidden" id="projId">
-    <div class="form-row"><div class="form-field full"><label>שם הפרויקט</label><input id="projName" placeholder="לדוגמה: ארט ארגמן — נס ציונה"></div></div>
-    <div class="form-row">
-      <div class="form-field"><label>כתובת</label><input id="projAddress" placeholder="רחוב ומספר"></div>
-      <div class="form-field"><label>לקוח</label><input id="projClient" placeholder="שם הלקוח"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>טלפון לקוח</label><input id="projPhone" placeholder="טלפון"></div>
-      <div class="form-field"><label>סטטוס</label><select id="projStatus"><option value="planning">תכנון</option><option value="active">פעיל</option><option value="completed">הושלם</option><option value="on_hold">מושהה</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>מספר קומות</label><input type="number" id="projFloors" placeholder="מספר"></div>
-      <div class="form-field"><label>מ"ר לקומה</label><input type="number" id="projSqm" placeholder="מטרים"></div>
-      <div class="form-field"><label>תקציב (₪)</label><input type="number" id="projBudget" placeholder="תקציב"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>תאריך התחלה</label><input type="date" id="projStart"></div>
-      <div class="form-field"><label>תאריך סיום משוער</label><input type="date" id="projEnd"></div>
-    </div>
-    <div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="projNotes" placeholder="הערות כלליות..."></textarea></div></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('projectModal')">ביטול</button><button class="btn-save" onclick="saveProject()">שמור</button></div>
-  </div>
-</div>
-
-<!-- Floor Modal -->
-<div class="modal-overlay" id="floorModal">
-  <div class="modal">
-    <h2 id="floorModalTitle">קומה חדשה</h2>
-    <input type="hidden" id="flrId">
-    <input type="hidden" id="flrProjectId">
-    <div class="form-row">
-      <div class="form-field"><label>מספר קומה</label><input type="number" id="flrNumber" placeholder="1"></div>
-      <div class="form-field"><label>סוג קומה</label><select id="flrType"><option>דירת גן</option><option>דירה רגילה</option><option>פנטהאוז</option><option>קומת מסחר</option><option>אחר</option></select></div>
-      <div class="form-field"><label>מ"ר</label><input type="number" id="flrSqm" placeholder="מטרים"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>סטטוס</label><select id="flrStage"><option value="not_started">טרם התחילה</option><option value="in_progress">בעבודה</option><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div>
-      <div class="form-field"><label>ימים משוערים</label><input type="number" id="flrEstDays" placeholder="ימים"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>עובדים (סוגים וכמויות)</label><textarea id="flrWorkers" placeholder="לדוגמה: 3 טפסנים, 2 עוזרים, 1 חשמלאי"></textarea></div>
-      <div class="form-field"><label>חומרי גלם</label><textarea id="flrMaterials" placeholder="בחר מהקטלוג או הזן ידנית"></textarea></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>תאריך התחלה</label><input type="date" id="flrStart"></div>
-      <div class="form-field"><label>תאריך סיום</label><input type="date" id="flrEnd"></div>
-    </div>
-    <div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="flrNotes" placeholder="הערות על הקומה..."></textarea></div></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('floorModal')">ביטול</button><button class="btn-save" onclick="saveFloor()">שמור</button></div>
-  </div>
-</div>
-
-<!-- Floor Report Modal -->
-<div class="modal-overlay" id="floorReportModal">
-  <div class="modal">
-    <h2>דוח סיום קומה</h2>
-    <input type="hidden" id="rptFlrId">
-    <p style="color:var(--text-soft);font-size:13px;margin-bottom:16px">דווח נתונים בפועל לקומה. המערכת תלמד מהנתונים ותשפר הערכות עתידיות.</p>
-    <div class="form-row">
-      <div class="form-field"><label>ימים בפועל</label><input type="number" id="rptActualDays" placeholder="ימים"></div>
-      <div class="form-field"><label>שעות מתות (פועלים)</label><input type="number" id="rptIdleHours" placeholder="שעות"></div>
-    </div>
-    <div class="form-row"><div class="form-field full"><label>חומרים שלא נוצלו</label><textarea id="rptWaste" placeholder="לדוגמה: 3 שק דבק עודף, 5 מ"ר אריח שבור"></textarea></div></div>
-    <div class="form-row">
-      <div class="form-field"><label>חריגת תקציב (₪)</label><input type="number" id="rptOverrun" placeholder="0 אם אין חריגה"></div>
-      <div class="form-field"><label>סטטוס סיום</label><select id="rptStatus"><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div>
-    </div>
-    <div class="form-row"><div class="form-field full"><label>הערות / לקחים</label><textarea id="rptNotes" placeholder="מה הלך טוב? מה לשפר?"></textarea></div></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('floorReportModal')">ביטול</button><button class="btn-save" onclick="saveFloorReport()">שמור דוח</button></div>
-  </div>
-</div>
-
-<!-- Material Modal -->
-<div class="modal-overlay" id="materialModal">
-  <div class="modal">
-    <h2 id="matModalTitle">חומר חדש</h2>
-    <input type="hidden" id="matId">
-    <div class="form-row">
-      <div class="form-field"><label>קטגוריה</label><input id="matCategory" placeholder="ריצוף / חדרים רטובים / טיח..."></div>
-      <div class="form-field"><label>קוד מוצר</label><input id="matCode" placeholder="506"></div>
-    </div>
-    <div class="form-row"><div class="form-field full"><label>שם המוצר</label><input id="matName" placeholder="דבק גב אריח"></div></div>
-    <div class="form-row"><div class="form-field full"><label>תיאור</label><input id="matDesc" placeholder="תיאור השימוש"></div></div>
-    <div class="form-row">
-      <div class="form-field"><label>יחידה</label><input id="matUnit" placeholder="שק / ליטר / מטר"></div>
-      <div class="form-field"><label>מחיר מוערך (₪)</label><input type="number" id="matPrice" placeholder="מחיר"></div>
-    </div>
-    <div class="form-row"><div class="form-field full"><label>ספק</label><input id="matSupplier" placeholder="שם ספק (אופציונלי)"></div></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('materialModal')">ביטול</button><button class="btn-save" onclick="saveMaterial()">שמור</button></div>
-  </div>
-</div>
-
-<!-- Photo Modal -->
-<div class="photo-modal-overlay" id="photoModal" onclick="closePhotoModal()">
-<button class="photo-modal-close">✕</button>
-<img id="photoModalImg" src="">
-</div>
-
+<!-- Modals -->
+<div class="modal-overlay" id="projectModal"><div class="modal"><h2 id="projectModalTitle">פרויקט חדש</h2><input type="hidden" id="projId"><div class="form-row"><div class="form-field full"><label>שם הפרויקט</label><input id="projName" placeholder="לדוגמה: ארט ארגמן — נס ציונה"></div></div><div class="form-row"><div class="form-field"><label>כתובת</label><input id="projAddress"></div><div class="form-field"><label>לקוח</label><input id="projClient"></div></div><div class="form-row"><div class="form-field"><label>טלפון לקוח</label><input id="projPhone"></div><div class="form-field"><label>סטטוס</label><select id="projStatus"><option value="planning">תכנון</option><option value="active">פעיל</option><option value="completed">הושלם</option><option value="on_hold">מושהה</option></select></div></div><div class="form-row"><div class="form-field"><label>מספר קומות</label><input type="number" id="projFloors"></div><div class="form-field"><label>מ"ר לקומה</label><input type="number" id="projSqm"></div><div class="form-field"><label>תקציב (₪)</label><input type="number" id="projBudget"></div></div><div class="form-row"><div class="form-field"><label>תאריך התחלה</label><input type="date" id="projStart"></div><div class="form-field"><label>תאריך סיום משוער</label><input type="date" id="projEnd"></div></div><div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="projNotes"></textarea></div></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('projectModal')">ביטול</button><button class="btn-save" onclick="saveProject()">שמור</button></div></div></div>
+<div class="modal-overlay" id="floorModal"><div class="modal"><h2 id="floorModalTitle">קומה חדשה</h2><input type="hidden" id="flrId"><input type="hidden" id="flrProjectId"><div class="form-row"><div class="form-field"><label>מספר קומה</label><input type="number" id="flrNumber"></div><div class="form-field"><label>סוג קומה</label><select id="flrType"><option>דירת גן</option><option>דירה רגילה</option><option>פנטהאוז</option><option>קומת מסחר</option><option>אחר</option></select></div><div class="form-field"><label>מ"ר</label><input type="number" id="flrSqm"></div></div><div class="form-row"><div class="form-field"><label>סטטוס</label><select id="flrStage"><option value="not_started">טרם התחילה</option><option value="in_progress">בעבודה</option><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div><div class="form-field"><label>ימים משוערים</label><input type="number" id="flrEstDays"></div></div><div class="form-row"><div class="form-field full"><label>עובדים</label><textarea id="flrWorkers" placeholder="3 טפסנים, 2 עוזרים, 1 חשמלאי"></textarea></div></div><div class="form-row"><div class="form-field"><label>תאריך התחלה</label><input type="date" id="flrStart"></div><div class="form-field"><label>תאריך סיום</label><input type="date" id="flrEnd"></div></div><div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="flrNotes"></textarea></div></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('floorModal')">ביטול</button><button class="btn-save" onclick="saveFloor()">שמור</button></div></div></div>
+<div class="modal-overlay" id="floorReportModal"><div class="modal"><h2>דוח סיום קומה</h2><input type="hidden" id="rptFlrId"><div class="form-row"><div class="form-field"><label>ימים בפועל</label><input type="number" id="rptActualDays"></div><div class="form-field"><label>שעות מתות</label><input type="number" id="rptIdleHours"></div></div><div class="form-row"><div class="form-field full"><label>חומרים שלא נוצלו</label><textarea id="rptWaste"></textarea></div></div><div class="form-row"><div class="form-field"><label>חריגת תקציב (₪)</label><input type="number" id="rptOverrun"></div><div class="form-field"><label>סטטוס סיום</label><select id="rptStatus"><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div></div><div class="form-row"><div class="form-field full"><label>הערות / לקחים</label><textarea id="rptNotes"></textarea></div></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('floorReportModal')">ביטול</button><button class="btn-save" onclick="saveFloorReport()">שמור דוח</button></div></div></div>
+<div class="modal-overlay" id="materialModal"><div class="modal"><h2 id="matModalTitle">חומר חדש</h2><input type="hidden" id="matId"><div class="form-row"><div class="form-field"><label>קטגוריה</label><input id="matCategory"></div><div class="form-field"><label>קוד מוצר</label><input id="matCode"></div></div><div class="form-row"><div class="form-field full"><label>שם המוצר</label><input id="matName"></div></div><div class="form-row"><div class="form-field full"><label>תיאור</label><input id="matDesc"></div></div><div class="form-row"><div class="form-field"><label>יחידת מדידה</label><input id="matUnit" placeholder="שק / ליטר / מטר / מ״ר / יחידה"></div><div class="form-field"><label>מחיר מוערך (₪)</label><input type="number" id="matPrice"></div></div><div class="form-row"><div class="form-field full"><label>ספק</label><input id="matSupplier"></div></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('materialModal')">ביטול</button><button class="btn-save" onclick="saveMaterial()">שמור</button></div></div></div>
+<div class="photo-modal-overlay" id="photoModal" onclick="closePhotoModal()"><button class="photo-modal-close">✕</button><img id="photoModalImg" src=""></div>
 <div class="toast" id="toast"></div>
 <div class="loading-overlay" id="loadingOverlay"><div style="text-align:center"><div class="spinner" style="margin:0 auto 12px"></div><p style="color:var(--gold);font-weight:600;font-size:14px">טוען נתונים...</p></div></div>
-
 <div class="footer-sig">מערכת ניהול פרויקטים · ציון ישראל ייזום ובנייה · מופעל על ידי AILON Task</div>
 
 <script>
 const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/realEstateAPI';
-let projects=[],floors=[],materials=[],currentView='dash';
-
-function showView(v){
-  currentView=v;
-  ['dash','projects','catalog','insights'].forEach(x=>{
-    document.getElementById('view'+x.charAt(0).toUpperCase()+x.slice(1)).style.display=x===v?'block':'none';
-  });
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('nav'+v.charAt(0).toUpperCase()+v.slice(1)).classList.add('active');
-}
-
-async function apiCall(body){
-  const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  return res.json();
-}
-
-async function fetchAll(){
-  try{
-    const data=await apiCall({action:'getAll'});
-    if(data.success){
-      projects=data.projects||[];
-      floors=data.floors||[];
-      materials=data.materials||[];
-    }
-  }catch(e){
-    projects=[];floors=[];materials=[];
-  }
-  document.getElementById('loadingOverlay').style.display='none';
-  renderAll();
-}
-
-function renderDashboard(){
-  document.getElementById('statProjects').textContent=projects.filter(p=>p.status==='active').length;
-  document.getElementById('statFloors').textContent=floors.filter(f=>f.stage==='in_progress').length;
-  document.getElementById('statMaterials').textContent=materials.length;
-  const totalBudget=projects.reduce((s,p)=>s+(p.budget||0),0);
-  document.getElementById('statBudget').textContent=totalBudget>0?totalBudget.toLocaleString():'—';
-  const list=document.getElementById('dashProjects');
-  if(projects.length===0){list.innerHTML='<div class="empty">אין פרויקטים עדיין. עבור לטאב "פרויקטים" כדי ליצור.</div>';return;}
-  list.innerHTML=projects.map(p=>{
-    const pFloors=floors.filter(f=>f.project_id===p.id);
-    const completed=pFloors.filter(f=>f.stage==='completed').length;
-    const inProg=pFloors.filter(f=>f.stage==='in_progress').length;
-    return `<div class="floor-card" style="cursor:pointer" onclick="showView('projects');openProject('${p.id}')">
-      <div class="floor-header"><h3>${esc(p.project_name||'ללא שם')}</h3><span class="badge badge-${p.status||'planning'}">${statusLabel(p.status)}</span></div>
-      <div class="floor-meta">
-        <span>🏢 ${p.num_floors||0} קומות</span>
-        <span>✅ ${completed} הושלמו</span>
-        <span>🔄 ${inProg} בעבודה</span>
-        ${p.budget?'<span>💰 ₪'+p.budget.toLocaleString()+'</span>':''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderProjects(){
-  const list=document.getElementById('projectsList');
-  if(projects.length===0){list.innerHTML='<div class="empty">אין פרויקטים. לחץ "+ פרויקט חדש" כדי להתחיל.</div>';return;}
-  list.innerHTML=projects.map(p=>{
-    const pFloors=floors.filter(f=>f.project_id===p.id);
-    const projPhotos=getPhotos(p);
-    return `<div class="card" style="margin-bottom:14px">
-      <div class="floor-header"><h3 style="font-size:18px">🏢 ${esc(p.project_name||'ללא שם')}</h3><span class="badge badge-${p.status||'planning'}">${statusLabel(p.status)}</span></div>
-      <div class="floor-meta">
-        ${p.address?'<span>📍 '+esc(p.address)+'</span>':''}
-        ${p.client_name?'<span>👤 '+esc(p.client_name)+'</span>':''}
-        <span>🏢 ${p.num_floors||0} קומות</span>
-        ${p.sqm_per_floor?'<span>📐 '+p.sqm_per_floor+' מ"ר/קומה</span>':''}
-        ${p.budget?'<span>💰 ₪'+(p.budget||0).toLocaleString()+'</span>':''}
-        ${projPhotos.length>0?'<span>📸 '+projPhotos.length+' תמונות</span>':''}
-      </div>
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-        <button class="btn btn-secondary btn-sm" onclick="openFloorModal('${p.id}')">+ קומה</button>
-        <button class="btn btn-secondary btn-sm" onclick="editProject('${p.id}')">ערוך</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')">מחק</button>
-      </div>
-      <div style="margin-top:14px">${renderPhotoGallery(p,'project',p.id)}</div>
-      ${pFloors.length>0?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים משוער</th><th>ימים בפועל</th><th>תמונות</th><th>פעולות</th></tr></thead><tbody>'+pFloors.sort((a,b)=>(a.floor_number||0)-(b.floor_number||0)).map(f=>{
-        const fPhotos=getPhotos(f);
-        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td>'+(fPhotos.length>0?'<button class="btn btn-secondary btn-sm" onclick="showFloorPhotos(\''+f.id+'\')">📸 '+fPhotos.length+'</button>':'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';
-      }).join('')+'</tbody></table></div>':''}
-    </div>`;
-  }).join('');
-}
-
-let currentProjectId=null;
-function openProject(id){currentProjectId=id;}
-
-function openProjectModal(){
-  document.getElementById('projId').value='';
-  document.getElementById('projectModalTitle').textContent='פרויקט חדש';
-  ['projName','projAddress','projClient','projPhone','projFloors','projSqm','projBudget','projStart','projEnd','projNotes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('projStatus').value='planning';
-  document.getElementById('projectModal').classList.add('show');
-}
-
-function editProject(id){
-  const p=projects.find(x=>x.id===id);if(!p)return;
-  document.getElementById('projId').value=id;
-  document.getElementById('projectModalTitle').textContent='עריכת פרויקט';
-  document.getElementById('projName').value=p.project_name||'';
-  document.getElementById('projAddress').value=p.address||'';
-  document.getElementById('projClient').value=p.client_name||'';
-  document.getElementById('projPhone').value=p.client_phone||'';
-  document.getElementById('projFloors').value=p.num_floors||'';
-  document.getElementById('projSqm').value=p.sqm_per_floor||'';
-  document.getElementById('projBudget').value=p.budget||'';
-  document.getElementById('projStart').value=(p.start_date||'').substring(0,10);
-  document.getElementById('projEnd').value=(p.estimated_end||'').substring(0,10);
-  document.getElementById('projStatus').value=p.status||'planning';
-  document.getElementById('projNotes').value=p.notes||'';
-  document.getElementById('projectModal').classList.add('show');
-}
-
-async function saveProject(){
-  const id=document.getElementById('projId').value;
-  const data={
-    project_name:val('projName'),address:val('projAddress'),client_name:val('projClient'),client_phone:val('projPhone'),
-    num_floors:parseInt(val('projFloors'))||0,sqm_per_floor:parseInt(val('projSqm'))||0,
-    budget:parseInt(val('projBudget'))||0,start_date:val('projStart'),estimated_end:val('projEnd'),
-    status:val('projStatus'),notes:val('projNotes'),
-    total_sqm:(parseInt(val('projFloors'))||0)*(parseInt(val('projSqm'))||0)
-  };
-  if(!data.project_name){showToast('נא למלא שם פרויקט');return;}
-  try{
-    await apiCall({action:id?'update':'create',entity:'RealEstateProject',id:id||undefined,data});
-    closeModal('projectModal');
-    showToast(id?'פרויקט עודכן ✓':'פרויקט נוצר ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה בשמירה');}
-}
-
-async function deleteProject(id){
-  if(!confirm('למחוק פרויקט זה?'))return;
-  try{
-    await apiCall({action:'delete',entity:'RealEstateProject',id});
-    showToast('פרויקט נמחק ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה במחיקה');}
-}
-
-function openFloorModal(projectId){
-  document.getElementById('flrId').value='';
-  document.getElementById('flrProjectId').value=projectId;
-  document.getElementById('floorModalTitle').textContent='קומה חדשה';
-  ['flrNumber','flrSqm','flrEstDays','flrStart','flrEnd','flrWorkers','flrMaterials','flrNotes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('flrStage').value='not_started';
-  document.getElementById('floorModal').classList.add('show');
-}
-
-async function saveFloor(){
-  const id=document.getElementById('flrId').value;
-  const projectId=document.getElementById('flrProjectId').value;
-  const project=projects.find(p=>p.id===projectId);
-  const data={
-    project_id:projectId,project_name:project?project.project_name:'',
-    floor_number:parseInt(val('flrNumber'))||0,floor_type:val('flrType'),sqm:parseInt(val('flrSqm'))||0,
-    stage:val('flrStage'),estimated_days:parseInt(val('flrEstDays'))||0,
-    workers:val('flrWorkers'),materials:val('flrMaterials'),
-    start_date:val('flrStart'),end_date:val('flrEnd'),notes:val('flrNotes')
-  };
-  if(!data.project_id){showToast('שגיאה: חסר פרויקט');return;}
-  try{
-    await apiCall({action:id?'update':'create',entity:'RealEstateFloor',id:id||undefined,data});
-    closeModal('floorModal');
-    showToast(id?'קומה עודכנה ✓':'קומה נוצרה ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה בשמירה');}
-}
-
-async function deleteFloor(id){
-  if(!confirm('למחוק קומה זו?'))return;
-  try{
-    await apiCall({action:'delete',entity:'RealEstateFloor',id});
-    showToast('קומה נמחקה ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה במחיקה');}
-}
-
-function openFloorReport(floorId){
-  const f=floors.find(x=>x.id===floorId);if(!f)return;
-  document.getElementById('rptFlrId').value=floorId;
-  document.getElementById('rptActualDays').value=f.actual_days||'';
-  document.getElementById('rptIdleHours').value=f.idle_time_hours||'';
-  document.getElementById('rptWaste').value=f.waste_materials||'';
-  document.getElementById('rptOverrun').value=f.budget_overrun||'';
-  document.getElementById('rptStatus').value='completed';
-  document.getElementById('rptNotes').value=f.report_notes||'';
-  document.getElementById('floorReportModal').classList.add('show');
-}
-
-async function saveFloorReport(){
-  const id=document.getElementById('rptFlrId').value;
-  const data={
-    actual_days:parseInt(val('rptActualDays'))||0,
-    idle_time_hours:parseInt(val('rptIdleHours'))||0,
-    waste_materials:val('rptWaste'),
-    budget_overrun:parseInt(val('rptOverrun'))||0,
-    stage:val('rptStatus'),
-    report_notes:val('rptNotes')
-  };
-  try{
-    await apiCall({action:'update',entity:'RealEstateFloor',id,data});
-    closeModal('floorReportModal');
-    showToast('דוח נשמר ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה בשמירה');}
-}
-
-function renderCatalog(){
-  const search=(document.getElementById('matSearch')?.value||'').toLowerCase();
-  let filtered=materials.filter(m=>{
-    const text=((m.product_name||'')+' '+(m.product_code||'')+' '+(m.category||'')+' '+(m.description||'')).toLowerCase();
-    return !search||text.includes(search);
-  });
-  const groups={};
-  filtered.forEach(m=>{
-    const cat=m.category||'כללי';
-    if(!groups[cat])groups[cat]=[];
-    groups[cat].push(m);
-  });
-  const list=document.getElementById('catalogList');
-  if(filtered.length===0){list.innerHTML='<div class="empty">אין חומרים בקטלוג.</div>';return;}
-  list.innerHTML=Object.keys(groups).sort().map(cat=>{
-    return '<div class="mat-group"><h4>'+esc(cat)+' ('+groups[cat].length+')</h4>'+groups[cat].map(m=>{
-      return '<div class="mat-item"><span class="mat-code">'+esc(m.product_code||'')+'</span><div class="mat-name">'+esc(m.product_name||'')+(m.description?'<div class="mat-desc">'+esc(m.description)+'</div>':'')+'</div>'+(m.estimated_price?'<span style="font-size:12px;color:var(--gold);font-weight:600">₪'+m.estimated_price+'</span>':'')+'<span class="mat-unit">'+esc(m.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\''+m.id+'\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\''+m.id+'\')">✕</button></div>';
-    }).join('')+'</div>';
-  }).join('');
-}
-
-function openMaterialModal(){
-  document.getElementById('matId').value='';
-  document.getElementById('matModalTitle').textContent='חומר חדש';
-  ['matCategory','matCode','matName','matDesc','matUnit','matPrice','matSupplier'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('materialModal').classList.add('show');
-}
-
-function editMaterial(id){
-  const m=materials.find(x=>x.id===id);if(!m)return;
-  document.getElementById('matId').value=id;
-  document.getElementById('matModalTitle').textContent='עריכת חומר';
-  document.getElementById('matCategory').value=m.category||'';
-  document.getElementById('matCode').value=m.product_code||'';
-  document.getElementById('matName').value=m.product_name||'';
-  document.getElementById('matDesc').value=m.description||'';
-  document.getElementById('matUnit').value=m.unit||'';
-  document.getElementById('matPrice').value=m.estimated_price||'';
-  document.getElementById('matSupplier').value=m.supplier||'';
-  document.getElementById('materialModal').classList.add('show');
-}
-
-async function saveMaterial(){
-  const id=document.getElementById('matId').value;
-  const data={
-    category:val('matCategory'),product_code:val('matCode'),product_name:val('matName'),
-    description:val('matDesc'),unit:val('matUnit'),
-    estimated_price:parseFloat(val('matPrice'))||0,supplier:val('matSupplier')
-  };
-  if(!data.product_name){showToast('נא למלא שם מוצר');return;}
-  try{
-    await apiCall({action:id?'update':'create',entity:'RealEstateMaterial',id:id||undefined,data});
-    closeModal('materialModal');
-    showToast(id?'חומר עודכן ✓':'חומר נוסף ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה בשמירה');}
-}
-
-async function deleteMaterial(id){
-  if(!confirm('למחוק חומר זה?'))return;
-  try{
-    await apiCall({action:'delete',entity:'RealEstateMaterial',id});
-    showToast('חומר נמחק ✓');
-    await fetchAll();
-  }catch(e){showToast('שגיאה במחיקה');}
-}
-
-function renderInsights(){
-  const list=document.getElementById('insightsList');
-  const completed=floors.filter(f=>f.stage==='completed');
-  let html='';
-  if(completed.length===0){
-    html='<div class="empty">עדיין אין קומות שהושלמו. כשתסיים קומות, המערכת תפיק תובנות אוטומטיות.</div>';
-  }else{
-    const timeData=completed.map(f=>({est:f.estimated_days||0,act:f.actual_days||0,project:f.project_name||''}));
-    const avgEst=timeData.reduce((s,x)=>s+x.est,0)/timeData.length;
-    const avgAct=timeData.reduce((s,x)=>s+x.act,0)/timeData.length;
-    const variance=((avgAct-avgEst)/Math.max(avgEst,1)*100).toFixed(0);
-    html+='<div class="floor-card"><div class="floor-header"><h3>⏱️ ניתוח זמנים</h3></div><div class="floor-meta"><span>ימים משוערים ממוצע: '+avgEst.toFixed(1)+'</span><span>ימים בפועל ממוצע: '+avgAct.toFixed(1)+'</span><span>סטייה: '+variance+'%</span></div></div>';
-    const wasteData=completed.filter(f=>f.waste_materials);
-    if(wasteData.length>0){
-      html+='<div class="floor-card"><div class="floor-header"><h3>♻️ ניתוח בזבוז חומרים</h3></div><div style="font-size:14px;color:var(--text-soft)">'+wasteData.map(f=>'קומה '+(f.floor_number||'')+': '+esc(f.waste_materials||'')).join('<br>')+'</div></div>';
-    }
-    const idleData=completed.filter(f=>f.idle_time_hours);
-    if(idleData.length>0){
-      const totalIdle=idleData.reduce((s,f)=>s+(f.idle_time_hours||0),0);
-      html+='<div class="floor-card"><div class="floor-header"><h3>😴 זמנים מתים</h3></div><div class="floor-meta"><span>סה"כ שעות מתות: '+totalIdle+'</span><span>ממוצע לקומה: '+(totalIdle/idleData.length).toFixed(1)+'</span></div></div>';
-    }
-    const budgetData=completed.filter(f=>f.budget_overrun);
-    if(budgetData.length>0){
-      const totalOverrun=budgetData.reduce((s,f)=>s+(f.budget_overrun||0),0);
-      html+='<div class="floor-card" style="border-right-color:var(--red)"><div class="floor-header"><h3>💰 חריגות תקציב</h3></div><div class="floor-meta"><span>סה"כ חריגה: ₪'+totalOverrun.toLocaleString()+'</span></div></div>';
-    }
-  }
-  html+='<div class="floor-card" style="border-right-color:var(--gold)"><div class="floor-header"><h3>🤖 המלצות AI</h3></div>';
-  if(completed.length>=3){
-    html+='<div style="font-size:14px;line-height:1.8;color:var(--text-soft)">• בהתבסס עת '+completed.length+' קומות שהושלמו, ניתן לשפר את הערכות הזמן<br>• מומלץ להקצות פועלים נוספים בשלב הטיח<br>• חומרי מליטה: יש להזמין 5% עודף מעבר לחישוב התיאורטי</div>';
-  }else{
-    html+='<div style="font-size:14px;color:var(--text-mute)">יש צורך בלפחות 3 קומות שהושלמו כדי להתחיל להפיק תובנות. כרגע יש '+completed.length+'.</div>';
-  }
-  html+='</div>';
-  list.innerHTML=html;
-}
-
-// ===== Photo Upload & Gallery =====
-function compressImage(file, maxW, quality) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = new Image();
-      img.onload = function() {
-        let w = img.width, h = img.height;
-        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = reject;
-      img.src = e.target.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-async function handlePhotoSelect(input, entityType, entityId) {
-  const files = Array.from(input.files || []);
-  if (files.length === 0) return;
-  showToast('מעלה תמונות...');
-  const record = entityType === 'floor' ? floors.find(f => f.id === entityId) : projects.find(p => p.id === entityId);
-  let photos = [];
-  try { photos = JSON.parse(record?.photos || '[]'); } catch(e) {}
-  for (const file of files) {
-    if (file.type.startsWith('image/')) {
-      const compressed = await compressImage(file, 1280, 0.75);
-      photos.push({ type: 'image', data: compressed, date: new Date().toISOString() });
-    }
-  }
-  const entityName = entityType === 'floor' ? 'RealEstateFloor' : 'RealEstateProject';
-  try {
-    await apiCall({ action: 'update', entity: entityName, id: entityId, data: { photos: JSON.stringify(photos) } });
-    showToast(photos.length + ' תמונות נשמרו ✓');
-    await fetchAll();
-    renderProjects();
-  } catch(e) { showToast('שגיאה בשמירת תמונות'); }
-  input.value = '';
-}
-
-function getPhotos(record) {
-  try { return JSON.parse(record?.photos || '[]'); } catch(e) { return []; }
-}
-
-function renderPhotoGallery(record, entityType, entityId) {
-  const photos = getPhotos(record);
-  let html = '<div class="photo-upload-area" onclick="document.getElementById(\'photoInput_'+entityType+'_'+entityId+'\').click()">';
-  html += '<div class="upload-icon">📸</div>';
-  html += '<div class="upload-text">צלם או בחר תמונות מהמכשיר</div>';
-  html += '<input type="file" id="photoInput_'+entityType+'_'+entityId+'" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotoSelect(this,\''+entityType+'\',\''+entityId+'\')">';
-  html += '</div>';
-  if (photos.length > 0) {
-    html += '<div class="photo-gallery">';
-    photos.forEach((photo, idx) => {
-      if (photo.type === 'image' && photo.data) {
-        html += '<div style="position:relative">';
-        html += '<img class="photo-thumb" src="'+photo.data+'" onclick="openPhotoModal(\''+entityType+'\',\''+entityId+'\','+idx+')" alt="תמונה">';
-        html += '<button class="btn btn-danger btn-sm" style="position:absolute;top:-4px;left:-4px;padding:2px 6px;font-size:10px;border-radius:50%;width:20px;height:20px" onclick="event.stopPropagation();deletePhoto(\''+entityType+'\',\''+entityId+'\','+idx+')">✕</button>';
-        html += '</div>';
-      }
-    });
-    html += '</div>';
-  }
-  return html;
-}
-
-function openPhotoModal(entityType, entityId, idx) {
-  const record = entityType === 'floor' ? floors.find(f => f.id === entityId) : projects.find(p => p.id === entityId);
-  const photos = getPhotos(record);
-  if (photos[idx] && photos[idx].data) {
-    document.getElementById('photoModalImg').src = photos[idx].data;
-    document.getElementById('photoModal').classList.add('show');
-  }
-}
-
-function closePhotoModal() { document.getElementById('photoModal').classList.remove('show'); }
-
-async function deletePhoto(entityType, entityId, idx) {
-  if (!confirm('למחוק תמונה זו?')) return;
-  const record = entityType === 'floor' ? floors.find(f => f.id === entityId) : projects.find(p => p.id === entityId);
-  let photos = getPhotos(record);
-  photos.splice(idx, 1);
-  const entityName = entityType === 'floor' ? 'RealEstateFloor' : 'RealEstateProject';
-  try {
-    await apiCall({ action: 'update', entity: entityName, id: entityId, data: { photos: JSON.stringify(photos) } });
-    showToast('תמונה נמחקה ✓');
-    await fetchAll();
-    renderProjects();
-  } catch(e) { showToast('שגיאה במחיקה'); }
-}
-
-function showFloorPhotos(floorId){
-  const f=floors.find(x=>x.id===floorId);
-  if(!f)return;
-  const photos=getPhotos(f);
-  if(photos.length===0){showToast('אין תמונות');return;}
-  openPhotoModal('floor',floorId,0);
-}
-
-// ===== Helpers =====
+let projects=[],floors=[],materials=[],calcUnits=[];
+const DEFAULT_MATERIALS=[
+  {product_code:'BLK-20',product_name:'בלוק 20 ס"מ איטונג',category:'שלד',description:'בלוק בטון חלול 40×20×20',unit:'יחידה',estimated_price:7,supplier:'איטונג'},
+  {product_code:'BLK-10',product_name:'בלוק 10 ס"מ איטונג',category:'שלד',description:'בלוק למחיצות 40×20×10',unit:'יחידה',estimated_price:5.5,supplier:'איטונג'},
+  {product_code:'CEM-W',product_name:'מלט לבן',category:'שלד',description:'מלט פורטלנד לבן לטיח',unit:'שק 25ק"ג',estimated_price:28,supplier:'נשר'},
+  {product_code:'CEM-G',product_name:'מלט אפור',category:'שלד',description:'מלט לשלד ובטון',unit:'שק 50ק"ג',estimated_price:32,supplier:'נשר'},
+  {product_code:'SAND-F',product_name:'חול זיפזיף',category:'שלד',description:'חול לתערובות',unit:'קוב',estimated_price:180,supplier:'מחצבה'},
+  {product_code:'GRAVEL',product_name:'חצץ 19מ"מ',category:'שלד',description:'חצץ לבטון',unit:'קוב',estimated_price:200,supplier:'מחצבה'},
+  {product_code:'REBAR-10',product_name:'ברזל בניין 10מ"מ',category:'שלד',description:'מוט ברזל לזיון',unit:'מטר רץ',estimated_price:8.5,supplier:'ישראל מתכת'},
+  {product_code:'REBAR-8',product_name:'ברזל בניין 8מ"מ',category:'שלד',description:'מוט ברזל לקשירה',unit:'מטר רץ',estimated_price:5.5,supplier:'ישראל מתכת'},
+  {product_code:'CONC-30',product_name:'בטון מוכן 30',category:'שלד',description:'בטון ליציקות',unit:'קוב',estimated_price:550,supplier:'נשר'},
+  {product_code:'PLS-GYP',product_name:'טיח גבס מוכן',category:'טיח וגבס',description:'טיח גבס לקירות — 16 ק"ג/מ"ר',unit:'שק 30ק"ג',estimated_price:35,supplier:'קנד וגבס'},
+  {product_code:'PLS-CEM',product_name:'טיח צמנטי מוכן',category:'טיח וגבס',description:'טיח חיצוני — 16 ק"ג/מ"ר',unit:'שק 25ק"ג',estimated_price:30,supplier:'נשר'},
+  {product_code:'GBD-BRD',product_name:'לוח גבס רגיל 12.5מ"מ',category:'טיח וגבס',description:'לוח גבס לקירות ותקרות',unit:'יחידה',estimated_price:48,supplier:'קנד וגבס'},
+  {product_code:'GBD-GRN',product_name:'לוח גבס ירוק (לחות)',category:'טיח וגבס',description:'לחדרים רטובים',unit:'יחידה',estimated_price:55,supplier:'קנד וגבס'},
+  {product_code:'SHPLTR',product_name:'שפכטל גבס',category:'טיח וגבס',description:'שפכטל — 0.7 ק"ג/מ"ר',unit:'שק 25ק"ג',estimated_price:42,supplier:'קנד וגבס'},
+  {product_code:'TILE-GLUE',product_name:'דבק קרמיקה גמיש',category:'ריצוף',description:'דבק לאריחים — 1.5 ק"ג/מ"ר',unit:'שק 20ק"ג',estimated_price:45,supplier:'סומבר'},
+  {product_code:'TILE-GROUT',product_name:'רובה אקרילית',category:'ריצוף',description:'רובה לפוגות',unit:'שק 5ק"ג',estimated_price:28,supplier:'סומבר'},
+  {product_code:'TILE-FIX',product_name:'טיט לריצוף',category:'ריצוף',description:'טיט מתחת לריצוף — 16 ק"ג/מ"ר',unit:'שק 25ק"ג',estimated_price:22,supplier:'נשר'},
+  {product_code:'TILE-PORS',product_name:'אריח פורצלן 60×60',category:'ריצוף',description:'אריח לרצפה',unit:'מ"ר',estimated_price:120,supplier:'מפעלי ריצוף'},
+  {product_code:'TILE-WALL',product_name:'אריח קיר 25×40',category:'ריצוף',description:'אריח קרמי לקירות',unit:'מ"ר',estimated_price:85,supplier:'מפעלי ריצוף'},
+  {product_code:'WPRO-ACR',product_name:'איטום אקרילי משחה',category:'איטום',description:'איטום לחדרים רטובים — 2 ק"ג/מ"ר',unit:'דלי 17ק"ג',estimated_price:220,supplier:'סומבר'},
+  {product_code:'WPRO-BIT',product_name:'איטום ביטומני',category:'איטום',description:'איטום לגגות — 2 ק"ג/מ"ר',unit:'דלי 25ק"ג',estimated_price:180,supplier:'נירלט'},
+  {product_code:'WPRO-MEM',product_name:'יריעת איטום דביקה עצמית',category:'איטום',description:'יריעה לחדרים רטובים',unit:'מ"ר',estimated_price:35,supplier:'נירלט'},
+  {product_code:'PNT-ACR',product_name:'צבע אקרילי לקירות',category:'צבע',description:'צבע פנים — 0.2 ליטר/מ"ר',unit:'ליטר',estimated_price:45,supplier:'טמבור'},
+  {product_code:'PNT-PRM',product_name:'פריימר לצבע',category:'צבע',description:'פריימר לקירות',unit:'ליטר',estimated_price:30,supplier:'טמבור'},
+  {product_code:'PNT-ELC',product_name:'צבע אלסטי חיצוני',category:'צבע',description:'צבע חיצוני — 0.9 ק"ג/מ"ר',unit:'ליטר',estimated_price:65,supplier:'נירלט'},
+  {product_code:'PNT-STR',product_name:'סילר לרצפת בטון',category:'צבע',description:'סילר שקוף — 0.2 ליטר/מ"ר',unit:'ליטר',estimated_price:55,supplier:'נירלט'},
+  {product_code:'MESH-FLR',product_name:'רשת מניטה (קוליה)',category:'מניטה ובידוד',description:'רשת חיזוק לרצפה',unit:'מ"ר',estimated_price:18,supplier:'פלסאר'},
+  {product_code:'MESH-WALL',product_name:'רשת פיברגלס לטיח',category:'מניטה ובידוד',description:'רשת לחיזוק טיח חיצוני',unit:'מ"ר',estimated_price:12,supplier:'פלסאר'},
+  {product_code:'PROF-AL',product_name:'פרופיל אלומיניום לפוגה',category:'פרופילים וגמר',description:'פרופיל לפוגות ריצוף',unit:'מטר רץ',estimated_price:15,supplier:'אלום'},
+  {product_code:'PROF-CRN',product_name:'פרופיל פינה לגבס',category:'פרופילים וגמר',description:'פרופיל פח לפינות גבס',unit:'מטר רץ',estimated_price:6,supplier:'קנד וגבס'}
+];
+function showView(v){['dash','projects','catalog','calc','insights'].forEach(function(x){var el=document.getElementById('view'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.style.display=x===v?'block':'none';});document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});var nav=document.getElementById('nav'+v.charAt(0).toUpperCase()+v.slice(1));if(nav)nav.classList.add('active');if(v==='calc')initCalcProjects();}
+async function apiCall(body){var res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return res.json();}
+async function fetchAll(){try{var data=await apiCall({action:'getAll'});if(data.success){projects=data.projects||[];floors=data.floors||[];materials=data.materials||[];}}catch(e){projects=[];floors=[];materials=[];}document.getElementById('loadingOverlay').style.display='none';renderAll();}
+function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
+function renderDashboard(){document.getElementById('statProjects').textContent=projects.filter(function(p){return p.status==='active';}).length;document.getElementById('statFloors').textContent=floors.filter(function(f){return f.stage==='in_progress';}).length;document.getElementById('statMaterials').textContent=materials.length;var tb=projects.reduce(function(s,p){return s+(p.budget||0);},0);document.getElementById('statBudget').textContent=tb>0?tb.toLocaleString():'—';var l=document.getElementById('dashProjects');if(!projects.length){l.innerHTML='<div class="empty">אין פרויקטים עדיין.</div>';return;}l.innerHTML=projects.map(function(p){var pf=floors.filter(function(f){return f.project_id===p.id;});var c=pf.filter(function(f){return f.stage==='completed';}).length;var ip=pf.filter(function(f){return f.stage==='in_progress';}).length;return '<div class="floor-card" style="cursor:pointer" onclick="showView(\'projects\')"><div class="floor-header"><h3>'+esc(p.project_name||'')+'</h3><span class="badge badge-'+(p.status||'planning')+'">'+statusLabel(p.status)+'</span></div><div class="floor-meta"><span>🏢 '+(p.num_floors||0)+' קומות</span><span>✅ '+c+' הושלמו</span><span>🔄 '+ip+' בעבודה</span>'+(p.budget?'<span>💰 ₪'+p.budget.toLocaleString()+'</span>':'')+'</div></div>';}).join('');}
+function renderProjects(){var l=document.getElementById('projectsList');if(!projects.length){l.innerHTML='<div class="empty">אין פרויקטים.</div>';return;}l.innerHTML=projects.map(function(p){var pf=floors.filter(function(f){return f.project_id===p.id;}).sort(function(a,b){return (a.floor_number||0)-(b.floor_number||0);});return '<div class="card" style="margin-bottom:14px"><div class="floor-header"><h3 style="font-size:18px">🏢 '+esc(p.project_name||'')+'</h3><span class="badge badge-'+(p.status||'planning')+'">'+statusLabel(p.status)+'</span></div><div class="floor-meta">'+(p.address?'<span>📍 '+esc(p.address)+'</span>':'')+(p.client_name?'<span>👤 '+esc(p.client_name)+'</span>':'')+'<span>🏢 '+(p.num_floors||0)+' קומות</span>'+(p.budget?'<span>💰 ₪'+(p.budget||0).toLocaleString()+'</span>':'')+'</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="openFloorModal(\''+p.id+'\')">+ קומה</button><button class="btn btn-secondary btn-sm" onclick="editProject(\''+p.id+'\')">ערוך</button><button class="btn btn-danger btn-sm" onclick="deleteProject(\''+p.id+'\')">מחק</button></div>'+(pf.length?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים</th><th>בפועל</th><th>פעולות</th></tr></thead><tbody>'+pf.map(function(f){return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';}).join('')+'</tbody></table></div>':'')+'</div>';}).join('');}
+function openProjectModal(){document.getElementById('projId').value='';document.getElementById('projectModalTitle').textContent='פרויקט חדש';['projName','projAddress','projClient','projPhone','projFloors','projSqm','projBudget','projStart','projEnd','projNotes'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('projStatus').value='planning';document.getElementById('projectModal').classList.add('show');}
+function editProject(id){var p=projects.find(function(x){return x.id===id;});if(!p)return;document.getElementById('projId').value=id;document.getElementById('projectModalTitle').textContent='עריכת פרויקט';document.getElementById('projName').value=p.project_name||'';document.getElementById('projAddress').value=p.address||'';document.getElementById('projClient').value=p.client_name||'';document.getElementById('projPhone').value=p.client_phone||'';document.getElementById('projFloors').value=p.num_floors||'';document.getElementById('projSqm').value=p.sqm_per_floor||'';document.getElementById('projBudget').value=p.budget||'';document.getElementById('projStart').value=(p.start_date||'').substring(0,10);document.getElementById('projEnd').value=(p.estimated_end||'').substring(0,10);document.getElementById('projStatus').value=p.status||'planning';document.getElementById('projNotes').value=p.notes||'';document.getElementById('projectModal').classList.add('show');}
+async function saveProject(){var id=document.getElementById('projId').value;var d={project_name:val('projName'),address:val('projAddress'),client_name:val('projClient'),client_phone:val('projPhone'),num_floors:parseInt(val('projFloors'))||0,sqm_per_floor:parseInt(val('projSqm'))||0,budget:parseInt(val('projBudget'))||0,start_date:val('projStart'),estimated_end:val('projEnd'),status:val('projStatus'),notes:val('projNotes'),total_sqm:(parseInt(val('projFloors'))||0)*(parseInt(val('projSqm'))||0)};if(!d.project_name){showToast('נא למלא שם');return;}try{await apiCall({action:id?'update':'create',entity:'RealEstateProject',id:id||undefined,data:d});closeModal('projectModal');showToast(id?'עודכן ✓':'נוצר ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+async function deleteProject(id){if(!confirm('למחוק?'))return;try{await apiCall({action:'delete',entity:'RealEstateProject',id:id});showToast('נמחק ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+function openFloorModal(pid){document.getElementById('flrId').value='';document.getElementById('flrProjectId').value=pid;document.getElementById('floorModalTitle').textContent='קומה חדשה';['flrNumber','flrSqm','flrEstDays','flrStart','flrEnd','flrWorkers','flrNotes'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('flrStage').value='not_started';document.getElementById('floorModal').classList.add('show');}
+async function saveFloor(){var id=document.getElementById('flrId').value;var pid=document.getElementById('flrProjectId').value;var p=projects.find(function(x){return x.id===pid;});var d={project_id:pid,project_name:p?p.project_name:'',floor_number:parseInt(val('flrNumber'))||0,floor_type:val('flrType'),sqm:parseInt(val('flrSqm'))||0,stage:val('flrStage'),estimated_days:parseInt(val('flrEstDays'))||0,workers:val('flrWorkers'),start_date:val('flrStart'),end_date:val('flrEnd'),notes:val('flrNotes')};if(!d.project_id){showToast('שגיאה');return;}try{await apiCall({action:id?'update':'create',entity:'RealEstateFloor',id:id||undefined,data:d});closeModal('floorModal');showToast(id?'עודכן ✓':'נוצר ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+async function deleteFloor(id){if(!confirm('למחוק?'))return;try{await apiCall({action:'delete',entity:'RealEstateFloor',id:id});showToast('נמחק ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+function openFloorReport(fid){var f=floors.find(function(x){return x.id===fid;});if(!f)return;document.getElementById('rptFlrId').value=fid;document.getElementById('rptActualDays').value=f.actual_days||'';document.getElementById('rptIdleHours').value=f.idle_time_hours||'';document.getElementById('rptWaste').value=f.waste_materials||'';document.getElementById('rptOverrun').value=f.budget_overrun||'';document.getElementById('rptStatus').value='completed';document.getElementById('rptNotes').value=f.report_notes||'';document.getElementById('floorReportModal').classList.add('show');}
+async function saveFloorReport(){var id=document.getElementById('rptFlrId').value;var d={actual_days:parseInt(val('rptActualDays'))||0,idle_time_hours:parseInt(val('rptIdleHours'))||0,waste_materials:val('rptWaste'),budget_overrun:parseInt(val('rptOverrun'))||0,stage:val('rptStatus'),report_notes:val('rptNotes')};try{await apiCall({action:'update',entity:'RealEstateFloor',id:id,data:d});closeModal('floorReportModal');showToast('דוח נשמר ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+function renderCatalog(){var s=(document.getElementById('matSearch')?document.getElementById('matSearch').value:'').toLowerCase();var f=materials.filter(function(m){var t=((m.product_name||'')+' '+(m.product_code||'')+' '+(m.category||'')+' '+(m.description||'')).toLowerCase();return !s||t.includes(s);});var g={};f.forEach(function(m){var c=m.category||'כללי';if(!g[c])g[c]=[];g[c].push(m);});var l=document.getElementById('catalogList');if(!f.length){l.innerHTML='<div class="empty">אין חומרים. לחץ "טען חומרי בניין סטנדרטיים" כדי להתחיל.</div>';return;}l.innerHTML=Object.keys(g).sort().map(function(c){return '<div class="mat-group"><h4>'+esc(c)+' ('+g[c].length+')</h4>'+g[c].map(function(m){return '<div class="mat-item"><span class="mat-code">'+esc(m.product_code||'')+'</span><div class="mat-name">'+esc(m.product_name||'')+(m.description?'<div class="mat-desc">'+esc(m.description)+'</div>':'')+'</div>'+(m.estimated_price?'<span style="font-size:12px;color:var(--gold);font-weight:600">₪'+m.estimated_price+'</span>':'')+'<span style="font-size:12px;color:var(--text-mute)">'+esc(m.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\''+m.id+'\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\''+m.id+'\')">✕</button></div>';}).join('')+'</div>';}).join('');}
+function openMaterialModal(){document.getElementById('matId').value='';document.getElementById('matModalTitle').textContent='חומר חדש';['matCategory','matCode','matName','matDesc','matUnit','matPrice','matSupplier'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('materialModal').classList.add('show');}
+function editMaterial(id){var m=materials.find(function(x){return x.id===id;});if(!m)return;document.getElementById('matId').value=id;document.getElementById('matModalTitle').textContent='עריכת חומר';document.getElementById('matCategory').value=m.category||'';document.getElementById('matCode').value=m.product_code||'';document.getElementById('matName').value=m.product_name||'';document.getElementById('matDesc').value=m.description||'';document.getElementById('matUnit').value=m.unit||'';document.getElementById('matPrice').value=m.estimated_price||'';document.getElementById('matSupplier').value=m.supplier||'';document.getElementById('materialModal').classList.add('show');}
+async function saveMaterial(){var id=document.getElementById('matId').value;var d={category:val('matCategory'),product_code:val('matCode'),product_name:val('matName'),description:val('matDesc'),unit:val('matUnit'),estimated_price:parseFloat(val('matPrice'))||0,supplier:val('matSupplier')};if(!d.product_name){showToast('נא למלא שם');return;}try{await apiCall({action:id?'update':'create',entity:'RealEstateMaterial',id:id||undefined,data:d});closeModal('materialModal');showToast(id?'עודכן ✓':'נוסף ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+async function deleteMaterial(id){if(!confirm('למחוק?'))return;try{await apiCall({action:'delete',entity:'RealEstateMaterial',id:id});showToast('נמחק ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+async function seedDefaultMaterials(){if(!confirm('לטעון 30 חומרי בניין סטנדרטיים?'))return;showToast('טוען...');var c=0;for(var i=0;i<DEFAULT_MATERIALS.length;i++){var m=DEFAULT_MATERIALS[i];var ex=materials.find(function(x){return x.product_code===m.product_code;});if(ex)continue;try{await apiCall({action:'create',entity:'RealEstateMaterial',data:m});c++;}catch(e){}}showToast(c+' חומרים נטענו ✓');await fetchAll();}
+function initCalcProjects(){var s=document.getElementById('calcProject');s.innerHTML='<option value="">— בחר פרויקט —</option>'+projects.map(function(p){return '<option value="'+p.id+'">'+esc(p.project_name||'')+'</option>';}).join('');}
+function updateCalcFloors(){var pid=document.getElementById('calcProject').value;var s=document.getElementById('calcFloor');var pf=floors.filter(function(f){return f.project_id===pid;});s.innerHTML='<option value="">— בחר קומה —</option>'+pf.map(function(f){return '<option value="'+f.id+'">קומה '+(f.floor_number||'')+' — '+(f.sqm||0)+' מ"ר</option>';}).join('');calcUnits=[];renderCalcUnits();recalcMaterials();}
+function loadCalcUnits(){var fid=document.getElementById('calcFloor').value;var f=floors.find(function(x){return x.id===fid;});if(!f){calcUnits=[];renderCalcUnits();recalcMaterials();return;}calcUnits=[{name:'דירה 1',area:f.sqm||0,length:0,width:0}];renderCalcUnits();recalcMaterials();}
+function addCalcUnit(){var n=calcUnits.length+1;calcUnits.push({name:'דירה '+n,area:0,length:0,width:0});renderCalcUnits();recalcMaterials();}
+function removeCalcUnit(i){calcUnits.splice(i,1);renderCalcUnits();recalcMaterials();}
+function updateCalcUnit(i,f,v){if(!calcUnits[i])return;calcUnits[i][f]=parseFloat(v)||0;if((f==='length'||f==='width')&&calcUnits[i].length>0&&calcUnits[i].width>0)calcUnits[i].area=(calcUnits[i].length*calcUnits[i].width).toFixed(2);recalcMaterials();}
+function renderCalcUnits(){var c=document.getElementById('calcUnits');if(!calcUnits.length){c.innerHTML='<div class="empty">בחר קומה או הוסף דירה</div>';return;}c.innerHTML=calcUnits.map(function(u,i){return '<div class="floor-card" style="padding:14px;margin-bottom:10px"><div class="floor-header"><h3 style="font-size:15px">'+esc(u.name||('דירה '+(i+1)))+'</h3><button class="btn btn-danger btn-sm" onclick="removeCalcUnit('+i+')">✕</button></div><div class="form-row" style="margin-bottom:8px"><div class="form-field"><label>שם דירה</label><input value="'+esc(u.name||'')+'" oninput="calcUnits['+i+'].name=this.value"></div><div class="form-field"><label>שטח רצפה (מ"ר) — כולל ממ"ד</label><input type="number" value="'+(u.area||0)+'" oninput="updateCalcUnit('+i+',\'area\',this.value)" step="0.1"></div></div><div class="form-row" style="margin-bottom:8px"><div class="form-field"><label>אורך (מ\') — לרשת מניטה</label><input type="number" value="'+(u.length||0)+'" oninput="updateCalcUnit('+i+',\'length\',this.value)" step="0.1"></div><div class="form-field"><label>רוחב (מ\') — לרשת מניטה</label><input type="number" value="'+(u.width||0)+'" oninput="updateCalcUnit('+i+',\'width\',this.value)" step="0.1"></div></div></div>';}).join('');}
+function recalcMaterials(){var h=parseFloat(document.getElementById('calcHeight')?document.getElementById('calcHeight').value:2.70)||2.70;var wf=parseFloat(document.getElementById('calcWallFactor')?document.getElementById('calcWallFactor').value:3.5)||3.5;var wp=parseFloat(document.getElementById('calcWaste')?document.getElementById('calcWaste').value:0)||0;var wm=1+wp/100;if(!calcUnits.length){document.getElementById('calcResults').innerHTML='<div class="empty">הוסף דירות</div>';return;}var t={blocks:0,mesh:0,plasterGyp:0,tileGlue:0,tileBed:0,paintInt:0,primer:0,waterproof:0,spackle:0,rebar:0,profAlum:0};var tfa=0,twa=0;var ur=calcUnits.map(function(u){var a=parseFloat(u.area)||0;var l=parseFloat(u.length)||0;var w=parseFloat(u.width)||0;var wa=a*wf*h;var ma=(l>0&&w>0)?(l*w):a;var r={name:u.name,area:a,wallArea:wa,blocks:Math.ceil(wa/0.08*wm),mesh:Math.ceil(ma*wm),plasterGyp:Math.ceil((wa+a)*16*wm),tileGlue:Math.ceil(a*1.5*wm),tileBed:Math.ceil(a*16*wm),paintInt:Math.ceil(wa*0.2*wm),primer:Math.ceil(wa*0.1*wm),waterproof:Math.ceil(a*2*wm),spackle:Math.ceil((wa+a)*0.7*wm),rebar:Math.ceil(a*3*wm),profAlum:Math.ceil(a*0.1*wm)};Object.keys(r).forEach(function(k){if(k==='name'||k==='area'||k==='wallArea')return;if(!t[k])t[k]=0;t[k]+=r[k];});tfa+=a;twa+=wa;return r;});var html='';ur.forEach(function(r){html+='<div class="floor-card" style="padding:14px;margin-bottom:10px"><div class="floor-header"><h3 style="font-size:15px;color:var(--gold-light)">'+esc(r.name)+'</h3><span style="font-size:13px;color:var(--text-soft)">'+r.area+' מ"ר · קירות: '+r.wallArea.toFixed(1)+' מ"ר</span></div><div class="floor-meta" style="font-size:12px"><span>🧱 בלוקים: <b style="color:var(--gold)">'+r.blocks.toLocaleString()+'</b></span><span>🔲 רשת: <b style="color:var(--gold)">'+r.mesh.toLocaleString()+' מ"ר</b></span><span>🎨 טיח: <b style="color:var(--gold)">'+r.plasterGyp.toLocaleString()+' ק"ג</b></span><span>🫙 דבק: <b style="color:var(--gold)">'+r.tileGlue.toLocaleString()+' ק"ג</b></span><span>🖌️ צבע: <b style="color:var(--gold)">'+r.paintInt.toLocaleString()+' ליטר</b></span></div></div>';});var items=[{k:'blocks',l:'🧱 בלוקים 20 ס"מ',u:'יחידה'},{k:'mesh',l:'🔲 רשת מניטה (קוליה)',u:'מ"ר'},{k:'plasterGyp',l:'🎨 טיח גבס',u:'ק"ג'},{k:'tileGlue',l:'🫙 דבק קרמיקה',u:'ק"ג'},{k:'tileBed',l:'🟫 טיט לריצוף',u:'ק"ג'},{k:'paintInt',l:'🖌️ צבע אקרילי',u:'ליטר'},{k:'primer',l:'🪣 פריימר',u:'ליטר'},{k:'waterproof',l:'💧 איטום אקרילי',u:'ק"ג'},{k:'spackle',l:'📋 שפכטל',u:'ק"ג'},{k:'rebar',l:'🔩 ברזל זיון 10מ"מ',u:'מטר רץ'},{k:'profAlum',l:'⬛ פרופיל אלומיניום',u:'מטר רץ'}];html+='<div class="card" style="background:var(--bg-3);border:1px solid var(--gold);margin-top:12px"><div style="font-size:17px;font-weight:800;color:var(--gold);margin-bottom:12px">📊 סך הכל לקומה ('+tfa.toLocaleString()+' מ"ר)</div><table class="data-table"><thead><tr><th>חומר</th><th>כמות</th><th>יחידה</th></tr></thead><tbody>';items.forEach(function(it){if(t[it.k]&&t[it.k]>0)html+='<tr><td>'+it.l+'</td><td style="color:var(--gold);font-weight:700">'+t[it.k].toLocaleString()+'</td><td>'+it.u+'</td></tr>';});html+='</tbody></table></div>';document.getElementById('calcResults').innerHTML=html;}
+async function saveCalcToFloor(){var fid=document.getElementById('calcFloor').value;if(!fid){showToast('בחר קומה');return;}var h=parseFloat(document.getElementById('calcHeight').value)||2.70;var wf=parseFloat(document.getElementById('calcWallFactor').value)||3.5;var wp=parseFloat(document.getElementById('calcWaste').value)||0;var d={units:calcUnits,settings:{height:h,wallFactor:wf,wastePct:wp},calculatedAt:new Date().toISOString()};try{await apiCall({action:'update',entity:'RealEstateFloor',id:fid,data:{materials:JSON.stringify(d)}});showToast('חישוב נשמר ✓');await fetchAll();}catch(e){showToast('שגיאה');}}
+function renderInsights(){var l=document.getElementById('insightsList');var c=floors.filter(function(f){return f.stage==='completed';});var h='';if(!c.length){h='<div class="empty">עדיין אין קומות שהושלמו.</div>';}else{var td=c.map(function(f){return {est:f.estimated_days||0,act:f.actual_days||0};});var ae=td.reduce(function(s,x){return s+x.est;},0)/td.length;var aa=td.reduce(function(s,x){return s+x.act;},0)/td.length;var v=((aa-ae)/Math.max(ae,1)*100).toFixed(0);h+='<div class="floor-card"><div class="floor-header"><h3>⏱️ ניתוח זמנים</h3></div><div class="floor-meta"><span>משוער: '+ae.toFixed(1)+'</span><span>בפועל: '+aa.toFixed(1)+'</span><span>סטייה: '+v+'%</span></div></div>';}h+='<div class="floor-card" style="border-right-color:var(--gold)"><div class="floor-header"><h3>🤖 המלצות</h3></div><div style="font-size:14px;color:'+(c.length>=3?'var(--text-soft)':'var(--text-mute)')+'">'+(c.length>=3?'• ניתן לשפר הערכות זמן<br>• להקצות פועלים נוספים בטיח<br>• להזמין 5% עודף חומרי מליטה':'יש צורך ב-3 קומות שהושלמו. כרגע: '+c.length)+'</div></div>';l.innerHTML=h;}
+function compressImage(f,mw,q){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(e){var img=new Image();img.onload=function(){var w=img.width,h=img.height;if(w>mw){h=Math.round(h*mw/w);w=mw;}var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);res(c.toDataURL('image/jpeg',q));};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(f);});}
+function getPhotos(r){try{return JSON.parse(r&&r.photos||'[]');}catch(e){return [];}}
+function renderPhotoGallery(r,et,ei){var p=getPhotos(r);var h='<div class="photo-upload-area" onclick="document.getElementById(\'photoInput_'+et+'_'+ei+'\').click()"><div class="upload-icon">📸</div><div class="upload-text">צלם או בחר תמונות</div><input type="file" id="photoInput_'+et+'_'+ei+'" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotoSelect(this,\''+et+'\',\''+ei+'\')"></div>';if(p.length){h+='<div class="photo-gallery">';p.forEach(function(ph,idx){if(ph.type==='image'&&ph.data)h+='<div style="position:relative"><img class="photo-thumb" src="'+ph.data+'" onclick="openPhotoModal(\''+et+'\',\''+ei+'\','+idx+')"><button class="btn btn-danger btn-sm" style="position:absolute;top:-4px;left:-4px;padding:2px 6px;font-size:10px;border-radius:50%;width:20px;height:20px" onclick="event.stopPropagation();deletePhoto(\''+et+'\',\''+ei+'\','+idx+')">✕</button></div>';});h+='</div>';}return h;}
+async function handlePhotoSelect(inp,et,ei){var fs=Array.from(inp.files||[]);if(!fs.length)return;showToast('מעלה...');var r=et==='floor'?floors.find(function(f){return f.id===ei;}):projects.find(function(p){return p.id===ei;});var ps=getPhotos(r);for(var i=0;i<fs.length;i++){if(fs[i].type.startsWith('image/')){var c=await compressImage(fs[i],1280,0.75);ps.push({type:'image',data:c,date:new Date().toISOString()});}}var en=et==='floor'?'RealEstateFloor':'RealEstateProject';try{await apiCall({action:'update',entity:en,id:ei,data:{photos:JSON.stringify(ps)}});showToast(ps.length+' תמונות ✓');await fetchAll();renderProjects();}catch(e){showToast('שגיאה');}inp.value='';}
+function openPhotoModal(et,ei,idx){var r=et==='floor'?floors.find(function(f){return f.id===ei;}):projects.find(function(p){return p.id===ei;});var ps=getPhotos(r);if(ps[idx]&&ps[idx].data){document.getElementById('photoModalImg').src=ps[idx].data;document.getElementById('photoModal').classList.add('show');}}
+function closePhotoModal(){document.getElementById('photoModal').classList.remove('show');}
+async function deletePhoto(et,ei,idx){if(!confirm('למחוק?'))return;var r=et==='floor'?floors.find(function(f){return f.id===ei;}):projects.find(function(p){return p.id===ei;});var ps=getPhotos(r);ps.splice(idx,1);var en=et==='floor'?'RealEstateFloor':'RealEstateProject';try{await apiCall({action:'update',entity:en,id:ei,data:{photos:JSON.stringify(ps)}});showToast('נמחק ✓');await fetchAll();renderProjects();}catch(e){showToast('שגיאה');}}
 function val(id){return document.getElementById(id).value;}
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 function statusLabel(s){return {planning:'תכנון',active:'פעיל',completed:'הושלם',on_hold:'מושהה'}[s]||s||'';}
 function stageLabel(s){return {not_started:'טרם התחילה',in_progress:'בעבודה',completed:'הושלמה',on_hold:'מושהית'}[s]||s||'';}
-function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
-function checkClicks(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');}
-document.addEventListener('click',checkClicks);
+document.addEventListener('click',function(e){if(e.target.classList&&e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');});
 fetchAll();
 </script>
 </body>
