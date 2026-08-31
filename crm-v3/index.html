@@ -205,6 +205,20 @@ tr:hover td{background:var(--bg)}
 .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
 }
 .menu-toggle{display:none;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text)}
+
+/* Digital Signature Pad */
+.sig-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center}
+.sig-overlay.active{display:flex}
+.sig-modal{background:#fff;border-radius:20px;padding:28px;max-width:500px;width:90%;box-shadow:var(--shadow-lg)}
+.sig-title{font-size:18px;font-weight:700;margin-bottom:16px;text-align:center}
+.sig-canvas-wrap{border:2px dashed var(--border);border-radius:12px;overflow:hidden;background:#fafafa;position:relative}
+.sig-canvas-wrap canvas{display:block;width:100%;touch-action:none;cursor:crosshair}
+.sig-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gray);font-size:14px;pointer-events:none}
+.sig-actions{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.sig-saved-img{max-width:200px;max-height:80px;border:1px solid var(--border);border-radius:8px;background:#fafafa}
+.sig-field{display:flex;align-items:center;gap:12px}
+.sig-placeholder{border:2px dashed var(--border);border-radius:8px;padding:12px 20px;color:var(--gray);font-size:14px;cursor:pointer;transition:all .2s}
+.sig-placeholder:hover{border-color:var(--teal);color:var(--teal)}
 </style>
 </head>
 <body>
@@ -267,6 +281,7 @@ tr:hover td{background:var(--bg)}
 <button class="nav-item" data-page="shelf"><span class="icon">📦</span> מוצרי מדף</button>
 <div class="nav-section">מערכת</div>
 <button class="nav-item" data-page="settings"><span class="icon">⚙️</span> הגדרות</button>
+<button class="nav-item" data-page="signature"><span class="icon">✍️</span> חתימה דיגיטלית</button>
 </nav>
 <div class="sidebar-footer">
 <button class="btn btn-outline btn-sm" style="width:100%" onclick="doLogout()">🚪 התנתק</button>
@@ -322,6 +337,21 @@ tr:hover td{background:var(--bg)}
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- Digital Signature Pad -->
+<div class="sig-overlay" id="sigOverlay">
+<div class="sig-modal">
+<div class="sig-title" id="sigTitle">✍️ חתימה דיגיטלית</div>
+<div class="sig-canvas-wrap">
+<canvas id="sigCanvas" width="460" height="200"></canvas>
+<div class="sig-hint" id="sigHint">חתום כאן</div>
+</div>
+<div class="sig-actions">
+<button class="btn btn-outline" onclick="clearSignature()">🗑️ נקה</button>
+<button class="btn btn-outline" onclick="closeSignature()">ביטול</button>
+<button class="btn btn-primary" onclick="saveSignature()">אישור חתימה</button>
+</div>
+</div>
+</div>
 <script>
 // ========== SUPABASE CONFIG ==========
 const SUPABASE_URL = 'https://nmpwsahwalmxplxudndv.supabase.co';
@@ -448,6 +478,7 @@ case 'expenses': await renderExpenses(); break;
 case 'subscriptions': await renderSubscriptions(); break;
 case 'shelf': await renderShelf(); break;
 case 'settings': await renderSettings(); break;
+case 'signature': await renderSignature(); break;
 }
 } catch(e) {
 content.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>שגיאה בטעינת הדף</p></div>';
@@ -799,8 +830,11 @@ openModal('הצעת מחיר', `
 <div id="quoteItemsList"></div>
 <button class="btn btn-outline btn-sm" onclick="addQuoteItem()" style="margin-top:8px">+ הוסף פריט</button>
 </div>
+<div class="modal-field"><label>✍️ חתימה דיגיטלית</label>
+<div id="quoteSigArea">${sigFieldHTML(q.signature||'', 'qf_signature')}</div>
+</div>
 `, id?'עדכן':'צור', async()=>{
-const data = { title:val('qf_title'), customer_name:val('qf_customer'), expires:val('qf_expires')||null, status:val('qf_status'), items:JSON.stringify(quoteItems) };
+const sigVal = document.getElementById('qf_signature') ? document.getElementById('qf_signature').value : ''; const data = { title:val('qf_title'), customer_name:val('qf_customer'), expires:val('qf_expires')||null, status:val('qf_status'), items:JSON.stringify(quoteItems), signature:sigVal };
 if(id){ await sb.from('quotes').update(data).eq('id',id); toast('הצעה עודכנה'); }
 else{ await sb.from('quotes').insert(data); toast('הצעה נוצרה'); }
 closeModal(); renderQuotes();
@@ -1192,6 +1226,46 @@ closeModal(); renderShelf();
 async function deleteShelf(id){ if(!confirm('למחוק?'))return; await sb.from('shelf_products').delete().eq('id',id); toast('נמחק'); renderShelf(); }
 
 // ========== SETTINGS ==========
+async function renderSignature() {
+  const c = document.getElementById('content');
+  // Load saved signatures from settings
+  let companySig = '';
+  try {
+    const { data } = await sb.from('settings').select('*').eq('key','company_signature').single();
+    companySig = data?.value || '';
+  } catch(e) {}
+  
+  c.innerHTML = `<div class="page-header"><div class="page-title">✍️ חתימה דיגיטלית</div><div class="page-subtitle">ניהול חתימות דיגיטליות למסמכים וחוזים</div></div>
+  
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><div class="card-title">🏢 חתימת החברה</div></div>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:16px">חתימה זו תופיע אוטומטית בהצעות מחיר, חוזים ומסמכים רשמיים.</p>
+    <div id="companySigArea">${sigFieldHTML(companySig, 'companySigInput')}</div>
+    <div style="margin-top:16px">
+      <button class="btn btn-primary" onclick="saveCompanySig()">שמור חתימה</button>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header"><div class="card-title">📋 איך זה עובד?</div></div>
+    <div style="padding:8px 0;font-size:14px;color:var(--text2);line-height:1.8">
+      1. חותמים על המסך באצבע או בעכבר<br>
+      2. החתימה נשמרת כתמונה (PNG)<br>
+      3. ניתן להצמיד לכל מסמך, הצעת מחיר או חוזה<br>
+      4. ניתן לעדכן או להחליף בכל עת<br>
+      5. נתמך בכל האפליקציות של AILON Task
+    </div>
+  </div>`;
+}
+
+async function saveCompanySig() {
+  const sig = document.getElementById('companySigInput').value;
+  if(!sig) { toast('נא לחתום לפני שמירה'); return; }
+  const { error } = await sb.from('settings').upsert({key:'company_signature', value:sig});
+  if(error && error.code==='42P01'){ await sb.from('settings').insert({key:'company_signature', value:sig}); }
+  toast('חתימת החברה נשמרה ✓');
+}
+
 async function renderSettings() {
 const c = document.getElementById('content');
 c.innerHTML = `<div class="page-header"><div class="page-title">⚙️ הגדרות</div><div class="page-subtitle">ניהול הגדרות המערכת</div></div>
@@ -1387,6 +1461,82 @@ const term = cmd.replace('חפש ','').replace('חפש','').replace('מצא ',''
 if(term){ doSearch(term); matched=true; }
 }
 if(!matched) document.getElementById('voiceTranscript').innerHTML = 'לא הבנתי את "'+text+'"<br><span style="font-size:14px;color:var(--gray)">נסה: צור ליד, חפש לקוח, פתח פגישות</span>';
+}
+
+// ========== DIGITAL SIGNATURE ==========
+let sigCallback = null;
+let sigCanvas, sigCtx, sigDrawing = false, sigHasContent = false;
+
+function openSignature(title, callback) {
+  sigCallback = callback;
+  document.getElementById('sigTitle').textContent = title || '✍️ חתימה דיגיטלית';
+  document.getElementById('sigOverlay').classList.add('active');
+  setTimeout(initSigCanvas, 100);
+}
+
+function initSigCanvas() {
+  sigCanvas = document.getElementById('sigCanvas');
+  sigCtx = sigCanvas.getContext('2d');
+  const rect = sigCanvas.parentElement.getBoundingClientRect();
+  sigCanvas.width = rect.width;
+  sigCanvas.height = 200;
+  sigCtx.strokeStyle = '#1e3a5f';
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+  sigHasContent = false;
+  document.getElementById('sigHint').style.display = 'block';
+  
+  sigCanvas.onpointerdown = (e) => {
+    sigDrawing = true;
+    sigHasContent = true;
+    document.getElementById('sigHint').style.display = 'none';
+    const r = sigCanvas.getBoundingClientRect();
+    sigCtx.beginPath();
+    sigCtx.moveTo(e.clientX - r.left, e.clientY - r.top);
+  };
+  sigCanvas.onpointermove = (e) => {
+    if(!sigDrawing) return;
+    const r = sigCanvas.getBoundingClientRect();
+    sigCtx.lineTo(e.clientX - r.left, e.clientY - r.top);
+    sigCtx.stroke();
+  };
+  sigCanvas.onpointerup = () => { sigDrawing = false; };
+  sigCanvas.onpointerleave = () => { sigDrawing = false; };
+}
+
+function clearSignature() {
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  sigHasContent = false;
+  document.getElementById('sigHint').style.display = 'block';
+}
+
+function closeSignature() {
+  document.getElementById('sigOverlay').classList.remove('active');
+  sigCallback = null;
+}
+
+function saveSignature() {
+  if(!sigHasContent) { toast('נא לחתום לפני אישור'); return; }
+  const dataUrl = sigCanvas.toDataURL('image/png');
+  if(sigCallback) sigCallback(dataUrl);
+  closeSignature();
+}
+
+function sigFieldHTML(savedSig, inputId) {
+  if(savedSig) {
+    return `<div class="sig-field">
+      <img src="${savedSig}" class="sig-saved-img" alt="חתימה">
+      <button class="btn btn-outline btn-sm" onclick="openSignature('עדכון חתימה', function(s){ document.getElementById('${inputId}').value=s; if(document.getElementById('${inputId}_img')) document.getElementById('${inputId}_img').src=s; })">ערוך</button>
+      <input type="hidden" id="${inputId}" value="${savedSig}">
+    </div>`;
+  }
+  return `<div class="sig-field">
+    <div class="sig-placeholder" onclick="openSignature('חתימה דיגיטלית', function(s){ document.getElementById('${inputId}').value=s; const ph=document.getElementById('${inputId}_ph'); if(ph){ ph.innerHTML='<img src=\''+s+'\' class=\'sig-saved-img\' alt=\'חתימה\' style=\'max-width:200px;max-height:80px;border:1px solid #e0e0e0;border-radius:8px\'>'; ph.style.border='none'; } })">
+      <span id="${inputId}_ph">✍️ לחץ לחתימה</span>
+    </div>
+    <input type="hidden" id="${inputId}" value="">
+  </div>`;
 }
 
 // ========== UTILITIES ==========
