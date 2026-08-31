@@ -1526,17 +1526,30 @@ function saveSignature() {
 function sigFieldHTML(savedSig, inputId) {
   if(savedSig) {
     return `<div class="sig-field">
-      <img src="${savedSig}" class="sig-saved-img" alt="חתימה">
-      <button class="btn btn-outline btn-sm" onclick="openSignature('עדכון חתימה', function(s){ document.getElementById('${inputId}').value=s; if(document.getElementById('${inputId}_img')) document.getElementById('${inputId}_img').src=s; })">ערוך</button>
+      <img src="${savedSig}" class="sig-saved-img" alt="חתימה" id="${inputId}_img">
+      <button class="btn btn-outline btn-sm" onclick="openSigForField('${inputId}')">ערוך</button>
       <input type="hidden" id="${inputId}" value="${savedSig}">
     </div>`;
   }
   return `<div class="sig-field">
-    <div class="sig-placeholder" onclick="openSignature('חתימה דיגיטלית', function(s){ document.getElementById('${inputId}').value=s; const ph=document.getElementById('${inputId}_ph'); if(ph){ ph.innerHTML='<img src=\''+s+'\' class=\'sig-saved-img\' alt=\'חתימה\' style=\'max-width:200px;max-height:80px;border:1px solid #e0e0e0;border-radius:8px\'>'; ph.style.border='none'; } })">
+    <div class="sig-placeholder" onclick="openSigForField('${inputId}')">
       <span id="${inputId}_ph">✍️ לחץ לחתימה</span>
     </div>
     <input type="hidden" id="${inputId}" value="">
   </div>`;
+}
+
+function openSigForField(inputId) {
+  openSignature('חתימה דיגיטלית', function(s) {
+    document.getElementById(inputId).value = s;
+    var ph = document.getElementById(inputId + '_ph');
+    if(ph) {
+      ph.innerHTML = '<img src="' + s + '" class="sig-saved-img" alt="חתימה" style="max-width:200px;max-height:80px;border:1px solid #e0e0e0;border-radius:8px">';
+      ph.parentElement.style.border = 'none';
+    }
+    var img = document.getElementById(inputId + '_img');
+    if(img) img.src = s;
+  });
 }
 
 // ========== UTILITIES ==========
