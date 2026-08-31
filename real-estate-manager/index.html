@@ -87,6 +87,19 @@ textarea{resize:vertical;min-height:70px}
 .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;z-index:9999}
 .loading-overlay .spinner{width:40px;height:40px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.photo-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.photo-thumb{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid var(--gray-200);transition:border-color .2s}
+.photo-thumb:hover{border-color:var(--teal)}
+.photo-upload-area{border:2px dashed var(--gray-300);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-top:12px}
+.photo-upload-area:hover{border-color:var(--teal);background:var(--teal-light)}
+.photo-upload-area .upload-icon{font-size:28px;margin-bottom:8px}
+.photo-upload-area .upload-text{font-size:14px;color:var(--gray-500);font-weight:600}
+.photo-actions{display:flex;gap:6px;margin-top:4px}
+.video-link-input{margin-top:8px}
+.photo-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:300;display:none;justify-content:center;align-items:center;padding:20px}
+.photo-modal-overlay.show{display:flex}
+.photo-modal-overlay img{max-width:90%;max-height:90%;border-radius:12px}
+.photo-modal-close{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:24px;width:40px;height:40px;border-radius:50%;cursor:pointer}
 @media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.form-row{flex-direction:column}.data-table{font-size:12px}.data-table th,.data-table td{padding:6px 8px}}
 @media print{.header{position:static}.header-nav{display:none}.actions{display:none}.btn{display:none}.modal-overlay{display:none}}
 </style>
@@ -253,6 +266,12 @@ textarea{resize:vertical;min-height:70px}
 <div class="toast" id="toast"></div>
 <div class="loading-overlay" id="loadingOverlay"><div style="text-align:center"><div class="spinner" style="margin:0 auto 12px"></div><p style="color:var(--teal);font-weight:600;font-size:14px">טוען נתונים...</p></div></div>
 
+<!-- Photo Modal -->
+<div class="photo-modal-overlay" id="photoModal" onclick="closePhotoModal()">
+<button class="photo-modal-close">✕</button>
+<img id="photoModalImg" src="">
+</div>
+
 <script>
 const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/realEstateAPI';
 let projects=[],floors=[],materials=[],currentView='dash';
@@ -315,6 +334,7 @@ function renderProjects(){
   if(projects.length===0){list.innerHTML='<div class="empty">אין פרויקטים. לחץ "+ פרויקט חדש" כדי להתחיל.</div>';return;}
   list.innerHTML=projects.map(p=>{
     const pFloors=floors.filter(f=>f.project_id===p.id);
+    const projPhotos=getPhotos(p);
     return `<div class="card" style="margin-bottom:14px">
       <div class="floor-header"><h3 style="font-size:18px">🏢 ${esc(p.project_name||'ללא שם')}</h3><span class="badge badge-${p.status||'planning'}">${statusLabel(p.status)}</span></div>
       <div class="floor-meta">
@@ -323,14 +343,17 @@ function renderProjects(){
         <span>🏢 ${p.num_floors||0} קומות</span>
         ${p.sqm_per_floor?'<span>📐 '+p.sqm_per_floor+' מ"ר/קומה</span>':''}
         ${p.budget?'<span>💰 ₪'+(p.budget||0).toLocaleString()+'</span>':''}
+        ${projPhotos.length>0?'<span>📸 '+projPhotos.length+' תמונות</span>':''}
       </div>
       <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
         <button class="btn btn-secondary btn-sm" onclick="openFloorModal('${p.id}')">+ קומה</button>
         <button class="btn btn-secondary btn-sm" onclick="editProject('${p.id}')">ערוך</button>
         <button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')">מחק</button>
       </div>
-      ${pFloors.length>0?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים משוער</th><th>ימים בפועל</th><th>פעולות</th></tr></thead><tbody>'+pFloors.sort((a,b)=>(a.floor_number||0)-(b.floor_number||0)).map(f=>{
-        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';
+      <div style="margin-top:14px">${renderPhotoGallery(p,'project',p.id)}</div>
+      ${pFloors.length>0?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים משוער</th><th>ימים בפועל</th><th>תמונות</th><th>פעולות</th></tr></thead><tbody>'+pFloors.sort((a,b)=>(a.floor_number||0)-(b.floor_number||0)).map(f=>{
+        const fPhotos=getPhotos(f);
+        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td>'+(fPhotos.length>0?'<button class="btn btn-secondary btn-sm" onclick="showFloorPhotos(\''+f.id+'\')">📸 '+fPhotos.length+'</button>':'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';
       }).join('')+'</tbody></table></div>':''}
     </div>`;
   }).join('');
@@ -575,10 +598,144 @@ function closeModal(id){document.getElementById(id).classList.remove('show');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function statusLabel(s){return {planning:'תכנון',active:'פעיל',completed:'הושלם',on_hold:'מושהה'}[s]||s||'';}
 function stageLabel(s){return {not_started:'טרם התחילה',in_progress:'בעבודה',completed:'הושלמה',on_hold:'מושהית'}[s]||s||'';}
+function showFloorPhotos(floorId){
+  const f=floors.find(x=>x.id===floorId);
+  if(!f)return;
+  const photos=getPhotos(f);
+  if(photos.length===0){showToast('אין תמונות');return;}
+  // Show first photo
+  openPhotoModal('floor',floorId,0);
+}
+
 function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
 function checkClicks(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');}
 document.addEventListener('click',checkClicks);
 fetchAll();
+
+// ===== Photo Upload & Gallery =====
+let pendingPhotos = {}; // {entityType_entityId: [base64photos]}
+
+function compressImage(file, maxW, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handlePhotoSelect(input, entityType, entityId) {
+  const files = Array.from(input.files || []);
+  if (files.length === 0) return;
+  
+  showToast('מעלה תמונות...');
+  
+  // Get existing photos
+  const record = entityType === 'floor' 
+    ? floors.find(f => f.id === entityId)
+    : projects.find(p => p.id === entityId);
+  
+  let photos = [];
+  try { photos = JSON.parse(record?.photos || '[]'); } catch(e) {}
+  
+  // Compress and add each file
+  for (const file of files) {
+    if (file.type.startsWith('image/')) {
+      const compressed = await compressImage(file, 1280, 0.75);
+      photos.push({ type: 'image', data: compressed, date: new Date().toISOString() });
+    }
+  }
+  
+  // Save to entity
+  const entityName = entityType === 'floor' ? 'RealEstateFloor' : 'RealEstateProject';
+  try {
+    await apiCall({ action: 'update', entity: entityName, id: entityId, data: { photos: JSON.stringify(photos) } });
+    showToast(photos.length + ' תמונות נשמרו ✓');
+    await fetchAll();
+    renderProjects();
+  } catch(e) {
+    showToast('שגיאה בשמירת תמונות');
+  }
+  
+  // Reset input
+  input.value = '';
+}
+
+function getPhotos(record) {
+  try { return JSON.parse(record?.photos || '[]'); } catch(e) { return []; }
+}
+
+function renderPhotoGallery(record, entityType, entityId) {
+  const photos = getPhotos(record);
+  let html = '<div class="photo-upload-area" onclick="document.getElementById(\'photoInput_'+entityType+'_'+entityId+'\').click()">';
+  html += '<div class="upload-icon">📸</div>';
+  html += '<div class="upload-text">צלם או בחר תמונות מהמכשיר</div>';
+  html += '<input type="file" id="photoInput_'+entityType+'_'+entityId+'" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotoSelect(this,\''+entityType+'\',\''+entityId+'\')">';
+  html += '</div>';
+  
+  if (photos.length > 0) {
+    html += '<div class="photo-gallery">';
+    photos.forEach((photo, idx) => {
+      if (photo.type === 'image' && photo.data) {
+        html += '<div style="position:relative">';
+        html += '<img class="photo-thumb" src="'+photo.data+'" onclick="openPhotoModal(\''+entityType+'\',\''+entityId+'\','+idx+')" alt="תמונה">';
+        html += '<button class="btn btn-danger btn-sm" style="position:absolute;top:-4px;left:-4px;padding:2px 6px;font-size:10px;border-radius:50%;width:20px;height:20px" onclick="event.stopPropagation();deletePhoto(\''+entityType+'\',\''+entityId+'\','+idx+')">✕</button>';
+        html += '</div>';
+      }
+    });
+    html += '</div>';
+  }
+  
+  return html;
+}
+
+function openPhotoModal(entityType, entityId, idx) {
+  const record = entityType === 'floor' 
+    ? floors.find(f => f.id === entityId)
+    : projects.find(p => p.id === entityId);
+  const photos = getPhotos(record);
+  if (photos[idx] && photos[idx].data) {
+    document.getElementById('photoModalImg').src = photos[idx].data;
+    document.getElementById('photoModal').classList.add('show');
+  }
+}
+
+function closePhotoModal() {
+  document.getElementById('photoModal').classList.remove('show');
+}
+
+async function deletePhoto(entityType, entityId, idx) {
+  if (!confirm('למחוק תמונה זו?')) return;
+  const record = entityType === 'floor' 
+    ? floors.find(f => f.id === entityId)
+    : projects.find(p => p.id === entityId);
+  let photos = getPhotos(record);
+  photos.splice(idx, 1);
+  
+  const entityName = entityType === 'floor' ? 'RealEstateFloor' : 'RealEstateProject';
+  try {
+    await apiCall({ action: 'update', entity: entityName, id: entityId, data: { photos: JSON.stringify(photos) } });
+    showToast('תמונה נמחקה ✓');
+    await fetchAll();
+    renderProjects();
+  } catch(e) {
+    showToast('שגיאה במחיקה');
+  }
+}
+
 </script>
 </body>
 </html>
