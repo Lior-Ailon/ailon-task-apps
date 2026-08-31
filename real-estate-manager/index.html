@@ -4,102 +4,160 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="version" content="2.0">
-<title>ניהול פרויקטי נדל"ן — AILON Task</title>
+<meta name="version" content="3.0">
+<title>ציון ישראל — ניהול פרויקטים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--teal:#0d9488;--teal-dark:#0f766e;--teal-light:#ccfbf1;--navy:#1e3a5f;--navy-light:#e0ecf5;--amber:#f59e0b;--red:#ef4444;--green:#22c55e;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--r:12px;--r-sm:8px;--shadow:0 4px 16px rgba(15,23,42,.06)}
+:root{
+  --bg:#0a141c;
+  --bg-2:#0c1920;
+  --bg-3:#101e28;
+  --gold:#c5a059;
+  --gold-dark:#b08d4e;
+  --gold-light:#d4b76a;
+  --gold-soft:rgba(197,160,89,.12);
+  --text:#ffffff;
+  --text-soft:#a0aec0;
+  --text-mute:#5a6c7a;
+  --white:#fff;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --blue:#3b82f6;
+  --r:12px;
+  --r-sm:8px;
+  --shadow:0 4px 20px rgba(0,0,0,.3);
+  --border:rgba(197,160,89,.15);
+  --border-soft:rgba(255,255,255,.06);
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Heebo',sans-serif;background:var(--gray-100);color:var(--gray-800);line-height:1.5;padding-bottom:60px;-webkit-tap-highlight-color:transparent}
-.header{background:linear-gradient(135deg,var(--navy),var(--teal-dark));color:#fff;padding:18px 24px;box-shadow:0 4px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:100}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:60px;-webkit-tap-highlight-color:transparent}
+
+/* Header */
+.header{background:linear-gradient(135deg,#0a141c,#0c1920);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.header-top h1{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px}
+.header-logo{display:flex;align-items:center;gap:14px}
+.logo-mark{width:48px;height:48px;border:2px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:var(--gold);background:rgba(197,160,89,.08);letter-spacing:-1px}
+.header-logo-text h1{font-size:17px;font-weight:800;color:var(--gold);letter-spacing:.5px;line-height:1.2}
+.header-logo-text span{font-size:11px;color:var(--text-soft);letter-spacing:.2em;font-weight:500}
 .header-nav{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
-.nav-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-family:inherit;transition:all .2s}
-.nav-btn:hover{background:rgba(255,255,255,.2)}
-.nav-btn.active{background:#fff;color:var(--teal-dark);border-color:#fff;font-weight:700}
+.nav-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text-soft);font-family:inherit;transition:all .2s}
+.nav-btn:hover{background:var(--gold-soft);color:var(--gold-light);border-color:var(--gold)}
+.nav-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+
+/* Layout */
 .container{max-width:1100px;margin:20px auto 0;padding:0 16px}
-.card{background:#fff;border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:var(--shadow);border:1px solid var(--gray-200)}
-.card-title{font-size:18px;font-weight:700;color:var(--teal-dark);margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--teal-light);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card{background:var(--bg-2);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.card-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
 .card-title .actions-inline{display:flex;gap:6px}
+
+/* Stats */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
-.stat-card{background:#fff;border-radius:var(--r);padding:20px;box-shadow:var(--shadow);border:1px solid var(--gray-200);text-align:center}
-.stat-card .num{font-size:32px;font-weight:900;color:var(--teal-dark)}
-.stat-card .label{font-size:13px;color:var(--gray-500);margin-top:4px;font-weight:600}
-.stat-card .sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+.stat-card{background:var(--bg-2);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center;transition:transform .2s}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-card .num{font-size:32px;font-weight:900;color:var(--gold)}
+.stat-card .label{font-size:13px;color:var(--text-soft);margin-top:4px;font-weight:600}
+.stat-card .sub{font-size:11px;color:var(--text-mute);margin-top:2px}
+
+/* Table */
 .data-table{width:100%;border-collapse:collapse;font-size:14px}
-.data-table th{background:var(--gray-100);padding:12px 14px;font-weight:700;text-align:right;border:1px solid var(--gray-200);white-space:nowrap}
-.data-table td{padding:10px 14px;border:1px solid var(--gray-200)}
-.data-table tr:hover{background:var(--gray-50)}
+.data-table th{background:var(--bg-3);padding:12px 14px;font-weight:700;text-align:right;border:1px solid var(--border);white-space:nowrap;color:var(--gold)}
+.data-table td{padding:10px 14px;border:1px solid var(--border-soft);color:var(--text-soft)}
+.data-table tr:hover td{background:var(--gold-soft);color:var(--text)}
+
+/* Badges */
 .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block}
-.badge-planning{background:#fef3c7;color:#92400e}
-.badge-active{background:#dcfce7;color:#166534}
-.badge-completed{background:#e0e7ff;color:#3730a3}
-.badge-on_hold{background:#fee2e2;color:#991b1b}
-.badge-not_started{background:var(--gray-100);color:var(--gray-500)}
-.badge-in_progress{background:#dbeafe;color:#1e40af}
+.badge-planning{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-active{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-completed{background:rgba(59,130,246,.15);color:var(--blue)}
+.badge-on_hold{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-not_started{background:rgba(255,255,255,.06);color:var(--text-mute)}
+.badge-in_progress{background:rgba(245,158,11,.15);color:var(--amber)}
+
+/* Form */
 .form-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .form-field{flex:1;min-width:180px}
 .form-field.full{flex:100%}
-label{display:block;font-size:13.5px;font-weight:600;color:var(--gray-700);margin-bottom:6px}
-input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--gray-300);border-radius:var(--r-sm);font-size:14.5px;font-family:inherit;transition:border-color .2s;background:#fff;color:var(--gray-800)}
-input:focus,textarea:focus,select:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3.5px rgba(13,148,136,.12)}
+label{display:block;font-size:13.5px;font-weight:600;color:var(--gold);margin-bottom:6px}
+input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14.5px;font-family:inherit;transition:border-color .2s;background:var(--bg-3);color:var(--text)}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3.5px rgba(197,160,89,.12)}
+input::placeholder,textarea::placeholder{color:var(--text-mute)}
 textarea{resize:vertical;min-height:70px}
+select option{background:var(--bg-3);color:var(--text)}
+
+/* Buttons */
 .btn{padding:12px 24px;border-radius:var(--r-sm);font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;gap:8px;justify-content:center}
-.btn-primary{background:var(--teal);color:#fff}
-.btn-primary:hover{background:var(--teal-dark)}
-.btn-secondary{background:#fff;color:var(--gray-700);border:1.5px solid var(--gray-300)}
-.btn-secondary:hover{background:var(--gray-100)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{opacity:.9}
+.btn-primary{background:var(--gold);color:var(--bg)}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-secondary{background:transparent;color:var(--text-soft);border:1.5px solid var(--border)}
+.btn-secondary:hover{background:var(--gold-soft);color:var(--gold-light);border-color:var(--gold)}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1.5px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
 .btn-sm{padding:8px 14px;font-size:13px}
 .actions{display:flex;gap:12px;justify-content:center;padding:16px 0;flex-wrap:wrap}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;justify-content:center;align-items:center;padding:20px}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{background:#fff;border-radius:16px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-.modal h2{font-size:20px;font-weight:800;color:var(--teal-dark);margin-bottom:16px}
+.modal{background:var(--bg-2);border-radius:16px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid var(--border)}
+.modal h2{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:16px}
 .modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px}
-.btn-save{background:var(--teal);color:#fff}
-.btn-cancel{background:var(--gray-100);color:var(--gray-600)}
-.toast{position:fixed;bottom:20px;right:20px;background:var(--teal-dark);color:#fff;padding:14px 24px;border-radius:12px;font-weight:700;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.btn-save{background:var(--gold);color:var(--bg)}
+.btn-save:hover{background:var(--gold-light)}
+.btn-cancel{background:var(--bg-3);color:var(--text-soft);border:1px solid var(--border)}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--gold);color:var(--bg);padding:14px 24px;border-radius:12px;font-weight:700;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 .toast.show{display:block;animation:slideUp .3s ease}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.floor-card{background:#fff;border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--gray-200);border-right:4px solid var(--teal)}
+
+/* Floor cards */
+.floor-card{background:var(--bg-2);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border);border-right:4px solid var(--gold)}
 .floor-card.in_progress{border-right-color:var(--amber)}
 .floor-card.completed{border-right-color:var(--green)}
-.floor-card.not_started{border-right-color:var(--gray-300)}
+.floor-card.not_started{border-right-color:var(--text-mute)}
 .floor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.floor-header h3{font-size:16px;font-weight:700}
-.floor-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--gray-500);margin-bottom:10px}
+.floor-header h3{font-size:16px;font-weight:700;color:var(--text)}
+.floor-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--text-soft);margin-bottom:10px}
 .floor-meta span{display:flex;align-items:center;gap:4px}
-.mat-search{margin-bottom:16px}
-.mat-group{margin-bottom:20px}
-.mat-group h4{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--gray-200)}
-.mat-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r-sm);background:var(--gray-50);margin-bottom:8px;border:1px solid var(--gray-100)}
-.mat-item:hover{border-color:var(--teal)}
-.mat-code{background:var(--teal-light);color:var(--teal-dark);padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;min-width:60px;text-align:center}
-.mat-name{flex:1;font-weight:600;font-size:14px}
-.mat-desc{font-size:12px;color:var(--gray-500)}
-.mat-unit{font-size:12px;color:var(--gray-400);min-width:40px;text-align:center}
-.empty{text-align:center;color:var(--gray-400);padding:40px;font-size:15px}
-.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;z-index:9999}
-.loading-overlay .spinner{width:40px;height:40px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Photo gallery */
 .photo-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.photo-thumb{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid var(--gray-200);transition:border-color .2s}
-.photo-thumb:hover{border-color:var(--teal)}
-.photo-upload-area{border:2px dashed var(--gray-300);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-top:12px}
-.photo-upload-area:hover{border-color:var(--teal);background:var(--teal-light)}
+.photo-thumb{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:border-color .2s}
+.photo-thumb:hover{border-color:var(--gold)}
+.photo-upload-area{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-top:12px}
+.photo-upload-area:hover{border-color:var(--gold);background:var(--gold-soft)}
 .photo-upload-area .upload-icon{font-size:28px;margin-bottom:8px}
-.photo-upload-area .upload-text{font-size:14px;color:var(--gray-500);font-weight:600}
+.photo-upload-area .upload-text{font-size:14px;color:var(--text-soft);font-weight:600}
 .photo-actions{display:flex;gap:6px;margin-top:4px}
-.video-link-input{margin-top:8px}
-.photo-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:300;display:none;justify-content:center;align-items:center;padding:20px}
+.photo-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:none;justify-content:center;align-items:center;padding:20px}
 .photo-modal-overlay.show{display:flex}
 .photo-modal-overlay img{max-width:90%;max-height:90%;border-radius:12px}
-.photo-modal-close{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:24px;width:40px;height:40px;border-radius:50%;cursor:pointer}
+.photo-modal-close{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:24px;width:40px;height:40px;border-radius:50%;cursor:pointer}
+
+/* Materials */
+.mat-search{margin-bottom:16px}
+.mat-group{margin-bottom:20px}
+.mat-group h4{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.mat-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r-sm);background:var(--bg-3);margin-bottom:8px;border:1px solid var(--border-soft);transition:border-color .2s}
+.mat-item:hover{border-color:var(--gold)}
+.mat-code{background:var(--gold-soft);color:var(--gold-light);padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;min-width:60px;text-align:center}
+.mat-name{flex:1;font-weight:600;font-size:14px;color:var(--text)}
+.mat-desc{font-size:12px;color:var(--text-mute)}
+.mat-unit{font-size:12px;color:var(--text-mute);min-width:40px;text-align:center}
+.empty{text-align:center;color:var(--text-mute);padding:40px;font-size:15px}
+
+/* Loading */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.loading-overlay .spinner{width:40px;height:40px;border:4px solid var(--gold);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Footer signature */
+.footer-sig{text-align:center;padding:20px;color:var(--text-mute);font-size:12px;border-top:1px solid var(--border);margin-top:30px}
+.footer-sig a{color:var(--gold);text-decoration:none}
+
 @media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.form-row{flex-direction:column}.data-table{font-size:12px}.data-table th,.data-table td{padding:6px 8px}}
 @media print{.header{position:static}.header-nav{display:none}.actions{display:none}.btn{display:none}.modal-overlay{display:none}}
 </style>
@@ -108,8 +166,13 @@ textarea{resize:vertical;min-height:70px}
 
 <div class="header">
   <div class="header-top">
-    <h1>🏗️ ניהול פרויקטי נדל"ן</h1>
-    <span style="font-size:12px;opacity:.7">AILON Task v2.0</span>
+    <div class="header-logo">
+      <div class="logo-mark">ZI</div>
+      <div class="header-logo-text">
+        <h1>ציון ישראל</h1>
+        <span>ייזום ובנייה · ZION ISRAEL</span>
+      </div>
+    </div>
   </div>
   <div class="header-nav">
     <button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button>
@@ -122,7 +185,7 @@ textarea{resize:vertical;min-height:70px}
 <div class="container">
 
 <div id="viewDash">
-  <div class="stats-grid" id="statsGrid">
+  <div class="stats-grid">
     <div class="stat-card"><div class="num" id="statProjects">—</div><div class="label">פרויקטים פעילים</div></div>
     <div class="stat-card"><div class="num" id="statFloors">—</div><div class="label">קומות בעבודה</div></div>
     <div class="stat-card"><div class="num" id="statMaterials">—</div><div class="label">פריטים בקטלוג</div></div>
@@ -158,7 +221,7 @@ textarea{resize:vertical;min-height:70px}
 <div id="viewInsights" style="display:none">
   <div class="card">
     <div class="card-title">🤖 תובנות AI</div>
-    <div style="color:var(--gray-500);font-size:14px;margin-bottom:16px">המערכת לומדת מנתוני קומות שהושלמו ומפיקה המלצות לחיסכון בעלויות.</div>
+    <div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">המערכת לומדת מנתוני קומות שהושלמו ומפיקה המלצות לחיסכון בעלויות.</div>
     <div id="insightsList"></div>
   </div>
 </div>
@@ -170,9 +233,9 @@ textarea{resize:vertical;min-height:70px}
   <div class="modal">
     <h2 id="projectModalTitle">פרויקט חדש</h2>
     <input type="hidden" id="projId">
-    <div class="form-row"><div class="form-field full"><label>שם הפרויקט</label><input id="projName" placeholder="לדוגמה: מגדל מגורים הרצליה"></div></div>
+    <div class="form-row"><div class="form-field full"><label>שם הפרויקט</label><input id="projName" placeholder="לדוגמה: ארט ארגמן — נס ציונה"></div></div>
     <div class="form-row">
-      <div class="form-field"><label>כתובת</label><input id="projAddress" placeholder="כתובת"></div>
+      <div class="form-field"><label>כתובת</label><input id="projAddress" placeholder="רחוב ומספר"></div>
       <div class="form-field"><label>לקוח</label><input id="projClient" placeholder="שם הלקוח"></div>
     </div>
     <div class="form-row">
@@ -221,19 +284,17 @@ textarea{resize:vertical;min-height:70px}
   </div>
 </div>
 
-<!-- Floor Report Modal (completion report) -->
+<!-- Floor Report Modal -->
 <div class="modal-overlay" id="floorReportModal">
   <div class="modal">
     <h2>דוח סיום קומה</h2>
     <input type="hidden" id="rptFlrId">
-    <p style="color:var(--gray-500);font-size:13px;margin-bottom:16px">דווח נתונים בפועל לקומה. המערכת תלמד מהנתונים ותשפר הערכות עתידיות.</p>
+    <p style="color:var(--text-soft);font-size:13px;margin-bottom:16px">דווח נתונים בפועל לקומה. המערכת תלמד מהנתונים ותשפר הערכות עתידיות.</p>
     <div class="form-row">
       <div class="form-field"><label>ימים בפועל</label><input type="number" id="rptActualDays" placeholder="ימים"></div>
       <div class="form-field"><label>שעות מתות (פועלים)</label><input type="number" id="rptIdleHours" placeholder="שעות"></div>
     </div>
-    <div class="form-row">
-      <div class="form-field"><label>חומרים שלא נוצלו</label><textarea id="rptWaste" placeholder="לדוגמה: 3 שק דבק עודף, 5 מ"ר אריח שבור"></textarea></div>
-    </div>
+    <div class="form-row"><div class="form-field full"><label>חומרים שלא נוצלו</label><textarea id="rptWaste" placeholder="לדוגמה: 3 שק דבק עודף, 5 מ"ר אריח שבור"></textarea></div></div>
     <div class="form-row">
       <div class="form-field"><label>חריגת תקציב (₪)</label><input type="number" id="rptOverrun" placeholder="0 אם אין חריגה"></div>
       <div class="form-field"><label>סטטוס סיום</label><select id="rptStatus"><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div>
@@ -263,14 +324,16 @@ textarea{resize:vertical;min-height:70px}
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-<div class="loading-overlay" id="loadingOverlay"><div style="text-align:center"><div class="spinner" style="margin:0 auto 12px"></div><p style="color:var(--teal);font-weight:600;font-size:14px">טוען נתונים...</p></div></div>
-
 <!-- Photo Modal -->
 <div class="photo-modal-overlay" id="photoModal" onclick="closePhotoModal()">
 <button class="photo-modal-close">✕</button>
 <img id="photoModalImg" src="">
 </div>
+
+<div class="toast" id="toast"></div>
+<div class="loading-overlay" id="loadingOverlay"><div style="text-align:center"><div class="spinner" style="margin:0 auto 12px"></div><p style="color:var(--gold);font-weight:600;font-size:14px">טוען נתונים...</p></div></div>
+
+<div class="footer-sig">מערכת ניהול פרויקטים · ציון ישראל ייזום ובנייה · מופעל על ידי AILON Task</div>
 
 <script>
 const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/realEstateAPI';
@@ -353,7 +416,7 @@ function renderProjects(){
       <div style="margin-top:14px">${renderPhotoGallery(p,'project',p.id)}</div>
       ${pFloors.length>0?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים משוער</th><th>ימים בפועל</th><th>תמונות</th><th>פעולות</th></tr></thead><tbody>'+pFloors.sort((a,b)=>(a.floor_number||0)-(b.floor_number||0)).map(f=>{
         const fPhotos=getPhotos(f);
-        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td>'+(fPhotos.length>0?'<button class="btn btn-secondary btn-sm" onclick="showFloorPhotos(\''+f.id+'\')">📸 '+fPhotos.length+'</button>':'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';
+        return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td>'+(fPhotos.length>0?'<button class="btn btn-secondary btn-sm" onclick="showFloorPhotos(\\''+f.id+'\\')">📸 '+fPhotos.length+'</button>':'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\\''+f.id+'\\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\\''+f.id+'\\')">✕</button></td></tr>';
       }).join('')+'</tbody></table></div>':''}
     </div>`;
   }).join('');
@@ -415,7 +478,6 @@ async function deleteProject(id){
   }catch(e){showToast('שגיאה במחיקה');}
 }
 
-// ===== Floors =====
 function openFloorModal(projectId){
   document.getElementById('flrId').value='';
   document.getElementById('flrProjectId').value=projectId;
@@ -454,7 +516,6 @@ async function deleteFloor(id){
   }catch(e){showToast('שגיאה במחיקה');}
 }
 
-// ===== Floor Report (completion) =====
 function openFloorReport(floorId){
   const f=floors.find(x=>x.id===floorId);if(!f)return;
   document.getElementById('rptFlrId').value=floorId;
@@ -485,7 +546,6 @@ async function saveFloorReport(){
   }catch(e){showToast('שגיאה בשמירה');}
 }
 
-// ===== Materials Catalog =====
 function renderCatalog(){
   const search=(document.getElementById('matSearch')?.value||'').toLowerCase();
   let filtered=materials.filter(m=>{
@@ -502,7 +562,7 @@ function renderCatalog(){
   if(filtered.length===0){list.innerHTML='<div class="empty">אין חומרים בקטלוג.</div>';return;}
   list.innerHTML=Object.keys(groups).sort().map(cat=>{
     return '<div class="mat-group"><h4>'+esc(cat)+' ('+groups[cat].length+')</h4>'+groups[cat].map(m=>{
-      return '<div class="mat-item"><span class="mat-code">'+esc(m.product_code||'')+'</span><div class="mat-name">'+esc(m.product_name||'')+(m.description?'<div class="mat-desc">'+esc(m.description)+'</div>':'')+'</div>'+(m.estimated_price?'<span style="font-size:12px;color:var(--teal);font-weight:600">₪'+m.estimated_price+'</span>':'')+'<span class="mat-unit">'+esc(m.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\''+m.id+'\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\''+m.id+'\')">✕</button></div>';
+      return '<div class="mat-item"><span class="mat-code">'+esc(m.product_code||'')+'</span><div class="mat-name">'+esc(m.product_name||'')+(m.description?'<div class="mat-desc">'+esc(m.description)+'</div>':'')+'</div>'+(m.estimated_price?'<span style="font-size:12px;color:var(--gold);font-weight:600">₪'+m.estimated_price+'</span>':'')+'<span class="mat-unit">'+esc(m.unit||'')+'</span><button class="btn btn-secondary btn-sm" onclick="editMaterial(\\''+m.id+'\\')">ערוך</button> <button class="btn btn-danger btn-sm" onclick="deleteMaterial(\\''+m.id+'\\')">✕</button></div>';
     }).join('')+'</div>';
   }).join('');
 }
@@ -553,7 +613,6 @@ async function deleteMaterial(id){
   }catch(e){showToast('שגיאה במחיקה');}
 }
 
-// ===== Insights =====
 function renderInsights(){
   const list=document.getElementById('insightsList');
   const completed=floors.filter(f=>f.stage==='completed');
@@ -568,7 +627,7 @@ function renderInsights(){
     html+='<div class="floor-card"><div class="floor-header"><h3>⏱️ ניתוח זמנים</h3></div><div class="floor-meta"><span>ימים משוערים ממוצע: '+avgEst.toFixed(1)+'</span><span>ימים בפועל ממוצע: '+avgAct.toFixed(1)+'</span><span>סטייה: '+variance+'%</span></div></div>';
     const wasteData=completed.filter(f=>f.waste_materials);
     if(wasteData.length>0){
-      html+='<div class="floor-card"><div class="floor-header"><h3>♻️ ניתוח בזבוז חומרים</h3></div><div style="font-size:14px;color:var(--gray-600)">'+wasteData.map(f=>'קומה '+(f.floor_number||'')+': '+esc(f.waste_materials||'')).join('<br>')+'</div></div>';
+      html+='<div class="floor-card"><div class="floor-header"><h3>♻️ ניתוח בזבוז חומרים</h3></div><div style="font-size:14px;color:var(--text-soft)">'+wasteData.map(f=>'קומה '+(f.floor_number||'')+': '+esc(f.waste_materials||'')).join('<br>')+'</div></div>';
     }
     const idleData=completed.filter(f=>f.idle_time_hours);
     if(idleData.length>0){
@@ -581,40 +640,17 @@ function renderInsights(){
       html+='<div class="floor-card" style="border-right-color:var(--red)"><div class="floor-header"><h3>💰 חריגות תקציב</h3></div><div class="floor-meta"><span>סה"כ חריגה: ₪'+totalOverrun.toLocaleString()+'</span></div></div>';
     }
   }
-  html+='<div class="floor-card" style="border-right-color:var(--teal)"><div class="floor-header"><h3>🤖 המלצות AI</h3></div>';
+  html+='<div class="floor-card" style="border-right-color:var(--gold)"><div class="floor-header"><h3>🤖 המלצות AI</h3></div>';
   if(completed.length>=3){
-    html+='<div style="font-size:14px;line-height:1.8">• בהתבסס על '+completed.length+' קומות שהושלמו, ניתן לשפר את הערכות הזמן<br>• מומלץ להקצות פועלים נוספים בשלב הטיח<br>• חומרי מליטה: יש להזמין 5% עודף מעבר לחישוב התיאורטי</div>';
+    html+='<div style="font-size:14px;line-height:1.8;color:var(--text-soft)">• בהתבסס עת '+completed.length+' קומות שהושלמו, ניתן לשפר את הערכות הזמן<br>• מומלץ להקצות פועלים נוספים בשלב הטיח<br>• חומרי מליטה: יש להזמין 5% עודף מעבר לחישוב התיאורטי</div>';
   }else{
-    html+='<div style="font-size:14px;color:var(--gray-500)">יש צורך בלפחות 3 קומות שהושלמו כדי להתחיל להפיק תובנות. כרגע יש '+completed.length+'.</div>';
+    html+='<div style="font-size:14px;color:var(--text-mute)">יש צורך בלפחות 3 קומות שהושלמו כדי להתחיל להפיק תובנות. כרגע יש '+completed.length+'.</div>';
   }
   html+='</div>';
   list.innerHTML=html;
 }
 
-// ===== Helpers =====
-function val(id){return document.getElementById(id).value;}
-function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function closeModal(id){document.getElementById(id).classList.remove('show');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-function statusLabel(s){return {planning:'תכנון',active:'פעיל',completed:'הושלם',on_hold:'מושהה'}[s]||s||'';}
-function stageLabel(s){return {not_started:'טרם התחילה',in_progress:'בעבודה',completed:'הושלמה',on_hold:'מושהית'}[s]||s||'';}
-function showFloorPhotos(floorId){
-  const f=floors.find(x=>x.id===floorId);
-  if(!f)return;
-  const photos=getPhotos(f);
-  if(photos.length===0){showToast('אין תמונות');return;}
-  // Show first photo
-  openPhotoModal('floor',floorId,0);
-}
-
-function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
-function checkClicks(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');}
-document.addEventListener('click',checkClicks);
-fetchAll();
-
 // ===== Photo Upload & Gallery =====
-let pendingPhotos = {}; // {entityType_entityId: [base64photos]}
-
 function compressImage(file, maxW, quality) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -640,37 +676,23 @@ function compressImage(file, maxW, quality) {
 async function handlePhotoSelect(input, entityType, entityId) {
   const files = Array.from(input.files || []);
   if (files.length === 0) return;
-  
   showToast('מעלה תמונות...');
-  
-  // Get existing photos
-  const record = entityType === 'floor' 
-    ? floors.find(f => f.id === entityId)
-    : projects.find(p => p.id === entityId);
-  
+  const record = entityType === 'floor' ? floors.find(f => f.id === entityId) : projects.find(p => p.id === entityId);
   let photos = [];
   try { photos = JSON.parse(record?.photos || '[]'); } catch(e) {}
-  
-  // Compress and add each file
   for (const file of files) {
     if (file.type.startsWith('image/')) {
       const compressed = await compressImage(file, 1280, 0.75);
       photos.push({ type: 'image', data: compressed, date: new Date().toISOString() });
     }
   }
-  
-  // Save to entity
   const entityName = entityType === 'floor' ? 'RealEstateFloor' : 'RealEstateProject';
   try {
     await apiCall({ action: 'update', entity: entityName, id: entityId, data: { photos: JSON.stringify(photos) } });
     showToast(photos.length + ' תמונות נשמרו ✓');
     await fetchAll();
     renderProjects();
-  } catch(e) {
-    showToast('שגיאה בשמירת תמונות');
-  }
-  
-  // Reset input
+  } catch(e) { showToast('שגיאה בשמירת תמונות'); }
   input.value = '';
 }
 
@@ -685,7 +707,6 @@ function renderPhotoGallery(record, entityType, entityId) {
   html += '<div class="upload-text">צלם או בחר תמונות מהמכשיר</div>';
   html += '<input type="file" id="photoInput_'+entityType+'_'+entityId+'" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotoSelect(this,\''+entityType+'\',\''+entityId+'\')">';
   html += '</div>';
-  
   if (photos.length > 0) {
     html += '<div class="photo-gallery">';
     photos.forEach((photo, idx) => {
@@ -698,14 +719,11 @@ function renderPhotoGallery(record, entityType, entityId) {
     });
     html += '</div>';
   }
-  
   return html;
 }
 
 function openPhotoModal(entityType, entityId, idx) {
-  const record = entityType === 'floor' 
-    ? floors.find(f => f.id === entityId)
-    : projects.find(p => p.id === entityId);
+  const record = entityType === 'floor' ? floors.find(f => f.id === entityId) : projects.find(p => p.id === entityId);
   const photos = getPhotos(record);
   if (photos[idx] && photos[idx].data) {
     document.getElementById('photoModalImg').src = photos[idx].data;
@@ -713,29 +731,41 @@ function openPhotoModal(entityType, entityId, idx) {
   }
 }
 
-function closePhotoModal() {
-  document.getElementById('photoModal').classList.remove('show');
-}
+function closePhotoModal() { document.getElementById('photoModal').classList.remove('show'); }
 
 async function deletePhoto(entityType, entityId, idx) {
   if (!confirm('למחוק תמונה זו?')) return;
-  const record = entityType === 'floor' 
-    ? floors.find(f => f.id === entityId)
-    : projects.find(p => p.id === entityId);
+  const record = entityType === 'floor' ? floors.find(f => f.id === entityId) : projects.find(p => p.id === entityId);
   let photos = getPhotos(record);
   photos.splice(idx, 1);
-  
   const entityName = entityType === 'floor' ? 'RealEstateFloor' : 'RealEstateProject';
   try {
     await apiCall({ action: 'update', entity: entityName, id: entityId, data: { photos: JSON.stringify(photos) } });
     showToast('תמונה נמחקה ✓');
     await fetchAll();
     renderProjects();
-  } catch(e) {
-    showToast('שגיאה במחיקה');
-  }
+  } catch(e) { showToast('שגיאה במחיקה'); }
 }
 
+function showFloorPhotos(floorId){
+  const f=floors.find(x=>x.id===floorId);
+  if(!f)return;
+  const photos=getPhotos(f);
+  if(photos.length===0){showToast('אין תמונות');return;}
+  openPhotoModal('floor',floorId,0);
+}
+
+// ===== Helpers =====
+function val(id){return document.getElementById(id).value;}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function statusLabel(s){return {planning:'תכנון',active:'פעיל',completed:'הושלם',on_hold:'מושהה'}[s]||s||'';}
+function stageLabel(s){return {not_started:'טרם התחילה',in_progress:'בעבודה',completed:'הושלמה',on_hold:'מושהית'}[s]||s||'';}
+function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
+function checkClicks(e){if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');}
+document.addEventListener('click',checkClicks);
+fetchAll();
 </script>
 </body>
 </html>
