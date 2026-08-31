@@ -34,17 +34,25 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:60px;-webkit-tap-highlight-color:transparent}
 
-/* Header */
-.header{background:linear-gradient(135deg,#0a141c,#0c1920);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4)}
-.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+/* Hero Banner */
+.hero-banner{position:relative;min-height:320px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background:#0a0f14;
+  background-image:linear-gradient(135deg,rgba(10,20,28,.85),rgba(12,25,32,.75)),url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&q=80);
+  background-size:cover;background-position:center;border-bottom:1px solid var(--gold)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,20,28,.6) 0%,rgba(10,20,28,.9) 100%);pointer-events:none}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:320px;padding:20px 24px}
+.hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .header-logo{display:flex;align-items:center;gap:14px}
-.logo-mark{width:48px;height:48px;border:2px solid var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:var(--gold);background:rgba(197,160,89,.08);letter-spacing:-1px}
-.header-logo-text h1{font-size:17px;font-weight:800;color:var(--gold);letter-spacing:.5px;line-height:1.2}
-.header-logo-text span{font-size:11px;color:var(--text-soft);letter-spacing:.2em;font-weight:500}
-.header-nav{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
-.nav-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text-soft);font-family:inherit;transition:all .2s}
+.logo-mark{width:52px;height:52px;border:2px solid var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:var(--gold);background:rgba(197,160,89,.1);letter-spacing:-1px;box-shadow:0 4px 14px rgba(197,160,89,.15)}
+.header-logo-text h1{font-size:20px;font-weight:900;color:var(--gold);letter-spacing:.5px;line-height:1.2}
+.header-logo-text span{font-size:11px;color:var(--text-soft);letter-spacing:.22em;font-weight:500;text-transform:uppercase}
+.hero-nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav-btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid rgba(197,160,89,.25);background:rgba(10,20,28,.5);color:var(--text-soft);font-family:inherit;transition:all .2s;backdrop-filter:blur(4px)}
 .nav-btn:hover{background:var(--gold-soft);color:var(--gold-light);border-color:var(--gold)}
 .nav-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+.hero-tagline{text-align:center;padding:40px 0 10px}
+.hero-tagline-text{font-size:clamp(1.5rem,4vw,2.8rem);font-weight:900;color:var(--gold);letter-spacing:.15em;opacity:.9;text-shadow:0 2px 20px rgba(197,160,89,.3)}
+.hero-tagline-sub{font-size:clamp(.9rem,2vw,1.3rem);font-weight:600;color:var(--text-soft);margin-top:8px;letter-spacing:.05em}
+@media(max-width:640px){.hero-content{min-height:260px;padding:16px}.hero-tagline{padding:20px 0 5px}}
 
 /* Layout */
 .container{max-width:1100px;margin:20px auto 0;padding:0 16px}
@@ -164,21 +172,28 @@ select option{background:var(--bg-3);color:var(--text)}
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
-    <div class="header-logo">
-      <div class="logo-mark">ZI</div>
-      <div class="header-logo-text">
-        <h1>ציון ישראל</h1>
-        <span>ייזום ובנייה · ZION ISRAEL</span>
+<div class="hero-banner">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-top">
+      <div class="header-logo">
+        <div class="logo-mark">ZI</div>
+        <div class="header-logo-text">
+          <h1>ציון ישראל</h1>
+          <span>ייזום ובנייה · ZION ISRAEL</span>
+        </div>
+      </div>
+      <div class="hero-nav">
+        <button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button>
+        <button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button>
+        <button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג חומרים</button>
+        <button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button>
       </div>
     </div>
-  </div>
-  <div class="header-nav">
-    <button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button>
-    <button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button>
-    <button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג חומרים</button>
-    <button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button>
+    <div class="hero-tagline">
+      <div class="hero-tagline-text">WE BELIEVE · WE DO</div>
+      <div class="hero-tagline-sub">מערכת ניהול פרויקטי בנייה</div>
+    </div>
   </div>
 </div>
 
