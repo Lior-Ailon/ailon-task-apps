@@ -26,8 +26,18 @@ body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--t
 .header .meta .refresh-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.85rem;transition:.2s}
 .header .meta .refresh-btn:hover{background:rgba(255,255,255,.3)}
 
+/* Search Bar */
+.search-bar{padding:16px 32px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search-input{flex:1;min-width:260px;padding:12px 18px;border:2px solid var(--border);border-radius:12px;font-family:'Heebo',sans-serif;font-size:1rem;outline:none;transition:.2s}
+.search-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+.filter-btn{padding:8px 16px;border:1px solid var(--border);border-radius:20px;background:#fff;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;color:var(--text-light);transition:.2s;white-space:nowrap}
+.filter-btn:hover{border-color:var(--teal);color:var(--teal)}
+.filter-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.filter-btn .count{font-size:.7rem;opacity:.7;margin-right:4px}
+.search-results-count{font-size:.82rem;color:var(--text-light);font-weight:600;white-space:nowrap}
+
 /* Stats Cards */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;padding:24px 32px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;padding:0 32px 24px}
 .stat-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:8px;border:1px solid var(--border)}
 .stat-card .label{font-size:.8rem;color:var(--text-light);font-weight:600}
 .stat-card .value{font-size:2.2rem;font-weight:900;color:var(--navy)}
@@ -52,29 +62,29 @@ body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--t
 .category-header h2{font-size:1.3rem;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:10px}
 .category-header .badge{background:var(--teal);color:#fff;font-size:.8rem;padding:4px 12px;border-radius:20px;font-weight:700}
 .category-header .health{display:flex;gap:8px;align-items:center}
-.health-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
-.health-dot.good{background:var(--green)} .health-dot.warning{background:var(--orange)} .health-dot.critical{background:var(--red)} .health-dot.unknown{background:var(--gray)}
 
 /* App Grid */
-.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.app-card{background:var(--card-bg);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);transition:.2s;cursor:pointer;display:flex;flex-direction:column;gap:8px}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.app-card{background:var(--card-bg);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);transition:.2s;display:flex;flex-direction:column;gap:8px}
 .app-card:hover{box-shadow:0 6px 16px rgba(0,0,0,.1);transform:translateY(-2px);border-color:var(--teal-light)}
 .app-card .app-name{font-size:1rem;font-weight:700;color:var(--navy);line-height:1.3}
 .app-card .app-desc{font-size:.8rem;color:var(--text-light);line-height:1.4;max-height:2.6em;overflow:hidden}
-.app-card .app-meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;border-top:1px solid var(--border)}
+.app-card .app-meta{display:flex;justify-content:space-between;align-items:center;margin-top:4px;padding-top:8px;border-top:1px solid var(--border)}
 .app-card .status-badge{font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:700}
 .status-badge.live{background:var(--green-bg);color:var(--green)}
 .status-badge.archived{background:var(--gray-bg);color:var(--gray)}
-.status-badge.active{background:var(--green-bg);color:var(--green)}
-.app-card .backup-info{font-size:.72rem;color:var(--text-light);display:flex;align-items:center;gap:4px}
-.backup-badge{font-size:.68rem;padding:2px 8px;border-radius:12px;font-weight:600}
+.app-card .backup-badge{font-size:.68rem;padding:2px 8px;border-radius:12px;font-weight:600}
 .backup-badge.good{background:var(--green-bg);color:var(--green)}
 .backup-badge.warning{background:var(--orange-bg);color:var(--orange)}
 .backup-badge.critical{background:var(--red-bg);color:var(--red)}
 .backup-badge.unknown{background:var(--gray-bg);color:var(--gray)}
-.app-card .app-notes{font-size:.72rem;color:var(--text-light);font-style:italic;line-height:1.3;max-height:2.5em;overflow:hidden;margin-top:4px}
-.app-card .app-link{font-size:.72rem;color:var(--teal);text-decoration:none;word-break:break-all}
-.app-card .app-link:hover{text-decoration:underline}
+.app-card .app-notes{font-size:.72rem;color:var(--text-light);font-style:italic;line-height:1.3;max-height:2.5em;overflow:hidden}
+.app-card .open-link{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:var(--teal);text-decoration:none;padding:6px 14px;border:1.5px solid var(--teal);border-radius:8px;transition:.2s;margin-top:6px;align-self:flex-start}
+.app-card .open-link:hover{background:var(--teal);color:#fff}
+
+/* No results */
+.no-results{text-align:center;padding:40px;color:var(--text-light)}
+.no-results .icon{font-size:2.5rem;margin-bottom:12px}
 
 /* Loading */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--text-light)}
@@ -85,7 +95,8 @@ body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--t
 @media(max-width:768px){
   .header{padding:16px 20px;flex-direction:column;gap:12px}
   .header h1{font-size:1.3rem}
-  .stats{padding:16px 20px;grid-template-columns:repeat(2,1fr)}
+  .search-bar{padding:12px 20px}
+  .stats{padding:0 20px 20px;grid-template-columns:repeat(2,1fr)}
   .charts{padding:0 20px 20px;grid-template-columns:1fr}
   .categories{padding:0 20px 24px}
   .app-grid{grid-template-columns:1fr}
@@ -110,8 +121,15 @@ body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--t
   <!-- Stats -->
   <div class="stats" id="stats"></div>
 
+  <!-- Search -->
+  <div class="search-bar">
+    <input type="text" class="search-input" id="searchInput" placeholder="🔍 חפש אפליקציה לפי שם, קטגוריה או תיאור..." oninput="filterApps()">
+    <span class="search-results-count" id="resultsCount"></span>
+  </div>
+  <div class="search-bar" style="padding-top:0" id="filterBtns"></div>
+
   <!-- Charts -->
-  <div class="charts">
+  <div class="charts" id="chartsSection">
     <div class="chart-card"><h3>אפליקציות לפי קטגוריה</h3><canvas id="catChart"></canvas></div>
     <div class="chart-card"><h3>מצב גיבויים</h3><canvas id="backupChart"></canvas></div>
     <div class="chart-card"><h3>גיבויים לפי קטגוריה</h3><canvas id="backupCatChart"></canvas></div>
@@ -124,6 +142,8 @@ body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 <script>
 const API_URL='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/getAppDashboard';
+let allData=null;
+let activeFilter='all';
 let chartInstances={};
 
 async function loadData(){
@@ -133,6 +153,7 @@ async function loadData(){
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list'}),signal:AbortSignal.timeout(10000)});
     const result=await res.json();
     if(result.success&&result.data){
+      allData=result.data;
       renderDashboard(result.data);
       document.getElementById('loading').style.display='none';
       document.getElementById('content').style.display='block';
@@ -141,13 +162,12 @@ async function loadData(){
       throw new Error('API error');
     }
   }catch(e){
-    document.getElementById('loading').innerHTML='<p style="color:var(--red)">שגיאה בטעינת נתונים: '+e.message+'</p><button class="refresh-btn" style="margin-top:16px" onclick="loadData()">נסה שוב</button>';
+    document.getElementById('loading').innerHTML='<p style="color:var(--red)">שגיאה: '+e.message+'</p><button class="refresh-btn" style="margin-top:16px" onclick="loadData()">נסה שוב</button>';
   }
 }
 
 function renderDashboard(data){
   const s=data.stats;
-  // Stats cards
   document.getElementById('stats').innerHTML=`
     <div class="stat-card blue"><div class="icon">📱</div><div class="label">סה״כ אפליקציות</div><div class="value">${s.total}</div></div>
     <div class="stat-card green"><div class="icon">✅</div><div class="label">פעילות</div><div class="value green">${s.live}</div></div>
@@ -159,70 +179,77 @@ function renderDashboard(data){
     <div class="stat-card purple"><div class="icon">📦</div><div class="label">בארכיון</div><div class="value">${s.archived}</div></div>
   `;
 
+  // Render filter buttons
+  let filterHtml='<button class="filter-btn active" onclick="setFilter(\'all\')">הכל <span class="count">('+s.total+')</span></button>';
+  const cats=Object.keys(data.byCategory).sort();
+  for(const cat of cats){
+    const count=data.byCategory[cat].length;
+    filterHtml+='<button class="filter-btn" onclick="setFilter(\''+cat.replace(/'/g,"\\'")+'\')">'+cat+' <span class="count">('+count+')</span></button>';
+  }
+  document.getElementById('filterBtns').innerHTML=filterHtml;
+
   // Charts
   Object.values(chartInstances).forEach(c=>c&&c.destroy());
   chartInstances={};
-
   renderCatChart(data.categoryStats);
   renderBackupChart(s);
   renderBackupCatChart(data.categoryStats);
   renderStatusChart(s);
 
-  // Categories
-  renderCategories(data.byCategory);
+  // Apps
+  filterApps();
 }
 
-function renderCatChart(cats){
-  const ctx=document.getElementById('catChart');
-  const colors=['#0d9488','#1e3a5f','#8b5cf6','#f59e0b','#22c55e','#2563eb','#ef4444','#94a3b8'];
-  chartInstances.cat=new Chart(ctx,{type:'doughnut',data:{
-    labels:cats.map(c=>c.category),
-    datasets:[{data:cats.map(c=>c.count),backgroundColor:colors.slice(0,cats.length),borderWidth:2,borderColor:'#fff'}]
-  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo',size:11}}}}}});
+function setFilter(cat){
+  activeFilter=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  event.target.closest('.filter-btn').classList.add('active');
+  filterApps();
 }
 
-function renderBackupChart(s){
-  const ctx=document.getElementById('backupChart');
-  chartInstances.backup=new Chart(ctx,{type:'bar',data:{
-    labels:['תקין (≤7)','מתקרב (8-14)','חריג (14+)','לא ידוע'],
-    datasets:[{label:'אפליקציות',data:[s.backupGood,s.backupWarning,s.backupCritical,s.backupUnknown],backgroundColor:['#22c55e','#f59e0b','#ef4444','#94a3b8'],borderRadius:8}]
-  },options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Heebo'}}},x:{ticks:{font:{family:'Heebo'}}}}}});
-}
-
-function renderBackupCatChart(cats){
-  const ctx=document.getElementById('backupCatChart');
-  chartInstances.backupCat=new Chart(ctx,{type:'bar',data:{
-    labels:cats.map(c=>c.category),
-    datasets:[
-      {label:'תקין',data:cats.map(c=>c.backupGood),backgroundColor:'#22c55e',borderRadius:6},
-      {label:'מתקרב',data:cats.map(c=>c.backupWarning),backgroundColor:'#f59e0b',borderRadius:6},
-      {label:'חריג',data:cats.map(c=>c.backupCritical),backgroundColor:'#ef4444',borderRadius:6},
-    ]
-  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo',size:11}}}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Heebo'}}},x:{ticks:{font:{family:'Heebo',size:9}}}}}});
-}
-
-function renderStatusChart(s){
-  const ctx=document.getElementById('statusChart');
-  chartInstances.status=new Chart(ctx,{type:'doughnut',data:{
-    labels:['פעילות','בארכיון'],
-    datasets:[{data:[s.live,s.archived],backgroundColor:['#22c55e','#94a3b8'],borderWidth:2,borderColor:'#fff'}]
-  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo'}}}}}});
-}
-
-function renderCategories(byCategory){
-  const container=document.getElementById('categories');
-  let html='';
-  const catColors={'Puratos — עולם התעשייה':'#0d9488','MentorLON — עולמות האמון':'#8b5cf6','כלי תפסים — קואצ׳ינג':'#f59e0b','עולמות העסקים':'#2563eb','לקוחות':'#1e3a5f','חינוך':'#22c55e','כלים כלליים':'#94a3b8'};
+function filterApps(){
+  if(!allData)return;
+  const query=document.getElementById('searchInput').value.toLowerCase().trim();
+  let filtered=[];
   
-  for(const [cat,apps] of Object.entries(byCategory)){
-    const color=catColors[cat]||'#0d9488';
+  for(const [cat,apps] of Object.entries(allData.byCategory)){
+    for(const app of apps){
+      if(activeFilter!=='all'&&cat!==activeFilter)continue;
+      if(query){
+        const searchText=(app.name+' '+app.description+' '+app.category+' '+app.notes).toLowerCase();
+        if(!searchText.includes(query))continue;
+      }
+      filtered.push({...app,category:cat});
+    }
+  }
+  
+  document.getElementById('resultsCount').textContent=query||activeFilter!=='all'?'('+filtered.length+' תוצאות)':'';
+  
+  // Hide charts when searching
+  const showCharts=!query&&activeFilter==='all';
+  document.getElementById('chartsSection').style.display=showCharts?'':'none';
+  
+  if(filtered.length===0){
+    document.getElementById('categories').innerHTML='<div class="no-results"><div class="icon">🔍</div><p>לא נמצאו תוצאות</p></div>';
+    return;
+  }
+  
+  // Group by category
+  const grouped={};
+  for(const app of filtered){
+    if(!grouped[app.category])grouped[app.category]=[];
+    grouped[app.category].push(app);
+  }
+  
+  let html='';
+  for(const [cat,apps] of Object.entries(grouped)){
     const goodCount=apps.filter(a=>a.backupHealth==='good').length;
     const warnCount=apps.filter(a=>a.backupHealth==='warning').length;
     const critCount=apps.filter(a=>a.backupHealth==='critical').length;
     
     html+=`<div class="category-section">
       <div class="category-header">
-        <h2><span style="color:${color}">●</span> ${cat} <span class="badge">${apps.length}</span></h2>
+        <h2>${cat} <span class="badge">${apps.length}</span></h2>
         <div class="health">
           ${goodCount?`<span class="backup-badge good">✅ ${goodCount}</span>`:''}
           ${warnCount?`<span class="backup-badge warning">⚠️ ${warnCount}</span>`:''}
@@ -234,26 +261,62 @@ function renderCategories(byCategory){
     for(const app of apps){
       const statusClass=app.status==='archived'?'archived':'live';
       const statusLabel=app.isLive?'פעיל':'ארכיון';
-      const backupLabel=app.backupAgeDays!==null?(app.backupAgeDays===0?'היום':app.backupAgeDays===1?'אתמול':`${app.backupAgeDays} ימים`):'לא ידוע';
-      const backupClass=app.backupHealth;
+      const backupLabel=app.backupAgeDays!==null?(app.backupAgeDays===0?'היום':app.backupAgeDays===1?'אתמול':app.backupAgeDays+' ימים'):'לא ידוע';
       
-      html+=`<div class="app-card" onclick="window.open('${app.url}','_blank')">
+      html+=`<div class="app-card">
         <div class="app-name">${app.name}</div>
         ${app.description?`<div class="app-desc">${app.description}</div>`:''}
         ${app.notes?`<div class="app-notes">${app.notes}</div>`:''}
         <div class="app-meta">
           <span class="status-badge ${statusClass}">${statusLabel}</span>
-          <span class="backup-badge ${backupClass}">💾 ${backupLabel}</span>
+          <span class="backup-badge ${app.backupHealth}">💾 ${backupLabel}</span>
         </div>
+        ${app.url?`<a class="open-link" href="${app.url}" target="_blank">🔗 פתח אפליקציה</a>`:''}
       </div>`;
     }
     html+=`</div></div>`;
   }
-  container.innerHTML=html;
+  document.getElementById('categories').innerHTML=html;
+}
+
+function renderCatChart(cats){
+  const ctx=document.getElementById('catChart');
+  const colors=['#0d9488','#1e3a5f','#8b5cf6','#f59e0b','#22c55e','#2563eb','#ef4444','#94a3b8'];
+  chartInstances.cat=new Chart(ctx,{type:'doughnut',data:{
+    labels:cats.map(c=>c.category),
+    datasets:[{data:cats.map(c=>c.count),backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo',size:11}}}}}});
+}
+
+function renderBackupChart(s){
+  const ctx=document.getElementById('backupChart');
+  chartInstances.backup=new Chart(ctx,{type:'bar',data:{
+    labels:['תקין (≤7)','מתקרב (8-14)','חריג (14+)','לא ידוע'],
+    datasets:[{data:[s.backupGood,s.backupWarning,s.backupCritical,s.backupUnknown],backgroundColor:['#22c55e','#f59e0b','#ef4444','#94a3b8'],borderRadius:8}]
+  },options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{family:'Heboo'}}},x:{ticks:{font:{family:'Heebo'}}}}}});
+}
+
+function renderBackupCatChart(cats){
+  const ctx=document.getElementById('backupCatChart');
+  chartInstances.backupCat=new Chart(ctx,{type:'bar',data:{
+    labels:cats.map(c=>c.category),
+    datasets:[
+      {label:'תקין',data:cats.map(c=>c.backupGood),backgroundColor:'#22c55e',borderRadius:6},
+      {label:'מתקרב',data:cats.map(c=>c.backupWarning),backgroundColor:'#f59e0b',borderRadius:6},
+      {label:'חריג',data:cats.map(c=>c.backupCritical),backgroundColor:'#ef4444',borderRadius:6},
+    ]
+  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo',size:11}}}},scales:{y:{beginAtZero:true},x:{ticks:{font:{family:'Heebo',size:9}}}}}});
+}
+
+function renderStatusChart(s){
+  const ctx=document.getElementById('statusChart');
+  chartInstances.status=new Chart(ctx,{type:'doughnut',data:{
+    labels:['פעילות','בארכיון'],
+    datasets:[{data:[s.live,s.archived],backgroundColor:['#22c55e','#94a3b8'],borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo'}}}}}});
 }
 
 loadData();
-// Auto-refresh every 5 minutes
 setInterval(loadData,300000);
 </script>
 </body>
