@@ -244,6 +244,13 @@ textarea { min-height: 80px; resize: vertical; }
 }
 /* === AILON Task — Accessibility & Design Upgrade === */
 input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="שאלון אפיון ">
 </head>
 <body>
   <a href="#main-content" class="skip-link">דלג לתוכן</a>
@@ -996,5 +1003,8 @@ updateProgress();
         .modal { width: 95% !important; padding: 20px !important; }
     }
 /* === AILON Task — Accessibility & Design Upgrade === */
-    </style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script></body>
+    </style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script><script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
+</script>
+</body>
 </html>

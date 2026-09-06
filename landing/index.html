@@ -226,6 +226,13 @@
             .nav-links.mobile-open { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(10,31,51,0.98); padding: 24px; gap: 20px; }
         }
     </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AILON Task ·">
 </head>
 <body>
 
@@ -670,6 +677,9 @@
         return false;
     }
     
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 </script>
 </body>
 </html>

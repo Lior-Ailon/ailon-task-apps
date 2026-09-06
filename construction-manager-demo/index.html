@@ -247,6 +247,13 @@ body::before{
   .stats-row{grid-template-columns:1fr 1fr}
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0a141c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BuildFlow — ">
 </head>
 <body>
 
@@ -847,6 +854,9 @@ function renderGantt(){
 
 // ============ INIT ============
 renderDashboard();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 </script>
 </body>
 </html>

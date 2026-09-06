@@ -141,6 +141,13 @@ function openWA(){ window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text
   .btn-primary{width:100%;max-width:320px;justify-content:center}
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ליאור סופר ·">
 </head>
 <body>
 
@@ -210,5 +217,8 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
+</script>
 </body>
 </html>

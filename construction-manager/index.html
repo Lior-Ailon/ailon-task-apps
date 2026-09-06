@@ -158,6 +158,13 @@ body{background:var(--bg);color:var(--text);min-height:100vh}
 .stage-name{flex:1;font-weight:500}
 .stage-time{color:var(--text-light);font-size:.8rem}
 </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0a141c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AILON Task —">
 </head>
 <body>
 
@@ -1105,6 +1112,9 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
 
 // ============ INIT ============
 renderDashboard();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 </script>
 </body>
 </html>

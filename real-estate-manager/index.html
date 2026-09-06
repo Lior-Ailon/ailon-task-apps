@@ -95,6 +95,13 @@ select option{background:var(--bg-3);color:var(--text)}
 @media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}.form-row{flex-direction:column}.data-table{font-size:12px}.hero-content{min-height:260px;padding:16px}.hero-tagline{padding:20px 0 5px}}
 @media print{.hero-nav{display:none}.actions{display:none}.btn{display:none}.modal-overlay{display:none}}
 </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0a141c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ציון ישראל —">
 </head>
 <body>
 <div class="hero-banner"><div class="hero-overlay"></div><div class="hero-content"><div class="hero-top"><div class="header-logo"><div class="logo-mark">ZI</div><div class="header-logo-text"><h1>ציון ישראל</h1><span>ייזום ובנייה · ZION ISRAEL</span></div></div><div class="hero-nav"><button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button><button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button><button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג</button><button class="nav-btn" onclick="showView('calc')" id="navCalc">🧮 חישוב חומרים</button><button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button></div></div><div class="hero-tagline"><div class="hero-tagline-text">WE BELIEVE · WE DO</div><div class="hero-tagline-sub">מערכת ניהול פרויקטי בנייה</div></div></div></div>
@@ -198,6 +205,9 @@ function statusLabel(s){return {planning:'תכנון',active:'פעיל',complete
 function stageLabel(s){return {not_started:'טרם התחילה',in_progress:'בעבודה',completed:'הושלמה',on_hold:'מושהית'}[s]||s||'';}
 document.addEventListener('click',function(e){if(e.target.classList&&e.target.classList.contains('modal-overlay'))e.target.classList.remove('show');});
 fetchAll();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 </script>
 </body>
 </html>

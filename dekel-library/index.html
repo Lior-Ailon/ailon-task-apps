@@ -4,9 +4,19 @@
 <meta charset="UTF-8">
 <meta http-equiv="refresh" content="0; url=https://infoscreen.co.il/dekel-library/">
 <title>הועבר לכתובת חדשה</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="הועבר לכתובת">
 </head>
 <body style="font-family:sans-serif;text-align:center;padding:60px;background:#0f172a;color:#fff">
 <h2>המערכת עברה לכתובת חדשה</h2>
 <p>מיד תועברו אוטומטית ל: <a href="https://infoscreen.co.il/dekel-library/" style="color:#5eead4">infoscreen.co.il/dekel-library</a></p>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
+</script>
 </body>
 </html>

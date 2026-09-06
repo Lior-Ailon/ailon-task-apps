@@ -1206,9 +1206,10 @@ if(!data || data.length === 0){ document.getElementById('shelfList').innerHTML =
 document.getElementById('shelfList').innerHTML = `<div class="grid grid-3">${data.map(p=>`
 <div class="lead-card">
 <div class="lead-card-actions"><button onclick="deleteShelf(${p.id})">🗑️</button><button onclick="openShelfModal(${p.id})">✏️</button></div>
-<div class="lead-name">${p.name||'מוצר'}</div>
+<div class="lead-name">${p.name||'מוצר'} ${p.link?`<a href="${p.link}" target="_blank" rel="noopener" title="פתח אפליקציה" style="text-decoration:none;font-size:16px;margin-inline-start:4px">🔗</a>`:''}</div>
 ${p.price?`<div class="lead-value">${p.price.toLocaleString()} ₪</div>`:''}
 ${p.description?`<div style="font-size:13px;color:var(--text2);margin-top:4px">${p.description}</div>`:''}
+${p.link?`<button onclick="navigator.clipboard.writeText('${p.link}').then(()=>toast('הלינק הועתק'))" style="border:1px solid var(--border);background:#fff;border-radius:8px;padding:4px 10px;font-size:12px;color:var(--teal);cursor:pointer;margin-top:8px;font-family:var(--font)">📋 העתק לינק</button>`:''}
 <span class="badge ${p.status==='active'?'badge-active':'badge-cancelled'}">${p.status==='active'?'פעיל':'מבוטל'}</span>
 </div>
 `).join('')}</div>`;
@@ -1218,6 +1219,7 @@ function openShelfModal(id) {
 const p = id ? window._shelf.find(x=>x.id==id) : {};
 openModal('מוצר', `
 <div class="modal-field"><label>שם</label><input id="shf_name" value="${p.name||''}"></div>
+<div class="modal-field"><label>לינק לאפליקציה</label><input id="shf_link" value="${p.link||''}" placeholder="https://..." dir="ltr" style="text-align:left"></div>
 <div class="modal-field"><label>מחיר (₪)</label><input type="number" id="shf_price" value="${p.price||''}"></div>
 <div class="modal-field"><label>תיאור</label><textarea id="shf_desc">${p.description||''}</textarea></div>
 <div class="modal-field"><label>סטטוס</label><select id="shf_status">
@@ -1225,7 +1227,7 @@ openModal('מוצר', `
 <option value="inactive" ${p.status==='inactive'?'selected':''}>לא פעיל</option>
 </select></div>
 `, id?'עדכן':'צור', async()=>{
-const data = { name:val('shf_name'), price:parseInt(val('shf_price'))||0, description:val('shf_desc'), status:val('shf_status') };
+const data = { name:val('shf_name'), price:parseInt(val('shf_price'))||0, description:val('shf_desc'), status:val('shf_status'), link:val('shf_link')||null };
 if(id){ await sb.from('shelf_products').update(data).eq('id',id); toast('מוצר עודכן'); }
 else{ await sb.from('shelf_products').insert(data); toast('מוצר נוצר'); }
 closeModal(); renderShelf();
