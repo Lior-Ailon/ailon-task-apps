@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AILON Task — קטלוג המערכות</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+:root{
+  --navy:#0f2440; --navy2:#16345a; --teal:#0d9488; --teal2:#14b8a6; --gold:#c5a059;
+  --bg:#f6f4ef; --card:#ffffff; --ink:#1a2b3c; --soft:#5b6b7d; --line:#e5e0d6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#1d4370 100%);color:#fff;padding:56px 0 44px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;left:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,.28),transparent 70%)}
+.hero::before{content:'';position:absolute;right:-80px;bottom:-140px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(197,160,89,.18),transparent 70%)}
+.hero .wrap{position:relative;z-index:2}
+.hero-top{display:flex;align-items:center;gap:18px;margin-bottom:26px}
+.hero-top img{height:64px;filter:drop-shadow(0 4px 14px rgba(0,0,0,.35))}
+.brand-name{font-size:1.9rem;font-weight:900;letter-spacing:.5px}
+.brand-sub{font-size:.95rem;color:#9fd8d0;font-weight:300}
+.hero h1{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:900;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:var(--teal2)}
+.hero .lead{font-size:1.1rem;color:#c9d6e4;max-width:640px;font-weight:300}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);border-radius:14px;padding:14px 22px;min-width:130px}
+.stat b{display:block;font-size:1.7rem;font-weight:900;color:var(--teal2)}
+.stat span{font-size:.85rem;color:#b9c6d6}
+.slogan{margin-top:30px;font-size:1rem;color:var(--gold);letter-spacing:3px;font-weight:500;text-transform:uppercase}
+
+main{padding:42px 0 20px}
+.cat{margin-bottom:42px}
+.cat-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.cat-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;box-shadow:0 6px 16px rgba(13,148,136,.28)}
+.cat h2{font-size:1.45rem;font-weight:900;color:var(--navy)}
+.cat .cat-sub{color:var(--soft);font-size:.92rem;margin-right:60px;margin-bottom:16px;font-weight:300}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 20px 16px;display:flex;flex-direction:column;gap:8px;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,36,64,.12)}
+.card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal2))}
+.card.gold::before{background:linear-gradient(90deg,var(--gold),#e0c288)}
+.card h3{font-size:1.05rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px}
+.card p{font-size:.88rem;color:var(--soft);flex:1;font-weight:300}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.badge.live{background:#e0f2ef;color:var(--teal)}
+.badge.dev{background:#f5ecd9;color:#a07c33}
+.badge.client{background:#e8edf6;color:var(--navy2)}
+a.open{font-size:.82rem;font-weight:700;color:var(--teal);text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+a.open:hover{text-decoration:underline}
+
+footer{background:var(--navy);color:#c9d6e4;margin-top:30px;padding:36px 0}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer b{color:#fff;font-size:1.05rem}
+footer .contact{font-size:.9rem;font-weight:300}
+footer .slog{color:var(--gold);letter-spacing:2px;font-size:.8rem;font-weight:500}
+
+@media print{
+  body{background:#fff}
+  .hero{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card:hover{transform:none;box-shadow:none}
+  .cat{break-inside:avoid}
+  footer{background:#fff;color:var(--ink)}
+}
+@media(max-width:640px){
+  .hero{padding:40px 0 32px}
+  .hero-top img{height:48px}
+  .cat .cat-sub{margin-right:0}
+  .stats{gap:10px}
+  .stat{min-width:105px;padding:11px 16px}
+  .stat b{font-size:1.35rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/1b0b81977_ailon_header_logo.png" alt="AILON Task">
+      <div>
+        <div class="brand-name">AILON Task</div>
+        <div class="brand-sub">פיתוח מערכות עסקיות מקצה לקצה</div>
+      </div>
+    </div>
+    <h1>קטלוג <em>המערכות</em> שלנו</h1>
+    <p class="lead">מערכות דיגיטליות שנבנו, הושקו ועובדות בשטח — ממסכי תצוגה חכמים ועד ניהול פרויקטים, בכל עולם תוכן. הכל באוויר, נגיש מכל מקום, ומתעדכן בזמן אמת.</p>
+    <div class="stats">
+      <div class="stat"><b>35+</b><span>מערכות חיות</span></div>
+      <div class="stat"><b>7</b><span>עולמות תוכן</span></div>
+      <div class="stat"><b>100%</b><span>באוויר ועובדות</span></div>
+      <div class="stat"><b>2026</b><span>שנת הקמה</span></div>
+    </div>
+    <div class="slogan">Dream it · Plan it · Achieve it</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-monitor-play"></i></div><h2>מסכי תצוגה דיגיטלית — Info Screen</h2></div>
+    <div class="cat-sub">מערכת SaaS לניהול מסכי טלוויזיה חכמים: ספריות, לובי בניינים, בתי אבות ומוסדות ציבור. הלקוח מנהל תוכן ממסך ניהול פשוט — והמסך על הטלוויזיה מתעדכן לבד.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-desktop-tower"></i> פלטפורמת Info Screen</h3><p>מערכת ריבוי-משתמשים מלאה: ניהול לקוחות, משתמשים, תוכן, אירועים ומסכי תצוגה — עם הרשאות וסביבה פרטית לכל לקוח.</p><div class="card-foot"><span class="badge client">לקוח: דקל מחשבים</span><a class="open" href="https://infoscreen.co.il/dekel-library/" target="_blank">כניסה למערכת <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-monitor"></i> מסך דמו כללי</h3><p>מסך תצוגה מדגים שמתאים לכל סוג לקוח — מוסדות ציבור, בתי עסק, בנייני מגורים וספריות. חדשות, תמונות ותוכן מתחלף.</p><div class="card-foot"><span class="badge live">דמו חי</span><a class="open" href="https://infoscreen.co.il/dekel-library/display-info-demo.html" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-buildings"></i> מסך לובי בניין מגורים</h3><p>חדשות חיות מ-ynet, מזג אוויר בזמן אמת, אירועים והודעות ועד הבית — עיצוב יוקרתי לכניסה לבניין.</p><div class="card-foot"><span class="badge live">דמו חי</span><a class="open" href="https://infoscreen.co.il/dekel-library/display-lobby-demo.html" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-house-line"></i> מסך בית אבות</h3><p>אווירה חמה: פעילויות יומיות, תפריט היום, אירועי המוסד ותמונות — בעיצוב רך ונעים לדיירים ולמשפחות.</p><div class="card-foot"><span class="badge live">דמו חי</span><a class="open" href="https://infoscreen.co.il/dekel-library/display-nursing-demo.html" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-globe"></i> פלייר שיווקי</h3><p>דף נחיתה ממותג עם דומיין ייעודי — infoscreen.co.il — להצגה ללקוחות פוטנציאליים.</p><div class="card-foot"><span class="badge live">חי</span><a class="open" href="https://infoscreen.co.il/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-crane-tower"></i></div><h2>נדל"ן, בנייה וקבלנות</h2></div>
+    <div class="cat-sub">ניהול מלא של פרויקטים מהקרקע: תקציבים, קומות, עובדים, חומרים ודיווחים — עם למידה ותובנות לחיסכון בעלויות.</div>
+    <div class="grid">
+      <div class="card gold"><h3><i class="ph ph-building"></i> Real Estate Manager</h3><p>ניהול פרויקטי בנייה לקבלנים: בניינים, קומות, תקציבים מול ביצוע, חריגות, עובדים וחומרים — במיתוג מותאם אישית.</p><div class="card-foot"><span class="badge client">לקוח: ציון ישראל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/real-estate-manager/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card gold"><h3><i class="ph ph-hard-hat"></i> Construction Manager</h3><p>מעקב ביצוע בשטח: שלבי בנייה, ימי עבודה, חומרים בפועל מול התכנון ותיעוד פוטוגרפי לכל קומה.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/construction-manager/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card gold"><h3><i class="ph ph-clipboard-text"></i> שאלון אפיון — נכסי Wigan</h3><p>מיפוי דיגיטלי של 120 דונם: רכש, אחזקה, לוגיסטיקה, דיירים ופיננסים — מ-30 ל-120 עסקים בשטח.</p><div class="card-foot"><span class="badge client">לקוח: Wigan</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/aviad-questionnaire/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card gold"><h3><i class="ph ph-certificate"></i> מבחן רישוי תיווך נדל"ן</h3><p>סימולטור מבחן עם 25 שאלות אקראיות, ציון אוטומטי והסברים משפטיים — כלי הכשרה לעוסקים בתיווך.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/exam-tiuuch/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-bed"></i></div><h2>מלונאות ואירוח</h2></div>
+    <div class="cat-sub">מוצרי אורח לשדרוג חוויית האורח — טכנולוגיה שקטה שעובדת מאחורי הקלעים.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-devices"></i> Guest Hub — שירותי חדר דיגיטליים</h3><p>רכזת אורח חכמה בכניסה לחדר: הזמנת שירותים, מוזיקה ברישיון, מידע ותקשורת — דרך מדבקות NFC/QR על המצע. מבוסס טכנולוגיית NTAG213.</p><div class="card-foot"><span class="badge dev">בפיתוח · Tamara by Baron Hotels</span></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-confetti"></i></div><h2>אירועים, הפקות ופנאי</h2></div>
+    <div class="cat-sub">מערכות ניהול לוגיסטיקה של אירועים ותורים עם תזכורות אוטומטיות.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-calendar-check"></i> מערכת הזמנת פגישות — DJ יעל כהן</h3><p>קביעת פגישות אונליין עם תזכורות WhatsApp אוטומטיות 24 שעות מראש — בלי טלפונים ובלי להחמיץ לקוחות.</p><div class="card-foot"><span class="badge client">לקוח פרטי</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/yael-dj-booking/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-list-checks"></i> Event Checklist</h3><p>צ'קליסט חכם להפקת אירועים: פריטים לפי קטגוריות, הקצאות לאנשי צוות וסימון התקדמות בזמן אמת.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/event-checklist/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-factory"></i></div><h2>עולם המזון והתעשייה</h2></div>
+    <div class="cat-sub">חבילת דיגיטציה מלאה ל-Puratos Israel (תעשיית מאפים) — טפסים, דוחות ומיפויים שמחליפים ניירת.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-file-text"></i> דוח מאפייה דיגיטלי</h3><p>ניהול ניסויי מאפייה: מטרה, מרכיבים, תנאים, מדדים, תמונות ומסקנות — עם שליחת אישורים אוטומטית במייל.</p><div class="card-foot"><span class="badge client">Puratos Israel</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/puratos-bakery-report/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-flask"></i> טופס מעבדה</h3><p>טפסים דיגיטליים למעבדה — תיעוד מסודר ומיידי במקום טפסים מודפסים.</p><div class="card-foot"><span class="badge client">Puratos Israel</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/puratos-lab/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-squares-four"></i> מיפוי פערי נתונים</h3><p>סקר ארגוני למיפוי פערי מידע ובקשות פלטפורמה בכל המחלקות — כלי מרכזי להטמעת AI בארגון.</p><div class="card-foot"><span class="badge client">Puratos Israel</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/puratos-data-mapping/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-graduation-cap"></i> בקשות הכשרה</h3><p>ניהול בקשות הכשרה והסמכות עובדים: עלות, מחלקה, עדיפות ואישורים — במקום מיילים מפוזרים.</p><div class="card-foot"><span class="badge client">Puratos Israel</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/puratos-training/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-car"></i> טופס רכב דיגיטלי</h3><p>טופס מדיניות רכב עם שליחה אוטומטית למייל הניהולי — דיגיטציה של תהליך ניירתי.</p><div class="card-foot"><span class="badge client">Puratos Israel</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/puratos-car-policy/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-cocktail"></i> בקבוק הזמנות</h3><p>אוסף שיתופי של נוהלי הזמנות ומדיניות — מחליף הודעות מבולגנות בידע מסודר ונגיש.</p><div class="card-foot"><span class="badge client">Puratos Israel</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/puratos-bakery-knowledge/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-heart"></i></div><h2>קואצ'ינג, מנטורינג והתפתחות אישית</h2></div>
+    <div class="cat-sub">פלטפורמת MentorLON — סוויטת כלי אימון ומנטורינג דיגיטליים למאמנים ומתאמנים.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-users-three"></i> MentorLON — פלטפורמת המנטורינג</h3><p>מרכז הכלים המנטורי: כניסת מאמנים, ניהול מתאמנים, הרשאות וקטלוג כלי אימון — ניהול עם התחברות מאובטחת.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/mentorlon/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-capsule"></i> AILON Capsule</h3><p>אפליקציית העל למאמנים: הצטרפות מתאמנים, בחירת כלים ושיתוף נתונים עם המאמן בהתאם להסכמת פרטיות.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/capsule/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-flask"></i> מעבדת הפתרונות — Solution Lab</h3><p>5 מודלים אינטראקטיביים: E+R=O, אפקט הליצן, 3 מעגלים, צבירת ידע ומפת סיכונים — כלי עבודה מעשי לייעוץ.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/solution-lab/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-seal-check"></i> ש.ק.ו.פ — הטמעת הרגלים</h3><p>אפליקציית 21 יום להטמעת הרגלים חדשים עם מעקב יומי, גרפי התקדמות ועקרונות Atomic Habits.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/shkuf-habits/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-heart-straight"></i> סקר זוגיות</h3><p>שאלון אינטראקטיבי להערכת מערכת יחסים — 14 ממדים עם שמירת נתונים מאובטחת וניתוח עבור המאמן.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/couple-survey/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-compass"></i> מצפם הקריירה</h3><p>כלי התאמה מקצועית עם לוגיקת Yes/No/Maybe ודשבורד מאמן — להכוונת מתאמנים לקריירה המתאימה.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/matpen-kariera/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-calendar-heart"></i> לוז שבועי</h3><p>ניהול לו"ז שבועי למתאמנים עם דירוג מוטיבציה לכל שעה ומעקב שינה — כלי עבודה יומיומי.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/loaz-shavuai/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-note-pencil"></i> מעקב אימון — Coaching Tracker</h3><p>תיעוד פגישות אימון ומעקב אחרי משימות מתאמנים — כולל שאלון קליטה דיגיטלי ללקוחות חדשים.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/coaching-tracker/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-door-open"></i> Exit Strategy</h3><p>כלי אינטראקטיבי לתכנון אסטרטגיית יציאה עסקית — לבעלי עסקים שחושבים קדימה.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/exit-strategy/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-briefcase"></i></div><h2>ניהול עסק ותפעול</h2></div>
+    <div class="cat-sub">מערכות הלב של העסק: CRM, דשבורדים וניטור — הכל מאובטח ומגובה בגיבוי כפול.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-users"></i> CRM — ניהול לקוחות</h3><p>ניהול לידים, לקוחות, פרויקטים, משימות, הכנסות והוצאות — עם ממשק admin, הרשאות ואבטחת מידע ברמת השורה.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/crm-v3/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-squares-four"></i> App Dashboard</h3><p>דשבורד מרכזי שמנטר את כל האפליקציות: סטטוס, גיבויים, שימוש ויעילות — לכל מערכות החברה במקום אחד.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/app-dashboard/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-first-aid-kit"></i> Epilepsy Care</h3><p>מעקב בריאותי חכם: תיעוד אירועים עם מצב רוח, שינה, מזון ואנרגיה — ומתן תובנות למיפוי דפוסים וגורמי סיכון.</p><div class="card-foot"><span class="badge live">פעיל · PWA</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/epilepsy-care/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head"><div class="cat-icon"><i class="ph ph-student"></i></div><h2>חינוך ולמידה</h2></div>
+    <div class="cat-sub">מערכות למידה חוויתיות עם משחקיות, תגמול ומעקב התקדמות.</div>
+    <div class="grid">
+      <div class="card"><h3><i class="ph ph-sun"></i> Summer Learning</h3><p>אפליקציית למידת קיץ לילדים — משחקיות, תגמול כספי ומעקב התקדמות. מותקנת כאפליקציה על הפלאפון (PWA).</p><div class="card-foot"><span class="badge live">פעיל · PWA</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/summer-learning/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+      <div class="card"><h3><i class="ph ph-sparkle"></i> English Quest</h3><p>משחק לימוד אנגלית עם שלבים, ניקוד ומעקב התקדמות אישי.</p><div class="card-foot"><span class="badge live">פעיל</span><a class="open" href="https://lior-ailon.github.io/ailon-task-apps/english-quest/" target="_blank">צפייה <i class="ph ph-arrow-up-left"></i></a></div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <b>AILON Task</b>
+      <div class="contact">liors@ailon-task.com · פיתוח מערכות עסקיות מקצה לקצה</div>
+    </div>
+    <div class="slog">DREAM IT · PLAN IT · ACHIEVE IT</div>
+  </div>
+</footer>
+
+</body>
+</html>
