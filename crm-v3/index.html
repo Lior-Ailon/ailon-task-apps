@@ -365,6 +365,10 @@ tr:hover td{background:var(--bg)}
 const SUPABASE_URL = 'https://nmpwsahwalmxplxudndv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tcHdzYWh3YWxteHBseHVkbmR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMjcxNzIsImV4cCI6MjA5NzkwMzE3Mn0.QvQoCxmSz66dEPx7NWj6OcftgtjhViAytfkgRDL2q9c';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// לוג פעולות סופיות ב-CRM -> מייל עדכון לצוות (רק בלחיצת שמירה, לא בכל הקשה)
+async function notifyCrmUpdate(record_type, action, title, details){
+  try{ await fetch('https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/logCrmUpdate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({record_type,action,title,details})}); }catch(e){ /* שקט - לא חוסם את השמירה */ }
+}
 let currentUser = null;
 let currentPage = 'dashboard';
 let recognition = null;
@@ -721,7 +725,7 @@ closeModal(); renderLeads();
 }
 
 async function deleteLead(id){ if(!confirm('למחוק ליד?'))return; await sb.from('leads').delete().eq('id',id); toast('ליד נמחק'); renderLeads(); }
-async function convertLead(id){ await sb.from('leads').update({status:'converted'}).eq('id',id); const l = window._leads.find(x=>x.id==id); if(l){ await sb.from('customers').insert({name:l.name,company:l.company,phone:l.phone,email:l.email}); } toast('ליד הומר ללקוח 🎉'); renderLeads(); }
+async function convertLead(id){ await sb.from('leads').update({status:'converted'}).eq('id',id); const l = window._leads.find(x=>x.id==id); if(l){ await sb.from('customers').insert({name:l.name,company:l.company,phone:l.phone,email:l.email}); } toast('ליד הומר ללקוח 🎉'); notifyCrmUpdate('customer','create', l.name||'לקוח מהמרת ליד', 'נוצר בהמרת ליד | חברה: '+(l.company||'-')+' | טלפון: '+(l.phone||'-')); renderLeads(); }
 
 // ========== LEAD BOARD (KANBAN) ==========
 async function renderLeadBoard() {
@@ -792,6 +796,7 @@ openModal('לקוח', `
 const data = { name:val('cf_name'), company:val('cf_company'), phone:val('cf_phone'), email:val('cf_email'), address:val('cf_address'), notes:val('cf_notes') };
 if(id){ await sb.from('customers').update(data).eq('id',id); toast('לקוח עודכן'); }
 else{ await sb.from('customers').insert(data); toast('לקוח נוצר'); }
+notifyCrmUpdate('customer', id?'update':'create', data.name||'לקוח', 'חברה: '+(data.company||'-')+' | טלפון: '+(data.phone||'-')+' | אימייל: '+(data.email||'-'));
 closeModal(); renderCustomers();
 });
 }
@@ -1149,6 +1154,7 @@ openModal('הוצאה', `
 const data = { description:val('exf_desc'), amount:parseInt(val('exf_amount'))||0, category:val('exf_cat'), expense_date:val('exf_date')||null };
 if(id){ await sb.from('expenses').update(data).eq('id',id); toast('הוצאה עודכנה'); }
 else{ await sb.from('expenses').insert(data); toast('הוצאה נוצרה'); }
+notifyCrmUpdate('expense', id?'update':'create', data.description||'הוצאה', 'סכום: ₪'+(data.amount||0)+' | קטגוריה: '+(data.category||'-')+' | תאריך: '+(data.expense_date||'-'));
 closeModal(); renderExpenses();
 });
 }
