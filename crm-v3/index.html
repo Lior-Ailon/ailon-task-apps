@@ -1105,20 +1105,20 @@ if(!data || data.length === 0){ document.getElementById('incomesList').innerHTML
 const total = data.reduce((s,x)=>s+(x.amount||0),0);
 document.getElementById('incomesList').innerHTML = `
 <div class="card" style="text-align:center;margin-bottom:16px"><div style="font-size:32px;font-weight:700;color:var(--green)">${total.toLocaleString()} ₪</div><div style="color:var(--text2)">סך הכנסות</div></div>
-<table><thead><tr><th>תיאור</th><th>סכום</th><th>תאריך</th><th>קטגוריה</th><th></th></tr></thead><tbody>
-${data.map(x=>`<tr><td style="font-weight:600">${x.description||''}</td><td style="color:var(--green);font-weight:600">${(x.amount||0).toLocaleString()} ₪</td><td>${x.income_date?formatDate(x.income_date):'-'}</td><td>${x.category||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteIncome(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openIncomeModal(${x.id})">✏️</button></td></tr>`).join('')}
+<table><thead><tr><th>תיאור</th><th>סכום</th><th>תאריך</th><th>הערות</th><th></th></tr></thead><tbody>
+${data.map(x=>`<tr><td style="font-weight:600">${x.notes||''}</td><td style="color:var(--green);font-weight:600">${(x.amount||0).toLocaleString()} ₪</td><td>${x.income_date?formatDate(x.income_date):'-'}</td><td>${x.recurrence==='recurring'?'חוזרת':'חד פעמית'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteIncome(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openIncomeModal(${x.id})">✏️</button></td></tr>`).join('')}
 </tbody></table>`;
 }
 
 function openIncomeModal(id) {
 const x = id ? window._incomes.find(i=>i.id==id) : {};
 openModal('הכנסה', `
-<div class="modal-field"><label>תיאור</label><input id="incf_desc" value="${x.description||''}"></div>
+<div class="modal-field"><label>תיאור</label><input id="incf_desc" value="${x.notes||''}"></div>
 <div class="modal-field"><label>סכום (₪)</label><input type="number" id="incf_amount" value="${x.amount||''}"></div>
-<div class="modal-field"><label>קטגוריה</label><input id="incf_cat" value="${x.category||''}"></div>
+<div class="modal-field"><label>הערות</label><input id="incf_cat" value="${x.category||''}"></div>
 <div class="modal-field"><label>תאריך</label><input type="date" id="incf_date" value="${x.income_date?x.income_date.slice(0,10):''}"></div>
 `, id?'עדכן':'צור', async()=>{
-const data = { description:val('incf_desc'), amount:parseInt(val('incf_amount'))||0, category:val('incf_cat'), income_date:val('incf_date')||null };
+const cat = val('incf_cat'); const data = { notes:(val('incf_desc')+(cat?' · '+cat:'')), amount:parseInt(val('incf_amount'))||0, income_date:val('incf_date')||null };
 if(id){ await sb.from('incomes').update(data).eq('id',id); toast('הכנסה עודכנה'); }
 else{ await sb.from('incomes').insert(data); toast('הכנסה נוצרה'); }
 closeModal(); renderIncomes();
@@ -1138,23 +1138,23 @@ if(!data || data.length === 0){ document.getElementById('expensesList').innerHTM
 const total = data.reduce((s,x)=>s+(x.amount||0),0);
 document.getElementById('expensesList').innerHTML = `
 <div class="card" style="text-align:center;margin-bottom:16px"><div style="font-size:32px;font-weight:700;color:var(--red)">${total.toLocaleString()} ₪</div><div style="color:var(--text2)">סך הוצאות</div></div>
-<table><thead><tr><th>תיאור</th><th>סכום</th><th>תאריך</th><th>קטגוריה</th><th></th></tr></thead><tbody>
-${data.map(x=>`<tr><td style="font-weight:600">${x.description||''}</td><td style="color:var(--red);font-weight:600">${(x.amount||0).toLocaleString()} ₪</td><td>${x.expense_date?formatDate(x.expense_date):'-'}</td><td>${x.category||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteExpense(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openExpenseModal(${x.id})">✏️</button></td></tr>`).join('')}
+<table><thead><tr><th>תיאור</th><th>סכום</th><th>תאריך</th><th>הערות</th><th></th></tr></thead><tbody>
+${data.map(x=>`<tr><td style="font-weight:600">${x.expense_type||''}</td><td style="color:var(--red);font-weight:600">${(x.amount||0).toLocaleString()} ₪</td><td>${x.expense_date?formatDate(x.expense_date):'-'}</td><td>${x.notes||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteExpense(${x.id})">🗑️</button> <button class="btn btn-outline btn-sm" onclick="openExpenseModal(${x.id})">✏️</button></td></tr>`).join('')}
 </tbody></table>`;
 }
 
 function openExpenseModal(id) {
 const x = id ? window._expenses.find(e=>e.id==id) : {};
 openModal('הוצאה', `
-<div class="modal-field"><label>תיאור</label><input id="exf_desc" value="${x.description||''}"></div>
+<div class="modal-field"><label>תיאור</label><input id="exf_desc" value="${x.expense_type||''}"></div>
 <div class="modal-field"><label>סכום (₪)</label><input type="number" id="exf_amount" value="${x.amount||''}"></div>
-<div class="modal-field"><label>קטגוריה</label><input id="exf_cat" value="${x.category||''}"></div>
+<div class="modal-field"><label>הערות</label><input id="exf_cat" value="${x.notes||''}"></div>
 <div class="modal-field"><label>תאריך</label><input type="date" id="exf_date" value="${x.expense_date?x.expense_date.slice(0,10):''}"></div>
 `, id?'עדכן':'צור', async()=>{
-const data = { description:val('exf_desc'), amount:parseInt(val('exf_amount'))||0, category:val('exf_cat'), expense_date:val('exf_date')||null };
+const data = { expense_type:val('exf_desc'), amount:parseInt(val('exf_amount'))||0, notes:val('exf_cat'), expense_date:val('exf_date')||null };
 if(id){ await sb.from('expenses').update(data).eq('id',id); toast('הוצאה עודכנה'); }
 else{ await sb.from('expenses').insert(data); toast('הוצאה נוצרה'); }
-notifyCrmUpdate('expense', id?'update':'create', data.description||'הוצאה', 'סכום: ₪'+(data.amount||0)+' | קטגוריה: '+(data.category||'-')+' | תאריך: '+(data.expense_date||'-'));
+notifyCrmUpdate('expense', id?'update':'create', data.expense_type||'הוצאה', 'סכום: ₪'+(data.amount||0)+' | הערות: '+(data.notes||'-')+' | תאריך: '+(data.expense_date||'-'));
 closeModal(); renderExpenses();
 });
 }
