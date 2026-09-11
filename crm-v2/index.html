@@ -842,6 +842,10 @@ tbody tr:hover td{
     .twofa-toggle-btn.enable { background:#0d9488; color:#fff; }
     .twofa-toggle-btn.disable { background:#fee2e2; color:#dc2626; }
     </style>
+
+<link rel="manifest" href="manifest.json?v=20260911">
+<meta name="theme-color" content="#0d9488">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body><div style="position:fixed;top:0;left:0;right:0;background:#f59e0b;color:#1a1a1a;text-align:center;font-size:12px;font-weight:600;padding:4px;z-index:9999;font-family:Heebo,sans-serif;letter-spacing:1px">⚠️ גרסת פיתוח ישנה · ה-CRM הראשי: ailon-task.com</div>
 
@@ -2512,5 +2516,7 @@ document.getElementById('loginPassword').addEventListener('keypress', (e) => {
 // Init
 checkSession();
 </script>
+
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body>
 </html>

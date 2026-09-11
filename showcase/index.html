@@ -78,6 +78,10 @@ footer .slog{color:var(--gold);letter-spacing:2px;font-size:.8rem;font-weight:50
   .stat b{font-size:1.35rem}
 }
 </style>
+
+<link rel="manifest" href="manifest.json?v=20260911">
+<meta name="theme-color" content="#0d9488">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body>
 
@@ -204,5 +208,7 @@ footer .slog{color:var(--gold);letter-spacing:2px;font-size:.8rem;font-weight:50
   </div>
 </footer>
 
+
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body>
 </html>
