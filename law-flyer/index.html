@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>AILON Task — פתרונות AI למשרדי עורכי דין</title>
+<link rel="manifest" href="manifest.webmanifest?v=20260915b">
+<meta name="theme-color" content="#0d2440">
+<link rel="icon" href="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --navy:#0d2440; --navy2:#11304f; --teal:#0d9488; --teal2:#14b8a6; --gold:#c5a059; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Heebo',sans-serif; background:#0a1a2e; color:#fff; }
+
+/* HERO */
+.hero { position:relative; min-height:560px; display:flex; flex-direction:column; overflow:hidden; }
+.hero img.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.85; }
+.hero .shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,26,46,.55) 0%,rgba(10,26,46,.25) 40%,rgba(10,26,46,.96) 100%); }
+.hero .inner { position:relative; z-index:2; padding:28px clamp(20px,5vw,64px) 40px; display:flex; flex-direction:column; min-height:560px; }
+.topbar { display:flex; align-items:center; justify-content:space-between; }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand img { width:52px; height:52px; }
+.brand .n { font-size:24px; font-weight:900; }
+.brand .n span { color:var(--teal2); }
+.slogan { color:rgba(255,255,255,.6); font-size:14px; font-weight:300; font-style:italic; direction:ltr; }
+.hero-center { margin:auto 0; text-align:center; padding:40px 0 30px; }
+.kicker { display:inline-block; background:rgba(20,184,166,.2); border:1px solid var(--teal2); color:#5eead4; font-size:clamp(14px,2vw,19px); font-weight:600; padding:7px 24px; border-radius:100px; margin-bottom:20px; }
+h1 { font-size:clamp(34px,6vw,64px); font-weight:900; line-height:1.12; text-shadow:0 4px 30px rgba(0,0,0,.5); }
+h1 em { font-style:normal; color:var(--teal2); }
+.sub { font-size:clamp(15px,2.4vw,22px); font-weight:400; color:rgba(255,255,255,.85); margin-top:14px; max-width:760px; margin-inline:auto; line-height:1.45; }
+.cta-hero { display:inline-flex; align-items:center; gap:10px; margin-top:26px; background:linear-gradient(90deg,var(--teal),var(--teal2)); color:#04211d; font-size:clamp(16px,2.4vw,21px); font-weight:900; padding:15px 40px; border-radius:100px; text-decoration:none; box-shadow:0 12px 40px rgba(13,148,136,.45); transition:.15s; }
+.cta-hero:hover { transform:translateY(-2px); }
+
+/* SECTION: solutions */
+.section { max-width:1080px; margin:0 auto; padding:56px clamp(18px,4vw,40px); }
+.sec-head { text-align:center; margin-bottom:34px; }
+.sec-head .t { font-size:clamp(24px,4vw,38px); font-weight:900; }
+.sec-head .t em { font-style:normal; color:var(--teal2); }
+.sec-head .d { color:rgba(255,255,255,.65); font-size:clamp(14px,2vw,18px); margin-top:8px; font-weight:300; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+.card { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:18px; padding:24px 22px; transition:.15s; }
+.card:hover { border-color:var(--teal2); transform:translateY(-3px); background:rgba(255,255,255,.08); }
+.card .ic { font-size:34px; margin-bottom:12px; }
+.card h3 { font-size:20px; font-weight:800; margin-bottom:6px; }
+.card p { font-size:15px; font-weight:300; color:rgba(255,255,255,.68); line-height:1.45; }
+
+/* strip */
+.strip { max-width:1080px; margin:6px auto 0; padding:0 clamp(18px,4vw,40px) 56px; }
+.strip-in { background:linear-gradient(90deg,rgba(13,148,136,.28),rgba(20,184,166,.12)); border-right:5px solid var(--teal); border-radius:16px; padding:22px 30px; font-size:clamp(15px,2.2vw,20px); font-weight:600; line-height:1.5; color:#e6fffa; }
+.strip-in b { color:#5eead4; font-weight:800; }
+
+/* app shot */
+.shot-wrap { max-width:900px; margin:0 auto; padding:0 clamp(18px,4vw,40px) 60px; text-align:center; }
+.shot-frame { border-radius:22px; overflow:hidden; border:2px solid rgba(20,184,166,.45); box-shadow:0 30px 80px rgba(0,0,0,.55); }
+.shot-frame img { width:100%; display:block; }
+.cap { color:rgba(255,255,255,.55); font-size:14px; margin-top:12px; font-weight:300; }
+
+/* bottom CTA */
+.bottom { background:linear-gradient(135deg,var(--navy2),var(--navy)); border-top:1px solid rgba(20,184,166,.25); text-align:center; padding:50px clamp(20px,4vw,40px) 34px; }
+.bottom .t { font-size:clamp(20px,3.5vw,30px); font-weight:900; }
+.bottom .d { color:rgba(255,255,255,.7); font-size:clamp(13px,2vw,16px); margin-top:8px; font-weight:300; }
+.btns { margin-top:24px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.btn { padding:14px 32px; border-radius:100px; font-size:16px; font-weight:800; text-decoration:none; transition:.15s; }
+.btn-main { background:linear-gradient(90deg,var(--teal),var(--teal2)); color:#04211d; box-shadow:0 10px 34px rgba(13,148,136,.4); }
+.btn-main:hover { transform:translateY(-2px); }
+.btn-ghost { border:1.5px solid rgba(255,255,255,.3); color:#fff; }
+.btn-ghost:hover { border-color:var(--teal2); color:#5eead4; }
+.contact { margin-top:26px; color:rgba(255,255,255,.6); font-size:14px; direction:ltr; }
+.footer { text-align:center; color:rgba(255,255,255,.3); font-size:12px; letter-spacing:2px; direction:ltr; margin-top:18px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <img class="bg" src="img/hero_law.png" alt="בית משפט — כף משקל">
+  <div class="shade"></div>
+  <div class="inner">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON">
+        <div class="n">AILON <span>Task</span></div>
+      </div>
+      <div class="slogan">Dream it. Plan it. Achieve it.</div>
+    </div>
+    <div class="hero-center">
+      <div class="kicker">⚖️ למשרדי עורכי דין</div>
+      <h1>המשרד רץ את עצמו.<br><em>אתם רצים את התיקים.</em></h1>
+      <div class="sub">פתרונות AI שלוקחים את כל הניהול האדמיניסטרטיבי — וואטסאפ, מועדים, לקוחות — כדי שתתפנו למה שבאמת מניב</div>
+      <a class="cta-hero" href="https://lior-ailon.github.io/ailon-task-apps/law-office/" target="_blank">נסו את הדמו החי →</a>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-head">
+    <div class="t">מה <em>הסוכן שלנו</em> עושה בשביל המשרד</div>
+    <div class="d">לא עוד תוכנה — מנהלת משרד דיגיטלית שאף פעם לא ישנה</div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="ic">🤖</div><h3>מזכירה וירטואלית 24/7</h3><p>עונה ללקוחות בכל שעה, גם בחצות ובסופ״ש — בשם המשרד, בטון המשרד</p></div>
+    <div class="card"><div class="ic">💬</div><h3>צ׳אטבוט לקבלת פניות</h3><p>וואטסאפ עסקי שמנוהל לבד — כל פנייה מזוהה, מסווגת ומנותבת לעו״ד הנכון</p></div>
+    <div class="card"><div class="ic">🎯</div><h3>יצירת לידים</h3><p>פניות חדשות נכנסות למערכת, מדורגות לפי פוטנציאל ומטופלות אוטומטית</p></div>
+    <div class="card"><div class="ic">👥</div><h3>ניהול לקוחות (CRM)</h3><p>תיקים, פגישות ותשלומים — הכל במקום אחד, בלי אקסלים ובלי דברים שנופלים</p></div>
+    <div class="card"><div class="ic">📋</div><h3>ניהול אדמיניסטרטיבי</h3><p>מסמכים, משימות ותזכורות לכל תיק — סדר מלא, אפס דברים בין הכיסאות</p></div>
+    <div class="card"><div class="ic">⏱️</div><h3>התייעלות זמן</h3><p>שעות מזכירות ותפעול חוזרות לעבודה המשפטית — המשאב היקר ביותר במשרד</p></div>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="strip-in">כולל: <b>מעקב אחרי החלטות ופסקי דין בנט המשפט</b> • <b>סנכרון מועדי דיונים ותגובות</b> ליומן המשרדי — שום מועד לא מתפספס</div>
+</div>
+
+<div class="shot-wrap">
+  <div class="shot-frame"><img src="img/app_shot.png" alt="AILON LawDesk — מערכת ניהול תיקים"></div>
+  <div class="cap">AILON LawDesk — מערכת ניהול התיקים והמועדים · צילום מסך מהדמו החי</div>
+</div>
+
+<div class="bottom">
+  <div class="t">רוצים לראות את זה עובד על תרחיש מהמשרד שלכם?</div>
+  <div class="d">פגישת הדגמה ללא עלות וללא התחייבות — עם סוכן AI חי, לא מצגת</div>
+  <div class="btns">
+    <a class="btn btn-main" href="https://lior-ailon.github.io/ailon-task-apps/law-office/" target="_blank">לדמו החי של LawDesk</a>
+    <a class="btn btn-ghost" href="mailto:lior@ailon-task.com">לתיאום פגישה</a>
+  </div>
+  <div class="contact">Lior Sofer, CEO — lior@ailon-task.com</div>
+  <div class="footer">AILON TASK — DREAM IT. PLAN IT. ACHIEVE IT.</div>
+</div>
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=20260915b').catch(()=>{}); }
+</script>
+</body>
+</html>
