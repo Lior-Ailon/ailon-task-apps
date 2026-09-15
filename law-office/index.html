@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>AILON LawDesk — ניהול תיקים ומועדים למשרד עורכי דין</title>
+<link rel="manifest" href="manifest.webmanifest?v=20260915">
+<meta name="theme-color" content="#0d2440">
+<link rel="icon" href="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --navy:#0d2440; --navy2:#11304f; --teal:#0d9488; --teal2:#14b8a6; --red:#ef4444; --amber:#f59e0b; --green:#10b981; --bg:#f4f7f9; --card:#fff; --text:#1e293b; --sub:#64748b; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* Header */
+.header { background:linear-gradient(135deg,var(--navy),var(--navy2)); color:#fff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; box-shadow:0 2px 12px rgba(13,36,64,.25); }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand img { width:42px; height:42px; }
+.brand .t1 { font-size:19px; font-weight:900; }
+.brand .t1 span { color:var(--teal2); }
+.brand .t2 { font-size:12px; opacity:.7; font-weight:300; }
+.today { font-size:13px; background:rgba(255,255,255,.1); padding:6px 14px; border-radius:100px; font-weight:600; }
+
+.demo-ribbon { background:linear-gradient(90deg,#f59e0b,#fbbf24); color:#451a03; text-align:center; font-size:12.5px; font-weight:600; padding:5px; }
+
+.container { max-width:980px; margin:0 auto; padding:20px 16px 90px; }
+
+/* Alert strip */
+.alert-strip { background:#fff; border:1px solid #fee2e2; border-right:4px solid var(--red); border-radius:14px; padding:14px 18px; margin-bottom:20px; display:none; }
+.alert-strip.show { display:block; }
+.alert-strip .h { display:flex; align-items:center; gap:8px; font-weight:800; color:#b91c1c; font-size:15px; margin-bottom:8px; }
+.alert-item { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-top:1px dashed #fecaca; font-size:13.5px; color:var(--text); }
+.alert-item:first-of-type { border-top:none; }
+.alert-item .case-link { color:#b91c1c; font-weight:700; cursor:pointer; }
+
+/* Tabs */
+.tabs { display:flex; gap:8px; margin-bottom:18px; }
+.tab { flex:1; text-align:center; padding:10px; border-radius:12px; background:#fff; border:1.5px solid #e2e8f0; font-weight:700; font-size:14.5px; cursor:pointer; color:var(--sub); transition:.15s; }
+.tab.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+.tab .cnt { display:inline-block; background:var(--teal2); color:#04211d; border-radius:100px; font-size:11px; padding:1px 8px; margin-right:5px; font-weight:800; }
+
+/* Cases */
+.search { width:100%; padding:12px 16px; border-radius:12px; border:1.5px solid #e2e8f0; font-family:inherit; font-size:14px; margin-bottom:14px; background:#fff; }
+.search:focus { outline:none; border-color:var(--teal); }
+.case-card { background:var(--card); border-radius:16px; padding:16px 18px; margin-bottom:12px; border:1px solid #e8edf2; cursor:pointer; transition:.15s; box-shadow:0 1px 4px rgba(13,36,64,.05); }
+.case-card:hover { border-color:var(--teal2); transform:translateY(-1px); }
+.cc-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.cc-title { font-weight:800; font-size:16px; color:var(--navy); }
+.cc-sub { font-size:13px; color:var(--sub); margin-top:2px; }
+.cc-badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.badge { font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:100px; }
+.b-lawyer { background:#e0f2fe; color:#075985; }
+.b-status-open { background:#dbeafe; color:#1d4ed8; }
+.b-status-active { background:#d1fae5; color:#065f46; }
+.b-status-closed { background:#e2e8f0; color:#475569; }
+.b-next { background:#fef3c7; color:#92400e; }
+.b-next.urgent { background:#fee2e2; color:#b91c1c; }
+
+/* Agenda */
+.agenda-date { display:flex; align-items:center; gap:10px; margin:18px 0 8px; }
+.agenda-date .d { font-weight:900; font-size:15px; color:var(--navy); }
+.agenda-date .line { flex:1; height:2px; background:linear-gradient(90deg,var(--teal2),transparent); }
+.event-card { background:#fff; border-radius:14px; padding:14px 16px; margin-bottom:10px; border-right:4px solid var(--teal); border-top:1px solid #e8edf2; border-bottom:1px solid #e8edf2; border-left:1px solid #e8edf2; display:flex; align-items:center; gap:14px; cursor:pointer; }
+.event-card.urgent { border-right-color:var(--red); }
+.event-card.soon { border-right-color:var(--amber); }
+.ev-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; background:#e6fffa; flex-shrink:0; }
+.event-card.urgent .ev-icon { background:#fee2e2; }
+.event-card.soon .ev-icon { background:#fef3c7; }
+.ev-body { flex:1; }
+.ev-title { font-weight:800; font-size:14.5px; }
+.ev-sub { font-size:12.5px; color:var(--sub); margin-top:1px; }
+.ev-days { font-size:12px; font-weight:800; padding:4px 10px; border-radius:100px; flex-shrink:0; }
+.ev-days.ok { background:#d1fae5; color:#065f46; }
+.ev-days.soon { background:#fef3c7; color:#92400e; }
+.ev-days.urgent { background:#fee2e2; color:#b91c1c; }
+.empty { text-align:center; color:var(--sub); padding:40px 20px; font-size:14px; }
+
+/* Primary FAB */
+.fab { position:fixed; bottom:22px; left:22px; z-index:60; }
+.fab button { background:linear-gradient(90deg,var(--teal),var(--teal2)); color:#04211d; border:none; font-family:inherit; font-size:16px; font-weight:900; padding:14px 26px; border-radius:100px; cursor:pointer; box-shadow:0 8px 24px rgba(13,148,136,.4); display:flex; align-items:center; gap:8px; }
+.fab button:active { transform:scale(.97); }
+
+/* Modal */
+.overlay { position:fixed; inset:0; background:rgba(13,36,64,.55); z-index:100; display:none; align-items:flex-end; justify-content:center; }
+.overlay.show { display:flex; }
+.sheet { background:#fff; width:100%; max-width:640px; max-height:92vh; overflow-y:auto; border-radius:22px 22px 0 0; padding:22px 20px 30px; }
+.sheet-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.sheet-head .t { font-weight:900; font-size:19px; color:var(--navy); }
+.x { background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:16px; cursor:pointer; }
+.field { margin-bottom:12px; }
+.field label { display:block; font-size:12.5px; font-weight:700; color:var(--sub); margin-bottom:5px; }
+.field input, .field select, .field textarea { width:100%; padding:11px 13px; border:1.5px solid #e2e8f0; border-radius:11px; font-family:inherit; font-size:14.5px; background:#fff; color:var(--text); }
+.field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--teal); }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.btn-primary { width:100%; background:linear-gradient(90deg,var(--teal),var(--teal2)); color:#04211d; border:none; font-family:inherit; font-size:16px; font-weight:900; padding:14px; border-radius:13px; cursor:pointer; margin-top:6px; }
+
+/* Case detail */
+.cd-head { background:linear-gradient(135deg,var(--navy),var(--navy2)); border-radius:16px; padding:18px; color:#fff; margin-bottom:14px; }
+.cd-head .num { font-size:21px; font-weight:900; }
+.cd-head .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.cd-head .meta span { background:rgba(255,255,255,.14); font-size:12.5px; padding:4px 12px; border-radius:100px; }
+.sec-title { font-weight:900; font-size:15px; color:var(--navy); margin:16px 0 8px; display:flex; align-items:center; justify-content:space-between; }
+.mini-add { background:#e6fffa; color:#0f766e; border:none; font-family:inherit; font-size:12.5px; font-weight:800; padding:6px 13px; border-radius:100px; cursor:pointer; }
+.item-row { background:#fff; border:1px solid #e8edf2; border-radius:12px; padding:11px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; font-size:13.5px; }
+.item-row .l { font-weight:700; }
+.item-row .r { font-size:12.5px; color:var(--sub); text-align:left; }
+.chip-urg { font-size:11px; font-weight:800; padding:3px 9px; border-radius:100px; margin-right:8px; }
+
+.footer-note { text-align:center; color:var(--sub); font-size:12px; margin-top:26px; line-height:1.6; }
+.footer-note b { color:var(--navy); }
+@media (max-width:600px){ .brand .t2{display:none} .today{display:none} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="AILON">
+    <div>
+      <div class="t1">AILON <span>LawDesk</span></div>
+      <div class="t2">ניהול תיקים, מועדים ותזכורות למשרד עורכי דין</div>
+    </div>
+  </div>
+  <div class="today" id="todayBox"></div>
+</div>
+<div class="demo-ribbon">מצב הדגמה — הנתונים לדוגמה בלבד. בגרסת הייצור המערכת מחוברת ליומן המשרד ולוואטסאפ העסקי</div>
+
+<div class="container">
+  <div class="alert-strip" id="alertStrip">
+    <div class="h">⚠️ דורש תשומת לב — מועדים בימים הקרובים</div>
+    <div id="alertList"></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="cases" onclick="switchTab('cases')">תיקים <span class="cnt" id="cntCases">0</span></div>
+    <div class="tab" data-tab="agenda" onclick="switchTab('agenda')">יומן ומועדים <span class="cnt" id="cntEvents">0</span></div>
+  </div>
+
+  <div id="view-cases">
+    <input class="search" id="searchBox" placeholder="חיפוש לפי לקוח, מספר תיק או עורך דין..." oninput="render()">
+    <div id="casesList"></div>
+  </div>
+
+  <div id="view-agenda" style="display:none">
+    <div id="agendaList"></div>
+  </div>
+
+  <div class="footer-note">
+    <b>AILON Task</b> — Dream it. Plan it. Achieve it.<br>
+    כל תיק, כל מועד וכל תזכורת — במקום אחד. שום דבר לא נופל בין הכיסאות.
+  </div>
+</div>
+
+<div class="fab"><button onclick="openNewCase()">+ תיק חדש</button></div>
+
+<!-- Sheet: new case / new event -->
+<div class="overlay" id="ovl" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const KEY='ailon_lawdesk_demo_v1';
+const today=new Date(); today.setHours(0,0,0,0);
+const fmt=new Intl.DateTimeFormat('he-IL',{day:'numeric',month:'numeric',year:'numeric'});
+const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const daysLeft=d=>Math.round((new Date(d+'T00:00:00')-today)/86400000);
+const urg=d=>{const n=daysLeft(d);return n<0?'urgent':n<=3?'urgent':n<=7?'soon':'ok'};
+const urgLabel=d=>{const n=daysLeft(d);return n<0?('חריג '+Math.abs(n)+' ימים'):n===0?'היום!':n<=3?('בעוד '+n+' ימים'):n<=7?('בעוד '+n+' ימים'):(fmt.format(new Date(d+'T00:00:00')))};
+
+function seed(){
+  const t=new Date(); const p=n=>{const x=new Date(t);x.setDate(x.getDate()+n);return iso(x)};
+  return {cases:[
+    {id:1,num:'אזרחי 45832-09-26',client:'כהן נדל"ן בע"מ',field:'אזרחי — מקרקעין',lawyer:'עו"ד ישראלי',status:'פעיל',notes:'תביעה על הפרת חוזה מכר דירה. מסמכים נשלחו לבית המשפט.',
+      events:[{t:'hearing',title:'דיון הוכחות',date:p(3),time:'09:30',where:'שלום ת"א, אולם 3'},{t:'deadline',title:'תגובה לבקשת צד ג\'',date:p(6),time:'',where:''}]},
+    {id:2,num:'משפחתי 11234-03-26',client:'ד\'ר מיכל אברהם',field:'משפחה — מזונות',lawyer:'עו"ד שרון',status:'פעיל',notes:'הסכם גירושין בשלבי ניסוח.',
+      events:[{t:'deadline',title:'הגשת תצהיר מעודכן',date:p(2),time:'',where:''},{t:'hearing',title:'דיון לפשרה',date:p(12),time:'10:00',where:'משפחה ראשל"צ'}]},
+    {id:3,num:'הוצל"פ 88-26',client:'בנק לאומי',field:'הוצאה לפועל',lawyer:'עו"ד ישראלי',status:'פתוח',notes:'המרצת פתיחה — אישור המלצה התקבל.',
+      events:[{t:'deadline',title:'ערר על החלטת הרשם',date:p(-1),time:'',where:''}]},
+    {id:4,num:'פש"ר 23456-08-26',client:'פלסטיק בע"מ',field:'פשיטת רגל',lawyer:'עו"ד לוי',status:'פעיל',notes:'ניהול תיק בהליך פירוק.',
+      events:[{t:'hearing',title:'דיון דחיית תביעות',date:p(18),time:'11:15',where:'שלום חיפה'},{t:'deadline',title:'הגשת תביעות חוב מעודכנות',date:p(9),time:'',where:''}]},
+    {id:5,num:'עבודה 9021-05-26',client:'אבי כהן',field:'דיני עבודה',lawyer:'עו"ד שרון',status:'נסגר',notes:'הסתיים בפשרה — תשלום אחרון התקבל.',
+      events:[]}
+  ]};
+}
+function load(){ try{const d=JSON.parse(localStorage.getItem(KEY)); if(d&&d.cases) return d;}catch(e){} const s=seed(); localStorage.setItem(KEY,JSON.stringify(s)); return s; }
+function save(d){ localStorage.setItem(KEY,JSON.stringify(d)); }
+let DB=load();
+
+// Header date
+const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+document.getElementById('todayBox').textContent='יום '+days[today.getDay()]+' • '+fmt.format(today);
+
+function allEvents(){ const out=[]; DB.cases.forEach(c=>c.events.forEach(e=>out.push({...e,caseId:c.id,caseNum:c.num,client:c.client}))); return out.sort((a,b)=>a.date.localeCompare(b.date)); }
+
+function switchTab(t){ document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===t)); document.getElementById('view-cases').style.display=t==='cases'?'':'none'; document.getElementById('view-agenda').style.display=t==='agenda'?'':'none'; }
+
+function render(){
+  const q=(document.getElementById('searchBox').value||'').trim();
+  const list=document.getElementById('casesList');
+  const cases=DB.cases.filter(c=>!q||[c.num,c.client,c.lawyer,c.field].join(' ').includes(q));
+  document.getElementById('cntCases').textContent=DB.cases.length;
+  const evs=allEvents().filter(e=>e.t!=='closed');
+  document.getElementById('cntEvents').textContent=evs.length;
+  list.innerHTML=cases.length?'':'<div class="empty">לא נמצאו תיקים</div>';
+  cases.forEach(c=>{
+    const next=c.events.filter(e=>e.date>=iso(today)).sort((a,b)=>a.date.localeCompare(b.date))[0];
+    const past=c.events.filter(e=>e.date<iso(today))[0];
+    const el=document.createElement('div'); el.className='case-card'; el.onclick=()=>openCase(c.id);
+    el.innerHTML=`<div class="cc-top"><div><div class="cc-title">${c.num}</div><div class="cc-sub">${c.client} · ${c.field}</div></div></div>
+      <div class="cc-badges">
+        <span class="badge b-lawyer">${c.lawyer}</span>
+        <span class="badge b-status-${c.status==='נסגר'?'closed':c.status==='פתוח'?'open':'active'}">${c.status}</span>
+        ${next?`<span class="badge b-next ${urg(next.date)==='urgent'?'urgent':''}">⏳ ${next.title} — ${urgLabel(next.date)}</span>`:''}
+        ${past&&c.status!=='נסגר'?`<span class="badge b-next urgent">חריגה: ${past.title} (${fmt.format(new Date(past.date+'T00:00:00'))})</span>`:''}
+      </div>`;
+    list.appendChild(el);
+  });
+  renderAlerts(); if(document.getElementById('view-agenda').style.display!=='none') renderAgenda();
+}
+
+function renderAlerts(){
+  const evs=allEvents().filter(e=>daysLeft(e.date)<=7&&e.caseId).filter(e=>{const c=DB.cases.find(x=>x.id===e.caseId);return c&&c.status!=='נסגר'});
+  const strip=document.getElementById('alertStrip'), box=document.getElementById('alertList');
+  if(!evs.length){strip.classList.remove('show');return}
+  strip.classList.add('show');
+  box.innerHTML=''; evs.forEach(e=>{const d=document.createElement('div');d.className='alert-item';
+    d.innerHTML=`<span>${e.title} — <span class="case-link" onclick="openCase(${e.caseId})">${e.caseNum}</span></span><span class="ev-days ${urg(e.date)}">${urgLabel(e.date)}</span>`;box.appendChild(d);});
+}
+
+function renderAgenda(){
+  const box=document.getElementById('agendaList'); box.innerHTML='';
+  const evs=allEvents().filter(e=>{const c=DB.cases.find(x=>x.id===e.caseId);return c&&c.status!=='נסגר'});
+  if(!evs.length){box.innerHTML='<div class="empty">אין מועדים ביומן</div>';return}
+  let lastD='';
+  evs.forEach(e=>{
+    if(e.date!==lastD){ lastD=e.date; const h=document.createElement('div');h.className='agenda-date';
+      h.innerHTML=`<div class="d">${urgLabel(e.date)}</div><div class="line"></div>`; box.appendChild(h);}
+    const el=document.createElement('div'); el.className='event-card '+urg(e.date); el.onclick=()=>openCase(e.caseId);
+    el.innerHTML=`<div class="ev-icon">${e.t==='hearing'?'⚖️':'📝'}</div>
+      <div class="ev-body"><div class="ev-title">${e.title} ${e.time?'— '+e.time:''}</div><div class="ev-sub">${e.caseNum} · ${e.client}${e.where?' · '+e.where:''}</div></div>
+      <span class="ev-days ${urg(e.date)}">${urgLabel(e.date)}</span>`;
+    box.appendChild(el);
+  });
+}
+
+function closeSheet(){ document.getElementById('ovl').classList.remove('show'); }
+
+function openCase(id){
+  const c=DB.cases.find(x=>x.id===id); if(!c)return;
+  const s=document.getElementById('sheet');
+  const evs=c.events.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  s.innerHTML=`<div class="sheet-head"><div class="t">${c.num}</div><button class="x" onclick="closeSheet()">✕</button></div>
+    <div class="cd-head"><div class="num">${c.client}</div><div class="meta"><span>${c.field}</span><span>${c.lawyer}</span><span>${c.status}</span></div></div>
+    <div class="sec-title">מועדים ותזכורות <button class="mini-add" onclick="openNewEvent(${c.id})">+ מועד חדש</button></div>
+    ${evs.length?evs.map(e=>`<div class="item-row"><div class="l">${e.t==='hearing'?'⚖️':'📝'} ${e.title} ${e.time?'('+e.time+')':''}<br><span style="font-weight:400;font-size:12px;color:var(--sub)">${e.where||''}</span></div><div class="r">${fmt.format(new Date(e.date+'T00:00:00'))}<br><span class="chip-urg ${urg(e.date)}" style="margin-top:4px;display:inline-block">${urgLabel(e.date)}</span></div></div>`).join(''):'<div class="empty">אין מועדים בתיק</div>'}
+    <div class="sec-title">הערות</div>
+    <div class="item-row"><div style="font-weight:400;line-height:1.5">${c.notes||'—'}</div></div>
+    <div class="sec-title">סטטוס תיק</div>
+    <div class="row2"><button class="btn-primary" style="background:#e0f2fe;color:#075985;font-size:14px" onclick="setCaseStatus(${c.id},'פעיל')">סמן פעיל</button>
+    <button class="btn-primary" style="background:#e2e8f0;color:#475569;font-size:14px" onclick="setCaseStatus(${c.id},'נסגר')">סגור תיק</button></div>`;
+  document.getElementById('ovl').classList.add('show');
+}
+
+function setCaseStatus(id,st){ const c=DB.cases.find(x=>x.id===id); c.status=st; save(DB); render(); openCase(id); }
+
+function openNewCase(){
+  const s=document.getElementById('sheet');
+  s.innerHTML=`<div class="sheet-head"><div class="t">תיק חדש</div><button class="x" onclick="closeSheet()">✕</button></div>
+    <div class="field"><label>מספר תיק</label><input id="f_num" placeholder="לדוגמה: אזרחי 12345-09-26"></div>
+    <div class="field"><label>שם הלקוח</label><input id="f_client"></div>
+    <div class="row2">
+      <div class="field"><label>תחום</label><select id="f_field"><option>אזרחי</option><option>משפחה</option><option>הוצאה לפועל</option><option>דיני עבודה</option><option>פשיטת רגל</option><option>מקרקעין</option><option>פלילי</option></select></div>
+      <div class="field"><label>עו"ד מטפל</label><select id="f_law"><option>עו"ד ישראלי</option><option>עו"ד שרון</option><option>עו"ד לוי</option></select></div>
+    </div>
+    <div class="field"><label>הערות</label><textarea id="f_notes" rows="2"></textarea></div>
+    <button class="btn-primary" onclick="createCase()">צור תיק</button>`;
+  document.getElementById('ovl').classList.add('show');
+}
+function createCase(){
+  const num=document.getElementById('f_num').value.trim()||'תיק חדש';
+  DB.cases.unshift({id:Date.now(),num,client:document.getElementById('f_client').value.trim()||'לקוח חדש',field:document.getElementById('f_field').value,lawyer:document.getElementById('f_law').value,status:'פתוח',notes:document.getElementById('f_notes').value.trim(),events:[]});
+  save(DB); closeSheet(); render();
+}
+
+function openNewEvent(caseId){
+  const s=document.getElementById('sheet');
+  s.innerHTML=`<div class="sheet-head"><div class="t">מועד חדש</div><button class="x" onclick="closeSheet()">✕</button></div>
+    <div class="row2">
+      <div class="field"><label>סוג</label><select id="e_type"><option value="hearing">דיון ⚖️</option><option value="deadline">מועד הגשה 📝</option></select></div>
+      <div class="field"><label>תאריך</label><input type="date" id="e_date"></div>
+    </div>
+    <div class="field"><label>כותרת</label><input id="e_title" placeholder="לדוגמה: דיון הוכחות / תגובה לבקשה"></div>
+    <div class="row2">
+      <div class="field"><label>שעה (לדיון)</label><input type="time" id="e_time"></div>
+      <div class="field"><label>מיקום / בית משפט</label><input id="e_where"></div>
+    </div>
+    <button class="btn-primary" onclick="createEvent(${caseId})">הוסף מועד</button>`;
+  document.getElementById('ovl').classList.add('show');
+}
+function createEvent(caseId){
+  const c=DB.cases.find(x=>x.id===caseId);
+  const d=document.getElementById('e_date').value; if(!d){alert('נא לבחור תאריך');return}
+  c.events.push({t:document.getElementById('e_type').value,title:document.getElementById('e_title').value.trim()||'מועד',date:d,time:document.getElementById('e_time').value,where:document.getElementById('e_where').value.trim()});
+  save(DB); render(); openCase(caseId);
+}
+
+render();
+</script>
+</body>
+</html>
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=20260915').catch(()=>{}); }
+</script>
