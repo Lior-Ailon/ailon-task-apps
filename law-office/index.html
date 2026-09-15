@@ -114,6 +114,14 @@ body { font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text); 
 .item-row .r { font-size:12.5px; color:var(--sub); text-align:left; }
 .chip-urg { font-size:11px; font-weight:800; padding:3px 9px; border-radius:100px; margin-right:8px; }
 
+.contact-card { background:linear-gradient(135deg,var(--navy),var(--navy2)); border-radius:16px; padding:24px 18px; margin-top:28px; text-align:center; box-shadow:0 14px 40px rgba(13,36,64,.25); }
+.contact-card .ct { color:#fff; font-size:17.5px; font-weight:800; margin-bottom:5px; }
+.contact-card .cd { color:rgba(255,255,255,.75); font-size:13px; font-weight:300; margin-bottom:16px; line-height:1.5; }
+.btn-wa { display:flex; align-items:center; justify-content:center; gap:9px; width:100%; background:linear-gradient(90deg,var(--teal),var(--teal2)); color:#04211d; font-size:15.5px; font-weight:900; padding:14px; border-radius:12px; text-decoration:none; margin-bottom:10px; box-shadow:0 8px 24px rgba(13,148,136,.35); transition:.15s; }
+.btn-wa:hover { transform:translateY(-1px); }
+.btn-tel { display:flex; align-items:center; justify-content:center; gap:9px; width:100%; border:1.5px solid rgba(255,255,255,.35); color:#fff; font-size:14.5px; font-weight:700; padding:12px; border-radius:12px; text-decoration:none; transition:.15s; }
+.btn-tel:hover { border-color:var(--teal2); color:#5eead4; }
+.contact-card .who { margin-top:14px; color:rgba(255,255,255,.55); font-size:12px; direction:ltr; }
 .footer-note { text-align:center; color:var(--sub); font-size:12px; margin-top:26px; line-height:1.6; }
 .footer-note b { color:var(--navy); }
 @media (max-width:600px){ .brand .t2{display:none} .today{display:none} }
@@ -151,6 +159,14 @@ body { font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text); 
 
   <div id="view-agenda" style="display:none">
     <div id="agendaList"></div>
+  </div>
+
+  <div class="contact-card">
+    <div class="ct">פגישת ייעוץ — ללא כל התחייבות</div>
+    <div class="cd">רוצים לראות איך LawDesk מסדר לכם את המשרד?<br>דברו איתי ישירות ונקבע פגישת הדגמה</div>
+    <a class="btn-wa" href="https://wa.me/972540969834" target="_blank" rel="noopener">💬 שלחו הודעה בוואטסאפ</a>
+    <a class="btn-tel" href="tel:+972540969834">📞 054-096-9834</a>
+    <div class="who">Lior Sofer, CEO — AILON Task</div>
   </div>
 
   <div class="footer-note">
@@ -317,5 +333,5 @@ render();
 </body>
 </html>
 <script>
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=20260915').catch(()=>{}); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=20260915b').catch(()=>{}); }
 </script>
