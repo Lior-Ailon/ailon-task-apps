@@ -4,7 +4,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta name="version" content="2026-09-22-v3">
+  <meta name="version" content="2026-09-22-v4">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>מעגל החיים | Mentor-IT</title>
@@ -150,6 +150,12 @@ input[type=range].wheel-slider::-webkit-slider-thumb:hover { transform: scale(1.
   direction:rtl; outline:none;
 }
 .other-label-input:focus { border-color:#0d9488; box-shadow:0 0 0 3px rgba(13,148,136,.12); }
+
+.send-status { margin-top:10px; min-height:22px; font-size:13px; font-weight:700; text-align:center; }
+.send-status.ok { color:#047857; }
+.send-status.error { color:#b91c1c; }
+.btn-send:disabled { opacity:.6; cursor:wait; }
+
 </style>
 </head>
 <body>
@@ -186,6 +192,11 @@ input[type=range].wheel-slider::-webkit-slider-thumb:hover { transform: scale(1.
     <div id="bar-rows"></div>
     <div class="insights-list" id="insights-list"></div>
 
+    <div class="continue-wrap" style="margin-top:16px;">
+      <button type="button" class="btn-primary btn-send" id="send-results-btn" onclick="sendResultsToCoach()">שלח את התוצאה לליאור</button>
+      <div class="send-status" id="send-status" role="status" aria-live="polite"></div>
+    </div>
+
     <div class="continue-wrap" style="margin-top:14px;">
       <a href="./coaching-session.html" class="btn-continue">
         🤝 המשך לשיחת האימון ←
@@ -219,6 +230,8 @@ const DOMAINS = [
 const scores = {};
 DOMAINS.forEach(d => scores[d.id] = 5);
 let customOtherLabel = '';
+let resultSent = false;
+const WHEEL_RESULTS_API = 'https://super-688403df.base44.app/functions/submitWheelOfLife';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
@@ -412,6 +425,57 @@ function showResults() {
   document.getElementById('results-card').scrollIntoView({behavior:'smooth'});
 }
 
+async function sendResultsToCoach() {
+  const nameInput = document.getElementById('trainee-name');
+  const traineeName = nameInput.value.trim();
+  const button = document.getElementById('send-results-btn');
+  const status = document.getElementById('send-status');
+
+  if (resultSent) {
+    status.className = 'send-status ok';
+    status.textContent = 'התוצאה כבר נשלחה לליאור.';
+    return;
+  }
+  if (traineeName.length < 2) {
+    nameInput.focus();
+    status.className = 'send-status error';
+    status.textContent = 'נא למלא שם מתאמן לפני השליחה.';
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'שולח...';
+  status.className = 'send-status';
+  status.textContent = '';
+
+  try {
+    const response = await fetch(WHEEL_RESULTS_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mentor_code: 'lior',
+        trainee_name: traineeName,
+        session_date: document.getElementById('session-date').value,
+        scores: { ...scores },
+        custom_domain: customOtherLabel.trim(),
+        website: ''
+      })
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || 'השליחה נכשלה');
+
+    resultSent = true;
+    button.textContent = 'נשלח לליאור';
+    status.className = 'send-status ok';
+    status.textContent = 'התוצאה נשמרה ונשלחה לליאור בהצלחה.';
+  } catch (error) {
+    button.disabled = false;
+    button.textContent = 'נסה לשלוח שוב';
+    status.className = 'send-status error';
+    status.textContent = error.message || 'לא הצלחנו לשלוח כרגע.';
+  }
+}
+
 function copySummary() {
   const name = document.getElementById('trainee-name').value || 'המתאמן';
   const date = document.getElementById('session-date').value || new Date().toLocaleDateString('he-IL');
@@ -426,6 +490,11 @@ function copySummary() {
 function resetAll() {
   DOMAINS.forEach(d=>{ scores[d.id]=5; });
   customOtherLabel = '';
+  resultSent = false;
+  const sendButton = document.getElementById('send-results-btn');
+  const sendStatus = document.getElementById('send-status');
+  if (sendButton) { sendButton.disabled = false; sendButton.textContent = 'שלח את התוצאה לליאור'; }
+  if (sendStatus) { sendStatus.textContent = ''; sendStatus.className = 'send-status'; }
   buildSliders(); drawWheel();
   document.getElementById('results-card').style.display='none';
   document.getElementById('actions').style.display='none';
