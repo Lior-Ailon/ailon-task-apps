@@ -133,7 +133,19 @@
     ];
     for(let i=1;i<=6;i++){
       const v=conditions[i]||{},m=metrics[i]||{};
-      for(const [name,value] of Object.entries({...v,...m})) extras.push([`ניסוי ${i}: ${name}`,value]);
+      for(const [name,value] of Object.entries({...v,...m})) {
+        if(name!=='bakingAnnex') extras.push([`ניסוי ${i}: ${name}`,value]);
+      }
+      for(const ing of fixed){
+        if(ing.weighedByExperiment) extras.push([`ניסוי ${i}: ${text(ing.name)} (חומר קבוע) נשקל`,ing.weighedByExperiment[i]?'כן':'לא']);
+      }
+      for(const ing of varies[i]||[]){
+        if(text(ing.name) && typeof ing.weighed==='boolean') extras.push([`ניסוי ${i}: ${text(ing.name)} (חומר משתנה) נשקל`,ing.weighed?'כן':'לא']);
+      }
+      for(const [rowIndex,row] of (v.bakingAnnex?.rows||[]).entries()){
+        const detail=[text(row.ingredient),text(row.quantity),text(row.unit),text(row.notes)].filter(Boolean).join(' | ');
+        if(detail)extras.push([`ניסוי ${i}: נספח הרכב שורה ${rowIndex+1}`,detail]);
+      }
     }
     put('P2','פרטים נוספים מהדוח (מחוץ לאזור ההדפסה)');
     let next=3;

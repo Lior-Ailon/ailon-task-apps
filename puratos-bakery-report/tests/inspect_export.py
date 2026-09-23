@@ -23,6 +23,7 @@ with zipfile.ZipFile(path) as archive:
   for row in root.findall('.//x:row',ns))
 result={
  'sortedCellOrder':sorted_rows,
+ 'supplemental':' '.join(str(s[f'P{r}'].value or '')+' '+str(s[f'Q{r}'].value or '') for r in range(2,s.max_row+1)),
  'lastSupplementalValue':next((s[f'Q{r}'].value for r in range(s.max_row,2,-1) if s[f'Q{r}'].value is not None),None),
  'sheets':len(w.worksheets),'images':len(s._images),
  'project':s['B4'].value,'researcher':s['B6'].value,

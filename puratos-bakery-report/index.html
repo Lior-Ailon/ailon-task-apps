@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="version" content="4.1">
-<title>Puratos · דוח ניסויים — תחום הלחמים v4.1</title>
+<meta name="version" content="4.2">
+<title>Puratos · דוח ניסויים — תחום הלחמים v4.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -79,7 +79,10 @@ textarea { resize:vertical; min-height:70px; }
 /* Ingredient table */
 .ing-headers { display:flex; gap:10px; margin-bottom:10px; font-size:12.5px; color:var(--gray-500); font-weight:700; padding:0 4px; }
 .ing-headers .ing-name { flex:2.5; } .ing-headers .ing-gram { flex:1; } .ing-headers .ing-pct { flex:1; } .ing-headers .ing-type { width:80px; flex-shrink:0; } .ing-headers .spacer { width:36px; flex-shrink:0; }
-.ingredient-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+.ingredient-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+.weighed-group { display:flex; flex-basis:100%; align-items:center; flex-wrap:wrap; gap:8px; padding:3px 8px 7px; font-size:12px; color:var(--gray-700); }
+.weighed-group label,.weighed-var label { display:inline-flex; align-items:center; gap:3px; cursor:pointer; }
+.weighed-var { flex-shrink:0; font-size:12px; }
 .ingredient-row .ing-name { flex:2.5; } .ingredient-row .ing-gram { flex:1; } .ingredient-row .ing-pct { flex:1; }
 .ingredient-row .ing-pct input { background:var(--puratos-light); color:var(--puratos-red); font-weight:600; pointer-events:none; opacity:0.85; }
 .ingredient-row.is-flour .ing-name input { font-weight:700; border-color:var(--puratos-red); background:var(--puratos-light); }
@@ -128,6 +131,16 @@ textarea { resize:vertical; min-height:70px; }
 .tag:hover { border-color:var(--puratos-red); }
 .tag-input { padding:4px 10px; border:1.5px dashed var(--gray-300); border-radius:20px; font-size:12px; width:120px; }
 
+/* Experiment annex */
+.annex-print { display:none; }
+.annex-table-wrap { overflow-x:auto; }
+.annex-table { width:100%; border-collapse:collapse; min-width:580px; }
+.annex-table th,.annex-table td { border:1px solid var(--gray-200); padding:6px; text-align:right; }
+.annex-table th { background:var(--gray-100); font-size:13px; }
+.annex-table input,.annex-table select { width:100%; min-width:80px; padding:8px; border:1px solid var(--gray-300); border-radius:6px; font:inherit; }
+.photo-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.photo-actions button { flex:1; min-width:150px; }
+
 /* Photos */
 .photo-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; margin-top:12px; }
 .photo-item { position:relative; border-radius:10px; overflow:hidden; border:1px solid var(--gray-200); aspect-ratio:1; }
@@ -175,6 +188,8 @@ textarea { resize:vertical; min-height:70px; }
   .card { box-shadow:none; border:1px solid var(--gray-300); page-break-inside:avoid; }
   .actions, .unlock-row, .footer-note, .view-toggle, .add-btn, .remove-btn, .copy-btn { display:none !important; }
   .exp-tabs { display:none; }
+  #annexContent, #addAnnex { display:none !important; }
+  .annex-print { display:block; }
   .ingredient-row .ing-pct, .ing-headers .ing-pct { display:none; }
   input, textarea, select { border:1px solid var(--gray-300); background:#fff; }
   .print-title { display:block; font-size:20px; font-weight:700; color:var(--puratos-red); margin-bottom:8px; text-align:center; }
@@ -357,12 +372,29 @@ textarea { resize:vertical; min-height:70px; }
     <div id="metricsContainer"></div>
   </div>
 
+  <!-- Per-experiment baking improver composition annex -->
+  <div class="card" id="annexCard">
+    <div class="card-title">📎 נספח הרכב משפר אפייה</div>
+    <div class="info-label">לכל ניסוי אפשר ליצור נספח נפרד עם מרכיבים, כמויות והערות. נשמר יחד עם הדוח.</div>
+    <div class="exp-tabs" id="annexTabs">
+      <div class="exp-tab active" data-exp="1">ניסוי 1</div><div class="exp-tab" data-exp="2">ניסוי 2</div>
+      <div class="exp-tab" data-exp="3">ניסוי 3</div><div class="exp-tab" data-exp="4">ניסוי 4</div>
+      <div class="exp-tab" data-exp="5">ניסוי 5</div><div class="exp-tab" data-exp="6">ניסוי 6</div>
+    </div>
+    <div id="annexContent"></div>
+    <div id="annexPrint" class="annex-print"></div>
+    <button type="button" class="add-btn" id="addAnnex" onclick="addAnnexRow()">+ הוסף נספח / שורת הרכב לניסוי</button>
+  </div>
+
   <!-- Photos -->
   <div class="card">
     <div class="card-title">📷 תמונות</div>
-    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-      📸 לחץ לצירוף תמונות לדו"ח
+    <div class="photo-actions">
+      <button type="button" class="btn btn-secondary" onclick="document.getElementById('cameraInput').click()">📷 צלם תמונה</button>
+      <button type="button" class="btn btn-secondary" onclick="document.getElementById('photoInput').click()">🖼️ צרף תמונה מהמכשיר</button>
     </div>
+    <div class="info-label" style="margin-top:8px">התמונות נשמרות בטופס הדוח לאחר שמירה. עד 6 תמונות, לכל תמונה עד 10MB לפני הקטנה.</div>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(this)">
     <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
     <div class="photo-grid" id="photoGrid"></div>
   </div>
@@ -395,7 +427,7 @@ textarea { resize:vertical; min-height:70px; }
     <button class="btn btn-secondary" onclick="window.print()">🖨️ הדפסה</button>
     <button class="btn btn-secondary" onclick="clearForm()">🗑️ נקה</button>
   </div>
-  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.1</div>
+  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.2</div>
 </div>
 
 <!-- ============ DASHBOARD VIEW ============ -->
@@ -414,8 +446,8 @@ textarea { resize:vertical; min-height:70px; }
   </div>
 </div>
 
-<script src="./jszip.min.js?v=4.1"></script>
-<script src="./xlsx-export.js?v=4.1"></script>
+<script src="./jszip.min.js?v=4.2"></script>
+<script src="./xlsx-export.js?v=4.2"></script>
 <script>
 // ===== Constants =====
 const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','קמח 90% טחון','קמח 70% טחון','קמח קשה','קמח כוסמין','קמח שיבולת שוער','קמח מלא','קמח רך','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
@@ -433,6 +465,7 @@ let processMetrics={};
 let currentVarExp=1;
 let currentCondExp=1;
 let currentMetricsExp=1;
+let currentAnnexExp=1;
 
 // Initialize with defaults
 function initState(){
@@ -494,7 +527,7 @@ function renderFixedIngs(){
     const pv=calcPctFixed(idx);
     const row=document.createElement('div');
     row.className='ingredient-row'+(ing.isFlour?' is-flour':'');
-    row.innerHTML=`<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="text" list="ingList" value="${esc(ing.name)}" oninput="fixedIngs[${idx}].name=this.value" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="${ing.gram||''}" oninput="fixedIngs[${idx}].gram=this.value" onchange="renderFixedIngs()" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="${pv}" readonly placeholder="—"></div><div class="ing-checkbox-wrap"><label><input type="checkbox" ${ing.isFlour?'checked':''} onchange="toggleFlourFixed(${idx},this.checked)">קמח</label></div><button class="remove-btn" onclick="removeFixedIng(${idx})">✕</button>`;
+    row.innerHTML=`<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="text" list="ingList" value="${esc(ing.name)}" oninput="fixedIngs[${idx}].name=this.value" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="${ing.gram||''}" oninput="fixedIngs[${idx}].gram=this.value" onchange="renderFixedIngs()" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="${pv}" readonly placeholder="—"></div><div class="ing-checkbox-wrap"><label><input type="checkbox" ${ing.isFlour?'checked':''} onchange="toggleFlourFixed(${idx},this.checked)">קמח</label></div><button class="remove-btn" onclick="removeFixedIng(${idx})">✕</button><div class="weighed-group"><span>נשקל:</span>${Array.from({length:6},(_,i)=>`<label><input type="checkbox" aria-label="נשקל בניסוי ${i+1} עבור ${esc(ing.name||'חומר גלם')}" ${ing.weighedByExperiment?.[i+1]?'checked':''} onchange="setFixedWeighed(${idx},${i+1},this.checked)">נ${i+1}</label>`).join('')}</div>`;
     c.appendChild(row);
   });
   const dl=document.createElement('datalist');
@@ -506,6 +539,12 @@ function renderFixedIngs(){
   addBtn.textContent='+ הוסף חומר גלם קבוע';
   addBtn.onclick=()=>{fixedIngs.push({name:'',gram:'',isFlour:false});renderFixedIngs();};
   c.appendChild(addBtn);
+}
+
+function setFixedWeighed(idx,experiment,checked){
+  fixedIngs[idx].weighedByExperiment ||= {};
+  if(checked) fixedIngs[idx].weighedByExperiment[experiment]=true;
+  else delete fixedIngs[idx].weighedByExperiment[experiment];
 }
 
 function toggleFlourFixed(idx,checked){
@@ -551,7 +590,7 @@ function renderVarIngs(expNum){
     const pv=calcPctVar(expNum,idx);
     const row=document.createElement('div');
     row.className='ingredient-row'+(ing.isFlour?' is-flour':'');
-    row.innerHTML=`<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="text" list="ingList2" value="${esc(ing.name)}" oninput="varIngs[${expNum}][${idx}].name=this.value" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="${ing.gram||''}" oninput="varIngs[${expNum}][${idx}].gram=this.value" onchange="renderVarIngs(${expNum})" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="${pv}" readonly placeholder="—"></div><div class="ing-checkbox-wrap"><label><input type="checkbox" ${ing.isFlour?'checked':''} onchange="toggleFlourVar(${expNum},${idx},this.checked)">קמח</label></div><button class="remove-btn" onclick="removeVarIng(${expNum},${idx})">✕</button>`;
+    row.innerHTML=`<div class="ing-name"><div style="display:flex;align-items:center;gap:6px"><input type="text" list="ingList2" value="${esc(ing.name)}" oninput="varIngs[${expNum}][${idx}].name=this.value" placeholder="חומר גלם"></div></div><div class="ing-gram"><input type="number" value="${ing.gram||''}" oninput="varIngs[${expNum}][${idx}].gram=this.value" onchange="renderVarIngs(${expNum})" placeholder="גרם"></div><div class="ing-pct"><input type="text" value="${pv}" readonly placeholder="—"></div><div class="ing-checkbox-wrap"><label><input type="checkbox" ${ing.isFlour?'checked':''} onchange="toggleFlourVar(${expNum},${idx},this.checked)">קמח</label></div><div class="weighed-var"><label><input type="checkbox" aria-label="נשקל בניסוי ${expNum} עבור ${esc(ing.name||'חומר גלם')}" ${ing.weighed?'checked':''} onchange="varIngs[${expNum}][${idx}].weighed=this.checked">נשקל</label></div><button class="remove-btn" onclick="removeVarIng(${expNum},${idx})">✕</button>`;
     c.appendChild(row);
   });
   const dl=document.createElement('datalist');
@@ -710,24 +749,84 @@ function setupTabs(tabsId,onChange){
 setupTabs('varExpTabs',e=>{currentVarExp=e;renderVarIngs(e);});
 setupTabs('varCondTabs',e=>{currentCondExp=e;renderVarConditions(e);});
 setupTabs('metricsTabs',e=>{currentMetricsExp=e;renderMetrics(e);});
+setupTabs('annexTabs',e=>{currentAnnexExp=e;renderAnnex(e);});
+
+// ===== Baking-improver composition annex =====
+function escapeAnnex(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function annexRowsFor(exp){
+  varConditions[exp] ||= {};
+  return varConditions[exp].bakingAnnex?.rows || [];
+}
+function addAnnexRow(){
+  varConditions[currentAnnexExp] ||= {};
+  varConditions[currentAnnexExp].bakingAnnex ||= {rows:[]};
+  varConditions[currentAnnexExp].bakingAnnex.rows.push({ingredient:'',quantity:'',unit:'גרם',notes:''});
+  renderAnnex(currentAnnexExp);
+}
+function removeAnnexRow(index){
+  annexRowsFor(currentAnnexExp).splice(index,1);
+  if(!annexRowsFor(currentAnnexExp).length) delete varConditions[currentAnnexExp].bakingAnnex;
+  renderAnnex(currentAnnexExp);
+}
+function renderAnnex(exp){
+  const rows=annexRowsFor(exp);
+  const content=document.getElementById('annexContent');
+  if(!rows.length){content.innerHTML='<p class="info-label">אין נספח לניסוי הזה. הוסף נספח לפי הצורך.</p>';renderAnnexPrint();return;}
+  content.innerHTML=`<div class="annex-table-wrap"><table class="annex-table"><thead><tr><th>מרכיב משפר אפייה</th><th>כמות</th><th>יחידה</th><th>הערות</th><th></th></tr></thead><tbody id="annexRows">${rows.map((row,index)=>`
+    <tr><td><input data-field="ingredient" aria-label="מרכיב שורה ${index+1}" value="${escapeAnnex(row.ingredient)}" oninput="annexRowsFor(${exp})[${index}].ingredient=this.value;renderAnnexPrint()"></td>
+    <td><input type="number" min="0" step="any" data-field="quantity" aria-label="כמות שורה ${index+1}" value="${escapeAnnex(row.quantity)}" oninput="annexRowsFor(${exp})[${index}].quantity=this.value;renderAnnexPrint()"></td>
+    <td><select data-field="unit" aria-label="יחידה שורה ${index+1}" onchange="annexRowsFor(${exp})[${index}].unit=this.value;renderAnnexPrint()">${['גרם','ק״ג','מ״ל','%'].map(unit=>`<option value="${unit}" ${row.unit===unit?'selected':''}>${unit}</option>`).join('')}</select></td>
+    <td><input data-field="notes" aria-label="הערות שורה ${index+1}" value="${escapeAnnex(row.notes)}" oninput="annexRowsFor(${exp})[${index}].notes=this.value;renderAnnexPrint()"></td>
+    <td><button type="button" class="remove-btn" aria-label="הסר שורה ${index+1}" onclick="removeAnnexRow(${index})">✕</button></td></tr>`).join('')}</tbody></table></div>`;
+  renderAnnexPrint();
+}
+function renderAnnexPrint(){
+  const all=[];
+  for(let exp=1;exp<=6;exp++)for(const row of annexRowsFor(exp))all.push({exp,...row});
+  const panel=document.getElementById('annexPrint');
+  panel.innerHTML=all.length?`<h3>נספחי הרכב משפר אפייה</h3><table class="annex-table"><thead><tr><th>ניסוי</th><th>מרכיב</th><th>כמות</th><th>יחידה</th><th>הערות</th></tr></thead><tbody>${all.map(row=>`<tr><td>${row.exp}</td><td>${escapeAnnex(row.ingredient)}</td><td>${escapeAnnex(row.quantity)}</td><td>${escapeAnnex(row.unit)}</td><td>${escapeAnnex(row.notes)}</td></tr>`).join('')}</tbody></table>`:'';
+}
 
 // ===== Photos =====
-function handlePhotos(input){
-  const files=Array.from(input.files);
-  files.forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const dataUrl=e.target.result;
-      photos.push(dataUrl);
-      renderPhotos();
-    };
-    reader.readAsDataURL(file);
+async function resizePhoto(file){
+  const img=await new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file),image=new Image();
+    image.onload=()=>{URL.revokeObjectURL(url);resolve(image);};
+    image.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('אי אפשר לפתוח את התמונה'));};
+    image.src=url;
   });
+  const canvas=document.createElement('canvas');
+  const ctx=canvas.getContext('2d');
+  let dataUrl='';
+  for(const [limit,quality] of [[1600,0.76],[1200,0.65],[1000,0.55],[800,0.48]]){
+    const scale=Math.min(1,limit/Math.max(img.naturalWidth,img.naturalHeight));
+    canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+    canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    dataUrl=canvas.toDataURL('image/jpeg',quality);
+    if(dataUrl.length<=650000)return dataUrl;
+  }
+  throw new Error('התמונה גדולה מדי גם לאחר הקטנה');
+}
+async function handlePhotos(input){
+  const files=Array.from(input.files||[]);
+  input.value='';
+  for(const file of files){
+    if(photos.length>=6){showMsg('אפשר לשמור עד 6 תמונות בדוח',3500);break;}
+    if(!/^image\/(jpeg|png|webp|heic|heif|avif)$/i.test(file.type)||file.size>10*1024*1024){
+      showMsg('אפשר לצרף רק תמונות עד 10MB',3500);continue;
+    }
+    try{photos.push(await resizePhoto(file));renderPhotos();}
+    catch(e){showMsg(e.message||'שגיאה בצירוף התמונה',3500);}
+  }
 }
 function renderPhotos(){
   const grid=document.getElementById('photoGrid');
   grid.innerHTML=photos.map((p,i)=>
-    `<div class="photo-item"><img src="${p}"><button class="remove" onclick="photos.splice(${i},1);renderPhotos()">✕</button></div>`
+    `<div class="photo-item"><img src="${p}"><button class="remove" onclick="photos.splice(${i},1);renderPhotos()" aria-label="הסר תמונה ${i+1}">✕</button></div>`
   ).join('');
 }
 
@@ -813,7 +912,7 @@ async function exportExcel(){
   status.textContent='מכין את הקובץ...';
   try{
     const report=collectData('draft'); // Export must not submit or modify the report.
-    const response=await fetch(`./templates/${kind}.xlsx?v=4.1`);
+    const response=await fetch(`./templates/${kind}.xlsx?v=4.2`);
     if(!response.ok)throw new Error('לא ניתן לטעון את תבנית Excel');
     const blob=await BakeryXlsxExporter.build(await response.arrayBuffer(),report,kind);
     const link=document.createElement('a');
@@ -921,7 +1020,12 @@ async function loadReport(id){
   try{fixedIngs=JSON.parse(r.fixed_ingredients||r.data?.fixed_ingredients||'[]');}catch(e){fixedIngs=[];initState();}
   try{varIngs=JSON.parse(r.variable_ingredients||r.data?.variable_ingredients||'{}');}catch(e){}
   try{varConditions=JSON.parse(r.variable_conditions||r.data?.variable_conditions||'{}');}catch(e){}
+  for(let i=1;i<=6;i++)varConditions[i] ||= {actualKneadTime:'',finalFermentTime:'',fermentTemp:'',fermentHumidity:''};
   try{processMetrics=JSON.parse(r.process_metrics||r.data?.process_metrics||'{}');}catch(e){}
+  for(let i=1;i<=6;i++){
+    varIngs[i] ||= [];
+    processMetrics[i] ||= {actualDoughTemp:'',doughTexture:'',actualFermentTime:'',volumeStability:''};
+  }
   try{photos=JSON.parse(r.photos||r.data?.photos||'[]');}catch(e){photos=[];}
   
   // Tags
@@ -949,6 +1053,9 @@ async function loadReport(id){
   renderVarIngs(1);
   renderVarConditions(1);
   renderMetrics(1);
+  currentAnnexExp=1;
+  document.querySelectorAll('#annexTabs .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
+  renderAnnex(1);
   renderPhotos();
   showForm();
   showMsg('דו"ח נטען ✓',2000);
@@ -980,10 +1087,18 @@ function clearForm(){
   photos=[];
   currentReportId=null;
   initState();
+  document.getElementById('excelTemplate').value='bakery';
+  currentVarExp=currentCondExp=currentMetricsExp=1;
+  ['varExpTabs','varCondTabs','metricsTabs'].forEach(id=>{
+    document.querySelectorAll('#'+id+' .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
+  });
   renderFixedIngs();
   renderVarIngs(1);
   renderVarConditions(1);
   renderMetrics(1);
+  currentAnnexExp=1;
+  document.querySelectorAll('#annexTabs .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
+  renderAnnex(1);
   renderPhotos();
   document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
   document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
@@ -1002,6 +1117,7 @@ renderFixedIngs();
 renderVarIngs(1);
 renderVarConditions(1);
 renderMetrics(1);
+renderAnnex(1);
 </script>
 <div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #CC092F;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#CC092F;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div>
 <style>@keyframes ailon-spin{to{transform:rotate(360deg)}}</style>

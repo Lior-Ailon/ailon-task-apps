@@ -1,4 +1,4 @@
-const CACHE='ailon-pwa-v2';
+const CACHE='ailon-pwa-v3';
 const CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./jszip.min.js','./xlsx-export.js','./templates/bakery.xlsx','./templates/patisserie.xlsx','./templates/ta.xlsx'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
