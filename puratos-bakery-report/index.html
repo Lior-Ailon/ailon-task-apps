@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="version" content="4.0">
-<title>Puratos · דוח ניסויים — תחום הלחמים v4</title>
+<meta name="version" content="4.1">
+<title>Puratos · דוח ניסויים — תחום הלחמים v4.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -111,7 +111,11 @@ textarea { resize:vertical; min-height:70px; }
 .btn-sm { padding:8px 14px; font-size:13px; }
 .btn-unlock { background:#fef3c7; color:#92400e; border:1.5px solid #fcd34d; font-size:13px; padding:8px 16px; }
 .btn-unlock:hover { background:#fde68a; }
-.actions { display:flex; gap:12px; justify-content:center; padding:16px 0; flex-wrap:wrap; }
+.actions { display:flex; gap:12px; justify-content:center; align-items:center; padding:16px 0; flex-wrap:wrap; }
+.export-template { display:flex; gap:8px; align-items:center; color:var(--gray-700); font-size:14px; }
+.export-template select { padding:9px 12px; border:1.5px solid var(--gray-300); border-radius:8px; background:#fff; font:inherit; }
+#excelExportStatus { flex-basis:100%; text-align:center; font-size:13px; color:var(--gray-700); }
+.export-help { flex-basis:100%; text-align:center; color:var(--gray-500); font-size:12px; }
 
 /* Process grid */
 .process-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
@@ -379,11 +383,19 @@ textarea { resize:vertical; min-height:70px; }
   <div class="actions">
     <button class="btn btn-secondary" onclick="saveDraft()">💾 שמור טיוטה</button>
     <button class="btn btn-green" onclick="submitReport()">✓ הגש דו"ח</button>
-    <button class="btn btn-secondary" onclick="exportExcel()">📊 ייצא לאקסל</button>
+    <div class="export-template"><label for="excelTemplate">תבנית לייצוא</label>
+    <select id="excelTemplate" aria-label="תבנית Excel לייצוא">
+      <option value="bakery">Bakery · לחמים</option>
+      <option value="patisserie">Patisserie · קונדיטוריה</option>
+      <option value="ta">TA · לחמים</option>
+    </select></div>
+    <button class="btn btn-secondary" id="exportExcelButton" onclick="exportExcel()">📊 ייצא לאקסל (.xlsx)</button>
+    <span id="excelExportStatus" role="status" aria-live="polite"></span>
+    <small class="export-help">רק שדות שקיימים בדוח ימולאו. שדות ייחודיים לתבנית ללא נתון יישארו ריקים; תמונות הדוח אינן מוטמעות בקובץ.</small>
     <button class="btn btn-secondary" onclick="window.print()">🖨️ הדפסה</button>
     <button class="btn btn-secondary" onclick="clearForm()">🗑️ נקה</button>
   </div>
-  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.0</div>
+  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.1</div>
 </div>
 
 <!-- ============ DASHBOARD VIEW ============ -->
@@ -402,6 +414,8 @@ textarea { resize:vertical; min-height:70px; }
   </div>
 </div>
 
+<script src="./jszip.min.js?v=4.1"></script>
+<script src="./xlsx-export.js?v=4.1"></script>
 <script>
 // ===== Constants =====
 const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','קמח 90% טחון','קמח 70% טחון','קמח קשה','קמח כוסמין','קמח שיבולת שוער','קמח מלא','קמח רך','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
@@ -791,95 +805,28 @@ function updateStatusBadge(status){
 }
 
 // ===== Excel Export =====
-function exportExcel(){
-  const d=collectData('submitted');
-  let csv='\ufeff';
-  csv+='דו״ח ניסויים – תחום הלחמים (Bakery),R&D\n';
-  csv+='שם המאשר:,'+escCsv(d.approver)+',תאריך עדכון:,'+escCsv(d.updateDate)+'\n';
-  csv+='שם הפרויקט:,'+escCsv(d.projectName)+'\n';
-  csv+='מטרת הניסוי:,'+escCsv(d.expPurpose)+'\n';
-  csv+='שם החוקר/ת:,'+escCsv(d.researcher)+',תאריך ביצוע:,'+escCsv(d.execDate)+'\n';
-  csv+='תגיות:,'+escCsv(d.tags)+'\n';
-  if(d.linkedReportId)csv+='שיוך:,'+escCsv(d.linkedReportId)+'\n';
-  csv+='\n';
-  
-  // Fixed ingredients
-  csv+='חומרי גלם קבועים,גרם,% מקמח\n';
-  fixedIngs.forEach(ing=>{
-    if(ing.name||ing.gram){
-      csv+=escCsv(ing.name)+','+escCsv(ing.gram)+','+escCsv(calcPctFixed(fixedIngs.indexOf(ing)))+'\n';
-    }
-  });
-  csv+='\n';
-  
-  // Variable ingredients - all experiments side by side
-  csv+='חומרי גלם משתנים';
-  for(let i=1;i<=6;i++)csv+=',ניסוי '+i+' גר׳,ניסוי '+i+' %';
-  csv+='\n';
-  const allVarNames=[];
-  const nv={};
-  for(let i=1;i<=6;i++){varIngs[i].forEach(ing=>{if(ing.name&&!nv[ing.name]){nv[ing.name]=1;allVarNames.push(ing.name);}});}
-  allVarNames.forEach(name=>{
-    let row=escCsv(name);
-    for(let i=1;i<=6;i++){
-      const ing=varIngs[i].find(x=>x.name===name);
-      if(ing&&ing.gram){
-        row+=','+escCsv(ing.gram);
-        const tf=getTotalFlourVar(i);
-        if(tf>0){const pct=parseFloat(ing.gram)/tf*100;row+=','+(isNaN(pct)?'':pct.toFixed(1)+'%');}else row+=',';
-      }else row+=',,';
-    }
-    csv+=row+'\n';
-  });
-  csv+='\n';
-  
-  // Fixed conditions
-  csv+='תנאים קבועים\n';
-  csv+=',זמן לישה משוער,'+escCsv(d.fixedConditions.kneadTimeEst)+'\n';
-  csv+=',טמפ בצק רצויה,'+escCsv(d.fixedConditions.doughTemp)+'\n';
-  csv+=',תפיחה ב-Bulk,'+escCsv(d.fixedConditions.bulkFerment)+'\n';
-  csv+=',משקל יחידת בצק,'+escCsv(d.fixedConditions.doughWeight)+'\n';
-  csv+=',נתוני מולדר,'+escCsv(d.fixedConditions.moulder)+'\n';
-  csv+=',סוג תנור,'+escCsv(d.fixedConditions.ovenType)+'\n';
-  csv+=',תוכנית אפייה,'+escCsv(d.fixedConditions.bakingProgram)+'\n';
-  csv+=',קיטור,'+escCsv(d.fixedConditions.steam)+'\n\n';
-  
-  // Variable conditions + metrics per experiment
-  csv+='תנאים משתנים ומדדים';
-  for(let i=1;i<=6;i++)csv+=',ניסוי '+i;
-  csv+='\n';
-  csv+='זמן לישה בפועל';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].actualKneadTime);
-  csv+='\n';
-  csv+='זמן תפיחה בפועל';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].finalFermentTime);
-  csv+='\n';
-  csv+='טמפ תפיחה';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].fermentTemp);
-  csv+='\n';
-  csv+='לחות תפיחה';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(varConditions[i].fermentHumidity);
-  csv+='\n';
-  csv+='טמפ בצק בפועל';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(processMetrics[i].actualDoughTemp);
-  csv+='\n';
-  csv+='מרקם הבצק';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(processMetrics[i].doughTexture);
-  csv+='\n';
-  csv+='נפח ויציבות';
-  for(let i=1;i<=6;i++)csv+=','+escCsv(processMetrics[i].volumeStability);
-  csv+='\n\n';
-  
-  csv+='מסקנות\n'+escCsv(d.conclusions)+'\n';
-  csv+='Next Steps\n'+escCsv(d.nextSteps)+'\n';
-  
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='דוח_ניסוי_'+(d.projectName||'חדש').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+(d.execDate||'')+'.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+async function exportExcel(){
+  const button=document.getElementById('exportExcelButton');
+  const status=document.getElementById('excelExportStatus');
+  const kind=document.getElementById('excelTemplate').value;
+  button.disabled=true;
+  status.textContent='מכין את הקובץ...';
+  try{
+    const report=collectData('draft'); // Export must not submit or modify the report.
+    const response=await fetch(`./templates/${kind}.xlsx?v=4.1`);
+    if(!response.ok)throw new Error('לא ניתן לטעון את תבנית Excel');
+    const blob=await BakeryXlsxExporter.build(await response.arrayBuffer(),report,kind);
+    const link=document.createElement('a');
+    const url=URL.createObjectURL(blob);
+    link.href=url;
+    link.download='דוח_ניסוי_'+(report.projectName||'חדש').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+kind+'_'+(report.execDate||'')+'.xlsx';
+    document.body.appendChild(link);
+    link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    status.textContent='הקובץ הוכן לפי תבנית '+kind+'. פרטים ללא שדה בתבנית נשמרו בעמודות P:Q מחוץ לאזור ההדפסה.'+(report.photos?.length ? ' התמונות אינן מוטמעות בקובץ Excel.' : '');
+  }catch(error){
+    status.textContent=error.message || 'הייצוא נכשל, נסו שוב.';
+  }finally{button.disabled=false;}
 }
 
 // ===== Dashboard =====
