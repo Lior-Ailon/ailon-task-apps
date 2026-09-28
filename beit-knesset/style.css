@@ -313,3 +313,20 @@ body::before{
 
 .panel.active #halachaText{animation:panelIn .9s ease both}
 #tgBanner{animation:pulse 3.2s infinite}
+
+/* ---------- שתי הלכות יומיות ---------- */
+#halachaCards{width:min(86vw,1000px);display:flex;flex-direction:column;gap:2.2vh;max-height:46vh;overflow:auto}
+.halacha-card{
+  background:linear-gradient(135deg,rgba(16,38,70,.55),rgba(11,28,54,.55));
+  backdrop-filter:blur(12px);border:1px solid rgba(45,212,191,.25);border-radius:22px;
+  padding:2.6vh 3vw;font-size:clamp(15px,1.8vw,32px);line-height:1.65;text-align:center;font-weight:300;position:relative;
+}
+.halacha-card:first-child{border-color:rgba(251,191,36,.5)}
+.halacha-card:first-child::before{
+  content:"הלכה א׳";position:absolute;top:-1.2vh;right:3vw;font-size:clamp(10px,1vw,16px);
+  background:var(--gold);color:#0a1a33;font-weight:900;border-radius:8px;padding:.3vh 1vw;letter-spacing:.15em;
+}
+.halacha-card:last-child:not(:first-child)::before{
+  content:"הלכה ב׳";position:absolute;top:-1.2vh;right:3vw;font-size:clamp(10px,1vw,16px);
+  background:var(--teal-light);color:#0a1a33;font-weight:900;border-radius:8px;padding:.3vh 1vw;letter-spacing:.15em;
+}
