@@ -561,3 +561,27 @@ body{
 #ticker::before{font-family:'Suez One',serif !important}
 #tickerInner{font-family:'David Libre',serif !important;font-weight:500 !important}
 .azk-name{font-family:'David Libre',serif !important;font-weight:700 !important}
+
+/* ================================================================
+   v2.3 — כותרת קבועה בסגנון שלט כניסה: שם גדול בכתב מקראי,
+   הקדשה מתחתיו, ושעה+תאריך קבועים בזמן שהמסכים רצים מתחת
+   ================================================================ */
+#hdr{min-height:13vh;flex:0 0 auto}
+#shulName{
+  font-size:clamp(26px,3.4vw,62px) !important;
+  letter-spacing:.02em;text-shadow:0 2px 20px rgba(245,215,122,.35),0 2px 12px rgba(0,0,0,.4);
+}
+#shulDedication{
+  font-family:'David Libre',serif;font-weight:700;
+  font-size:clamp(15px,1.7vw,30px);color:#f5d77a;margin-top:.15em;
+  letter-spacing:.06em;text-shadow:0 1px 10px rgba(0,0,0,.45);
+}
+#shulCity{font-size:clamp(11px,1.05vw,18px);color:#a8bdd2;margin-top:.15em;letter-spacing:.3em}
+#hdrClock{text-align:center;flex:0 0 auto;min-width:9vw}
+#hdrTime{
+  font-family:'Heebo',sans-serif;font-weight:200;direction:ltr;
+  font-size:clamp(28px,3.4vw,64px);color:#fdeec2;line-height:1;
+  text-shadow:0 0 34px rgba(245,215,122,.4),0 2px 12px rgba(0,0,0,.5);
+}
+#hdrGreg{font-size:clamp(11px,1.1vw,19px);color:#cdd9e8;font-weight:300;margin-top:.2em;
+  text-shadow:0 1px 8px rgba(0,0,0,.5)}
