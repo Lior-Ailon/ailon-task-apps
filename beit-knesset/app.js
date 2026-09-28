@@ -323,7 +323,7 @@ const logoFor = name => {
 };
 
 const candleSvg = level => {
-  const colors = { today: 'var(--gold-light)', week: 'var(--teal-light)', far: '#5a7089' };
+  const colors = { today: 'var(--gold-light)', week: 'var(--teal-light)', far: '#a09284' };
   const c = colors[level] || colors.far;
   return `<svg viewBox="0 0 60 80" fill="none">
     <g class="flame">
@@ -651,9 +651,19 @@ async function fullRefresh() {
 (async function main() {
   await initHebcal();
   await fullRefresh();
+  // פרמטר ?p=panel-xxx — קיבוע מסך בודד לתצוגה מוקדמת
+  const forcePanel = new URLSearchParams(location.search).get('p');
+  if (forcePanel) {
+    const t = document.getElementById(forcePanel);
+    if (t) {
+      document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+      t.classList.add('active');
+      curPanel = [...document.querySelectorAll('.panel')].indexOf(t);
+    }
+  }
   setInterval(tick, 1000);
   setInterval(fullRefresh, 60000);
-  setInterval(() => showPanel(curPanel + 1), 14000);
+  if (!forcePanel) setInterval(() => showPanel(curPanel + 1), 14000);
   document.addEventListener('click', () => showPanel(curPanel + 1));
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') showPanel(curPanel + 1);
