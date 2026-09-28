@@ -72,6 +72,7 @@ const DEFAULTS = {
       { name: 'ערבית והבדלה', auto: 'tzeit' }
     ]}
   },
+  halachot: {},
   halacha: [
     'אין לדבר בין ישתבח לברכו, והמדבר צריך לחזור ולומר ברכו עם הציבור.',
     'המתפלל צריך לכוון בתפילת העמידה לפחות בפסוק הראשון של שמונה עשרה.',
@@ -444,9 +445,15 @@ function renderStatic() {
   } else $('#holidayLogo').innerHTML = logoFor('');
   const doy = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / DAY);
   const hal = S.halacha || [];
-  const idx = hal.length ? (doy * 2) % hal.length : 0;
-  const picks = hal.length ? [hal[idx], hal[(idx + 1) % hal.length]] : [];
-  const uniq = [...new Set(picks)].filter(Boolean);
+  const picks = [];
+  const hdKey = INFO ? (INFO.hd.getMonth() + '-' + INFO.hd.getDate()) : null;
+  const dated = hdKey ? (S.halachot || {})[hdKey] : null;
+  if (dated) picks.push(dated);
+  if (hal.length) {
+    const idx = (doy * 2) % hal.length;
+    picks.push(hal[idx], hal[(idx + 1) % hal.length]);
+  }
+  const uniq = [...new Set(picks)].filter(Boolean).slice(0, 2);
   $('#halachaCards').innerHTML = uniq.map(h =>
     `<div class="halacha-card">${h}</div>`).join('') ||
     '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
