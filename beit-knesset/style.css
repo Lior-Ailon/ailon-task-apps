@@ -1,5 +1,5 @@
 /* לוח הקהילה — שיח יוסף | AILON Task v1.2.0 — עיצוב חדשני */
-@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@200;300;400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@200;300;400;600;700;900&family=David+Libre:wght@400;500;700&family=Suez+One&display=swap');
 
 :root{
   --navy:#0f2440; --navy2:#16325c; --teal:#0d9488; --teal-light:#2dd4bf; --teal-glow:rgba(13,148,136,.4);
@@ -540,3 +540,24 @@ body{
   text-shadow:0 4px 40px rgba(0,0,0,.5),0 0 70px rgba(245,215,122,.55) !important;
 }
 #clockSeconds,#gregDate{color:#e8eef5;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+
+/* ================================================================
+   v2.2 — כתב מקראי: פונטים מסורתיים ברוח הדוגמאות
+   Suez One — כותרות תצוגה כבדות בסגנון דפוס עתיק
+   David Libre — גוף הלכה וטקסט בסגנון דפוס התנ"ך (כתב מקראי)
+   ================================================================ */
+#shulName{font-family:'Suez One',serif !important;letter-spacing:.03em}
+.panel-title{font-family:'Suez One',serif !important;font-weight:400 !important;letter-spacing:.04em}
+#hebDate{font-family:'David Libre',serif !important;font-weight:700 !important}
+#parsha{font-family:'David Libre',serif !important;font-weight:500 !important}
+#talGeshem{font-family:'Suez One',serif !important;font-weight:400 !important}
+.tg-title{font-family:'David Libre',serif !important}
+#zmanimSpecial .big{font-family:'Suez One',serif !important;font-weight:400 !important}
+.bless-name{font-family:'David Libre',serif !important;font-weight:700 !important}
+#halachaText,.halacha-card{font-family:'David Libre',serif !important}
+.notice-title{font-family:'Suez One',serif !important;font-weight:400 !important}
+.z-label{font-family:'David Libre',serif !important;font-weight:500 !important}
+.m-row .m-name{font-family:'David Libre',serif !important;font-weight:500 !important}
+#ticker::before{font-family:'Suez One',serif !important}
+#tickerInner{font-family:'David Libre',serif !important;font-weight:500 !important}
+.azk-name{font-family:'David Libre',serif !important;font-weight:700 !important}
