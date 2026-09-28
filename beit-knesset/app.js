@@ -1,5 +1,5 @@
-/* לוח הקהילה — בית הכנסת שיח יוסף, נתיבות | AILON Task v1.1.0 */
-const VERSION = '1.1.0';
+/* לוח הקהילה — בית הכנסת שיח יוסף, נתיבות | AILON Task v1.2.0 */
+const VERSION = '1.2.0';
 const RAD = Math.PI / 180, DAY = 86400000, J0 = 2440587.5, J2000 = 2451545;
 const $ = s => document.querySelector(s);
 
@@ -77,9 +77,20 @@ const DEFAULTS = {
     'הנחת תפילין מתחילה מזמן משיכיר, ונחה עד השקיעה.',
     'ספירת העומר נאמרת לפני עלינו לשלום — טוב להקפיד בערבית.'
   ],
-  azkarot: [],                 // { name, day, month } תאריך עברי
-  notices: [],                 // { title, text, from, until } תאריכים גרגוריאניים
-  services: [],                // { name, value }
+  azkarot: [
+    { name: 'כהן יעקב בן דוד', day: 18, month: 1 },
+    { name: 'לוי יצחק בן אברהם', day: 20, month: 1 },
+    { name: 'מזרחי שלמה בן משה', day: 22, month: 1 },
+    { name: 'פרידמן דוד בן יוסף', day: 5, month: 3 },
+    { name: 'ישראלי יהודה בן נחום', day: 12, month: 14 },
+    { name: 'ביטון אליהו בן שמואל', day: 3, month: 9 }
+  ],
+  notices: [],
+  services: [
+    { name: 'רופא תורן — ד"ר לוי', value: '050-0000000 (לדוגמה)' },
+    { name: 'גמ"ח הקהילה', value: 'אברהם כהן 050-0000000 (לדוגמה)' }
+  ],
+  yearBlessing: { names: ['אברהם כהן', 'יצחק לוי', 'יעקב ישראלי', 'שרה פרידמן', 'רבקה מזרחי', 'רחל ביטון', 'לאה שרעבי', 'מרים אוחיון'] },
   password: '1234'
 };
 
@@ -107,16 +118,11 @@ async function loadSettings() {
   return s;
 }
 
-/* ---------- לוח שנה עברי (hebcal) ---------- */
+/* ---------- לוח שנה עברי ---------- */
 let H = null, parshaCache = {};
 const HEB_MONTHS = ['תשרי', 'חשוון', 'כסלו', 'טבת', 'שבט', 'אדר', 'ניסן', 'אייר',
   'סיון', 'תמוז', 'אב', 'אלול'];
-const monthName = m => {
-  if (m === 13) return 'אדר א׳';
-  if (m === 14) return 'אדר ב׳';
-  if (m > 6) return HEB_MONTHS[m - 7];
-  return HEB_MONTHS[5 + m];
-};
+const monthName = m => m === 13 ? 'אדר א׳' : m === 14 ? 'אדר ב׳' : HEB_MONTHS[(m > 6 ? m - 7 : m + 5)];
 
 async function initHebcal() {
   try { H = await import('https://cdn.jsdelivr.net/npm/@hebcal/core@5/+esm'); }
@@ -134,7 +140,6 @@ function hebInfo(date, tz) {
     const info = { hd, isShabbat: hd.getDay() === 6, isFriday: hd.getDay() === 5 };
     try { info.hebDate = hd.render('he'); } catch (e) { info.hebDate = hd.toString(); }
 
-    /* פרשת השבוע — אירוע PARSHA_HASHAVUA הבא */
     try {
       const hy = hd.getFullYear();
       if (!parshaCache[hy]) {
@@ -145,7 +150,6 @@ function hebInfo(date, tz) {
       if (nx) info.parsha = nx.render('he');
     } catch (e) {}
 
-    /* חגים ומועדים */
     try {
       const fl = H.flags;
       const evs = H.HebrewCalendar.getHolidaysOnDate(hd, true) || [];
@@ -170,17 +174,20 @@ function hebInfo(date, tz) {
     } catch (e) {}
 
     const m = hd.getMonth(), d = hd.getDate();
-    info.talGeshem = ((m === 8 && d >= 7) || (m > 8 && m <= 14)) ?
-      'משיב הרוח ומוריד הגשם' : 'מוריד הטל';
+    const geshem = (m === 8 && d >= 7) || (m > 8 && m <= 14);
+    info.talGeshem = geshem ? 'משיב הרוח ומוריד הגשם' : 'מוריד הטל';
+    info.talTransition = (m === 1 && d === 15) || (m === 8 && d === 7);
     return info;
   } catch (e) { console.warn('hebInfo error', e); return null; }
 }
 
-/* ---------- אזכרות השבוע ---------- */
-function azkarotOfWeek(s) {
-  if (!H || !INFO || !s.azkarot.length) return [];
+/* ---------- אזכרות ---------- */
+const WEEKDAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+
+function azkarotData(s) {
+  if (!H || !INFO || !(s.azkarot || []).length) return { week: [], far: [] };
   const todayAbs = INFO.hd.abs();
-  const out = [];
+  const week = [], far = [];
   for (const a of s.azkarot) {
     if (!a || !a.day || !a.month || !a.name) continue;
     let hd = null;
@@ -188,11 +195,13 @@ function azkarotOfWeek(s) {
     if (!hd) continue;
     let diff = hd.abs() - todayAbs;
     if (diff < 0) { try { hd = new H.HDate(a.day, a.month, INFO.hd.getFullYear() + 1); diff = hd.abs() - todayAbs; } catch (e) {} }
-    if (diff >= 0 && diff <= 7)
-      out.push({ name: a.name, heb: a.day + ' ב' + monthName(a.month), days: diff });
+    const entry = { name: a.name, heb: a.day + ' ב' + monthName(a.month), days: diff,
+      weekday: 'יום ' + WEEKDAYS[hd.getDay() % 7] };
+    (diff >= 0 && diff <= 7 ? week : far).push(entry);
   }
-  out.sort((x, y) => x.days - y.days);
-  return out;
+  week.sort((x, y) => x.days - y.days);
+  far.sort((x, y) => x.days - y.days);
+  return { week, far: far.slice(0, 6) };
 }
 
 /* ---------- הודעות פעילות ---------- */
@@ -206,20 +215,63 @@ function activeNotices(s, date) {
   });
 }
 
-/* ---------- לוגו חגים ---------- */
+/* ---------- אייקונים ---------- */
+const wrap = (inner, cls = '') => `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor"
+  stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="${cls}"
+  style="color:var(--teal-light)">${inner}</svg>`;
+
+const ICONS = {
+  shofar: '<path d="M70 25 Q45 15 30 35 Q15 55 30 75 Q45 90 62 78"/><path d="M62 78 Q75 60 70 25"/><path d="M45 40 l-5 -8 M55 55 l7 -6 M40 62 l-8 5"/>',
+  kippur: '<circle cx="50" cy="50" r="18"/><path d="M50 12 v12 M50 76 v12 M12 50 h12 M76 50 h12 M23 23 l9 9 M77 23 l-9 9 M23 77 l9 -9 M77 77 l-9 -9"/>',
+  sukkah: '<path d="M18 32 h64 M24 32 l-8 -12 M40 32 l-5 -12 M60 32 l-5 -12 M78 32 l-8 -12"/><path d="M26 32 v52 M74 32 v52 M50 32 v52"/><circle cx="40" cy="58" r="5"/><path d="M42 32 q4 8 0 12 M58 32 q-4 8 0 12"/>',
+  minim: '<path d="M38 70 V28 M38 28 q-10 4 -10 16 M38 34 q-8 4 -8 14 M38 40 q-6 4 -6 12"/><ellipse cx="64" cy="52" rx="11" ry="14"/><path d="M60 38 h8 M58 66 h12"/>',
+  chanukiya: '<path d="M50 18 v46"/><path d="M35 28 v36 M65 28 v36"/><path d="M50 64 h-26 l26 16 26 -16 h-26"/>',
+  purim: '<circle cx="42" cy="42" r="24"/><path d="M66 66 l16 16"/><path d="M34 38 q4 -5 8 0 M48 38 q4 -5 8 0"/>',
+  pesach: '<rect x="25" y="30" width="50" height="45" rx="6"/><path d="M25 42 h50 M50 30 v45"/><circle cx="38" cy="52" r="4" fill="currentColor"/><circle cx="62" cy="60" r="4" fill="currentColor"/>',
+  shavuot: '<path d="M35 25 h30 M35 25 v55 M65 25 v55"/><path d="M20 35 h70 M20 80 h70"/><path d="M20 35 v45 M80 35 v45"/>',
+  roshChodesh: '<path d="M62 25 a28 28 0 1 0 0 50 a22 28 0 1 1 0 -50" fill="currentColor" stroke="none" opacity="0.9"/>',
+  torah: '<path d="M25 25 h50 M25 75 h50 M30 25 v50 M70 25 v50"/><path d="M25 35 q12 8 25 0 t25 0 M25 50 q12 8 25 0 t25 0 M25 65 q12 8 25 0 t25 0"/>',
+  tal: '<path d="M35 62 q-12 -18 0 -28 q12 10 0 28" fill="none"/><path d="M52 70 q-13 -20 0 -32 q13 12 0 32" fill="none"/><path d="M70 62 q-10 -15 0 -24 q10 9 0 24" fill="none"/><path d="M30 80 h45" stroke-dasharray="2 7"/>',
+  geshem: '<path d="M34 22 q-14 20 0 34 q14 -14 0 -34" fill="none"/><path d="M40 72 l-3 12 M52 74 l-2 10 M64 70 l-3 12 M28 74 l-2 8"/>',
+  blessing: '<path d="M50 12 l6 16 17 2 -13 12 4 17 -14 -9 -14 9 4 -17 -13 -12 17 -2 z"/>',
+  appleHoney: '<path d="M50 42 q-14 -8 -22 4 q-6 13 5 24 q8 8 17 4 q9 4 17 -4 q11 -11 5 -24 q-8 -12 -22 -4 z"/><path d="M50 42 v-9 M50 33 q7 -2 9 -8"/><rect x="64" y="58" width="20" height="17" rx="3"/><path d="M68 58 v-5 h12 v5"/>',
+  sufganiya: '<circle cx="50" cy="55" r="25"/><circle cx="50" cy="55" r="8"/><path d="M38 34 l-4 -6 M50 30 v-8 M62 34 l4 -6"/><path d="M40 40 l3 3 M58 42 l-3 3 M44 68 l3 -2 M60 66 l-3 2"/>',
+  sevivon: '<path d="M38 30 h24 v20 l-12 16 -12 -16 z"/><path d="M44 20 h12 M50 20 v10"/><path d="M50 38 v10 M45 43 h10"/>',
+  matza: '<circle cx="50" cy="50" r="30"/><circle cx="42" cy="44" r="3.5" fill="currentColor" stroke="none"/><circle cx="58" cy="56" r="3.5" fill="currentColor" stroke="none"/><circle cx="57" cy="37" r="2.5" fill="currentColor" stroke="none"/><circle cx="40" cy="60" r="2.5" fill="currentColor" stroke="none"/><path d="M50 20 v-6 M50 80 v6 M20 50 h-6 M80 50 h6"/>',
+  keara: '<circle cx="50" cy="52" r="34"/><circle cx="50" cy="52" r="6"/><circle cx="50" cy="28" r="5"/><circle cx="50" cy="76" r="5"/><circle cx="29" cy="40" r="5"/><circle cx="71" cy="40" r="5"/><circle cx="29" cy="64" r="5"/><circle cx="71" cy="64" r="5"/>',
+  wheat: '<path d="M50 88 V38"/><ellipse cx="42" cy="38" rx="5" ry="10" transform="rotate(-30 42 38)"/><ellipse cx="58" cy="38" rx="5" ry="10" transform="rotate(30 58 38)"/><ellipse cx="42" cy="52" rx="5" ry="10" transform="rotate(-30 42 52)"/><ellipse cx="58" cy="52" rx="5" ry="10" transform="rotate(30 58 52)"/><path d="M40 14 q10 -8 20 0"/>',
+  oznayim: '<path d="M50 38 L30 72 h40 z"/><path d="M50 52 L41 67 h18 z"/><path d="M42 34 l-4 -8 M58 34 l4 -8"/>',
+  danceTorah: '<rect x="34" y="14" width="32" height="22" rx="4"/><path d="M34 18 v14 M66 18 v14"/><path d="M42 14 v-4 M58 14 v-4"/><circle cx="50" cy="52" r="8"/><path d="M50 60 v14 M50 74 l-8 14 M50 74 l8 14 M50 62 l-12 10 M50 62 l12 10"/><circle cx="22" cy="60" r="6"/><path d="M22 66 v12 M22 78 l-6 12 M22 78 l6 12 M22 68 l8 8 M22 68 l-6 -10"/><circle cx="78" cy="60" r="6"/><path d="M78 66 v12 M78 78 l-6 12 M78 78 l6 12 M78 68 l-8 8 M78 68 l6 -10"/>',
+  rimon: '<path d="M50 40 q-18 -6 -18 14 q0 20 18 26 q18 -6 18 -26 q0 -20 -18 -14 z"/><path d="M50 40 v-12 M50 28 q8 -2 10 -8 M50 28 q-8 -2 -10 -8"/><circle cx="44" cy="54" r="2" fill="currentColor" stroke="none"/><circle cx="56" cy="58" r="2" fill="currentColor" stroke="none"/><circle cx="50" cy="66" r="2" fill="currentColor" stroke="none"/><circle cx="42" cy="66" r="2" fill="currentColor" stroke="none"/><circle cx="58" cy="50" r="2" fill="currentColor" stroke="none"/>'
+};
+
+const cleanHeb = s => (s || '').replace(/[\u0591-\u05C7]/g, '');
+
 const logoFor = name => {
-  const n = name || '';
-  const wrap = inner => `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor"
-    stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--teal-light)">${inner}</svg>`;
-  if (/ראש השנה|שופר/.test(n)) return wrap('<path d="M70 25 Q45 15 30 35 Q15 55 30 75 Q45 90 62 78"/><path d="M62 78 Q75 60 70 25"/><path d="M45 40 l-5 -8 M55 55 l7 -6 M40 62 l-8 5"/>');
-  if (/כיפור/.test(n)) return wrap('<circle cx="50" cy="50" r="18"/><path d="M50 12 v12 M50 76 v12 M12 50 h12 M76 50 h12 M23 23 l9 9 M77 23 l-9 9 M23 77 l9 -9 M77 77 l-9 -9"/>');
-  if (/סוכות/.test(n)) return wrap('<path d="M20 30 h60 M25 30 l-8 -10 M40 30 l-6 -10 M60 30 l-6 -10 M75 30 l-8 -10"/><path d="M28 30 v50 M72 30 v50 M50 30 v50"/><circle cx="50" cy="55" r="6"/>');
-  if (/חנוכה/.test(n)) return wrap('<path d="M50 20 v45"/><path d="M35 30 v35 M65 30 v35"/><path d="M50 65 h-25 l25 15 25 -15 h-25"/>');
-  if (/פורים/.test(n)) return wrap('<circle cx="42" cy="42" r="24"/><path d="M66 66 l16 16"/><path d="M34 38 q4 -5 8 0 M48 38 q4 -5 8 0"/>');
-  if (/פסח/.test(n)) return wrap('<rect x="25" y="30" width="50" height="45" rx="6"/><path d="M25 42 h50 M50 30 v45"/><circle cx="38" cy="52" r="4" fill="currentColor"/><circle cx="62" cy="60" r="4" fill="currentColor"/>');
-  if (/שבועות/.test(n)) return wrap('<path d="M35 25 h30 M35 25 v55 M65 25 v55"/><path d="M20 35 h70 M20 80 h70"/><path d="M20 35 v45 M80 35 v45"/>');
-  if (/ראש חודש/.test(n)) return wrap('<path d="M62 25 a28 28 0 1 0 0 50 a22 28 0 1 1 0 -50" fill="currentColor" stroke="none" opacity="0.9"/>');
-  return wrap('<path d="M25 25 h50 M25 75 h50 M30 25 v50 M70 25 v50"/><path d="M25 35 q12 8 25 0 t25 0 M25 50 q12 8 25 0 t25 0 M25 65 q12 8 25 0 t25 0"/>');
+  const n = cleanHeb(name);
+  if (/ראש השנה|שופר/.test(n)) return wrap(ICONS.shofar) + wrap(ICONS.appleHoney) + wrap(ICONS.rimon);
+  if (/כיפור/.test(n)) return wrap(ICONS.kippur);
+  if (/סוכות/.test(n)) return wrap(ICONS.sukkah) + wrap(ICONS.minim);
+  if (/חנוכה/.test(n)) return wrap(ICONS.chanukiya) + wrap(ICONS.sevivon) + wrap(ICONS.sufganiya);
+  if (/פורים/.test(n)) return wrap(ICONS.purim) + wrap(ICONS.oznayim);
+  if (/פסח/.test(n)) return wrap(ICONS.matza) + wrap(ICONS.keara);
+  if (/שמחת תורה|שמחת-תורה/.test(n)) return wrap(ICONS.danceTorah) + wrap(ICONS.torah);
+  if (/שבועות/.test(n)) return wrap(ICONS.torah) + wrap(ICONS.wheat);
+  if (/ראש חודש/.test(n)) return wrap(ICONS.roshChodesh);
+  return wrap(ICONS.torah);
+};
+
+const candleSvg = level => {
+  const colors = { today: 'var(--gold-light)', week: 'var(--teal-light)', far: '#5a7089' };
+  const c = colors[level] || colors.far;
+  return `<svg viewBox="0 0 60 80" fill="none">
+    <g class="flame">
+      <ellipse cx="30" cy="22" rx="7" ry="13" fill="${c}" opacity=".95"/>
+      <ellipse cx="30" cy="26" rx="3" ry="7" fill="#fff" opacity=".9"/>
+    </g>
+    <rect x="24" y="34" width="12" height="30" rx="3" fill="#e8eef5"/>
+    <path d="M18 70 h24" stroke="${c}" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
 };
 
 /* ---------- מניינים ---------- */
@@ -289,24 +341,52 @@ function hebrewCountdown(ms) {
 
 /* ---------- רינדור ---------- */
 let S = null, INFO = null, Z = null, NEXT = null, curPanel = 0;
-const AZK_LABEL = ['היום', 'מחר', 'בעוד יומיים'];
+const AZK_LABEL = d => d === 0 ? 'היום — יום השנה' : d === 1 ? 'מחר' : 'בעוד ' + d + ' ימים';
 
 function buildDynamicPanels() {
-  ['panel-azkarot', 'panel-notices', 'panel-services'].forEach(id => {
+  ['panel-azkarot', 'panel-notices', 'panel-services', 'panel-blessing'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
   const main = $('#main');
-  const azk = azkarotOfWeek(S);
-  if (azk.length) {
+  const { week, far } = azkarotData(S);
+  if (week.length || far.length) {
     main.insertAdjacentHTML('beforeend', `
       <section class="panel" id="panel-azkarot">
-        <h2 class="panel-title">אזכרות השבוע</h2>
-        <div class="list" style="width:min(80vw,820px)">
-          ${azk.map(a => `<div class="z-row"><span class="z-label" style="color:var(--text)">${a.name}</span>
-            <span class="z-val" style="color:var(--teal-light)">${a.heb} • ${a.days < 3 ? AZK_LABEL[a.days] : 'בעוד ' + a.days + ' ימים'}</span></div>`).join('')}
+        <h2 class="panel-title">אזכרות</h2>
+        <div class="azk-wrap">
+          ${week.map(a => `
+            <div class="azk-row ${a.days === 0 ? 'today candle-glow' : 'week candle-mid'}">
+              <div class="azk-candle">${candleSvg(a.days === 0 ? 'today' : 'week')}</div>
+              <div class="azk-name">${a.name}</div>
+              <div class="azk-meta">
+                <div class="azk-date">${a.heb}</div>
+                <div class="azk-when">${a.days === 0 ? AZK_LABEL(0) : a.weekday + ' • ' + AZK_LABEL(a.days)}</div>
+              </div>
+            </div>`).join('')}
+          ${far.map(a => `
+            <div class="azk-row far candle-dim">
+              <div class="azk-candle">${candleSvg('far')}</div>
+              <div class="azk-name">${a.name}</div>
+              <div class="azk-meta">
+                <div class="azk-date">${a.heb}</div>
+                <div class="azk-when">${a.weekday}</div>
+              </div>
+            </div>`).join('')}
         </div>
-        <div class="note-line">יעלו זכרותם לברכה</div>
+        <div class="azk-note">יעלו זכרותם לברכה — נר השבוע מאיר</div>
+      </section>`);
+  }
+  if ((S.yearBlessing || {}).names || 0) {
+    const names = S.yearBlessing.names.filter(Boolean);
+    main.insertAdjacentHTML('beforeend', `
+      <section class="panel" id="panel-blessing">
+        <h2 class="panel-title">ברכת השנה</h2>
+        <div class="bless-frame">
+          ${wrap(ICONS.blessing).replace('<svg', '<svg style="color:var(--gold);width:clamp(44px,5vw,80px);height:clamp(44px,5vw,80px);margin-bottom:1vh;filter:drop-shadow(0 0 12px rgba(251,191,36,.6))"')}
+          <div id="blessNames">${names.map(n => `<div class="bless-name">${n}</div>`).join('')}</div>
+          <div class="bless-sub">המתפללים יבואו עליהם ברכת השנה</div>
+        </div>
       </section>`);
   }
   const not = activeNotices(S, new Date());
@@ -322,7 +402,7 @@ function buildDynamicPanels() {
     main.insertAdjacentHTML('beforeend', `
       <section class="panel" id="panel-services">
         <h2 class="panel-title">שירותי הקהילה</h2>
-        <div class="list" style="width:min(80vw,820px)">
+        <div class="list">
           ${S.services.map(v => `<div class="z-row"><span class="z-label" style="color:var(--text)">${v.name}</span>
             <span class="z-val" style="font-size:clamp(14px,1.4vw,26px);color:var(--teal-light)">${v.value || ''}</span></div>`).join('')}
         </div>
@@ -338,8 +418,18 @@ function renderStatic() {
     $('#parsha').textContent = INFO.parsha || (INFO.isShabbat ? 'שבת שלום' : '');
     $('#special').textContent = INFO.holiday || '';
     $('#holidayLogo').innerHTML = logoFor(INFO.holiday);
+    const isGeshem = INFO.talGeshem.includes('גשם');
+    $('#tgIcon').innerHTML = wrap(isGeshem ? ICONS.geshem : ICONS.tal);
     $('#talGeshem').textContent = INFO.talGeshem;
     $('#ftrTal').textContent = 'בתפילה: ' + INFO.talGeshem;
+    $('#rainFx').style.display = isGeshem ? 'block' : 'none';
+    if (isGeshem && !$('#rainFx').children.length)
+      $('#rainFx').innerHTML = '<i style="right:8%;animation-delay:0s"></i><i style="right:24%;animation-delay:.5s"></i><i style="right:40%;animation-delay:.9s"></i><i style="right:56%;animation-delay:.3s"></i><i style="right:72%;animation-delay:1.2s"></i><i style="right:88%;animation-delay:.7s"></i>';
+    const banner = $('#tgBanner');
+    if (INFO.talTransition) {
+      banner.style.display = 'block';
+      banner.textContent = '★ החל מהיום בתפילת העמידה: ' + INFO.talGeshem + ' ★';
+    } else banner.style.display = 'none';
     if (INFO.omer) {
       $('#omerBox').style.display = 'block';
       $('#omerBox').textContent = 'היום — ' + INFO.omer + ' ימים לעומר';
