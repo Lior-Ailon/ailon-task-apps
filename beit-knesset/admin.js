@@ -38,6 +38,20 @@ const DEFAULTS = {
     'הנחת תפילין מתחילה מזמן משיכיר, ונחה עד השקיעה.',
     'ספירת העומר נאמרת לפני עלינו לשלום — טוב להקפיד בערבית.'
   ],
+  azkarot: [
+    { name: 'כהן יעקב בן דוד', day: 18, month: 1 },
+    { name: 'לוי יצחק בן אברהם', day: 20, month: 1 },
+    { name: 'מזרחי שלמה בן משה', day: 22, month: 1 },
+    { name: 'פרידמן דוד בן יוסף', day: 5, month: 3 },
+    { name: 'ישראלי יהודה בן נחום', day: 12, month: 14 },
+    { name: 'ביטון אליהו בן שמואל', day: 3, month: 9 }
+  ],
+  notices: [],
+  services: [
+    { name: 'רופא תורן — ד"ר לוי', value: '050-0000000 (לדוגמה)' },
+    { name: 'גמ"ח הקהילה', value: 'אברהם כהן 050-0000000 (לדוגמה)' }
+  ],
+  yearBlessing: { names: ['אברהם כהן', 'יצחק לוי', 'יעקב ישראלי', 'שרה פרידמן', 'רבקה מזרחי', 'רחל ביטון', 'לאה שרעבי', 'מרים אוחיון'] },
   azkarot: [], notices: [], services: [],
   password: '1234'
 };
@@ -92,6 +106,7 @@ function fillForm() {
   $('#f_tzeit').value = S.offsets.tzeit;
   $('#f_rt').value = S.offsets.rt;
   $('#f_halacha').value = S.halacha.join('\n');
+  $('#f_blessing').value = ((S.yearBlessing || {}).names || []).join('\n');
   renderProfiles();
   renderAzkarot();
   renderNotices();
@@ -207,6 +222,7 @@ function save() {
     tzeit: +$('#f_tzeit').value, rt: +$('#f_rt').value
   };
   S.halacha = $('#f_halacha').value.split('\n').map(x => x.trim()).filter(Boolean);
+  S.yearBlessing = { names: $('#f_blessing').value.split('\n').map(x => x.trim()).filter(Boolean) };
   const pw = $('#f_pw').value.trim();
   if (pw) S.password = pw;
   localStorage.setItem(LS_KEY, JSON.stringify(S));
