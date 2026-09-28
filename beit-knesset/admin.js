@@ -16,6 +16,7 @@ let S = null, $ = s => document.querySelector(s);
 const DEFAULTS = {
   version: 1,
   shulName: 'בית הכנסת שיח יוסף ע"ש הרב יוסף חדד',
+  brand: 'AILON',
   city: 'נתיבות', tz: 'Asia/Jerusalem', lat: 31.423, lng: 34.589,
   offsets: { tefillin: 30, candles: 18, tzeit: 45, rt: 72 },
   profiles: {
@@ -96,6 +97,7 @@ function tryGate() {
 
 function fillForm() {
   $('#f_shulName').value = S.shulName;
+  $('#f_brand').value = S.brand || '';
   const sel = $('#f_city');
   sel.innerHTML = Object.keys(CITIES).map(c => `<option>${c}</option>`).join('');
   if (!Object.keys(CITIES).includes(S.city)) sel.insertAdjacentHTML('beforeend', `<option>${S.city}</option>`);
@@ -215,6 +217,7 @@ function save() {
   collectProfiles();
   collectExtra();
   S.shulName = $('#f_shulName').value;
+  S.brand = $('#f_brand').value.trim() || 'AILON';
   S.lat = parseFloat($('#f_lat').value);
   S.lng = parseFloat($('#f_lng').value);
   S.offsets = {
