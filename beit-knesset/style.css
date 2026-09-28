@@ -330,3 +330,63 @@ body::before{
   content:"הלכה ב׳";position:absolute;top:-1.2vh;right:3vw;font-size:clamp(10px,1vw,16px);
   background:var(--teal-light);color:#0a1a33;font-weight:900;border-radius:8px;padding:.3vh 1vw;letter-spacing:.15em;
 }
+
+/* ---------- v1.4: הווי מעודר — מסגרת זהב, עיגולים רחבים ---------- */
+body::after{
+  content:"";position:fixed;inset:1.3vh 1.3vw;pointer-events:none;z-index:50;
+  border:2px solid transparent;border-radius:34px;
+  background:
+    linear-gradient(160deg,#b8860b,#f5d77a 18%,#b8860b 40%,#8a6508 60%,#f5d77a 82%,#b8860b) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.55;box-shadow:inset 0 0 45px rgba(0,0,0,.35);
+}
+body{
+  background:
+    radial-gradient(75vw 55vh at 50% -15%,rgba(184,134,11,.12),transparent 60%),
+    radial-gradient(60vw 60vh at 85% -10%,rgba(20,184,166,.14),transparent 60%),
+    radial-gradient(70vw 70vh at 10% 110%,rgba(22,50,92,.8),transparent 55%),
+    linear-gradient(160deg,#0d1e3a 0%,#0a1730 55%,#0c1b36 100%) !important;
+  background-attachment:fixed !important;
+}
+#hdr{background:linear-gradient(180deg,rgba(184,134,11,.12),transparent)}
+#hdr::after{
+  background:linear-gradient(90deg,transparent,#b8860b 28%,#f5d77a 50%,#b8860b 72%,transparent);
+}
+#hebDate{color:#f5d77a;text-shadow:0 0 24px rgba(245,215,122,.4)}
+.panel-title{color:#f5d77a}
+.panel-title::before{background:linear-gradient(90deg,transparent,#b8860b)}
+.panel-title::after{background:linear-gradient(90deg,#b8860b,transparent)}
+#nextCard{
+  border-radius:32px;border:1px solid rgba(184,134,11,.5);
+  background:linear-gradient(135deg,rgba(13,148,136,.16),rgba(16,38,70,.75));
+  box-shadow:0 0 55px rgba(184,134,11,.2),inset 0 1px 0 rgba(255,255,255,.12);
+}
+#nextCard::before{border-radius:32px}
+#nextTime{color:#f5d77a}
+#nextCountdown{color:#e9c767}
+.z-row{border-radius:20px;border-right:4px solid #b8860b;border-color:rgba(245,215,122,.28);
+  background:linear-gradient(135deg,rgba(16,38,70,.62),rgba(11,28,54,.62))}
+.z-row.hl{border-right-color:#f5d77a;box-shadow:0 0 30px rgba(245,215,122,.2)}
+.m-row{border-radius:22px;border-right:4px solid #b8860b;border-color:rgba(245,215,122,.22);
+  background:linear-gradient(135deg,rgba(16,38,70,.6),rgba(11,28,54,.6))}
+.m-row.next{border-right-color:#f5d77a;box-shadow:0 0 42px rgba(245,215,122,.28)}
+.m-row.next .m-time{color:#f5d77a}
+.azk-row{border-radius:24px;border:1px solid rgba(245,215,122,.3)}
+.azk-row.today{border:1px solid #f5d77a;box-shadow:0 0 45px rgba(245,215,122,.45)}
+.azk-row.today .azk-when{color:#f5d77a}
+.azk-date{color:#e9c767}
+.halacha-card{border-radius:28px;border:1px solid rgba(245,215,122,.3);
+  background:linear-gradient(135deg,rgba(16,38,70,.6),rgba(11,28,54,.6))}
+.halacha-card:first-child{border-color:rgba(245,215,122,.55)}
+.bless-frame{border-radius:30px;border:1px solid #b8860b}
+.bless-name{border-radius:16px;background:rgba(184,134,11,.1);border:1px solid rgba(245,215,122,.3);color:#f5d77a}
+.notice-card{border-radius:28px}
+.notice-title{color:#2dd4bf}
+#talGeshemBox{border-radius:28px;border:1px solid rgba(245,215,122,.4)}
+#tgBanner{border-radius:18px;border-color:#b8860b;color:#f5d77a}
+#tgIcon svg{color:#f5d77a}
+.list{width:min(80vw,860px)}
+.candle-glow{filter:drop-shadow(0 0 14px rgba(245,215,122,.9))}
+#shulName{text-shadow:0 2px 18px rgba(184,134,11,.4)}
+#shulCity{color:#e9c767}
