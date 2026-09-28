@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ניהול לוח הקהילה</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link rel="stylesheet" href="style.css?v=1.0.0">
+<style>
+body{display:block;overflow:auto}
+#gate{max-width:420px;margin:15vh auto;text-align:center}
+#gate input{font-size:20px;padding:12px;border-radius:10px;border:1px solid #2a4a77;background:var(--bg);color:#fff;text-align:center;width:100%;margin:1em 0;direction:ltr}
+#admin{max-width:900px;margin:0 auto 60px;display:none}
+#admin.on{display:block}
+h1{font-size:26px;color:var(--teal-light);margin:24px 0;text-align:center}
+h2{font-size:20px;color:var(--gold);margin:28px 0 12px;border-bottom:1px solid var(--navy2);padding-bottom:6px}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fld label{font-size:14px;color:var(--dim)}
+.fld input,.fld select,.fld textarea{
+  padding:10px 12px;border-radius:10px;border:1px solid #2a4a77;background:#0d2142;color:#fff;font-size:16px;font-family:inherit
+}
+.fld textarea{min-height:110px;resize:vertical}
+.row3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size:16px;font-weight:700;font-family:inherit}
+.btn-main{background:var(--teal);color:#fff}
+.btn-sec{background:#1c3a63;color:var(--teal-light);font-size:14px;padding:8px 14px}
+.btn-danger{background:#7a2f2f;color:#fff;font-size:14px;padding:8px 14px}
+.mrow{display:grid;grid-template-columns:1.6fr 1fr 1.2fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.mrow input,.mrow select{padding:8px 10px;border-radius:8px;border:1px solid #2a4a77;background:#0d2142;color:#fff;font-size:15px}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--teal);color:#fff;
+  padding:12px 26px;border-radius:12px;font-weight:700;display:none;z-index:9}
+.hint{font-size:13px;color:var(--dim);margin:6px 0 14px}
+</style>
+</head>
+<body>
+<div id="gate">
+  <h1>ניהול לוח הקהילה</h1>
+  <p style="color:var(--dim)">הזן סיסמה</p>
+  <input id="pw" type="password" placeholder="סיסמה" autofocus>
+  <button class="btn-main" onclick="tryGate()">כניסה</button>
+</div>
+
+<div id="admin">
+  <h1>ניהול לוח הקהילה</h1>
+
+  <h2>כללי</h2>
+  <div class="fld"><label>שם בית הכנסת</label><input id="f_shulName"></div>
+  <div class="row3">
+    <div class="fld"><label>עיר</label><select id="f_city"></select></div>
+    <div class="fld"><label>רוחב (lat)</label><input id="f_lat" type="number" step="0.001" style="direction:ltr"></div>
+    <div class="fld"><label>אורך (lng)</label><input id="f_lng" type="number" step="0.001" style="direction:ltr"></div>
+  </div>
+
+  <h2>זמנים אוטומטיים (בדקות)</h2>
+  <div class="row3">
+    <div class="fld"><label>הנחת תפילין — אחרי עלות</label><input id="f_tefillin" type="number"></div>
+    <div class="fld"><label>כניסת שבת — לפני שקיעה</label><input id="f_candles" type="number"></div>
+    <div class="fld"><label>צאת הכוכבים — אחרי שקיעה</label><input id="f_tzeit" type="number"></div>
+    <div class="fld"><label>רבנו תם — אחרי שקיעה</label><input id="f_rt" type="number"></div>
+  </div>
+
+  <h2>מניינים</h2>
+  <p class="hint">אפשרות "אוטומטי": כניסת שבת / צאת הכוכבים (מוצאי שבת) / כניסת שבת של שבוע הבא (מנחה בשבת).</p>
+  <div id="profiles"></div>
+
+  <h2>הלכה יומית</h2>
+  <p class="hint">כל שורה — הלכה אחת. מתחלף אוטומטית כל יום לפי סדר.</p>
+  <div class="fld"><textarea id="f_halacha"></textarea></div>
+
+
+  <h2>אזכרות (תאריך עברי)</h2>
+  <p class="hint">מוצגות בסבב המסכים רק בשבוע של האזכרה.</p>
+  <div id="azkarotRows"></div>
+  <button class="btn-sec" onclick="addAzkara()">+ הוסף אזכרה</button>
+
+  <h2>הודעות מיוחדות (לפי תאריך)</h2>
+  <p class="hint">למשל: בין הזמנים, סדרי לימוד בחגים, קמפיין תרומות. מוצגות רק בטווח התאריכים.</p>
+  <div id="noticesRows"></div>
+  <button class="btn-sec" onclick="addNotice()">+ הוסף הודעה</button>
+
+  <h2>שירותי הקהילה</h2>
+  <p class="hint">רופא תורן, רבנות, גמ"ח — כל שורה מוצגת בסבב.</p>
+  <div id="servicesRows"></div>
+  <button class="btn-sec" onclick="addService()">+ הוסף שירות</button>
+
+  <h2>מערכת</h2>
+  <div class="row3">
+    <div class="fld"><label>סיסמה חדשה</label><input id="f_pw" style="direction:ltr"></div>
+    <div class="fld" style="align-self:end"><button class="btn-sec" onclick="exportJson()">ייצוא settings.json</button></div>
+    <div class="fld" style="align-self:end"><button class="btn-sec" onclick="$('#f_import').click()">ייבוא קובץ</button><input type="file" id="f_import" accept=".json" style="display:none" onchange="importJson(event)"></div>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+    <button class="btn-main" onclick="save()">שמירה</button>
+    <a class="btn-sec" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">לצפייה בלוח</a>
+    <button class="btn-danger" onclick="resetLocal()">איפוס לברירת מחדל</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="admin.js?v=1.0.0"></script>
+</body>
+</html>
