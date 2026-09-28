@@ -72,11 +72,15 @@ const DEFAULTS = {
     ]}
   },
   halacha: [
-    'הלכה יומית — עריכה במסך הניהול: הוסף כאן הלכות קצרות, כל שורה הלכה אחת.',
-    'זמן תפילה בתפילת עמידה קודם לשקיעה עדיף, ובדיעבד עד צאת הכוכבים.',
-    'הנחת תפילין מתחילה מזמן משיכיר, ונחה עד השקיעה.',
-    'ספירת העומר נאמרת לפני עלינו לשלום — טוב להקפיד בערבית.'
-  ],
+    'אין לדבר בין ישתבח לברכו, והמדבר צריך לחזור ולומר ברכו עם הציבור.',
+    'המתפלל צריך לכוון בתפילת העמידה לפחות בפסוק הראשון של שמונה עשרה.',
+    'מי שלא התפלל מנחה עד שקיעה — יתפלל ערבית שתיים ומתפלל מנחה אחריה.',
+    'ספירת העומר טעוכה בלילה לפני עלינו לשלום, ואם שכח — יספור בלי ברכה כל הלילה.',
+    'תפילין נבדקות פעמיים בשנה, בחול המועד פסח ובחול המועד סוכות.',
+    'נרות שבת מדליקים עשרים דקות לפני השקיעה, ובתענית עם בין הערביים.',
+    'הבדלה צריך לקדש עד צאת הכוכבים, ולא יאחר יותר משבוע.',
+    'ברכת המזון טעונה כוונה, והעונה אמן אחר ברכות — כוונתו עולה.'
+    ],
   azkarot: [
     { name: 'כהן יעקב בן דוד', day: 18, month: 1 },
     { name: 'לוי יצחק בן אברהם', day: 20, month: 1 },
@@ -436,7 +440,13 @@ function renderStatic() {
     } else $('#omerBox').style.display = 'none';
   } else $('#holidayLogo').innerHTML = logoFor('');
   const doy = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / DAY);
-  $('#halachaText').textContent = S.halacha.length ? S.halacha[doy % S.halacha.length] : '';
+  const hal = S.halacha || [];
+  const idx = hal.length ? (doy * 2) % hal.length : 0;
+  const picks = hal.length ? [hal[idx], hal[(idx + 1) % hal.length]] : [];
+  const uniq = [...new Set(picks)].filter(Boolean);
+  $('#halachaCards').innerHTML = uniq.map(h =>
+    `<div class="halacha-card">${h}</div>`).join('') ||
+    '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
 }
 
 function renderZmanim() {
