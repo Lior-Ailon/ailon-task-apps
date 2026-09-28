@@ -437,13 +437,15 @@ function buildDynamicPanels() {
       </section>`);
   }
   const not = activeNotices(S, new Date());
-  if (not.length) {
-    main.insertAdjacentHTML('beforeend', `
-      <section class="panel" id="panel-notices">
-        <h2 class="panel-title">הודעות</h2>
-        ${not.map(n => `<div class="notice-card"><div class="notice-title">${n.title}</div>
-          ${n.text ? `<div class="notice-text">${n.text}</div>` : ''}</div>`).join('')}
-      </section>`);
+  const tk = $('#tickerInner');
+  if (tk) {
+    const items = not.map(n => {
+      const body = [n.title, n.text].filter(Boolean).join(' — ').replace(/\\n|\n/g, ' ✦ ');
+      return `<span class="tk-item">${body}</span>`;
+    }).join('<span class="tk-sep">✦</span>');
+    // שכפול תוכן לגלילה רציפה
+    tk.innerHTML = items ? items + '<span class="tk-sep">✦</span>' + items : '';
+    $('#ticker').style.display = items ? 'flex' : 'none';
   }
   if (S.services && S.services.length) {
     main.insertAdjacentHTML('beforeend', `
