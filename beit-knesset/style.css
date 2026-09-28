@@ -494,3 +494,49 @@ body{
   from{transform:translateX(0)}
   to{transform:translateX(-50%)}
 }
+
+/* ================================================================
+   v2.1 — סגנון "בינה לעיתים": רקע צילומי-אווירה ייחודי לכל מסך
+   רקעים ייחודיים שהופקו עבור הלוח; שכבת כהות לקריאות טקסט.
+   ================================================================ */
+.panel{overflow:hidden}
+.panel>*{position:relative;z-index:2}
+.panel::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center;
+}
+.panel::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,12,26,.42),rgba(6,12,26,.62));
+}
+#panel-clock::before{background-image:url('bg_main.jpg')}
+#panel-clock::after{background:linear-gradient(180deg,rgba(6,12,26,.30),rgba(6,12,26,.52))}
+#panel-zmanim::before{background-image:url('bg_zmanim.jpg')}
+#panel-minyan::before{background-image:url('bg_minyan.jpg')}
+#panel-halacha::before{background-image:url('bg_halacha.jpg')}
+#panel-azkarot::before{background-image:url('bg_azkarot.jpg')}
+#panel-notices::before{background-image:url('bg_services.jpg')}
+#panel-services::before{background-image:url('bg_services.jpg')}
+#panel-blessing::before{background-image:url('bg_blessing.jpg')}
+#panel-blessing::after{background:linear-gradient(180deg,rgba(250,244,226,.20),rgba(245,235,210,.34))}
+
+/* כרטיסים — זכוכית חמה שקופה למחצה שמאפשרת לרקע לנשום */
+#nextCard,.z-row,.m-row,.halacha-card,.azk-row,.notice-card,#talGeshemBox,.bless-frame{
+  background:linear-gradient(160deg,rgba(253,250,242,.93),rgba(238,244,250,.88)) !important;
+}
+#nextCard{
+  box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 60px rgba(184,134,11,.25),inset 0 1px 0 rgba(255,255,255,.7) !important;
+}
+/* מסגרת זהב עבה יותר סביב הכרטיס המרכזי */
+#nextCard{border:2px solid #d9a635 !important}
+
+/* כותרת פאנל — זהב עם צל כהה לקריאות על רקע צבעוני */
+.panel-title{
+  text-shadow:0 2px 12px rgba(0,0,0,.55),0 0 30px rgba(0,0,0,.35);
+}
+/* שעון — זהב חם במקום לבן, בולט על רקע השמיים */
+#clockTime{
+  color:#fdeec2;
+  text-shadow:0 4px 40px rgba(0,0,0,.5),0 0 70px rgba(245,215,122,.55) !important;
+}
+#clockSeconds,#gregDate{color:#e8eef5;text-shadow:0 1px 8px rgba(0,0,0,.5)}
