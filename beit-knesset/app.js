@@ -128,7 +128,7 @@ async function loadSettings() {
 let H = null, parshaCache = {};
 const HEB_MONTHS = ['תשרי', 'חשוון', 'כסלו', 'טבת', 'שבט', 'אדר', 'ניסן', 'אייר',
   'סיון', 'תמוז', 'אב', 'אלול'];
-const monthName = m => m === 13 ? 'אדר א׳' : m === 14 ? 'אדר ב׳' : HEB_MONTHS[(m > 6 ? m - 7 : m + 5)];
+const monthName = (m, leap) => m === 13 ? 'אדר ב׳' : (m === 12 && leap) ? 'אדר א׳' : HEB_MONTHS[(m > 6 ? m - 7 : m + 5)];
 
 async function initHebcal() {
   try { H = await import('https://cdn.jsdelivr.net/npm/@hebcal/core@6/+esm'); }
@@ -168,7 +168,7 @@ function dafYomiFor(abs) {
       const daf = last + 1 - (sofar - day) + (DAF_OFFSETS[i] || 0);
       const gm = toGematria(daf);
       const num = gm.length > 1 ? gm.slice(0, -1) + '״' + gm.slice(-1) : gm + '׳';
-      return 'דף יומי • ' + DAF_TABLE[i][0] + ' דף ' + num;
+      return DAF_TABLE[i][0] + ' דף ' + num;
     }
   }
   return null;
@@ -183,7 +183,21 @@ function hebInfo(date, tz) {
     const local = new Date(gv('year'), gv('month') - 1, gv('day'), 12);
     const hd = new H.HDate(local);
     const info = { hd, isShabbat: hd.getDay() === 6, isFriday: hd.getDay() === 5 };
-    try { info.hebDate = hd.render('he'); } catch (e) { info.hebDate = hd.toString(); }
+    // תאריך עברי באותיות מקראיות — בלי שנה ובלי מספרים
+    try {
+      const dn = hd.getDate();
+      const g = toGematria(dn);
+      const dayHe = g.length > 1 ? g.slice(0, -1) + '״' + g.slice(-1) : g + '׳';
+      let mn = '';
+      try { mn = hd.getMonthName('he'); } catch (e) {}
+      if (!mn || !/[א-ת]/.test(mn)) {
+        const m = hd.getMonth();
+        if (m === 13) mn = 'אדר ב׳';
+        else if (m === 12 && hd.isLeapYear()) mn = 'אדר א׳';
+        else mn = HEB_MONTHS[(m > 6 ? m - 7 : m + 5)];
+      }
+      info.hebDate = dayHe + ' ב' + mn;
+    } catch (e) { try { info.hebDate = hd.toString(); } catch (e2) { info.hebDate = ''; } }
 
     try {
       const hy = hd.getFullYear();
@@ -242,7 +256,7 @@ function azkarotData(s) {
     if (!hd) continue;
     let diff = hd.abs() - todayAbs;
     if (diff < 0) { try { hd = new H.HDate(a.day, a.month, INFO.hd.getFullYear() + 1); diff = hd.abs() - todayAbs; } catch (e) {} }
-    const entry = { name: a.name, heb: a.day + ' ב' + monthName(a.month), days: diff,
+    const entry = { name: a.name, heb: a.day + ' ב' + monthName(a.month, INFO && INFO.hd ? INFO.hd.isLeapYear() : false), days: diff,
       weekday: 'יום ' + WEEKDAYS[hd.getDay() % 7] };
     (diff >= 0 && diff <= 7 ? week : far).push(entry);
   }
@@ -468,7 +482,7 @@ function renderStatic() {
     $('#hebDate').textContent = INFO.hebDate || '';
     $('#parsha').textContent = INFO.parsha || (INFO.isShabbat ? 'שבת שלום' : '');
     $('#special').textContent = INFO.holiday || '';
-    $('#dafYomi').textContent = INFO.dafYomi || '';
+    const dv = $('#dafVal'); if (dv) dv.textContent = INFO.dafYomi || '';
     $('#holidayLogo').innerHTML = logoFor(INFO.holiday);
     const isGeshem = INFO.talGeshem.includes('גשם');
     $('#tgIcon').innerHTML = wrap(isGeshem ? ICONS.geshem : ICONS.tal);
@@ -501,6 +515,45 @@ function renderStatic() {
   $('#halachaCards').innerHTML = uniq.map(h =>
     `<div class="halacha-card">${h}</div>`).join('') ||
     '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
+  const lh = $('#lashonCard');
+  if (lh) lh.innerHTML = `<div class="lashon-title">הלכות לשון הרע</div><div class="lashon-text">${lashonOfDay()}</div>`;
+}
+
+/* ---------- רמב״ם יומי (3 פרקים) מ-API ספריא ---------- */
+function loadRambam() {
+  const tz = encodeURIComponent(S.tz || 'Asia/Jerusalem');
+  fetch('https://www.sefaria.org/api/calendars?timezone=' + tz)
+    .then(r => r.json())
+    .then(d => {
+      const items = d.calendar_items || d;
+      const r3 = items.find(it => it && it.title &&
+        (String(it.title.en || '').includes('3 Chapters'))) ||
+        items.find(it => it && it.title && String(it.title.he || '').includes('רמב'));
+      const v = r3 && r3.displayValue && (r3.displayValue.he || r3.displayValue.en);
+      const el = $('#rambamVal');
+      if (el) { el.textContent = v || ''; $('#rambamBox').style.display = v ? 'flex' : 'none'; }
+    })
+    .catch(() => { const b = $('#rambamBox'); if (b) b.style.display = 'none'; });
+}
+
+/* ---------- הלכות לשון הרע (חפץ חיים) — אחת ליום ---------- */
+const LASHON_LAWS = [
+  'לשון הרע היא דיבור על חברו גם כשהדבר אמת. אמרו חז״ל: לשון הרע שקר הוא חמור ממנו.',
+  '״לא תלך רכיל בעמך״ — אסור לספר על חברו אפילו על מעשים טובים, אם עלול לבוא מזה צער.',
+  'המספר לשון הרע פוגע בשלושה: בעצמו, בשומע ובנאמר עליו (רבינו יונה, אגרת התשובה).',
+  'לפני שמספרים על אחר — שקול היטב: האם התכלית מועילה? האם אין דרך אחרת? האם הסיפור מדויק?',
+  'השומע לשון הרע עובר באיסור בפני עצמו, ואסור לו להאמין לדברים בלבו (חפץ חיים).',
+  'גם רמיזה או תנועת גוף על חברו היא בכלל איסור לשון הרע — הכל בכלל ״דיבור״.',
+  'ראית חבר חוטא? תוכח אותו בינך לבינו בלבד, ולא תספר לאחרים (רמב״ם, הלכות דעות).',
+  '״הוי דן את כל האדם לכף זכות״ — דין הוגן וכוונה טובה מרחיקים את האדם מלשון הרע (פרקי אבות א, ו).',
+  'שמירת הלשון שוקלת כנגד כל המצוות כולן (ירושלמי, פאה א, א).',
+  '״הבא לטהר מסייעין אותו״ — המתאמץ לשמור על לשונו נעזר מן השמים.',
+  '״מי האיש החפץ חיים... נצור לשונך מרע״ (תהלים לד) — מפתח לחיים טובים וארוכים.',
+  'אם שמעת לשון הרע — השתדל לשנות את הנושא, ובלב שלם דון את חברך לכף זכות.',
+];
+function lashonOfDay() {
+  const doy = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / DAY);
+  return LASHON_LAWS[doy % LASHON_LAWS.length];
 }
 
 function renderZmanim() {
@@ -567,6 +620,7 @@ async function fullRefresh() {
   NEXT = nextMinyan(now, S, INFO, Z);
   buildDynamicPanels();
   renderStatic();
+  loadRambam();
   renderZmanim();
   renderMinyan();
   renderNext();
