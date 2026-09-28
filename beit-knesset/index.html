@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לוח הקהילה — שיח יוסף</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="description" content="לוח זמנים ומניינים לבית הכנסת שיח יוסף, נתיבות — AILON Task">
+<link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+<body>
+<header id="hdr">
+  <div id="hdrRight">
+    <div id="shulName">בית הכנסת שיח יוסף</div>
+    <div id="shulCity">נתיבות</div>
+  </div>
+  <div id="hdrMid">
+    <div id="hebDate"></div>
+    <div id="parsha"></div>
+    <div id="special"></div>
+  </div>
+  <div id="holidayLogo"></div>
+</header>
+
+<main id="main">
+
+  <section class="panel active" id="panel-clock">
+    <div id="clockTime">--:--</div>
+    <div id="clockSeconds"></div>
+    <div id="gregDate"></div>
+    <div id="nextCard">
+      <div id="nextLabel">המניין הבא</div>
+      <div id="nextName">…</div>
+      <div id="nextTime">…</div>
+      <div id="nextCountdown"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-zmanim">
+    <h2 class="panel-title">זמני היום</h2>
+    <div id="zmanimGrid"></div>
+    <div id="zmanimSpecial"></div>
+  </section>
+
+  <section class="panel" id="panel-minyan">
+    <h2 class="panel-title" id="minyanTitle">סדר היום</h2>
+    <div id="minyanList"></div>
+  </section>
+
+  <section class="panel" id="panel-halacha">
+    <h2 class="panel-title">הלכה יומית</h2>
+    <div id="halachaText"></div>
+    <div id="talGeshemBox">
+      <div class="tg-title">בתפילת העמידה אומרים</div>
+      <div id="talGeshem"></div>
+    </div>
+    <div id="omerBox" style="display:none"></div>
+  </section>
+
+</main>
+
+<footer id="ftr">
+  <div id="ftrTal"></div>
+  <div id="ftrDate"></div>
+  <div id="ftrAdminWrap"><a id="ftrAdmin" href="admin.html">ניהול</a><span class="ailon-mark">AILON</span></div>
+</footer>
+
+<script type="module" src="app.js?v=1.0.0"></script>
+</body>
+</html>
