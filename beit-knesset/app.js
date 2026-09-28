@@ -54,6 +54,7 @@ function zmanimFor(date, s) {
 const DEFAULTS = {
   version: 1,
   shulName: 'בית הכנסת שיח יוסף ע"ש הרב יוסף חדד',
+  brand: 'AILON',
   city: 'נתיבות', tz: 'Asia/Jerusalem',
   lat: 31.423, lng: 34.589,
   offsets: { tefillin: 30, candles: 18, tzeit: 45, rt: 72 },
@@ -416,6 +417,8 @@ function buildDynamicPanels() {
 
 function renderStatic() {
   $('#shulName').textContent = S.shulName;
+  const bm = document.querySelector('.ailon-mark');
+  if (bm) bm.textContent = S.brand || 'AILON';
   $('#shulCity').textContent = S.city;
   if (INFO) {
     $('#hebDate').textContent = INFO.hebDate || '';
