@@ -7,8 +7,8 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="description" content="לוח זמנים ומניינים לבית הכנסת שיח יוסף, נתיבות — AILON Task">
-<link rel="stylesheet" href="style.css?v=1.0.0">
+<meta name="description" content="לוח זמנים, מניינים וזמני היום לבית הכנסת שיח יוסף, נתיבות — AILON Task">
+<link rel="stylesheet" href="style.css?v=1.2.0">
 </head>
 <body>
 <header id="hdr">
@@ -51,10 +51,15 @@
 
   <section class="panel" id="panel-halacha">
     <h2 class="panel-title">הלכה יומית</h2>
+    <div id="tgBanner"></div>
     <div id="halachaText"></div>
     <div id="talGeshemBox">
-      <div class="tg-title">בתפילת העמידה אומרים</div>
-      <div id="talGeshem"></div>
+      <div id="tgIcon"></div>
+      <div>
+        <div class="tg-title">בתפילת העמידה אומרים</div>
+        <div id="talGeshem"></div>
+      </div>
+      <div class="rain" id="rainFx" style="display:none"></div>
     </div>
     <div id="omerBox" style="display:none"></div>
   </section>
@@ -67,6 +72,6 @@
   <div id="ftrAdminWrap"><a id="ftrAdmin" href="admin.html">ניהול</a><span class="ailon-mark">AILON</span></div>
 </footer>
 
-<script type="module" src="app.js?v=1.0.0"></script>
+<script type="module" src="app.js?v=1.2.0"></script>
 </body>
 </html>
