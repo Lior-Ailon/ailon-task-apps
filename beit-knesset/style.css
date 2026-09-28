@@ -1,0 +1,127 @@
+/* לוח הקהילה — AILON Task v1.0.0 */
+:root{
+  --navy:#0f2440; --navy2:#16325c; --teal:#0d9488; --teal-light:#14b8a6; --teal-glow:rgba(13,148,136,.35);
+  --bg:#0a1a33; --text:#f2f7fa; --dim:#9fb3c8; --card:#122a4d; --gold:#fbbf24;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Segoe UI','Arial Hebrew',Arial,sans-serif;
+  background:radial-gradient(1200px 800px at 70% -10%,var(--navy2),var(--bg) 70%);
+  color:var(--text);direction:rtl;
+  display:flex;flex-direction:column;
+}
+#hdr{
+  flex:0 0 12vh;display:flex;align-items:center;justify-content:space-between;
+  padding:0 3vw;border-bottom:2px solid var(--teal);gap:2vw;
+}
+#shulName{font-size:clamp(20px,2.6vw,42px);font-weight:700;color:#fff}
+#shulCity{font-size:clamp(12px,1.2vw,20px);color:var(--teal-light);margin-top:.3em}
+#hdrMid{text-align:center;flex:1}
+#hebDate{font-size:clamp(16px,1.9vw,32px);font-weight:700;color:var(--gold)}
+#parsha{font-size:clamp(13px,1.5vw,26px);color:var(--text);margin-top:.15em}
+#special{font-size:clamp(12px,1.3vw,22px);color:var(--teal-light);margin-top:.15em;font-weight:700}
+#holidayLogo{flex:0 0 auto;width:clamp(50px,7vw,110px);height:clamp(50px,7vw,110px);opacity:.95}
+#holidayLogo svg{width:100%;height:100%}
+
+#main{flex:1 1 auto;position:relative}
+.panel{
+  position:absolute;inset:0;display:none;
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:2vh 4vw;opacity:0;transition:opacity .7s ease;
+}
+.panel.active{display:flex;opacity:1}
+.panel-title{
+  font-size:clamp(22px,2.6vw,44px);color:var(--teal-light);letter-spacing:.06em;
+  margin-bottom:3vh;border-bottom:3px solid var(--teal);padding:0 .5em .1em;
+}
+
+/* שעון */
+#panel-clock{gap:1vh}
+#clockTime{font-size:clamp(70px,14vw,240px);font-weight:800;line-height:1;color:#fff;
+  text-shadow:0 0 40px var(--teal-glow)}
+#clockSeconds{font-size:clamp(14px,1.4vw,24px);color:var(--dim);letter-spacing:.3em;direction:ltr}
+#gregDate{font-size:clamp(15px,1.6vw,28px);color:var(--dim)}
+#nextCard{
+  background:linear-gradient(135deg,var(--card),#0d2142);
+  border:2px solid var(--teal);border-radius:20px;
+  box-shadow:0 0 45px var(--teal-glow);
+  padding:2.2vh 5vw;text-align:center;margin-top:2vh;min-width:min(60vw,700px);
+}
+#nextLabel{font-size:clamp(12px,1.1vw,18px);color:var(--dim);letter-spacing:.25em}
+#nextName{font-size:clamp(24px,3.2vw,56px);font-weight:800;color:var(--teal-light);margin-top:.2em}
+#nextTime{font-size:clamp(30px,4vw,72px);font-weight:800;color:#fff}
+#nextCountdown{font-size:clamp(14px,1.5vw,26px);color:var(--gold);margin-top:.3em;font-weight:700}
+
+/* זמנים */
+#zmanimGrid{
+  display:grid;grid-template-columns:repeat(2,minmax(200px,26vw));
+  gap:1.2vh 3vw;width:min(92vw,1000px);
+}
+.z-row{
+  display:flex;justify-content:space-between;align-items:center;gap:2vw;
+  background:var(--card);border-radius:12px;padding:1.4vh 1.6vw;
+  border-right:4px solid var(--teal);
+}
+.z-row.hl{border-right-color:var(--gold);box-shadow:0 0 25px rgba(251,191,36,.25);background:#1a3157}
+.z-label{font-size:clamp(14px,1.6vw,28px);color:var(--dim)}
+.z-val{font-size:clamp(16px,1.9vw,34px);font-weight:800;color:#fff;direction:ltr}
+#zmanimSpecial{margin-top:3vh;text-align:center}
+#zmanimSpecial .big{
+  font-size:clamp(24px,3vw,54px);font-weight:800;color:var(--gold);
+  text-shadow:0 0 30px rgba(251,191,36,.3);
+}
+#zmanimSpecial .lbl{font-size:clamp(14px,1.4vw,24px);color:var(--text);margin-bottom:.3em}
+
+/* מניינים */
+#minyanList{width:min(90vw,900px);display:flex;flex-direction:column;gap:1.1vh}
+.m-row{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--card);border-radius:12px;padding:1.5vh 2.4vw;
+  font-size:clamp(16px,1.8vw,32px);border-right:4px solid var(--navy2);
+}
+.m-row .m-name{font-weight:600}
+.m-row .m-time{font-weight:800;direction:ltr;color:var(--teal-light)}
+.m-row.next{
+  border-right-color:var(--teal);background:linear-gradient(135deg,#123a52,var(--card));
+  box-shadow:0 0 35px var(--teal-glow);transform:scale(1.03);
+}
+.m-row.next .m-time{color:#fff}
+.m-row.next .m-name::after{content:"  •  הבא";color:var(--gold);font-size:.75em}
+.m-done{opacity:.45}
+.m-auto-note{font-size:clamp(12px,1.2vw,20px);color:var(--dim);margin-top:2vh;text-align:center}
+
+/* הלכה */
+#halachaText{
+  width:min(84vw,950px);font-size:clamp(18px,2.2vw,40px);line-height:1.7;text-align:center;
+  background:var(--card);border-radius:20px;padding:4vh 4vw;border:2px solid var(--navy2);
+  max-height:46vh;overflow:auto;
+}
+#talGeshemBox{
+  margin-top:3vh;text-align:center;background:var(--card);border-radius:16px;
+  padding:1.6vh 4vw;border:2px solid var(--teal);
+}
+.tg-title{font-size:clamp(12px,1.2vw,20px);color:var(--dim);letter-spacing:.15em}
+#talGeshem{font-size:clamp(18px,2vw,36px);font-weight:800;color:var(--teal-light);margin-top:.2em}
+#omerBox{margin-top:2vh;font-size:clamp(16px,1.8vw,30px);color:var(--gold);font-weight:700}
+
+#ftr{
+  flex:0 0 6vh;display:flex;align-items:center;justify-content:space-between;
+  padding:0 3vw;border-top:1px solid var(--navy2);font-size:clamp(11px,1.1vw,18px);color:var(--dim);
+}
+#ftrTal{font-weight:700;color:var(--teal-light)}
+#ftrAdminWrap{display:flex;align-items:center;gap:1.2em}
+#ftrAdmin{color:var(--dim);text-decoration:none;opacity:.55}
+#ftrAdmin:hover{opacity:1}
+.ailon-mark{font-weight:800;letter-spacing:.25em;color:var(--teal);opacity:.5;font-size:.8em}
+
+/* פאנלים דינמיים */
+.list{display:flex;flex-direction:column;gap:1.2vh;max-height:56vh;overflow:auto}
+.list .z-row{display:flex;justify-content:space-between;align-items:center;gap:2vw}
+.note-line{margin-top:3vh;font-size:clamp(14px,1.4vw,24px);color:var(--dim);text-align:center}
+.notice-card{
+  width:min(84vw,950px);background:var(--card);border:2px solid var(--teal);border-radius:20px;
+  padding:3vh 4vw;text-align:center;margin-bottom:2vh
+}
+.notice-title{font-size:clamp(20px,2.4vw,44px);font-weight:800;color:var(--teal-light)}
+.notice-text{font-size:clamp(15px,1.7vw,30px);margin-top:1vh;line-height:1.5;color:var(--text);white-space:pre-wrap}
