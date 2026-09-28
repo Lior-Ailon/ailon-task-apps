@@ -593,9 +593,27 @@ function renderNext() {
   $('#nextTime').textContent = NEXT.time;
 }
 
+function buildAcTicks() {
+  const g = document.getElementById('acTicks'); if (!g) return;
+  let s = '';
+  for (let i = 0; i < 60; i++) {
+    const major = i % 5 === 0;
+    const w = major ? 1.6 : .7, h = major ? 9 : 5;
+    s += `<rect x="${100 - w / 2}" y="${14}" width="${w}" height="${h}" fill="${major ? '#e8e2d4' : 'rgba(216,192,168,.55)'}" transform="rotate(${i * 6} 100 100)"/>`;
+  }
+  g.innerHTML = s;
+}
+
 function tick() {
   const now = new Date();
   $('#clockTime').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  const acH = document.getElementById('acH'), acM = document.getElementById('acM'), acS = document.getElementById('acS');
+  if (acH) {
+    const h12 = now.getHours() % 12, m = now.getMinutes(), s = now.getSeconds();
+    acH.setAttribute('transform', 'rotate(' + ((h12 + m / 60) * 30) + ' 100 100)');
+    acM.setAttribute('transform', 'rotate(' + ((m + s / 60) * 6) + ' 100 100)');
+    acS.setAttribute('transform', 'rotate(' + (s * 6) + ' 100 100)');
+  }
   const ht = $('#hdrTime'); if (ht) ht.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
   const hg = $('#hdrGreg'); if (hg) hg.textContent = now.toLocaleDateString('he-IL',
     { weekday: 'long', day: 'numeric', month: 'long' });
@@ -621,6 +639,7 @@ async function fullRefresh() {
   buildDynamicPanels();
   renderStatic();
   loadRambam();
+  buildAcTicks();
   renderZmanim();
   renderMinyan();
   renderNext();
