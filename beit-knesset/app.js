@@ -131,8 +131,47 @@ const HEB_MONTHS = ['תשרי', 'חשוון', 'כסלו', 'טבת', 'שבט', '�
 const monthName = m => m === 13 ? 'אדר א׳' : m === 14 ? 'אדר ב׳' : HEB_MONTHS[(m > 6 ? m - 7 : m + 5)];
 
 async function initHebcal() {
-  try { H = await import('https://cdn.jsdelivr.net/npm/@hebcal/core@5/+esm'); }
+  try { H = await import('https://cdn.jsdelivr.net/npm/@hebcal/core@6/+esm'); }
   catch (e) { console.warn('hebcal לא נטען', e); }
+}
+
+/* ---------- דף יומי (פורט של daf.el, נחלת הכלל) ---------- */
+const DAF_TABLE = [
+  ['ברכות',64],['שבת',157],['עירובין',105],['פסחים',121],['שקלים',22],['יומא',88],
+  ['סוכה',56],['ביצה',40],['ראש השנה',35],['תענית',31],['מגילה',32],['מועד קטן',29],
+  ['חגיגה',27],['יבמות',122],['כתובות',112],['נדרים',91],['נזיר',66],['סוטה',49],
+  ['גיטין',90],['קידושין',82],['בבא קמא',119],['בבא מציעא',119],['בבא בתרא',176],
+  ['סנהדרין',113],['מכות',24],['שבועות',49],['עבודה זרה',76],['הוריות',14],
+  ['זבחים',120],['מנחות',110],['חולין',142],['בכורות',61],['ערכין',34],['תמורה',34],
+  ['כריתות',28],['מעילה',22],['קינים',4],['תמיד',9],['מידות',5],['נידה',73]
+];
+const DAF_START8 = 721163, DAF_CYCLE = 2711, DAF_OFFSETS = { 36: 21, 37: 24, 38: 32 };
+
+function toGematria(n) {
+  if (n === 15) return 'טו';
+  if (n === 16) return 'טז';
+  const map = [['ק',100],['צ',90],['פ',80],['ע',70],['ס',60],['נ',50],['מ',40],
+    ['ל',30],['כ',20],['י',10],['ט',9],['ח',8],['ז',7],['ו',6],['ה',5],['ד',4],['ג',3],['ב',2],['א',1]];
+  let out = '';
+  for (const [ch, v] of map) while (n >= v) { out += ch; n -= v; }
+  return out || 'א';
+}
+
+function dafYomiFor(abs) {
+  if (!abs || abs < DAF_START8) return null;
+  const day = (abs - DAF_START8) % DAF_CYCLE;
+  let sofar = 0;
+  for (let i = 0; i < DAF_TABLE.length; i++) {
+    const last = DAF_TABLE[i][1];
+    sofar += last - 1;
+    if (day < sofar) {
+      const daf = last + 1 - (sofar - day) + (DAF_OFFSETS[i] || 0);
+      const gm = toGematria(daf);
+      const num = gm.length > 1 ? gm.slice(0, -1) + '״' + gm.slice(-1) : gm + '׳';
+      return 'דף יומי • ' + DAF_TABLE[i][0] + ' דף ' + num;
+    }
+  }
+  return null;
 }
 
 function hebInfo(date, tz) {
@@ -170,6 +209,8 @@ function hebInfo(date, tz) {
         info.isRoshChodesh = !!(ev.getFlags() & fl.ROSH_CHODESH) && !info.isYomTov;
       }
     } catch (e) {}
+
+    try { info.dafYomi = dafYomiFor(hd.abs()); } catch (e) {}
 
     try {
       const m = hd.getMonth(), d = hd.getDate();
@@ -425,6 +466,7 @@ function renderStatic() {
     $('#hebDate').textContent = INFO.hebDate || '';
     $('#parsha').textContent = INFO.parsha || (INFO.isShabbat ? 'שבת שלום' : '');
     $('#special').textContent = INFO.holiday || '';
+    $('#dafYomi').textContent = INFO.dafYomi || '';
     $('#holidayLogo').innerHTML = logoFor(INFO.holiday);
     const isGeshem = INFO.talGeshem.includes('גשם');
     $('#tgIcon').innerHTML = wrap(isGeshem ? ICONS.geshem : ICONS.tal);
