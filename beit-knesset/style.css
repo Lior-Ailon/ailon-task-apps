@@ -390,3 +390,107 @@ body{
 .candle-glow{filter:drop-shadow(0 0 14px rgba(245,215,122,.9))}
 #shulName{text-shadow:0 2px 18px rgba(184,134,11,.4)}
 #shulCity{color:#e9c767}
+
+/* ---------- דף יומי ---------- */
+#dafYomi{
+  font-size:clamp(12px,1.35vw,23px);color:var(--gold-light);margin-top:.15em;font-weight:700;letter-spacing:.04em;
+  text-shadow:0 0 14px rgba(245,215,122,.3);
+}
+#dafYomi:empty{display:none}
+
+/* ================================================================
+   v2.0 — עיצוב מעודר בסגנון "בית הכנסת דרכי שלום": כרטיסי קלף
+   בהירים (קרם/תכלת) עם מסגרת זהב על רקע הלילה הכהה שלנו.
+   שילוב, לא חיקוי: המסגרת החיצונית + הכוכבים נשארים שלנו,
+   כרטיסי התוכן הפכו לבהירים כמו בדוגמאות.
+   ================================================================ */
+:root{
+  --paper:linear-gradient(160deg,#fdf8ec 0%,#f3f7fb 55%,#e7effa 100%);
+  --paper-deep:linear-gradient(160deg,#fbf3dd 0%,#eef5fb 60%,#dfe9f6 100%);
+  --ink:#15294a; --ink-dim:#4d6584; --gold-deep:#b8860b; --gold-rim:#d9a635;
+}
+
+/* כותרת — כמוסה מעוגלת עם קישוטי זהב בפינות */
+#hdr{
+  margin:1.6vh 2.4vw 0;flex:0 0 auto;min-height:10vh;
+  background:linear-gradient(135deg,#132a4d,#0d1e3a 55%,#132a4d);
+  border-radius:999px;border:1.5px solid var(--gold-rim);
+  box-shadow:0 8px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);
+  padding:0 4vw;position:relative;
+}
+#hdr::after{display:none}
+#hdr::before{
+  content:"❋";position:absolute;top:50%;transform:translateY(-50%);left:1.6vw;
+  color:var(--gold-rim);font-size:clamp(16px,1.8vw,28px);opacity:.8;
+}
+#main{margin-top:1.6vh}
+
+/* כרטיסי תוכן — קלף בהיר, טקסט נייבי, מסגרת זהב */
+#nextCard,.z-row,.m-row,.halacha-card,.azk-row,.notice-card,#talGeshemBox,.bless-frame{
+  background:var(--paper) !important;border:1.5px solid var(--gold-rim) !important;
+  box-shadow:0 6px 26px rgba(8,16,32,.35),inset 0 1px 0 rgba(255,255,255,.6) !important;
+  color:var(--ink) !important;
+}
+#nextLabel,.z-label,.m-row .m-name,.azk-name,.notice-text,#talGeshem,.bless-sub,#halachaCards,.halacha-card{color:var(--ink) !important}
+#nextName{color:var(--ink) !important}
+#nextTime,#nextCountdown{color:var(--gold-deep) !important;text-shadow:none !important}
+.z-val{color:var(--ink) !important;font-weight:900}
+.z-label{color:var(--ink-dim) !important}
+.m-row .m-time{color:var(--gold-deep) !important}
+.m-row.next{background:var(--paper-deep) !important;box-shadow:0 0 34px rgba(184,134,11,.35) !important}
+.m-row.next .m-time{color:var(--gold-deep) !important}
+.m-row.next .m-name::after{color:var(--gold-deep) !important}
+.azk-date{color:var(--gold-deep) !important}
+.azk-when{color:var(--ink-dim) !important}
+.azk-row.today{background:var(--paper-deep) !important;box-shadow:0 0 40px rgba(184,134,11,.4) !important}
+.azk-row.today .azk-when{color:var(--gold-deep) !important}
+.notice-title{color:var(--gold-deep) !important}
+.tg-title{color:var(--ink-dim) !important}
+#tgIcon svg{color:var(--gold-deep) !important;filter:drop-shadow(0 0 6px rgba(184,134,11,.4)) !important}
+.halacha-card:first-child::before,.halacha-card:last-child:not(:first-child)::before{
+  background:var(--gold-deep) !important;color:#fff !important;
+}
+.bless-name{background:rgba(184,134,11,.08) !important;border:1px solid rgba(184,134,11,.35) !important;color:var(--gold-deep) !important}
+.bless-sub{color:var(--ink-dim) !important}
+
+/* קישוט יהלום זהב בפינה — כמו בכרטיס ההלכה בדוגמה */
+#nextCard::after,.halacha-card:first-child::after,.bless-frame::after{
+  content:"◆";position:absolute;top:-.6em;left:1.4em;color:var(--gold-deep);
+  font-size:.6em;background:var(--paper);padding:0 .3em;border-radius:50%;
+}
+#nextCard,.halacha-card:first-child,.bless-frame{position:relative}
+
+/* תחתית — כמוסה מעוגלת תואמת */
+#ftr{
+  margin:0 2.4vw 1.6vh;border-radius:999px;border:1px solid rgba(217,166,53,.4);
+  border-top:none;background:linear-gradient(135deg,#132a4d,#0d1e3a);
+  padding:0 3vw;box-shadow:0 6px 22px rgba(0,0,0,.3);
+}
+
+/* ---------- טיקר הודעות — רץ ברקע, תמיד נראה ---------- */
+#ticker{
+  display:none;flex:0 0 auto;align-items:center;gap:1vw;overflow:hidden;
+  margin:0 2.4vw;min-height:5.2vh;
+  background:var(--paper);
+  border:1.5px solid var(--gold-rim);border-radius:999px;
+  box-shadow:0 6px 22px rgba(8,16,32,.4),inset 0 1px 0 rgba(255,255,255,.6);
+  padding:.2vh 0;position:relative;
+}
+#ticker::before{
+  content:"הודעות";flex:0 0 auto;align-self:center;
+  background:linear-gradient(160deg,#b8860b,#d9a635);color:#fff;font-weight:900;
+  border-radius:999px;padding:.5vh 1.4vw;margin-right:1.2vw;
+  font-size:clamp(11px,1vw,17px);letter-spacing:.1em;
+  box-shadow:0 2px 10px rgba(184,134,11,.45);
+}
+#tickerInner{
+  display:flex;align-items:center;gap:2vw;white-space:nowrap;flex:0 0 auto;width:max-content;
+  font-size:clamp(14px,1.5vw,26px);color:var(--ink);font-weight:600;
+  animation:tkrun 38s linear infinite;will-change:transform;
+}
+#ticker:hover #tickerInner{animation-play-state:paused}
+.tk-sep{color:var(--gold-deep);opacity:.7}
+@keyframes tkrun{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
