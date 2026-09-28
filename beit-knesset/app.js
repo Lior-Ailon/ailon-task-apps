@@ -543,6 +543,9 @@ function renderNext() {
 function tick() {
   const now = new Date();
   $('#clockTime').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  const ht = $('#hdrTime'); if (ht) ht.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  const hg = $('#hdrGreg'); if (hg) hg.textContent = now.toLocaleDateString('he-IL',
+    { weekday: 'long', day: 'numeric', month: 'long' });
   $('#clockSeconds').textContent = pad(now.getSeconds());
   $('#gregDate').textContent = now.toLocaleDateString('he-IL',
     { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
