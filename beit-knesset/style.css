@@ -706,3 +706,66 @@ body{
 
 /* פוטר */
 #ftr,#ftr *{color:#cdbcae !important}
+
+
+/* ================================================================
+   v3.1 — השלמת ההסבה לאדום-כסוף: משתנים, שאריות זהב/טורקיז/כחול,
+   מסגרת כסוף, והתאמת מסך הניהול לאותה פלטה.
+   ================================================================ */
+:root{
+  --navy:#4a1010; --navy2:#5c1414;
+  --teal:#8a6a3f; --teal-light:#d8c0a8; --teal-glow:rgba(216,192,168,.35);
+  --text:#ece7dd;
+}
+/* מסגרת החוץ: כסף מלוטש במקום זהב */
+body::after{
+  background:linear-gradient(160deg,#8a7a5c,#f2e9dc 18%,#a8926a 40%,#6b5c42 60%,#e8dcc4 82%,#8a7a5c) border-box;
+  opacity:.45;
+}
+#hdr::after{background:linear-gradient(90deg,transparent,#cbb694 28%,#f2e9dc 50%,#cbb694 72%,transparent)}
+#hdr{background:linear-gradient(180deg,rgba(216,192,168,.10),transparent)}
+#hebDate{color:#d8c0a8;text-shadow:0 0 24px rgba(216,192,168,.35)}
+.panel-title::before{background:linear-gradient(90deg,transparent,#a8926a)}
+.panel-title::after{background:linear-gradient(90deg,#a8926a,transparent)}
+#nextTime{color:#7a5c34}
+#nextCountdown{color:#8a6a3f}
+.z-row{border-right:4px solid #a8926a;border-color:rgba(203,182,148,.55)}
+.z-row.hl{border-right-color:#cbb694;box-shadow:0 0 30px rgba(216,192,168,.28)}
+.m-row{border-right:4px solid #a8926a;border-color:rgba(203,182,148,.5)}
+.m-row.next{border-right-color:#cbb694;box-shadow:0 0 42px rgba(216,192,168,.35)}
+.azk-row{border:1px solid rgba(203,182,148,.5)}
+.azk-row.today{border:1px solid #cbb694;box-shadow:0 0 45px rgba(216,192,168,.5)}
+.azk-row.today .azk-when{color:#7a5c34}
+.azk-date{color:#7a5c34}
+.halacha-card{border:1px solid rgba(203,182,148,.5)}
+.halacha-card:first-child{border-color:rgba(203,182,148,.75)}
+.bless-frame{border:1px solid #cbb694}
+.bless-name{background:rgba(216,192,168,.12);border:1px solid rgba(203,182,148,.45);color:#7a5c34}
+.notice-title{color:#8a6a3f}
+#talGeshemBox{border:1px solid rgba(203,182,148,.55)}
+#tgBanner{border-color:#cbb694;color:#7a5c34}
+#tgIcon svg{color:#a8926a}
+#shulName{text-shadow:0 2px 18px rgba(216,192,168,.35)}
+#dafYomi{color:#d8c0a8;text-shadow:0 0 14px rgba(216,192,168,.3)}
+/* האזכרות: להבה חמה על נר שמנת */
+.candle-glow{filter:drop-shadow(0 0 14px rgba(216,192,168,.9))}
+
+/* ---------- ניהול: רקע בורדו, שדות כהים-אדומים, כפתורי שמפניה ---------- */
+body.admin-mode{overflow:auto}
+#gate input,.fld input,.fld select,.fld textarea,.mrow input,.mrow select{
+  border-color:#6b4a3a !important;background:rgba(60,10,10,.55) !important;color:#f2eee8 !important
+}
+#gate input::placeholder{color:#a89880}
+#gate{padding:2vh 0}
+button.btn-main{background:#8a6a3f;color:#fff}
+.btn-sec{background:#4a1010;color:#d8c0a8}
+.btn-danger{background:#8a2a2a;color:#fff}
+.toast{background:#8a6a3f}
+h2{border-bottom-color:#6b4a3a !important}
+
+/* v3.1a — פוטר וטיקר באדום-כסוף */
+#ftr{
+  background:linear-gradient(135deg,#3a0c0c,#2a0606) !important;
+  border:1px solid rgba(203,182,148,.35) !important;border-top:none;
+  box-shadow:0 6px 22px rgba(0,0,0,.4) !important;
+}
