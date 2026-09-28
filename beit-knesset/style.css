@@ -632,3 +632,77 @@ body{
   font-family:'David Libre',serif;font-weight:500;color:var(--ink);
   font-size:clamp(14px,1.5vw,30px);line-height:1.45;
 }
+
+
+/* ================================================================
+   v3.0 — סגנון אדום-כסוף בהשראת "הצג החכם":
+   רקע בורדו עמוק, כיתוב כסוף-שמפניה, כרטיסים לבן/שמנת
+   עם כיתוב שחור, שעון אנלוגי כסוף במרכז המסך הראשי.
+   ================================================================ */
+:root{
+  --bg:#2a0606;
+  --gold:#d8c0a8; --gold-light:#f2e9dc; --gold-deep:#8a6a3f; --gold-rim:#cbb694;
+  --ink:#161616; --ink-dim:#3d3d3d; --dim:#cdbcae;
+  --card:rgba(70,14,14,.6);
+}
+body{
+  background:
+    radial-gradient(60vw 60vh at 85% -10%,rgba(140,34,34,.32),transparent 60%),
+    radial-gradient(70vw 70vh at 8% 108%,rgba(88,16,16,.75),transparent 55%),
+    linear-gradient(160deg,#4a1010 0%,#2a0606 55%,#180303 100%) !important;
+  background-attachment:fixed;
+}
+#hdr{
+  background:linear-gradient(135deg,#541414,#2a0606 55%,#3a0c0c);
+  border-color:#cbb694;
+  box-shadow:0 8px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(242,233,220,.14);
+}
+#shulName{color:#f2eee8 !important;text-shadow:0 2px 22px rgba(216,192,168,.35),0 2px 12px rgba(0,0,0,.5) !important}
+#shulDedication{color:#d8c0a8 !important}
+#parsha{color:#e8e2d4 !important}
+#special{color:#f2e9dc !important}
+#hdrTime{color:#f2eee8 !important;text-shadow:0 0 34px rgba(216,192,168,.35),0 2px 12px rgba(0,0,0,.5) !important}
+#hdrGreg{color:#cdbcae !important}
+#hdrClock #hebDate{color:#d8c0a8 !important}
+
+/* פאנלים: בורדו עמוק אחיד במקום תמונות */
+.panel::before{
+  background:
+    radial-gradient(60vw 60vh at 80% 8%,rgba(120,28,28,.35),transparent 62%),
+    radial-gradient(70vw 70vh at 15% 95%,rgba(70,12,12,.5),transparent 58%) !important;
+  background-size:cover;background-position:center;
+}
+.panel::after{background:linear-gradient(180deg,rgba(26,4,4,.30),rgba(14,2,2,.52)) !important}
+.panel-title{color:#ead9c0 !important;text-shadow:0 2px 14px rgba(0,0,0,.6),0 0 34px rgba(216,192,168,.25) !important}
+
+/* כרטיסים: לבן/שמנת עם כיתוב שחור (כמו בתמונת ההשראה) */
+#nextCard,.z-row,.m-row,.halacha-card,.azk-row,.notice-card,#talGeshemBox,.bless-frame,#dafBox,#rambamBox,#lashonCard{
+  background:linear-gradient(160deg,rgba(253,250,242,.96),rgba(245,239,226,.92)) !important;
+  border-color:#cbb694 !important;
+  color:#161616 !important;
+  box-shadow:0 10px 34px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.75) !important;
+}
+.m-row.next{border-right-color:#cbb694 !important;box-shadow:0 0 42px rgba(216,192,168,.35) !important}
+.m-row.next .m-time{color:#8a6a3f !important}
+.m-row.next .m-name::after{color:#8a6a3f !important}
+.next-label,.side-title,.lashon-title{color:#8a6a3f !important}
+#nextLabel{color:#8a6a3f !important}
+
+/* שעון דיגיטלי + אנלוגי במרכז */
+#clockCenter{display:flex;align-items:center;justify-content:center;gap:4vw;width:100%;flex:0 0 auto}
+#analogWrap{flex:0 0 auto}
+#analogWrap svg{width:clamp(190px,40vh,500px);height:auto;display:block;
+  filter:drop-shadow(0 14px 44px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(216,192,168,.18))}
+#digitalCol{text-align:center;flex:0 0 auto}
+#clockTime{color:#f2eee8 !important;font-size:clamp(42px,6.5vw,112px) !important;
+  text-shadow:0 4px 44px rgba(0,0,0,.5),0 0 70px rgba(216,192,168,.4) !important}
+#clockSeconds,#gregDate{color:#cdbcae !important;text-shadow:0 1px 8px rgba(0,0,0,.5) !important}
+
+/* טיקר: גלולה כסופה-אדומה */
+#ticker{background:rgba(46,8,8,.88) !important;border-color:#cbb694 !important;
+  box-shadow:0 6px 24px rgba(0,0,0,.5),inset 0 1px 0 rgba(242,233,220,.14) !important}
+#tickerInner{color:#efe9dc !important}
+#ticker::before{color:#2a0606 !important;background:linear-gradient(135deg,#f2e9dc,#d8c0a8) !important}
+
+/* פוטר */
+#ftr,#ftr *{color:#cdbcae !important}
