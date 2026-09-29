@@ -421,33 +421,23 @@ function buildDynamicPanels() {
   });
   const main = $('#main');
   const { week, far } = azkarotData(S);
-  if (week.length || far.length) {
+  const tiles = [];
+  week.forEach(a => tiles.push({ ...a, soon: true, today: a.days === 0 }));
+  far.slice(0, Math.max(0, 16 - week.length)).forEach(a => tiles.push({ ...a, soon: false, today: false }));
+  if (tiles.length) {
     main.insertAdjacentHTML('beforeend', `
       <section class="panel" id="panel-azkarot">
         <h2 class="panel-title">אזכרות</h2>
-        <div class="azk-wrap">
-          ${week.map(a => `
-            <div class="azk-row soon ${a.days === 0 ? 'today' : ''}">
-              <div class="azk-candle">${candleSvg('today')}</div>
+        <div class="azk-grid">
+          ${tiles.map(a => `
+            <div class="azk-tile ${a.soon ? 'soon' : 'far'} ${a.today ? 'today' : ''}">
+              <div class="azk-candle ${a.soon ? 'candle-glow' : 'candle-dim'}">${candleSvg(a.soon ? 'today' : 'far')}</div>
               <div class="azk-name">${a.name}</div>
-              <div class="azk-meta">
-                <div class="azk-cap">תאריך פטירה</div>
-                <div class="azk-date">${a.heb}</div>
-                <div class="azk-when">${a.days === 0 ? AZK_LABEL(0) + ' — הנר דולק' : a.weekday + ' • ' + AZK_LABEL(a.days) + ' — הנר דולק'}</div>
-              </div>
-            </div>`).join('')}
-          ${far.map(a => `
-            <div class="azk-row far candle-dim">
-              <div class="azk-candle">${candleSvg('far')}</div>
-              <div class="azk-name">${a.name}</div>
-              <div class="azk-meta">
-                <div class="azk-cap">תאריך פטירה</div>
-                <div class="azk-date">${a.heb}</div>
-                <div class="azk-when">${a.weekday}</div>
-              </div>
+              <div class="azk-date">${a.heb}</div>
+              ${a.soon ? `<div class="azk-when">${a.days === 0 ? 'היום — יום השנה' : AZK_LABEL(a.days)}</div>` : ''}
             </div>`).join('')}
         </div>
-        <div class="azk-note">יעלו זכרותם לברכה — נר השבוע מאיר</div>
+        <div class="azk-note">יעלו זכרותם לברכה</div>
       </section>`);
   }
   if ((S.yearBlessing || {}).names || 0) {
