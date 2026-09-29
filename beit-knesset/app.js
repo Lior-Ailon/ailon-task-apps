@@ -53,7 +53,7 @@ function zmanimFor(date, s) {
 /* ---------- הגדרות ---------- */
 const DEFAULTS = {
   version: 1,
-  shulName: 'בית הכנסת שיח יוסף ע"ש הרב יוסף חדד',
+  shulName: 'בית הכנסת שיח יוסף',
   brand: 'AILON',
   city: 'נתיבות', tz: 'Asia/Jerusalem',
   lat: 31.423, lng: 34.589,
@@ -279,7 +279,7 @@ function activeNotices(s, date) {
 /* ---------- אייקונים ---------- */
 const wrap = (inner, cls = '') => `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor"
   stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="${cls}"
-  style="color:var(--teal-light)">${inner}</svg>`;
+  style="color:var(--gold-light)">${inner}</svg>`;
 
 const ICONS = {
   shofar: '<path d="M70 25 Q45 15 30 35 Q15 55 30 75 Q45 90 62 78"/><path d="M62 78 Q75 60 70 25"/><path d="M45 40 l-5 -8 M55 55 l7 -6 M40 62 l-8 5"/>',
@@ -323,7 +323,7 @@ const logoFor = name => {
 };
 
 const candleSvg = level => {
-  const colors = { today: 'var(--gold-light)', week: 'var(--teal-light)', far: '#a09284' };
+  const colors = { today: 'var(--gold-light)', week: 'var(--gold-light)', far: 'rgba(21,42,82,.6)' };
   const c = colors[level] || colors.far;
   return `<svg viewBox="0 0 60 80" fill="none">
     <g class="flame">
@@ -467,7 +467,7 @@ function buildDynamicPanels() {
         <h2 class="panel-title">שירותי הקהילה</h2>
         <div class="list">
           ${S.services.map(v => `<div class="z-row"><span class="z-label" style="color:var(--text)">${v.name}</span>
-            <span class="z-val" style="font-size:clamp(14px,1.4vw,26px);color:var(--teal-light)">${v.value || ''}</span></div>`).join('')}
+            <span class="z-val" style="font-size:clamp(14px,1.4vw,26px);color:var(--gold-light)">${v.value || ''}</span></div>`).join('')}
         </div>
       </section>`);
   }
