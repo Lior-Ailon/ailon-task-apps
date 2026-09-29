@@ -169,5 +169,9 @@
     ]
   },
   "halachot": {},
-  "dedication": "על שם הרב יוסף חדד"
+  "dedication": "על שם הרב יוסף חדד",
+  "board": {
+    "panel_seconds": 14,
+    "azk_page_seconds": 12
+  }
 }
