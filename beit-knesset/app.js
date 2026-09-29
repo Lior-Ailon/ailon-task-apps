@@ -418,7 +418,7 @@ const AZK_LABEL = d => d === 0 ? 'היום — יום השנה' : d === 1 ? 'מ�
 /* מעבר אוטומטי בין עמודי האזכרות (9 כרטיסים בעמוד) */
 const AZK_PAGE_SIZE = 9;
 let azkPageIdx = 0, azkPagerTimer = null;
-const AZK_SOLDIER_BADGE = '<div class="azk-soldier"><svg viewBox="0 0 24 24" class="azk-soldier-ico"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" fill="#d4af37" stroke="#fff2c0" stroke-width="1"/><path d="M12 7l1.2 2.6 2.8.3-2 1.9.5 2.8-2.5-1.4-2.5 1.4.5-2.8-2-1.9 2.8-.3z" fill="#0e1c3c"/></svg><span>חייל צה״ל</span></div>';
+const AZK_SOLDIER_BADGE = '<div class="azk-soldier" title="חייל צה״ל"><svg viewBox="0 0 44 44" class="azk-soldier-ico"><circle cx="22" cy="22" r="20.5" fill="rgba(14,28,60,.55)" stroke="#d4af37" stroke-width="1.6"/><path d="M22 5.5l14 24.4H8z" fill="none" stroke="#d4af37" stroke-width="1.5" opacity=".9"/><path d="M22 38.5L8 14.1h28z" fill="none" stroke="#d4af37" stroke-width="1.5" opacity=".9"/><rect x="21" y="8" width="2" height="26" rx="1" fill="#f2ead2"/><path d="M16 12h12M17 10h10" stroke="#f2ead2" stroke-width="1.6" fill="none"/><path d="M14 36c-1.8-3-1.8-6.5 0-9.5M30 36c1.8-3 1.8-6.5 0-9.5" stroke="#7fae6a" stroke-width="1.4" fill="none"/><circle cx="14" cy="26" r="1.1" fill="#7fae6a"/><circle cx="30" cy="26" r="1.1" fill="#7fae6a"/></svg></div>';
 function startAzkPager(tiles) {
   if (azkPagerTimer) { clearInterval(azkPagerTimer); azkPagerTimer = null; }
   const box = document.getElementById('azkRegBox');
@@ -436,8 +436,9 @@ function startAzkPager(tiles) {
             ${a.is_soldier ? AZK_SOLDIER_BADGE : ''}
             <div class="azk-candle">${candleSvg('far')}</div>
             <div class="azk-body">
+              <div class="azk-prefix">לעילוי נשמת</div>
               <div class="azk-name">${a.name}</div>
-              <div class="azk-date">${a.heb}</div>
+              <div class="azk-date">תאריך פטירה: ${a.heb}</div>
             </div>
           </div>`).join('')}
       </div>
@@ -446,6 +447,62 @@ function startAzkPager(tiles) {
   render();
   const azkSecs = Math.max(3, ((S || {}).board || {}).azk_page_seconds || 12);
   if (pages.length > 1) azkPagerTimer = setInterval(() => { azkPageIdx = (azkPageIdx + 1) % pages.length; render(); }, azkSecs * 1000);
+}
+
+
+/* רקע חגים — כל חג מקבל את התמונות שלו בפינות המסך */
+const HOLIDAY_DECO = {
+  rosh_hashana: ['rosh.png', null],
+  yom_kippur: ['yom_kippur.png', null],
+  sukkot: ['sukkah.png', 'minim.png'],
+  simchat_torah: ['simchat_torah.png', null],
+  chanukah: ['chanukah.png', null],
+  purim: ['purim.png', null],
+  pesach: ['pesach.png', null],
+  shavuot: ['shavuot.png', null],
+  lag_baomer: ['lag_baomer.png', null],
+  rosh_chodesh: ['rosh_chodesh.png', null],
+  shabbat: ['shabbat.png', null],
+  tzom_gedaliah: ['mikdash.png', null],
+  asara_btevet: ['mikdash.png', null],
+  taanit_ester: ['mikdash.png', null],
+  shiva_asar_btamuz: ['mikdash.png', null],
+  tisha_bav: ['mikdash.png', null]
+};
+function currentHoliday(m, d, dow) {
+  /* hebcal: ניסן=1, אייר=2, סיון=3, תמוז=4, אב=5, אלול=6, תשרי=7, חשון=8, כסלו=9, טבת=10, שבט=11, אדר=12 */
+  if (m === 7 && d <= 2) return 'rosh_hashana';
+  if (m === 7 && d === 3) return 'tzom_gedaliah';
+  if (m === 7 && d === 10) return 'yom_kippur';
+  if (m === 7 && d >= 15 && d <= 21) return 'sukkot';
+  if (m === 7 && d >= 22 && d <= 23) return 'simchat_torah';
+  if (m === 9 && d >= 25) return 'chanukah';
+  if (m === 10 && d <= 3) return 'chanukah';
+  if (m === 10 && d === 10) return 'asara_btevet';
+  if (m === 12 && d === 13) return 'taanit_ester';
+  if (m === 12 && d >= 14 && d <= 15) return 'purim';
+  if (m === 1 && d >= 15 && d <= 22) return 'pesach';
+  if (m === 2 && d === 18) return 'lag_baomer';
+  if (m === 3 && d >= 5 && d <= 7) return 'shavuot';
+  if (m === 4 && d === 17) return 'shiva_asar_btamuz';
+  if (m === 5 && d === 9) return 'tisha_bav';
+  if (dow === 6) return 'shabbat';
+  if (d === 1 || d === 30) return 'rosh_chodesh';
+  return null;
+}
+function updateHolidayDeco() {
+  try {
+    const hd = new H.HDate();
+    const key = currentHoliday(hd.getMonth(), hd.getDate(), hd.getDay());
+    const imgs = key ? HOLIDAY_DECO[key] : null;
+    const L = document.getElementById('decoLeft'), R = document.getElementById('decoRight');
+    if (!L || !R) return;
+    const [il, ir] = imgs || [null, null];
+    L.style.backgroundImage = il ? `url('./${il}?v=5.6.0')` : 'none';
+    L.style.display = il ? 'block' : 'none';
+    R.style.backgroundImage = ir ? `url('./${ir}?v=5.6.0')` : 'none';
+    R.style.display = ir ? 'block' : 'none';
+  } catch (e) {}
 }
 
 function buildDynamicPanels() {
@@ -673,6 +730,7 @@ function showPanel(i) {
 }
 
 async function fullRefresh() {
+  updateHolidayDeco();
   S = await loadSettings();
   const now = new Date();
   Z = zmanimFor(now, S);
