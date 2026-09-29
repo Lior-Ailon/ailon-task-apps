@@ -98,6 +98,8 @@ function tryGate() {
 
 function fillForm() {
   $('#f_shulName').value = S.shulName;
+  $('#f_panel_sec').value = (S.board || {}).panel_seconds ?? 14;
+  $('#f_azk_sec').value = (S.board || {}).azk_page_seconds ?? 12;
   $('#f_brand').value = S.brand || '';
   const sel = $('#f_city');
   sel.innerHTML = Object.keys(CITIES).map(c => `<option>${c}</option>`).join('');
@@ -226,6 +228,10 @@ function save() {
   S.offsets = {
     tefillin: +$('#f_tefillin').value, candles: +$('#f_candles').value,
     tzeit: +$('#f_tzeit').value, rt: +$('#f_rt').value
+  };
+  S.board = {
+    panel_seconds: Math.max(3, +$('#f_panel_sec').value || 14),
+    azk_page_seconds: Math.max(3, +$('#f_azk_sec').value || 12)
   };
   S.halacha = $('#f_halacha').value.split('\n').map(x => x.trim()).filter(Boolean);
   S.yearBlessing = { names: $('#f_blessing').value.split('\n').map(x => x.trim()).filter(Boolean) };
