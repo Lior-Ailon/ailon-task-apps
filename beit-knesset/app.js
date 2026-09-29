@@ -444,7 +444,8 @@ function startAzkPager(tiles) {
       ${pages.length > 1 ? `<div class="azk-dots">${pages.map((_, i) => `<span class="azk-dot${i === azkPageIdx ? ' on' : ''}"></span>`).join('')}</div>` : ''}`;
   };
   render();
-  if (pages.length > 1) azkPagerTimer = setInterval(() => { azkPageIdx = (azkPageIdx + 1) % pages.length; render(); }, 12000);
+  const azkSecs = Math.max(3, ((S || {}).board || {}).azk_page_seconds || 12);
+  if (pages.length > 1) azkPagerTimer = setInterval(() => { azkPageIdx = (azkPageIdx + 1) % pages.length; render(); }, azkSecs * 1000);
 }
 
 function buildDynamicPanels() {
@@ -704,7 +705,8 @@ async function fullRefresh() {
   }
   setInterval(tick, 1000);
   setInterval(fullRefresh, 60000);
-  if (!forcePanel) setInterval(() => showPanel(curPanel + 1), 14000);
+  const panelSecs = Math.max(3, (S.board || {}).panel_seconds || 14);
+  if (!forcePanel) setInterval(() => showPanel(curPanel + 1), panelSecs * 1000);
   document.addEventListener('click', () => showPanel(curPanel + 1));
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') showPanel(curPanel + 1);
