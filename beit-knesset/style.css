@@ -8,7 +8,7 @@
   --navy:#0b1a38; --navy2:#12244a; --navy-deep:#071229;
   --text:#f6efdd; --dim:rgba(246,239,221,.75);
   --ivory:#f7f0de; --ink:#152a52;
-  --card:rgba(9,19,44,.78); --cream:rgba(247,240,222,.96);
+  --card:rgba(9,19,44,.62); --cream:rgba(248,242,226,.74);
   --glass:rgba(11,26,56,.55);
 }
 
@@ -447,7 +447,8 @@ body{
 .azk-card{
   position:relative;
   display:flex;flex-direction:row-reverse;align-items:center;gap:1vw;
-  background:linear-gradient(165deg,#1c3059 0%,#0e1c3c 55%,#132a4d 100%);
+  background:linear-gradient(165deg,rgba(28,48,89,.82) 0%,rgba(14,28,60,.66) 55%,rgba(19,42,77,.8) 100%);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border:1px solid rgba(212,175,55,.75);
   border-radius:clamp(12px,1.3vw,22px);
   box-shadow:inset 0 0 0 2px rgba(212,175,55,.22),inset 0 0 60px rgba(4,10,26,.65),0 8px 22px rgba(0,0,0,.45);
@@ -488,3 +489,16 @@ body{
 .azk-dots{display:flex;gap:10px;justify-content:center;margin-top:1.2vh}
 .azk-dot{width:11px;height:11px;border-radius:50%;background:rgba(216,192,168,.35);box-shadow:0 1px 3px rgba(0,0,0,.4)}
 .azk-dot.on{background:var(--gold);box-shadow:0 0 10px rgba(212,175,55,.8)}
+
+/* ================================================================
+   v5.2 — אפקט זכוכית: הכותל נראה מאחורי כל כרטיסי התוכן,
+   טשטוש עדין שומר על בהירות הכיתוב
+   ================================================================ */
+.z-row,.m-row,.clock-card,.halacha-card,.bless-card,.zman-card,.azk-card{
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+  backdrop-filter:blur(14px) saturate(1.15);
+}
+.z-row,.m-row,.clock-card,.halacha-card,.bless-card,.zman-card{
+  text-shadow:0 1px 2px rgba(255,255,255,.35);
+  box-shadow:inset 0 0 0 2px rgba(212,175,55,.2),0 6px 18px rgba(0,0,0,.28);
+}
