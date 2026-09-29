@@ -164,6 +164,7 @@ function renderAzkarot() {
       <input class="azk-name" value="${a.name||''}" placeholder="שם הנפטר">
       <input class="azk-day" type="number" min="1" max="30" value="${a.day||''}" placeholder="יום" style="direction:ltr">
       <select class="azk-month">${HEB_MONTH_OPTS.map(m=>`<option value="${m}" ${a.month===m?'selected':''}>${HEB_MONTH_NAMES[m]}</option>`).join('')}</select>
+      <label class="azk-sol-lbl"><input type="checkbox" class="azk-soldier" ${a.is_soldier?'checked':''}> חייל</label>
       <button class="btn-danger" onclick="delArr('azkarot',${i})">✕</button>
     </div>`).join('');
 }
@@ -200,7 +201,8 @@ function collectExtra() {
   S.azkarot = [...document.querySelectorAll('#azkarotRows [data-azk]')].map(r=>({
     name: r.querySelector('.azk-name').value,
     day: +r.querySelector('.azk-day').value || '',
-    month: +r.querySelector('.azk-month').value
+    month: +r.querySelector('.azk-month').value,
+    is_soldier: r.querySelector('.azk-soldier').checked
   })).filter(a=>a.name && a.day);
   S.notices = [...document.querySelectorAll('#noticesRows [data-ntc]')].map(r=>({
     title: r.querySelector('.ntc-title').value,
