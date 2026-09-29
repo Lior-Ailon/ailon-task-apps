@@ -245,18 +245,28 @@ function hebInfo(date, tz) {
 /* ---------- אזכרות ---------- */
 const WEEKDAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
+const CIVIL_MONTH_NAMES = {1:'תשרי',2:'חשוון',3:'כסלו',4:'טבת',5:'שבט',6:'אדר',7:'ניסן',8:'אייר',9:'סיון',10:'תמוז',11:'אב',12:'אלול',13:'אדר א׳',14:'אדר ב׳'};
+function azkHebMonth(civil, leap) {
+  if (civil === 13) return leap ? 12 : 12; // אדר א׳ (בשנה רגילה — אדר)
+  if (civil === 14) return leap ? 13 : 12; // אדר ב׳ (בשנה רגילה — אדר)
+  if (civil === 6) return leap ? 13 : 12;  // אדר: בשנה מעוברת — אדר ב׳
+  return civil > 6 ? civil - 6 : civil + 6;
+}
+
 function azkarotData(s) {
   if (!H || !INFO || !(s.azkarot || []).length) return { week: [], far: [] };
   const todayAbs = INFO.hd.abs();
+  const hd0leap = INFO.hd.isLeapYear();
   const week = [], far = [];
   for (const a of s.azkarot) {
     if (!a || !a.day || !a.month || !a.name) continue;
     let hd = null;
-    try { hd = new H.HDate(a.day, a.month, INFO.hd.getFullYear()); } catch (e) {}
+    const yr0 = INFO.hd.getFullYear();
+    try { hd = new H.HDate(a.day, azkHebMonth(a.month, hd0leap), yr0); } catch (e) {}
     if (!hd) continue;
     let diff = hd.abs() - todayAbs;
-    if (diff < 0) { try { hd = new H.HDate(a.day, a.month, INFO.hd.getFullYear() + 1); diff = hd.abs() - todayAbs; } catch (e) {} }
-    const entry = { name: a.name, heb: a.day + ' ב' + monthName(a.month, INFO && INFO.hd ? INFO.hd.isLeapYear() : false), days: diff,
+    if (diff < 0) { try { hd = new H.HDate(a.day, azkHebMonth(a.month, H.isHebrewLeapYear(yr0 + 1) || INFO.hd.isLeapYear()), yr0 + 1); diff = hd.abs() - todayAbs; } catch (e) {} }
+    const entry = { name: a.name, heb: a.day + ' ב' + (CIVIL_MONTH_NAMES[a.month] || ''), days: diff,
       weekday: 'יום ' + WEEKDAYS[hd.getDay() % 7] };
     (diff >= 0 && diff <= 7 ? week : far).push(entry);
   }
@@ -417,12 +427,13 @@ function buildDynamicPanels() {
         <h2 class="panel-title">אזכרות</h2>
         <div class="azk-wrap">
           ${week.map(a => `
-            <div class="azk-row ${a.days === 0 ? 'today candle-glow' : 'week candle-mid'}">
-              <div class="azk-candle">${candleSvg(a.days === 0 ? 'today' : 'week')}</div>
+            <div class="azk-row soon ${a.days === 0 ? 'today' : ''}">
+              <div class="azk-candle">${candleSvg('today')}</div>
               <div class="azk-name">${a.name}</div>
               <div class="azk-meta">
+                <div class="azk-cap">תאריך פטירה</div>
                 <div class="azk-date">${a.heb}</div>
-                <div class="azk-when">${a.days === 0 ? AZK_LABEL(0) : a.weekday + ' • ' + AZK_LABEL(a.days)}</div>
+                <div class="azk-when">${a.days === 0 ? AZK_LABEL(0) + ' — הנר דולק' : a.weekday + ' • ' + AZK_LABEL(a.days) + ' — הנר דולק'}</div>
               </div>
             </div>`).join('')}
           ${far.map(a => `
@@ -430,6 +441,7 @@ function buildDynamicPanels() {
               <div class="azk-candle">${candleSvg('far')}</div>
               <div class="azk-name">${a.name}</div>
               <div class="azk-meta">
+                <div class="azk-cap">תאריך פטירה</div>
                 <div class="azk-date">${a.heb}</div>
                 <div class="azk-when">${a.weekday}</div>
               </div>
