@@ -355,3 +355,17 @@ body{
   #minyanList{grid-template-columns:1fr}
   #clockCenter{flex-direction:column;gap:2vh}
 }
+
+/* ================================================================
+   v4.1 — התאמות ליאור: בלי לוגו חג בכותרת; שעון אנלוגי בקצה הימני,
+   השעה הדיגיטלית במרכז, המניין הבא משמאל
+   ================================================================ */
+#holidayLogo{display:none !important}
+#panel-clock{flex-direction:row;justify-content:space-between;align-items:center;width:100%;gap:2vw}
+#clockCenter{display:contents}
+#digitalCol{align-items:center;text-align:center}
+#nextCard{align-self:center}
+#panel-clock .panel-title{display:none}
+@media (max-aspect-ratio:4/3){
+  #panel-clock{flex-direction:column;justify-content:center;gap:2.4vh}
+}
