@@ -266,7 +266,7 @@ function azkarotData(s) {
     if (!hd) continue;
     let diff = hd.abs() - todayAbs;
     if (diff < 0) { try { hd = new H.HDate(a.day, azkHebMonth(a.month, H.isHebrewLeapYear(yr0 + 1) || INFO.hd.isLeapYear()), yr0 + 1); diff = hd.abs() - todayAbs; } catch (e) {} }
-    const entry = { name: a.name, heb: a.day + ' ב' + (CIVIL_MONTH_NAMES[a.month] || ''), days: diff,
+    const entry = { name: a.name, heb: a.day + ' ב' + (CIVIL_MONTH_NAMES[a.month] || ''), days: diff, is_soldier: !!a.is_soldier,
       weekday: 'יום ' + WEEKDAYS[hd.getDay() % 7] };
     (diff >= 0 && diff <= 7 ? week : far).push(entry);
   }
@@ -422,21 +422,37 @@ function buildDynamicPanels() {
   const main = $('#main');
   const { week, far } = azkarotData(S);
   const tiles = [];
-  week.forEach(a => tiles.push({ ...a, soon: true, today: a.days === 0 }));
-  far.slice(0, Math.max(0, 24 - week.length)).forEach(a => tiles.push({ ...a, soon: false, today: false }));
-  if (tiles.length) {
+  far.slice(0, 24).forEach(a => tiles.push({ ...a, is_soldier: !!a.is_soldier }));
+  if (week.length || tiles.length) {
     main.insertAdjacentHTML('beforeend', `
       <section class="panel" id="panel-azkarot">
         <h2 class="panel-title">אזכרות</h2>
+        ${week.length ? `
+        <div class="azk-week-head">✦ נפטרי השבוע ✦</div>
+        <div class="azk-week-grid">
+          ${week.map(a => `
+            <div class="azk-card week ${a.days === 0 ? 'today' : ''}">
+              ${a.is_soldier ? '<div class="azk-soldier"><svg viewBox="0 0 24 24" class="azk-soldier-ico"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" fill="#d4af37" stroke="#fff2c0" stroke-width="1"/><path d="M12 7l1.2 2.6 2.8.3-2 1.9.5 2.8-2.5-1.4-2.5 1.4.5-2.8-2-1.9 2.8-.3z" fill="#0e1c3c"/></svg><span>חייל צה״ל</span></div>' : ''}
+              <div class="azk-candle">${candleSvg('today')}</div>
+              <div class="azk-body">
+                <div class="azk-prefix">לעילוי נשמת</div>
+                <div class="azk-name">${a.name}</div>
+                <div class="azk-sub"><span class="azk-date">תאריך פטירה: ${a.heb}</span></div>
+              </div>
+            </div>`).join('')}
+        </div>` : ''}
+        ${tiles.length ? `
         <div class="azk-grid">
           ${tiles.map(a => `
-            <div class="azk-tile ${a.soon ? 'soon' : 'far'} ${a.today ? 'today' : ''}">
-              <div class="azk-candle ${a.soon ? 'candle-glow' : 'candle-dim'}">${candleSvg(a.soon ? 'today' : 'far')}</div>
-              <div class="azk-name">${a.name}</div>
-              <div class="azk-date">${a.heb}</div>
-              ${a.soon ? `<div class="azk-when">${a.days === 0 ? 'היום — יום השנה' : AZK_LABEL(a.days)}</div>` : ''}
+            <div class="azk-card reg${a.is_soldier ? ' has-soldier' : ''}">
+              ${a.is_soldier ? '<div class="azk-soldier"><svg viewBox="0 0 24 24" class="azk-soldier-ico"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" fill="#d4af37" stroke="#fff2c0" stroke-width="1"/><path d="M12 7l1.2 2.6 2.8.3-2 1.9.5 2.8-2.5-1.4-2.5 1.4.5-2.8-2-1.9 2.8-.3z" fill="#0e1c3c"/></svg><span>חייל צה״ל</span></div>' : ''}
+              <div class="azk-candle">${candleSvg('far')}</div>
+              <div class="azk-body">
+                <div class="azk-name">${a.name}</div>
+                <div class="azk-date">${a.heb}</div>
+              </div>
             </div>`).join('')}
-        </div>
+        </div>` : ''}
         <div class="azk-note">יעלו זכרותם לברכה</div>
       </section>`);
   }
