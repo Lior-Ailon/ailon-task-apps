@@ -369,3 +369,25 @@ body{
 @media (max-aspect-ratio:4/3){
   #panel-clock{flex-direction:column;justify-content:center;gap:2.4vh}
 }
+
+/* ================================================================
+   v4.2 — מסך אזכרות: שבוע לפני ההזכרה — הנר קופץ לראש, מאיר ובולט;
+   מוצג תאריך פטירה
+   ================================================================ */
+.azk-cap{font-size:clamp(10px,.95vw,16px);color:rgba(21,42,82,.62);letter-spacing:.14em;font-weight:600}
+.azk-row.soon{
+  background:linear-gradient(135deg,#f8e9bb,#e9c964 40%,#c39a2e);
+  border-color:rgba(255,244,200,.9);border-right-color:#fff2c0;
+  box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 36px rgba(212,175,55,.55);
+  transform:scale(1.03);
+}
+.azk-row.soon .azk-when{color:rgba(21,42,82,.92);font-weight:800}
+.azk-row.soon .azk-date{color:#4a2f04}
+.azk-row.soon .azk-cap{color:rgba(74,47,4,.7)}
+.azk-row.soon .azk-candle{filter:drop-shadow(0 0 14px rgba(255,214,102,.95));animation:flameDance 1.5s ease-in-out infinite alternate;transform-origin:50% 90%}
+@keyframes flameDance{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.1)}}
+.azk-row.today{
+  box-shadow:0 12px 36px rgba(0,0,0,.45),0 0 26px rgba(212,175,55,.7);
+  animation:azkPulse 2.2s ease-in-out infinite;
+}
+@keyframes azkPulse{0%,100%{box-shadow:0 12px 36px rgba(0,0,0,.45),0 0 22px rgba(212,175,55,.55)}50%{box-shadow:0 12px 36px rgba(0,0,0,.45),0 0 48px rgba(240,215,138,.95)}}
