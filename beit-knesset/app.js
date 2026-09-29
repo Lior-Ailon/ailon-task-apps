@@ -414,6 +414,39 @@ function hebrewCountdown(ms) {
 let S = null, INFO = null, Z = null, NEXT = null, curPanel = 0;
 const AZK_LABEL = d => d === 0 ? 'היום — יום השנה' : d === 1 ? 'מחר' : 'בעוד ' + d + ' ימים';
 
+
+/* מעבר אוטומטי בין עמודי האזכרות (9 כרטיסים בעמוד) */
+const AZK_PAGE_SIZE = 9;
+let azkPageIdx = 0, azkPagerTimer = null;
+const AZK_SOLDIER_BADGE = '<div class="azk-soldier"><svg viewBox="0 0 24 24" class="azk-soldier-ico"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" fill="#d4af37" stroke="#fff2c0" stroke-width="1"/><path d="M12 7l1.2 2.6 2.8.3-2 1.9.5 2.8-2.5-1.4-2.5 1.4.5-2.8-2-1.9 2.8-.3z" fill="#0e1c3c"/></svg><span>חייל צה״ל</span></div>';
+function startAzkPager(tiles) {
+  if (azkPagerTimer) { clearInterval(azkPagerTimer); azkPagerTimer = null; }
+  const box = document.getElementById('azkRegBox');
+  if (!box) return;
+  const pages = [];
+  for (let i = 0; i < tiles.length; i += AZK_PAGE_SIZE) pages.push(tiles.slice(i, i + AZK_PAGE_SIZE));
+  if (azkPageIdx >= pages.length) azkPageIdx = 0;
+  const render = () => {
+    if (!document.getElementById('azkRegBox')) { clearInterval(azkPagerTimer); azkPagerTimer = null; return; }
+    const t = pages[azkPageIdx] || [];
+    box.innerHTML = `
+      <div class="azk-grid">
+        ${t.map(a => `
+          <div class="azk-card reg${a.is_soldier ? ' has-soldier' : ''}">
+            ${a.is_soldier ? AZK_SOLDIER_BADGE : ''}
+            <div class="azk-candle">${candleSvg('far')}</div>
+            <div class="azk-body">
+              <div class="azk-name">${a.name}</div>
+              <div class="azk-date">${a.heb}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+      ${pages.length > 1 ? `<div class="azk-dots">${pages.map((_, i) => `<span class="azk-dot${i === azkPageIdx ? ' on' : ''}"></span>`).join('')}</div>` : ''}`;
+  };
+  render();
+  if (pages.length > 1) azkPagerTimer = setInterval(() => { azkPageIdx = (azkPageIdx + 1) % pages.length; render(); }, 12000);
+}
+
 function buildDynamicPanels() {
   ['panel-azkarot', 'panel-notices', 'panel-services', 'panel-blessing'].forEach(id => {
     const el = document.getElementById(id);
@@ -441,20 +474,10 @@ function buildDynamicPanels() {
               </div>
             </div>`).join('')}
         </div>` : ''}
-        ${tiles.length ? `
-        <div class="azk-grid">
-          ${tiles.map(a => `
-            <div class="azk-card reg${a.is_soldier ? ' has-soldier' : ''}">
-              ${a.is_soldier ? '<div class="azk-soldier"><svg viewBox="0 0 24 24" class="azk-soldier-ico"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z" fill="#d4af37" stroke="#fff2c0" stroke-width="1"/><path d="M12 7l1.2 2.6 2.8.3-2 1.9.5 2.8-2.5-1.4-2.5 1.4.5-2.8-2-1.9 2.8-.3z" fill="#0e1c3c"/></svg><span>חייל צה״ל</span></div>' : ''}
-              <div class="azk-candle">${candleSvg('far')}</div>
-              <div class="azk-body">
-                <div class="azk-name">${a.name}</div>
-                <div class="azk-date">${a.heb}</div>
-              </div>
-            </div>`).join('')}
-        </div>` : ''}
+        ${tiles.length ? `<div id="azkRegBox"></div>` : ''}
         <div class="azk-note">יעלו זכרותם לברכה</div>
       </section>`);
+    startAzkPager(tiles);
   }
   if ((S.yearBlessing || {}).names || 0) {
     const names = S.yearBlessing.names.filter(Boolean);
