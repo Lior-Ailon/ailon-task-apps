@@ -272,7 +272,7 @@ function azkarotData(s) {
   }
   week.sort((x, y) => x.days - y.days);
   far.sort((x, y) => x.days - y.days);
-  return { week, far: far.slice(0, 6) };
+  return { week, far: far.slice(0, 24) };
 }
 
 /* ---------- הודעות פעילות ---------- */
@@ -423,7 +423,7 @@ function buildDynamicPanels() {
   const { week, far } = azkarotData(S);
   const tiles = [];
   week.forEach(a => tiles.push({ ...a, soon: true, today: a.days === 0 }));
-  far.slice(0, Math.max(0, 16 - week.length)).forEach(a => tiles.push({ ...a, soon: false, today: false }));
+  far.slice(0, Math.max(0, 24 - week.length)).forEach(a => tiles.push({ ...a, soon: false, today: false }));
   if (tiles.length) {
     main.insertAdjacentHTML('beforeend', `
       <section class="panel" id="panel-azkarot">
