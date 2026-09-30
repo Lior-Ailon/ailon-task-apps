@@ -778,20 +778,7 @@ function renderStatic() {
       $('#omerBox').textContent = 'היום — ' + INFO.omer + ' ימים לעומר';
     } else $('#omerBox').style.display = 'none';
   } else $('#holidayLogo').innerHTML = logoFor('');
-  const doy = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / DAY);
-  const hal = S.halacha || [];
-  const picks = [];
-  const hdKey = INFO ? (INFO.hd.getMonth() + '-' + INFO.hd.getDate()) : null;
-  const dated = hdKey ? (S.halachot || {})[hdKey] : null;
-  if (dated) picks.push(dated);
-  if (hal.length) {
-    const idx = (doy * 2) % hal.length;
-    picks.push(hal[idx], hal[(idx + 1) % hal.length]);
-  }
-  const uniq = [...new Set(picks)].filter(Boolean).slice(0, 2);
-  $('#halachaCards').innerHTML = uniq.map(h =>
-    `<div class="halacha-card">${h}</div>`).join('') ||
-    '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
+  renderHalachaCards();
   const lh = $('#lashonCard');
   if (lh) lh.innerHTML = `<div class="lashon-title">הלכות לשון הרע</div><div class="lashon-text">${lashonOfDay()}</div>`;
 }
@@ -901,10 +888,30 @@ function tick() {
   if (NEXT) $('#nextCountdown').textContent = hebrewCountdown(NEXT.date - now);
 }
 
+let halIdx = (Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / DAY) * 2) % 100000;
+function renderHalachaCards() {
+  const hal = S.halacha || [];
+  const picks = [];
+  const hdKey = INFO ? (INFO.hd.getMonth() + '-' + INFO.hd.getDate()) : null;
+  const dated = hdKey ? (S.halachot || {})[hdKey] : null;
+  if (dated) picks.push(dated);
+  if (hal.length) {
+    const idx = halIdx % hal.length;
+    picks.push(hal[idx], hal[(idx + 1) % hal.length]);
+  }
+  const uniq = [...new Set(picks)].filter(Boolean).slice(0, 2);
+  const box = $('#halachaCards');
+  if (box) box.innerHTML = uniq.map(h =>
+    `<div class="halacha-card">${h}</div>`).join('') ||
+    '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
+}
+
 function showPanel(i) {
   const ps = document.querySelectorAll('.panel');
   curPanel = ((i % ps.length) + ps.length) % ps.length;
   ps.forEach((p, k) => p.classList.toggle('active', k === curPanel));
+  const cur = ps[curPanel];
+  if (cur && cur.id === 'panel-halacha' && S) { halIdx += 2; renderHalachaCards(); }
 }
 
 async function fullRefresh() {
