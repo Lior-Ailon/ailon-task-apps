@@ -505,12 +505,190 @@ function updateHolidayDeco() {
   } catch (e) {}
 }
 
+
+/* ================= v6.0 — מסכים חדשים ================= */
+const PARSHA_BLURB = {
+ 'בראשית':'בריאת העולם בשישה ימים, האדם בצלם אלוקים — וראשית כל אנוש על פי רצון הבורא',
+ 'נח':'המבול על העולם, קשת הברית — והתחלה חדשה לאנושות עם בן אדם צדיק',
+ 'לך לך':'אברהם אבינו נקרא לדרך, ברית בין הבתרים וההבטחה על ארץ ישראל ועם גדול',
+ 'וירא':'עקידת יצחק — ניסיון האמונה הגדול, והמלאך שבא לסיימו',
+ 'חיי שרה':'פטירת שרה אמנו, קניין מערת המכפלה ושידוך רבקה ליצחק',
+ 'תולדות':'יעקב ועשו — מי יירש את ברכת אברהם ואת דרך האמת',
+ 'ויצא':'יעקב בחרן — החלום על הסולם, ארבע נשים ודרכו חזרה לארץ',
+ 'וישלח':'המפגש עם עשו ואירוע דינה — יעקב לוקח אחריות על בניו',
+ 'וישב':'מכירת יוסף למצרים — מהבור אל הארמון, השגחה בתוך הניסיון',
+ 'מקץ':'חלומות פרעה ועליית יוסף לשלטון מצרים — "אין כזה חכם ונבון כמוך"',
+ 'ויגש':'יהודה עומד במבחן מול יוסף — "בני לא תרדו" והאיחוד המשפחתי במצרים',
+ 'ויחי':'ברכות יעקב לשנים עשר בניו, ופטירתו וקבורתו בארץ ישראל',
+ 'שמות':'לידת משה רבינו, הר העם במצרים — ותחילת הגאולה "פקד פקדתי"',
+ 'וארא':'מכות מצרים מתחילות — "אנכי ה׳" וההבטחה "ולקחתי אתכם לי לעם"',
+ 'בא':'מכות אחרונות, קידוש החודש, קרבן פסח ויציאת מצרים בלילה ההוא',
+ 'בשלח':'קריעת ים סוף ושירת הים — "ה׳ ימלוך לעולם ועד"',
+ 'יתרו':'מתן תורה בהר סיני — עשרת הדברות לעם ש"וידעתם כי אני ה׳"',
+ 'משפטים':'דינים ומשפטים בין אדם לחברו — התורה יורדת לחיי היום־יום',
+ 'תרומה':'נדבת לב למשכן — "ועשו לי מקדש ושכנתי בתוכם"',
+ 'תצוה':'שמן זית זך כתית למאור, בגדי כהונה ומעשה בצלאל ואהליאב',
+ 'כי תשא':'חטא העגל ושלוש עשרה מידות של רחמים — תשובה וסליחה',
+ 'ויקהל':'איסוף התרומות למשכן — "כל נדיב לב יביא את תרומת ה׳"',
+ 'פקודי':'חשבון המשכן וסיום ספר שמות — "ותשרה שכינה על משכן"',
+ 'ויקרא':'קרבנות התורה — וה׳ קורא למשה בקול רך, מתוך ענווה',
+ 'צו':'דיני כהנים, המלוא וקרבן תמיד — תורת העבודה במקדש',
+ 'שמיני':'חנוכת המשכן ומות נדב ואביהוא — קדושה וזהירה בעבודת הקודש',
+ 'תזריע':'טהרת היולדת ודיני הצרעת — טהרת הגוף והנפש',
+ 'מצורע':'טהרת המצורע והצרעת בבתים — כפרה ותיקון דרך שיחה',
+ 'אחרי מות':'עבודת כהן גדול ביום הכיפורים — קדושה בתוך החיים',
+ 'קדושים':'"קדושים תהיו" — מצוות בין אדם לחברו ו"ואהבת לרעך כמוך"',
+ 'אמור':'דיני כהנים ומועדי ה׳ — וספירת העומר עד מתן תורה',
+ 'בהר':'שמיטה ויובל — האמונה שהארץ והכל של הקב"ה',
+ 'בחקתי':"אם בחקותיי תלכו — הברכות הגדולות והברית עם ישראל",
+ 'במדבר':'מפקד בני ישראל במדבר סיני וסדרי המחנה — "איש על דגלו"',
+ 'נשא':'דיני נזיר, ברכת כהנים ונדיבות הנשיאים על המשכן',
+ 'בהעלותך':'העלאת האורות של אהרן, ומסעי המחנה בדגלים',
+ 'שלח':'חטא המרגלים — והאזהרה "ולא תתורו אחרי לבבכם ואחרי עיניכם"',
+ 'קרח':'מחלוקתו של קרח ועדתו — סכנת המחלוקת וגודל מעלת השלום',
+ 'חקת':'פרה אדומה, מי מריבה ופטירת אהרן הכהן',
+ 'בלק':'בלעם מנסה לקלל וברכות יוצאות מפיו — "מה טובו אוהליך יעקב"',
+ 'פינחס':'קנאת פינחס, מפקד העם וקרבנות המועדים לדורות',
+ 'מטות':'דיני נדרים ומלחמת מדין — כוח הדיבור ושמירת הנדר',
+ 'מסעי':'מסעי בני ישראל במדבר וערי הלויים — סיום ספר במדבר',
+ 'דברים':'משה מסכם את המסע — דברי תוכחה ואהבה לפני הכניסה לארץ',
+ 'ואתחנן':'קריאת שמע, עשרת הדברות ומצוות "ואהבת את ה׳ אלוקיך"',
+ 'עקב':'הזהרה מגאווה — "כוחי ועוצם ידי עשה את כל החיל הזה"',
+ 'ראה':'"ראה אנכי נותן לפניכם היום ברכה" — הבחירה החופשית',
+ 'שופטים':'שופטים ושוטרים, דיני מלך — סדרי הנהגה וצדק בארץ',
+ 'כי תצא':'מלחמה ומצוות רבות — הפרשה שמכילה את מספר המצוות הגדול ביותר',
+ 'כי תבוא':'ביכורים, וידוי מעשרות והברית בהר עיבל — "ארמי אובד אבי"',
+ 'נצבים':'"כולכם נצבים היום" — הברית נכרתת עם כל אחד ואחד',
+ 'וילך':'"אנכי היום בן מאה ועשרים שנה" — הזמנת הברית האחרונה וכתיבת התורה',
+ 'האזינו':'שירת האזינו — עדות בפי שמים וארץ לכל הדורות',
+ 'וזאת הברכה':'ברכת משה לשבטים, ופטירתו על הר נבו מול הארץ המובטחת',
+ 'תרומה תצוה':'נדבת המשכן ובגדי הכהונה — "ועשו לי מקדש"',
+ 'ויקהל פקודי':'איסוף הנדבות והקמת המשכן — ותשרה השכינה',
+ 'אחרי מות קדושים':'עבודת יום הכיפורים ו"קדושים תהיו"',
+ 'בהר בחקתי':'שמיטה, יובל והברכות — "אם בחקותיי תלכו"',
+ 'מטות מסעי':'נדרים, מלחמת מדין ומסעי המדבר',
+ 'נצבים וילך':'הברית האחרונה — "כולכם נצבים היום לפני ה׳ אלוקיכם"'
+};
+
+function parshaKey() {
+  if (!INFO || !INFO.parsha) return null;
+  return INFO.parsha.replace(/^.*(?:פרשת|שבת)\s+/, '').trim();
+}
+
+function buildParshaPanel(main) {
+  if (!INFO || !INFO.parsha) return;
+  const key = parshaKey();
+  const blurb = PARSHA_BLURB[key] || '';
+  const haft = (S.haftara || {})[key] || '';
+  const note = (S.parshaNotes || {})[key] || '';
+  main.insertAdjacentHTML('beforeend', `
+    <section class="panel" id="panel-parsha">
+      <h2 class="panel-title">פרשת השבוע</h2>
+      <div class="parsha-hero">
+        <div class="parsha-scroll">${wrap(ICONS.blessing).replace('<svg', '<svg style="color:var(--gold);width:clamp(38px,4vw,64px);height:clamp(38px,4vw,64px);margin-bottom:1vh;filter:drop-shadow(0 0 14px rgba(212,175,55,.55))"')}</div>
+        <div class="parsha-name">${key}</div>
+        ${blurb ? `<div class="parsha-blurb">${blurb}</div>` : ''}
+        ${haft ? `<div class="parsha-haftara">הפטרה: ${haft}</div>` : ''}
+        ${note ? `<div class="parsha-note">${note}</div>` : ''}
+      </div>
+    </section>`);
+}
+
+function buildLessonsPanel(main) {
+  const L = (S.lessons || []).filter(l => l.title);
+  if (!L.length) return;
+  const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  main.insertAdjacentHTML('beforeend', `
+    <section class="panel" id="panel-lessons">
+      <h2 class="panel-title">שיעורי השבוע</h2>
+      <div class="lesson-list">
+        ${L.map(l => `
+          <div class="lesson-row">
+            <div class="lesson-when"><span class="lesson-day">יום ${DAYS[+l.day] || l.day || ''}</span><span class="lesson-time">${l.time || ''}</span></div>
+            <div class="lesson-body"><div class="lesson-title">${l.title}</div>${l.teacher ? `<div class="lesson-teacher">${l.teacher}</div>` : ''}</div>
+          </div>`).join('')}
+      </div>
+    </section>`);
+}
+
+function buildEventsPanel(main) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const E = (S.events || []).filter(e => {
+    if (!e.title) return false;
+    const from = e.date ? new Date(e.date + 'T00:00:00') : null;
+    const until = e.until ? new Date(e.until + 'T00:00:00') : null;
+    return (!from || from <= today) && (!until || until >= today);
+  });
+  if (!E.length) return;
+  const fmt = d => { if (!d) return ''; const x = new Date(d + 'T00:00:00'); return x.getDate() + '/' + (x.getMonth() + 1); };
+  main.insertAdjacentHTML('beforeend', `
+    <section class="panel" id="panel-events">
+      <h2 class="panel-title">אירועי הקהילה</h2>
+      <div class="event-list">
+        ${E.map(e => `
+          <div class="event-card">
+            <div class="event-date">${e.date ? (e.until && e.until !== e.date ? fmt(e.date) + ' — ' + fmt(e.until) : 'בתאריך ' + fmt(e.date)) : ''}</div>
+            <div class="event-title">${e.title}</div>
+            ${e.text ? `<div class="event-text">${(e.text || '').replace(/\n/g, '<br>')}</div>` : ''}
+          </div>`).join('')}
+      </div>
+    </section>`);
+}
+
+function buildHistoryPanel(main) {
+  if (!INFO) return;
+  const hd = INFO.hd || new H.HDate();
+  const m = hd.getMonth(), d = hd.getDate();
+  const T = (S.history || []).filter(h => +h.month === m && +h.day === d && h.text);
+  if (!T.length) return;
+  main.insertAdjacentHTML('beforeend', `
+    <section class="panel" id="panel-history">
+      <h2 class="panel-title">היום בהיסטוריה יהודית</h2>
+      <div class="hist-list">
+        ${T.map(h => `<div class="hist-card"><div class="hist-date">${monthName(m, hd.isLeapYear())} ${h.day}</div><div class="hist-text">${h.text}</div></div>`).join('')}
+      </div>
+    </section>`);
+}
+
+function buildRefuaPanel(main) {
+  const N = (S.refua || []).filter(Boolean);
+  if (!N.length) return;
+  main.insertAdjacentHTML('beforeend', `
+    <section class="panel" id="panel-refua">
+      <h2 class="panel-title">לרפואה שלמה</h2>
+      <div class="refua-wrap">
+        <div class="refua-sub">המתפללים יתפללו לרפואתם של:</div>
+        <div class="refua-names">${N.join(' · ')}</div>
+        <div class="refua-bless">השם ישלח רפואה שלמה ומהירה לכל חולי עמו ישראל</div>
+      </div>
+    </section>`);
+}
+
+function buildDonorsPanel(main) {
+  const D = (S.donors || []).filter(v => v.name);
+  if (!D.length) return;
+  main.insertAdjacentHTML('beforeend', `
+    <section class="panel" id="panel-donors">
+      <h2 class="panel-title">ידידי בית הכנסת</h2>
+      <div class="donor-grid">
+        ${D.map(v => `<div class="donor-plaque"><div class="donor-name">${v.name}</div>${v.tier ? `<div class="donor-tier">${v.tier}</div>` : ''}</div>`).join('')}
+      </div>
+      <div class="donor-thanks">יהי רצון שתהא מידתם תמיד עלינו לברכה</div>
+    </section>`);
+}
+
 function buildDynamicPanels() {
-  ['panel-azkarot', 'panel-notices', 'panel-services', 'panel-blessing'].forEach(id => {
+  ['panel-azkarot', 'panel-notices', 'panel-services', 'panel-blessing', 'panel-parsha', 'panel-lessons', 'panel-events', 'panel-history', 'panel-refua', 'panel-donors'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
   const main = $('#main');
+  buildParshaPanel(main);
+  buildLessonsPanel(main);
+  buildEventsPanel(main);
+  buildHistoryPanel(main);
+  buildRefuaPanel(main);
+  buildDonorsPanel(main);
   const { week, far } = azkarotData(S);
   const tiles = [];
   far.slice(0, 24).forEach(a => tiles.push({ ...a, is_soldier: !!a.is_soldier }));
