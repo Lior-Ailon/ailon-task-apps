@@ -112,10 +112,18 @@ function fillForm() {
   $('#f_rt').value = S.offsets.rt;
   $('#f_halacha').value = S.halacha.join('\n');
   $('#f_blessing').value = ((S.yearBlessing || {}).names || []).join('\n');
+  $('#f_refua').value = (S.refua || []).join('\n');
+  $('#f_donors').value = (S.donors || []).map(d => [d.name, d.tier].filter(Boolean).join(' | ')).join('\n');
+  const pairsToText = o => Object.entries(o || {}).map(([k, v]) => k + ' | ' + v).join('\n');
+  $('#f_haftara').value = pairsToText(S.haftara);
+  $('#f_parshaNote').value = pairsToText(S.parshaNotes);
   renderProfiles();
   renderAzkarot();
   renderNotices();
   renderServices();
+  renderLessons();
+  renderEvents();
+  renderHistory();
 }
 
 function renderProfiles() {
@@ -197,7 +205,51 @@ function renderServices() {
 }
 function addService(){ (S.services=S.services||[]).push({name:'',value:''}); renderServices(); }
 
-function delArr(key, i){ S[key].splice(i,1); renderAzkarot(); renderNotices(); renderServices(); }
+const HEB_CIVIL_MONTHS = ['ניסן','אייר','סיון','תמוז','אב','אלול','תשרי','חשוון','כסלו','טבת','שבט','אדר','אדר ב׳'];
+const DAYS_HEB = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+function renderLessons() {
+  const box = $('#lessonsRows'); if (!box) return;
+  S.lessons = S.lessons || [];
+  box.innerHTML = S.lessons.map((l, i) => `
+    <div class="row" data-lsn="${i}">
+      <select class="lsn-day">${DAYS_HEB.map((d, k) => `<option value="${k}" ${+l.day === k ? 'selected' : ''}>${d}</option>`).join('')}</select>
+      <input class="lsn-time" type="time" value="${l.time || ''}" placeholder="שעה">
+      <input class="lsn-title" value="${l.title || ''}" placeholder="נושא השיעור">
+      <input class="lsn-teacher" value="${l.teacher || ''}" placeholder="מעביר">
+      <button class="btn-x" onclick="delArr('lessons', ${i})">✕</button>
+    </div>`).join('');
+}
+function addLesson(){ (S.lessons = S.lessons || []).push({day:'6', time:'', title:'', teacher:''}); renderLessons(); }
+
+function renderEvents() {
+  const box = $('#eventsRows'); if (!box) return;
+  S.events = S.events || [];
+  box.innerHTML = S.events.map((e, i) => `
+    <div class="row" data-ev="${i}">
+      <input class="ev-title" value="${e.title || ''}" placeholder="כותרת האירוע">
+      <input class="ev-date" type="date" value="${e.date || ''}">
+      <input class="ev-until" type="date" value="${e.until || ''}" title="עד תאריך (לא חובה)">
+      <input class="ev-text" value="${e.text || ''}" placeholder="פרטים">
+      <button class="btn-x" onclick="delArr('events', ${i})">✕</button>
+    </div>`).join('');
+}
+function addEvent(){ (S.events = S.events || []).push({title:'', date:'', until:'', text:''}); renderEvents(); }
+
+function renderHistory() {
+  const box = $('#historyRows'); if (!box) return;
+  S.history = S.history || [];
+  box.innerHTML = S.history.map((h, i) => `
+    <div class="row" data-hst="${i}">
+      <select class="hst-month">${HEB_CIVIL_MONTHS.map((m, k) => `<option value="${k + 1}" ${+h.month === k + 1 ? 'selected' : ''}>${m}</option>`).join('')}</select>
+      <input class="hst-day" type="number" min="1" max="30" value="${h.day || ''}" placeholder="יום">
+      <input class="hst-text" value="${h.text || ''}" placeholder="מה קרה בתאריך">
+      <button class="btn-x" onclick="delArr('history', ${i})">✕</button>
+    </div>`).join('');
+}
+function addHistory(){ (S.history = S.history || []).push({month:1, day:'', text:''}); renderHistory(); }
+
+function delArr(key, i){ S[key].splice(i,1); renderAzkarot(); renderNotices(); renderServices(); renderLessons(); renderEvents(); renderHistory(); }
 
 function collectExtra() {
   S.azkarot = [...document.querySelectorAll('#azkarotRows [data-azk]')].map(r=>({
@@ -216,6 +268,28 @@ function collectExtra() {
     name: r.querySelector('.srv-name').value,
     value: r.querySelector('.srv-value').value
   })).filter(v=>v.name);
+  S.lessons = [...document.querySelectorAll('#lessonsRows [data-lsn]')].map(r=>({
+    day: r.querySelector('.lsn-day').value,
+    time: r.querySelector('.lsn-time').value,
+    title: r.querySelector('.lsn-title').value.trim(),
+    teacher: r.querySelector('.lsn-teacher').value.trim()
+  })).filter(l=>l.title);
+  S.events = [...document.querySelectorAll('#eventsRows [data-ev]')].map(r=>({
+    title: r.querySelector('.ev-title').value.trim(),
+    date: r.querySelector('.ev-date').value,
+    until: r.querySelector('.ev-until').value,
+    text: r.querySelector('.ev-text').value.trim()
+  })).filter(e=>e.title);
+  S.history = [...document.querySelectorAll('#historyRows [data-hst]')].map(r=>({
+    month: +r.querySelector('.hst-month').value,
+    day: +r.querySelector('.hst-day').value,
+    text: r.querySelector('.hst-text').value.trim()
+  })).filter(h=>h.day && h.text);
+  const parsePairs = t => Object.fromEntries(t.split('\n').map(x => x.trim()).filter(Boolean).map(x => {
+    const i = x.indexOf('|'); return i < 0 ? null : [x.slice(0, i).trim(), x.slice(i + 1).trim()];
+  }).filter(Boolean));
+  S.haftara = parsePairs(($('#f_haftara') || {}).value || '');
+  S.parshaNotes = parsePairs(($('#f_parshaNote') || {}).value || '');
 }
 
 function save() {
@@ -235,6 +309,10 @@ function save() {
   };
   S.halacha = $('#f_halacha').value.split('\n').map(x => x.trim()).filter(Boolean);
   S.yearBlessing = { names: $('#f_blessing').value.split('\n').map(x => x.trim()).filter(Boolean) };
+  S.refua = $('#f_refua').value.split('\n').map(x => x.trim()).filter(Boolean);
+  S.donors = $('#f_donors').value.split('\n').map(x => x.trim()).filter(Boolean).map(x => {
+    const i = x.indexOf('|'); return i < 0 ? { name: x, tier: '' } : { name: x.slice(0, i).trim(), tier: x.slice(i + 1).trim() };
+  });
   const pw = $('#f_pw').value.trim();
   if (pw) S.password = pw;
   localStorage.setItem(LS_KEY, JSON.stringify(S));
