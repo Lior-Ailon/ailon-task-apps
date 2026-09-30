@@ -97,6 +97,32 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
   <div id="servicesRows"></div>
   <button class="btn-sec" onclick="addService()">+ הוסף שירות</button>
 
+  <h2>שיעורי השבוע</h2>
+  <div class="rows" id="lessonsRows"></div>
+  <button class="btn-sec" onclick="addLesson()">+ הוסף שיעור</button>
+
+  <h2>אירועי הקהילה (מוצג לפי תאריך)</h2>
+  <div class="rows" id="eventsRows"></div>
+  <button class="btn-sec" onclick="addEvent()">+ הוסף אירוע</button>
+
+  <h2>היום בהיסטוריה יהודית</h2>
+  <div class="rows" id="historyRows"></div>
+  <button class="btn-sec" onclick="addHistory()">+ הוסף תאריך</button>
+
+  <h2>לרפואה שלמה</h2>
+  <div class="fld"><label>שמות (שם בכל שורה, למשל: אברהם בת שרה)</label>
+  <textarea id="f_refua" rows="4"></textarea></div>
+
+  <h2>ידידי בית הכנסת</h2>
+  <div class="fld"><label>שם | תואר (בכל שורה)</label>
+  <textarea id="f_donors" rows="4"></textarea></div>
+
+  <h2>פרשת השבוע (מתקדם)</h2>
+  <div class="fld"><label>הפטרות — פרשה | הפטרה (בכל שורה, למשל: בראשית | ישעיהו מב, ה — מג, ו)</label>
+  <textarea id="f_haftara" rows="3"></textarea></div>
+  <div class="fld"><label>דבר תורה שבועי — פרשה | טקסט (בכל שורה)</label>
+  <textarea id="f_parshaNote" rows="3"></textarea></div>
+
   <h2>מערכת</h2>
   <div class="row3">
     <div class="fld"><label>סיסמה חדשה</label><input id="f_pw" style="direction:ltr"></div>
@@ -110,6 +136,6 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="admin.js?v=1.0.0"></script>
+<script src="admin.js?v=6.0.0"></script>
 </body>
 </html>
