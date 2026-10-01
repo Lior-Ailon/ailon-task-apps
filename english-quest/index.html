@@ -1157,7 +1157,7 @@ let state = {
   dailyGoalMinutes: 20
 };
 
-const PARENT_PASS = "1234";
+const PARENT_PASS = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"; // sha256
 const STORAGE_KEY = "english_quest_data";
 
 function loadState() {
@@ -1976,9 +1976,11 @@ function showParentLock() {
   document.getElementById('parent-pass').value = '';
 }
 
-function checkParentPass() {
+async function checkParentPass() {
   const pass = document.getElementById('parent-pass').value;
-  if (pass === PARENT_PASS) {
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass))
+    .then(b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''));
+  if (hash === PARENT_PASS) {
     renderParentDashboard();
     showScreen('screen-parent');
   } else {

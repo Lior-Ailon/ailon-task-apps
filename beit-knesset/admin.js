@@ -55,8 +55,13 @@ const DEFAULTS = {
   ],
   yearBlessing: { names: ['אברהם כהן', 'יצחק לוי', 'יעקב ישראלי', 'שרה פרידמן', 'רבקה מזרחי', 'רחל ביטון', 'לאה שרעבי', 'מרים אוחיון'] },
   azkarot: [], notices: [], services: [],
-  password: '1234'
+  password: '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'
 };
+
+async function sha256(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 function deepMerge(base, over) {
   const out = { ...base };
@@ -89,8 +94,11 @@ function toast(msg) {
   setTimeout(() => t.style.display = 'none', 2600);
 }
 
-function tryGate() {
-  if ($('#pw').value === S.password) {
+async function tryGate() {
+  const isHashed = /^[a-f0-9]{64}$/.test(S.password || '');
+  const ok = isHashed ? (await sha256($('#pw').value)) === S.password
+                      : $('#pw').value === S.password;
+  if (ok) {
     $('#gate').style.display = 'none';
     $('#admin').classList.add('on');
   } else toast('סיסמה שגויה');
@@ -292,7 +300,7 @@ function collectExtra() {
   S.parshaNotes = parsePairs(($('#f_parshaNote') || {}).value || '');
 }
 
-function save() {
+async function save() {
   collectProfiles();
   collectExtra();
   S.shulName = $('#f_shulName').value;
@@ -314,7 +322,7 @@ function save() {
     const i = x.indexOf('|'); return i < 0 ? { name: x, tier: '' } : { name: x.slice(0, i).trim(), tier: x.slice(i + 1).trim() };
   });
   const pw = $('#f_pw').value.trim();
-  if (pw) S.password = pw;
+  if (pw) S.password = await sha256(pw);
   localStorage.setItem(LS_KEY, JSON.stringify(S));
   toast('נשמר ✔ הלוח בטלוויזיה יתעדכן בתוך דקה');
 }

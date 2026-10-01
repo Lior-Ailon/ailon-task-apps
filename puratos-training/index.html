@@ -271,9 +271,9 @@ const API = "https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/pura
 
 // Admin users — two accounts with shared generic password
 const ADMIN_USERS = {
-  "amir": "amir1234",
-  "lior": "amir1234"
-};
+  "amir": "76bd5c43f2f7a3acedd9f9c3b88d50bdfc063e7e330261f29d21a90394dce432",
+  "lior": "76bd5c43f2f7a3acedd9f9c3b88d50bdfc063e7e330261f29d21a90394dce432"
+}; // sha256 — ההשוואה מגובבת
 
 let allRequests = [];
 let isAdmin = false;
@@ -344,11 +344,13 @@ async function submitRequest() {
   }
 }
 
-function adminLogin() {
+async function adminLogin() {
   const user = document.getElementById("adminUser").value.trim().toLowerCase();
   const pass = document.getElementById("adminPass").value;
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass))
+    .then(b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''));
 
-  if (ADMIN_USERS[user] && ADMIN_USERS[user] === pass) {
+  if (ADMIN_USERS[user] && ADMIN_USERS[user] === hash) {
     isAdmin = true;
     currentAdminUser = user;
     document.getElementById("loginPanel").style.display = "none";
