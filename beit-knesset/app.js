@@ -409,6 +409,32 @@ function nextMinyan(now, s, info, z) {
   return null;
 }
 
+let PB_NEXT = null;
+function renderPrayerBar() {
+  const bar = $('#prayerBar');
+  if (!bar) return;
+  if (!S || !(S.board || {}).fixed_times) { bar.style.display = 'none'; PB_NEXT = null; return; }
+  const now = new Date();
+  const seq = buildSeq(now, S, INFO, Z);
+  if (!seq.length) { bar.style.display = 'none'; PB_NEXT = null; return; }
+  PB_NEXT = seq.find(m => m.date > now) || null;
+  bar.style.display = 'flex';
+  bar.innerHTML = `
+    <div class="pb-label">זמני תפילות — ${seq.label || ''}</div>
+    <div class="pb-items">${seq.map(m => `
+      <div class="pb-item${m === PB_NEXT ? ' pb-next' : ''}">
+        <span class="pb-name">${m.name}</span>
+        <span class="pb-time">${m.time}</span>
+        ${m === PB_NEXT ? '<span class="pb-cd" id="pbCd"></span>' : ''}
+      </div>`).join('')}
+    </div>`;
+  updatePrayerCd();
+}
+function updatePrayerCd() {
+  const cd = document.getElementById('pbCd');
+  if (cd && PB_NEXT) cd.textContent = hebrewCountdown(PB_NEXT.date - new Date());
+}
+
 function hebrewCountdown(ms) {
   if (ms < 0) return '';
   const mins = Math.round(ms / 60000);
@@ -880,6 +906,7 @@ function buildAcTicks() {
 }
 
 function tick() {
+  updatePrayerCd();
   const now = new Date();
   $('#clockTime').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes());
   const acH = document.getElementById('acH'), acM = document.getElementById('acM'), acS = document.getElementById('acS');
@@ -917,8 +944,21 @@ function renderHalachaCards() {
     '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
 }
 
+let PANELS = [];
+function computePanels() {
+  const pages = (S.board || {}).pages;
+  const all = [...document.querySelectorAll('.panel')];
+  all.forEach(p => {
+    const show = (!pages || !pages.length || pages.includes(p.id));
+    p.style.display = show ? '' : 'none';
+    if (!show) p.classList.remove('active');
+  });
+  PANELS = all.filter(p => p.style.display !== 'none');
+  if (PANELS.length && !PANELS.some(p => p.classList.contains('active'))) showPanel(0);
+}
+
 function showPanel(i) {
-  const ps = document.querySelectorAll('.panel');
+  const ps = PANELS.length ? PANELS : [...document.querySelectorAll('.panel')];
   curPanel = ((i % ps.length) + ps.length) % ps.length;
   ps.forEach((p, k) => p.classList.toggle('active', k === curPanel));
   const cur = ps[curPanel];
@@ -934,6 +974,8 @@ async function fullRefresh() {
   INFO = hebInfo(now, S.tz);
   NEXT = nextMinyan(now, S, INFO, Z);
   buildDynamicPanels();
+  computePanels();
+  renderPrayerBar();
   renderStatic();
   loadRambam();
   buildAcTicks();
@@ -941,8 +983,7 @@ async function fullRefresh() {
   renderMinyan();
   renderNext();
   tick();
-  const ps = document.querySelectorAll('.panel');
-  if (curPanel >= ps.length) showPanel(0);
+  if (curPanel >= PANELS.length) showPanel(0);
 }
 
 (async function main() {
@@ -953,6 +994,7 @@ async function fullRefresh() {
   if (forcePanel) {
     const t = document.getElementById(forcePanel);
     if (t) {
+      t.style.display = '';
       document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
       t.classList.add('active');
       curPanel = [...document.querySelectorAll('.panel')].indexOf(t);
