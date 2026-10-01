@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AILON Shul — ניהול בתי כנסת</title>
+<title>BK — מערכת לניהול מסכים בבתי כנסת</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="../beit-knesset/icon.svg" type="image/svg+xml">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -32,7 +32,12 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;
   padding:12px 26px;border-radius:12px;font-weight:700;display:none;z-index:9}
 .hint{font-size:13px;color:var(--dim);margin:6px 0 14px}
-#login{max-width:420px;margin:15vh auto;text-align:center}
+#login{max-width:460px;margin:12vh auto 60px;text-align:center}
+.bk-logo{display:inline-block;background:var(--gold);color:#0d2142;font-weight:900;font-size:34px;
+  letter-spacing:2px;border-radius:14px;padding:12px 22px;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+.bk-tag{font-size:22px;color:var(--gold-light);margin:18px 0 8px}
+.bk-desc{font-size:15px;color:var(--dim);margin:0 auto 22px;max-width:420px;line-height:1.5}
+.portal-head{display:flex;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 #login input{font-size:18px;padding:12px;border-radius:10px;border:1px solid #9a7a24;background:var(--bg);color:#fff;text-align:center;width:100%;margin:0.6em 0;direction:ltr}
 #portal{display:none;max-width:900px;margin:0 auto 60px}
 #userBar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
@@ -52,15 +57,22 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
 </head>
 <body class="admin-mode">
 <div id="login">
-  <h1>AILON Shul</h1>
-  <p style="color:var(--dim)">ניהול מרכזי לבתי כנסת</p>
+  <div class="bk-logo">BK</div>
+  <h1 class="bk-tag">מערכת לניהול מסכים בבתי כנסת</h1>
+  <p class="bk-desc">ניהול מרכזי של תוכן המסכים בבית הכנסת — מניינים, זמנים, הלכה יומית, אזכרות, שיעורים ואירועי הקהילה — מכל מקום ובזמן אמת, ישירות למסך בבית הכנסת.</p>
   <input id="l_user" placeholder="שם משתמש" style="direction:ltr" autocomplete="username">
   <input id="l_pass" type="password" placeholder="סיסמה" style="direction:ltr" autocomplete="current-password">
   <button class="btn-main" onclick="doLogin()">כניסה</button>
 </div>
 
 <div id="portal">
-  <h1>AILON Shul — ניהול בתי כנסת</h1>
+  <div class="portal-head">
+    <div class="bk-logo">BK</div>
+    <div>
+      <h1 class="bk-tag" style="text-align:right">מערכת לניהול מסכים בבתי כנסת</h1>
+      <p class="bk-desc" style="text-align:right;margin:4px 0 0">כל בתי הכנסת והתצוגות שלך — במקום אחד</p>
+    </div>
+  </div>
   <div id="userBar">
     <span id="hello"></span>
     <button class="btn-sec" onclick="openPwModal()">שינוי סיסמה</button>
@@ -181,6 +193,6 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
     </div>
   </div>
 </div>
-<script src="app.js?v=1.0.0"></script>
+<script src="app.js?v=1.0.1"></script>
 </body>
 </html>
