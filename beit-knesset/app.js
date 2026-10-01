@@ -111,16 +111,25 @@ function deepMerge(base, over) {
   return out;
 }
 
+const SHUL_API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/shulApi';
+let BOARD_CODE = new URLSearchParams(location.search).get('shul') || 'shach-yosef';
+
 async function loadSettings() {
   let s = structuredClone(DEFAULTS);
+  let ok = false;
   try {
-    const r = await fetch('./settings.json?v=' + Date.now());
-    if (r.ok) s = deepMerge(s, await r.json());
+    const r = await fetch(SHUL_API + '?action=get_board&code=' + encodeURIComponent(BOARD_CODE) + '&nc=' + Date.now());
+    if (r.ok) {
+      const d = await r.json();
+      if (d.success && d.settings) { s = deepMerge(s, d.settings); ok = true; }
+    }
   } catch (e) {}
-  try {
-    const l = localStorage.getItem('shulboard.settings');
-    if (l) s = deepMerge(s, JSON.parse(l));
-  } catch (e) {}
+  if (!ok) {
+    try {
+      const r = await fetch('./settings.json?v=' + Date.now());
+      if (r.ok) s = deepMerge(s, await r.json());
+    } catch (e) {}
+  }
   return s;
 }
 
