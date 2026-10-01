@@ -95,6 +95,7 @@ function toast(msg) {
 
 function fillForm() {
   $('#f_shulName').value = S.shulName;
+  $('#f_theme').value = S.theme || 'kotel-gold';
   $('#f_panel_sec').value = (S.board || {}).panel_seconds ?? 14;
   $('#f_azk_sec').value = (S.board || {}).azk_page_seconds ?? 12;
   $('#f_brand').value = S.brand || '';
@@ -294,6 +295,7 @@ async function save() {
   collectProfiles();
   collectExtra();
   S.shulName = $('#f_shulName').value;
+  S.theme = $('#f_theme').value;
   S.brand = $('#f_brand').value.trim() || 'AILON';
   S.lat = parseFloat($('#f_lat').value);
   S.lng = parseFloat($('#f_lng').value);

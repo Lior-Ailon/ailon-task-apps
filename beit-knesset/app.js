@@ -761,6 +761,8 @@ function buildDynamicPanels() {
 
 function renderStatic() {
   $('#shulName').textContent = S.shulName;
+  const sd = $('#shulDedication');
+  if (sd) { sd.textContent = S.dedication || ''; sd.style.display = S.dedication ? '' : 'none'; }
   const bm = document.querySelector('.ailon-mark');
   if (bm) bm.textContent = S.brand || 'AILON';
   $('#shulCity').textContent = S.city;
@@ -926,6 +928,7 @@ function showPanel(i) {
 async function fullRefresh() {
   updateHolidayDeco();
   S = await loadSettings();
+  document.documentElement.dataset.theme = S.theme || 'kotel-gold';
   const now = new Date();
   Z = zmanimFor(now, S);
   INFO = hebInfo(now, S.tz);
