@@ -136,9 +136,8 @@ async function openEditor(id) {
   $('#i_notes').value = CUR.notes||'';
   // הגדרות לוח
   const st = CUR.settings;
-  $('#b_motto').value = st.motto||''; $('#b_principal').value = st.principal||'';
-  $('#b_sec').value = (st.board||{}).panel_seconds || 10;
-  renderPageChecks(); renderSched();
+  $('#b_motto').value = st.motto||'';
+  renderSched();
   // טעינת תוכן
   const cn = await api('list_content', { school_id: id }); const allC = cn.data || [];
   notices = allC.filter(c=>c.type==='notice');
@@ -169,12 +168,6 @@ async function saveInfo() {
 }
 
 /* לוח */
-function renderPageChecks() {
-  const pages = (CUR.settings.board||{}).pages || [];
-  $('#b_pages').innerHTML = Object.entries(PAGE_LABELS).map(([k,label]) =>
-    `<label style="display:inline-flex;align-items:center;gap:8px;margin:0 18px 10px 0;font-size:15px">
-      <input type="checkbox" id="pg_${k}" ${pages.includes(k)?'checked':''}> ${label}</label>`).join('');
-}
 function renderSched() {
   const sc = CUR.settings.schedule = CUR.settings.schedule || {};
   $('#b_sched').innerHTML = SCHED_DAYS.map(d => {
@@ -198,10 +191,9 @@ async function saveBoard() {
     CUR.settings.schedule[el.dataset.sd][+el.dataset.i].time = el.value; });
   document.querySelectorAll('#b_sched .sd-label').forEach(el=>{
     CUR.settings.schedule[el.dataset.sd][+el.dataset.i].label = el.value; });
-  const pages = Object.keys(PAGE_LABELS).filter(k=>$('#pg_'+k).checked);
   const settings = { ...CUR.settings,
-    motto: $('#b_motto').value, principal: $('#b_principal').value,
-    board: { panel_seconds: Math.min(60,Math.max(4,+$('#b_sec').value||10)), pages } };
+    motto: $('#b_motto').value,
+    board: { panel_seconds: 10, pages: Object.keys(PAGE_LABELS) } };
   const r = await api('save_settings', { school_id: CUR.id, settings });
   if (!r.success) return toast(r.message);
   CUR.settings = settings; toast('הגדרות הלוח נשמרו');
