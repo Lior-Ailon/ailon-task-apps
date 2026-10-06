@@ -54,9 +54,24 @@ async function fetchBoard() {
   renderAll();
 }
 
+/* מספר -> אותיות עבריות (כ״ה, ט״ו, ט״ז, א׳) */
+function hebNum(n) {
+  const ones=['','א','ב','ג','ד','ה','ו','ז','ח','ט'];
+  const tens=['','י','כ','ל','מ','נ','ס','ע','פ','צ'];
+  const hund=['','ק','ר','ש','ת'];
+  if(n===15) return 'ט״ו';
+  if(n===16) return 'ט״ז';
+  let s=(hund[Math.floor(n/100)]||''); n%=100;
+  s+=(tens[Math.floor(n/10)]||''); n%=10;
+  if(n) s+=ones[n];
+  if(!s) return '';
+  return s.length===1 ? s+'׳' : s.slice(0,-1)+'״'+s.slice(-1);
+}
 function hebDateStr(d) {
   try {
-    return new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { day:'numeric', month:'long' }).format(d);
+    const day = parseInt(new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { day:'numeric' }).format(d));
+    const month = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { month:'long' }).format(d);
+    return hebNum(day) + ' ב' + month;
   } catch(e){ return ''; }
 }
 
