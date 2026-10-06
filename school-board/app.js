@@ -1,225 +1,214 @@
-/* לוח בית הספר — SB v1.0.0 | AILON Task */
+/* לוח בית הספר — SB v2.0.0 | בסטייל ספריית רחובות | AILON Task */
 const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/schoolApi';
 const $ = s => document.querySelector(s);
 let CODE = new URLSearchParams(location.search).get('school') || 'neot-ashkelon';
-let D = null;          // נתונים מהשרת
-let PAGES = ['home','notices','events','media','schedule','birthdays'];
-let curIdx = 0, mediaIdx = 0, noticePage = 0, curVideo = null;
+let D = null;
 const MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+/* תוכן ברירת מחדל — כשאין נתונים מהשרת */
+const FALLBACK = {
+  name: 'בית הספר', motto: '',
+  photos: [
+    { title: 'ברוכים הבאים לבית הספר', image_url: 'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/f623da77c_generated_image.png' },
+    { title: 'שעת סיפור בכיתה', image_url: 'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/91d3ccb2e_generated_image.png' },
+    { title: 'סדנת יצירה', image_url: 'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/511344075_generated_image.png' },
+    { title: 'שיעור מדעים', image_url: 'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/3760f01c1_generated_image.png' },
+    { title: 'פעילות ספורט בחצר', image_url: 'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/dddf75b67_generated_image.png' }
+  ],
+  news_cards: [
+    { title: 'ברוכים הבאים לשנת הלימודים', description: 'מאחלים לכל תלמידי בית הספר שנה מוצלחת ומלאת הצלחות', badge: 'teal' },
+    { title: 'יום ספורט בית ספרי', description: 'תחרויות, מסלולים ופעילויות ספורט לכל הכיתות', event_date: '11.10.2026', badge: 'orange' },
+    { title: 'אסיפת הורים כיתות א׳', description: 'נושאים: הסתגלות, לוח זמנים ודגשים לשנה', event_date: '14.10.2026', badge: 'blue' },
+    { title: 'ערב שירה ומוסיקה', description: 'ערב חגיגי בהשתתפות התלמידים והצוות', event_date: '29.10.2026', badge: 'purple' }
+  ],
+  rss: [
+    { title: 'אדם יחיד לא יכול לעשות הכל, אבל כל אחד יכול לעשות משהו' },
+    { title: 'כל ילד הוא עולם ומלואו' },
+    { title: 'שאל טובה = למידה טובה' },
+    { title: 'טעות היא הזדמנות ללמוד משהו חדש' },
+    { title: 'כל הכבוד לקבוצת האקליפטוס על הזכייה בתחרות החשבון' },
+    { title: 'תלמידים מצטיינים חוזרים מאליפות הארץ עם מדליות' },
+    { title: 'מאות תלמידים התנדבו השבוע בקהילה' },
+    { title: 'עשרות עצים חדשים נשתלו בחצר בית הספר' }
+  ],
+  notices: [
+    { title: 'ביום ראשון יתקיים יום ספורט בית ספרי — עם בגדי ספורט ובקבוק מים' },
+    { title: 'מבצע השבת ספרים לספרייה מסתיים ביום חמישי' },
+    { title: 'קבוצת האקליפטוס זכתה במקום הראשון בתחרות החשבון הארצית — כל הכבוד!' }
+  ]
+};
+
+const esc = s => (s||'').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 async function fetchBoard() {
   try {
     const r = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action:'get_board', code: CODE }) });
+      body: JSON.stringify({ action:'get_board', code: CODE }), signal: AbortSignal.timeout(6000) });
     const j = await r.json();
-    if (!j.success) throw new Error(j.message||'fail');
+    if (!j.success) throw new Error('fail');
     D = j;
-    const st = j.settings || {};
-    PAGES = (st.board && st.board.pages && st.board.pages.length) ? st.board.pages : PAGES;
-    return true;
   } catch(e) {
-    $('#loading').innerHTML = '<div style="font-size:22px;color:#f87171">לא נמצא לוח לקוד: ' + CODE + '</div>' +
-      '<div style="color:var(--dim)">בדוק את הקישור או פנה לניהול בית הספר</div>';
-    return false;
+    D = null;
   }
+  renderAll();
 }
 
-/* ---------- עזרים ---------- */
 function hebDateStr(d) {
   try {
-    return new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { day:'numeric', month:'long', year:'numeric' }).format(d).replace(/ה$/,'');
+    return new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { day:'numeric', month:'long' }).format(d);
   } catch(e){ return ''; }
 }
-function gregStr(d) { return DAYS[d.getDay()] + ', ' + d.getDate() + ' ב' + MONTHS[d.getMonth()] + ' ' + d.getFullYear(); }
-function todayKey() { const d = new Date(); return d.getDay(); } // 0=ראשון
-function daysUntil(iso) {
-  const today = new Date(); today.setHours(0,0,0,0);
-  const that = new Date(iso + 'T00:00:00');
-  return Math.round((that - today) / 86400000);
-}
+
+/* ---------- שעון + תאריך + הפסקה הבאה ---------- */
 function schedForToday() {
-  const sc = (D.settings||{}).schedule || {};
-  const day = todayKey();
-  if (day === 5) return { label: sc.friday_label || 'יום ו׳', items: sc.friday || [] };
-  if (day === 4) return { label: sc.thursday_label || 'יום ה׳', items: sc.thursday || [] };
-  if (day === 0) return { label: sc.sunday_label || 'יום א׳', items: sc.sunday || [] };
-  return { label: sc.weekdays_label || 'ימים ב׳-ד׳', items: sc.weekdays || [] };
+  const sc = ((D && D.settings) || {}).schedule || {};
+  const day = new Date().getDay();
+  if (day === 5) return { items: sc.friday || [] };
+  if (day === 4) return { items: sc.thursday || [] };
+  if (day === 0) return { items: sc.sunday || [] };
+  return { items: sc.weekdays || [] };
 }
-function nextBreak() {
+function updateClock() {
+  const now = new Date();
+  $('#clock').textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  $('#dateStr').textContent = 'יום ' + DAYS[now.getDay()] + ' ' + now.getDate() + ' ב' + MONTHS[now.getMonth()] + ' · ' + hebDateStr(now);
+  // הפסקה הבאה
   const s = schedForToday();
-  const now = new Date(), mins = now.getHours()*60 + now.getMinutes();
+  const mins = now.getHours()*60 + now.getMinutes();
+  let nb = null;
   for (const it of s.items) {
     const [h,m] = (it.time||'').split(':').map(Number);
     if (isNaN(h)) continue;
-    if (h*60+m > mins) {
-      const diff = (h*60+m) - mins;
-      return { name: it.label, time: it.time, in: diff };
-    }
+    if (h*60+m > mins) { nb = { name: it.label, time: it.time, in: (h*60+m)-mins }; break; }
   }
-  return null;
+  $('#nextBreak').textContent = nb
+    ? (nb.in <= 1 ? nb.name + ' — עכשיו!' : nb.name + ' · ' + nb.time + ' · בעוד ' + nb.in + ' דק׳')
+    : '';
+  $('#nextBreak').style.display = nb ? '' : 'none';
 }
 
-/* ---------- רינדור עמודים ---------- */
-function renderHome() {
-  $('#h_name').innerHTML = escHtml(D.name);
-  const st = D.settings || {};
-  if (st.motto) { $('#h_motto').textContent = '״' + st.motto + '״'; $('#h_motto').classList.remove('hidden'); }
-  if (st.principal) { $('#h_value').innerHTML = '<div class="vt">צוות בית הספר</div><div class="vx">' + escHtml(st.principal) + '</div>'; $('#h_value').classList.remove('hidden'); }
-  tickClock();
-}
-function escHtml(s){ return (s||'').toString().replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
-function noticeChunks(arr, n) { const out=[]; for(let i=0;i<arr.length;i+=n) out.push(arr.slice(i,i+n)); return out; }
-
-function renderNotices() {
-  const chunks = noticeChunks(D.notices || [], 4);
-  if (noticePage >= chunks.length) noticePage = 0;
-  const items = chunks[noticePage] || [];
-  $('#n_grid').innerHTML = items.map((n,i)=>`
-    <div class="ntc${i%2?' alt':''}">
-      <h3>${escHtml(n.title)}</h3>
-      ${n.text?'<p>'+escHtml(n.text)+'</p>':''}
-    </div>`).join('') || '<p class="sub">אין הודעות חדשות</p>';
-}
-
-function renderEvents() {
-  const evts = (D.events || []).slice(0, 5);
-  $('#e_list').innerHTML = evts.map((e,i)=>{
+/* ---------- כרטיסי חדשות: הודעות + אירועים ---------- */
+function buildCards() {
+  if (!D) return FALLBACK.news_cards;
+  const cards = [];
+  const badges = ['teal','orange','blue','purple','green','pink','gold','red'];
+  (D.notices || []).forEach((n, i) => cards.push({
+    title: n.title, description: n.text, badge: badges[i % badges.length], type: 'notice'
+  }));
+  (D.events || []).forEach((e, i) => {
     const d = new Date(e.event_date + 'T00:00:00');
-    const du = daysUntil(e.event_date);
-    let count;
-    if (du === 0) count = 'היום!';
-    else if (du === 1) count = 'מחר';
-    else count = 'בעוד ' + du + ' ימים';
-    return `
-    <div class="evt${i===0?' evt-next':''}">
-      <div class="evt-date"><div class="d">${d.getDate()}</div><div class="m">${MONTHS[d.getMonth()]}</div></div>
-      <div class="evt-body">
-        <h3>${escHtml(e.title)}</h3>
-        ${e.description?'<p>'+escHtml(e.description)+'</p>':''}
-        ${e.location?'<div class="loc">'+escHtml(e.location)+'</div>':''}
-        ${e.event_time?'<div class="loc">'+e.event_time+'</div>':''}
-      </div>
-      <div class="evt-count">${count}</div>
-    </div>`;
-  }).join('') || '<p class="sub">אין אירועים קרובים</p>';
+    cards.push({
+      title: e.title, description: e.description,
+      event_date: d.getDate() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear(),
+      event_time: e.event_time || '', location: e.location || '',
+      badge: badges[(i+2) % badges.length], type: 'event'
+    });
+  });
+  return cards.length ? cards : FALLBACK.news_cards;
+}
+function renderNewsCards() {
+  let items = buildCards();
+  let filled = items.slice();
+  while (filled.length < 12) filled = filled.concat(items);
+  const html = filled.map(it => {
+    const dateHtml = it.event_date ? '<div class="event-date">' + esc(it.event_date) + (it.event_time ? ' · ' + esc(it.event_time) : '') + '</div>' : '';
+    const descHtml = it.description ? '<div class="desc">' + esc(it.description) + '</div>' : '';
+    const locHtml = it.location ? '<div class="desc">' + esc(it.location) + '</div>' : '';
+    return '<div class="news-card"><div class="badge b-' + it.badge + '">' + (it.type === 'event' ? '!' : '') + '</div><div><div class="txt">' + esc(it.title) + '</div>' + descHtml + locHtml + dateHtml + '</div></div>';
+  }).join('');
+  $('#newsScroll').innerHTML = html + html;
 }
 
-function renderMedia() {
-  const list = D.media || [];
-  if (!list.length) { $('#m_wrap').innerHTML = '<p class="sub">אין תמונות וסרטונים</p>'; return; }
-  if (mediaIdx >= list.length) mediaIdx = 0;
-  const m = list[mediaIdx];
-  const isImg = /\.(png|jpe?g|gif|webp)(\?|$)/i.test(m.media_url||'');
-  stopVideo();
-  $('#m_wrap').innerHTML = (isImg
-      ? `<img src="${escHtml(m.media_url)}" alt="">`
-      : `<video src="${escHtml(m.media_url)}" autoplay muted playsinline></video>`)
-    + (m.title ? `<div class="media-title">${escHtml(m.title)}</div>` : '');
-  if (!isImg) {
-    const v = $('#m_wrap video');
-    if (v) { curVideo = v; v.onended = ()=> nextPanel(); }
+/* ---------- גלריית תמונות וסרטונים ---------- */
+let _photoTimer = null, _curSlide = 0, _slides = [];
+function renderPhotos() {
+  const items = (D && (D.media || []).length) ? D.media : FALLBACK.photos;
+  const panel = $('#photoPanel');
+  const dots = $('#photoDots');
+  panel.querySelectorAll('.photo-slide').forEach(s => s.remove());
+  let slidesHtml = '', dotsHtml = '';
+  items.forEach((m, i) => {
+    const url = m.media_url || m.image_url || '';
+    const isImg = /\.(png|jpe?g|gif|webp)(\?|$)/i.test(url);
+    if (!url) return;
+    const inner = isImg
+      ? '<img src="' + esc(url) + '" alt="' + esc(m.title||'') + '">'
+      : '<video src="' + esc(url) + '" autoplay muted playsinline loop></video>';
+    slidesHtml += '<div class="photo-slide' + (i === 0 ? ' on' : '') + '">' + inner + '</div>';
+    dotsHtml += '<div class="photo-dot' + (i === 0 ? ' active' : '') + '"></div>';
+  });
+  if (!slidesHtml) {
+    slidesHtml = '<div class="photo-slide on"><div class="photo-ph"><div class="t">גלריית בית הספר</div></div></div>';
   }
-}
-function stopVideo(){ const v = $('#m_wrap video'); if (v) { try{v.pause();}catch(e){} } curVideo = null; }
-
-function renderSchedule() {
-  const s = schedForToday();
-  $('#s_title').innerHTML = 'מערכת <span class="accent">היום</span> — ' + escHtml(s.label);
-  const now = new Date(), mins = now.getHours()*60 + now.getMinutes();
-  let nextFound = false;
-  $('#s_rows').innerHTML = s.items.map(it=>{
-    const [h,m] = (it.time||'').split(':').map(Number);
-    const isNext = !nextFound && !isNaN(h) && h*60+m > mins;
-    if (isNext) nextFound = true;
-    return `<div class="sched-row${isNext?' next':''}">
-      <span class="t" style="direction:ltr">${escHtml(it.time||'')}</span>
-      <span class="lbl">${escHtml(it.label)}</span>
-      ${isNext?'<span style="color:var(--gold);font-size:18px;font-weight:700">הבא</span>':'<span></span>'}
-    </div>`;
-  }).join('') || '<p class="sub">אין מערכת להיום</p>';
-}
-
-function renderBirthdays() {
-  const now = new Date();
-  const list = (D.birthdays || []).filter(b => b.event_date)
-    .map(b => ({ ...b, d: new Date(b.event_date + 'T00:00:00') }))
-    .filter(b => b.d.getMonth() === now.getMonth() && b.d.getDate() >= now.getDate() - 2)
-    .sort((a,b)=>a.d.getDate()-b.d.getDate())
-    .slice(0, 6);
-  $('#b_grid').innerHTML = list.map(b=>`
-    <div class="bday">
-      <div class="cake"></div>
-      <div class="bn">${escHtml(b.title)}</div>
-      <div class="bm">${b.d.getDate()} ב${MONTHS[b.d.getMonth()]}</div>
-    </div>`).join('') || '<p class="sub">אין ימי הולדת בימים הקרובים</p>';
+  panel.insertAdjacentHTML('afterbegin', slidesHtml);
+  dots.innerHTML = dotsHtml;
+  _slides = panel.querySelectorAll('.photo-slide');
+  const allDots = dots.querySelectorAll('.photo-dot');
+  _curSlide = 0;
+  if (_photoTimer) clearInterval(_photoTimer);
+  // סרטון נשאר עד סופו — מעבר לפי סוג המדיה
+  _photoTimer = setInterval(() => {
+    if (_curSlide >= _slides.length) return;
+    const cur = _slides[_curSlide];
+    const v = cur && cur.querySelector('video');
+    if (v && !v.ended && v.currentTime > 0) return; // סרטון עדיין רץ
+    _curSlide = (_curSlide + 1) % _slides.length;
+    _slides.forEach(s => s.classList.remove('on'));
+    allDots.forEach(d => d.classList.remove('active'));
+    _slides[_curSlide].classList.add('on');
+    if (allDots[_curSlide]) allDots[_curSlide].classList.add('active');
+  }, 7000);
 }
 
-/* ---------- רוטציה ---------- */
-function showPage(idx) {
-  stopVideo();
-  curIdx = idx;
-  const id = PAGES[idx];
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  const el = $('#p-' + id);
-  if (!el) { nextPanel(); return; }
-  el.classList.add('on');
-  if (id === 'home') renderHome();
-  if (id === 'notices') { noticePage = 0; renderNotices(); }
-  if (id === 'events') renderEvents();
-  if (id === 'media') renderMedia();
-  if (id === 'schedule') renderSchedule();
-  if (id === 'birthdays') renderBirthdays();
-  renderDots();
-  // משך שהייה
-  let secs = ((D.settings||{}).board||{}).panel_seconds || 10;
-  if (id === 'media' && curVideo && curVideo.duration) {
-    secs = Math.max(secs, Math.ceil(curVideo.duration) + 1);
+/* ---------- טיקר RSS עליון: חדשות חיוביות + ערכים + ימי הולדת ---------- */
+function renderRss() {
+  let items;
+  if (D) {
+    items = [];
+    (D.values || []).forEach(v => items.push({ title: (v.title ? v.title + ': ' : '') + (v.text || '') }));
+    const now = new Date();
+    (D.birthdays || []).forEach(b => {
+      if (!b.event_date) return;
+      const d = new Date(b.event_date + 'T00:00:00');
+      if (d.getMonth() === now.getMonth() && Math.abs(d.getDate() - now.getDate()) <= 2)
+        items.push({ title: 'יום הולדת שמח ל' + b.title + '!' });
+    });
+  } else {
+    items = null;
   }
-  clearTimeout(showPage._t);
-  showPage._t = setTimeout(nextPanel, secs * 1000);
-}
-function nextPanel() {
-  if (!PAGES.length) return;
-  showPage((curIdx + 1) % PAGES.length);
-}
-function renderDots() {
-  $('#dots').classList.remove('hidden');
-  $('#dots').innerHTML = PAGES.map((_,i)=>`<span class="${i===curIdx?'on':''}"></span>`).join('');
+  if (!items || !items.length) items = FALLBACK.rss;
+  let filled = items.slice();
+  while (filled.length < 20) filled = filled.concat(items);
+  const html = filled.map(it => '<div class="rss-item"><span class="dot"></span><span>' + esc(it.title) + '</span></div>').join('');
+  $('#rssTrack').innerHTML = html + html;
 }
 
-/* ---------- שעונים ---------- */
-function tickClock() {
-  const d = new Date();
-  const hh = String(d.getHours()).padStart(2,'0'), mm = String(d.getMinutes()).padStart(2,'0');
-  const el = $('#h_clock'); if (el) el.textContent = hh + ':' + mm;
-  const hd = $('#h_date'); if (hd) hd.textContent = gregStr(d) + ' · ' + hebDateStr(d);
-  const bc = $('#bar_clock'); if (bc) bc.textContent = hh + ':' + mm + ':' + String(d.getSeconds()).padStart(2,'0');
-  const bh = $('#bar_hdate'); if (bh) bh.textContent = hebDateStr(d);
-  // הפסקה הבאה בסרגל
-  const nb = nextBreak();
-  const bn = $('#bar_next');
-  if (nb) {
-    if (nb.in <= 60 && nb.in > 0) { bn.classList.remove('hidden'); bn.textContent = nb.name + ' בעוד ' + nb.in + ' דק׳'; }
-    else if (nb.in === 0) { bn.classList.remove('hidden'); bn.textContent = nb.name + ' — עכשיו!'; }
-    else if (nb.in > 0) { bn.classList.remove('hidden'); bn.textContent = nb.name + ' · ' + nb.time; }
-    else { bn.classList.add('hidden'); }
-  }
+/* ---------- טיקר תחתון: הודעות בית הספר ---------- */
+function renderNoticesTicker() {
+  let items = (D && (D.notices || []).length) ? D.notices : FALLBACK.notices;
+  let filled = items.slice();
+  while (filled.length < 12) filled = filled.concat(items);
+  const html = filled.map(n => '<div class="news-item"><span class="dot"></span><span>' + esc(n.title) + (n.text ? ' — ' + esc(n.text) : '') + '</span></div>').join('');
+  $('#newsTrack').innerHTML = html + html;
 }
 
-/* ---------- אתחול ---------- */
+/* ---------- כללי ---------- */
+function renderAll() {
+  $('#schoolName').textContent = (D && D.name) ? D.name : FALLBACK.name;
+  const motto = (D && D.settings && D.settings.motto) || FALLBACK.motto;
+  $('#schoolMotto').textContent = motto;
+  document.title = ((D && D.name) || FALLBACK.name) + ' — לוח בית הספר';
+  renderNewsCards();
+  renderPhotos();
+  renderRss();
+  renderNoticesTicker();
+}
+
 (async function init(){
-  if (!await fetchBoard()) return;
-  document.title = D.name + ' — לוח בית הספר';
-  $('#bar_name').textContent = D.name;
+  await fetchBoard();
   $('#loading').classList.add('hidden');
-  $('#bar').classList.remove('hidden');
-  showPage(0);
-  tickClock();
-  setInterval(tickClock, 1000);
-  setInterval(async ()=>{ // רענון נתונים כל דקה
-    const ok = await fetchBoard();
-    if (ok) renderDots();
-  }, 60000);
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(fetchBoard, 60000);
 })();
