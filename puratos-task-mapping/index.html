@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="2026-10-08-v1">
+<title>מיפוי משימות דיגיטליות חוזרות | Puratos Israel</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d9488">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#0d9488;--primary-light:#14b8a6;--dark:#134e4a;--card-bg:#ffffff;--page-bg:#f4f6f8;--text-main:#1e293b;--text-muted:#64748b;--border:#e2e8f0;--radius-card:16px;--radius-item:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--page-bg);color:var(--text-main);line-height:1.6}
+.container{max-width:720px;margin:0 auto;padding:20px 14px 40px}
+.header{text-align:center;padding:28px 20px 22px;background:linear-gradient(135deg,var(--dark),var(--primary));color:#fff;border-radius:var(--radius-card);margin-bottom:18px;box-shadow:0 6px 24px rgba(13,148,136,.25)}
+.header h1{font-size:22px;font-weight:800;margin-bottom:8px}
+.header .sub{font-size:14px;opacity:.9}
+.intro{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card);padding:16px 18px;margin-bottom:18px;font-size:14px;color:var(--text-muted)}
+.intro b{color:var(--text-main)}
+.badge-fill{display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+.progress-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card);padding:12px 16px;margin-bottom:18px;position:sticky;top:8px;z-index:50}
+.progress-bar{height:8px;background:var(--border);border-radius:8px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--primary-light));transition:width .3s ease}
+.progress-text{font-size:12px;color:var(--text-muted);margin-top:6px;text-align:center}
+.section{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card);padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.section-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;margin-bottom:4px}
+.section-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:#f0fdfa;border-radius:10px;font-size:18px;flex-shrink:0}
+.section-desc{font-size:12.5px;color:var(--text-muted);margin-bottom:14px;padding-right:46px}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+label.field-label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+input[type=text],textarea,select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-item);font-family:inherit;font-size:16px;background:#fff;color:var(--text-main);transition:border-color .2s}
+input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(13,148,136,.12)}
+textarea{min-height:90px;resize:vertical}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.5}
+.options-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.option{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-item);cursor:pointer;transition:all .15s;font-size:14px;min-height:44px;background:#fff}
+.option:hover{border-color:var(--primary-light);background:#f0fdfa}
+.option.checked{border-color:var(--primary);background:#f0fdfa;font-weight:600}
+.option input{width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;cursor:pointer}
+.radio-group{display:flex;flex-direction:column;gap:8px}
+.radio-opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-item);cursor:pointer;font-size:14px;transition:all .15s;min-height:44px;background:#fff}
+.radio-opt:hover{border-color:var(--primary-light)}
+.radio-opt.checked{border-color:var(--primary);background:#f0fdfa;font-weight:600}
+.radio-opt input{width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;cursor:pointer}
+.submit-section{text-align:center;padding:28px 20px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-card)}
+.btn-submit{padding:14px 44px;background:linear-gradient(135deg,var(--dark),var(--primary));color:#fff;border:none;border-radius:var(--radius-item);font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;min-height:44px;transition:all .2s;box-shadow:0 4px 16px rgba(13,148,136,.3)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,148,136,.4)}
+.btn-submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.success-msg{display:none;text-align:center;padding:24px;background:#f0fdf4;border:2px solid var(--primary-light);border-radius:var(--radius-card);margin-bottom:16px}
+.success-msg h3{color:var(--primary);font-size:20px;margin-bottom:6px}
+.success-msg p{color:var(--text-muted);font-size:14px}
+.admin-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.btn-export{padding:10px 20px;border:1.5px solid var(--border);background:#fff;color:var(--text-main);border-radius:var(--radius-item);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;min-height:44px;transition:all .2s}
+.btn-export:hover{border-color:var(--primary);color:var(--primary)}
+#submissionsList{margin-top:16px}
+.submission-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-item);padding:12px 14px;margin-bottom:10px;font-size:13.5px}
+.submission-card h4{font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
+.badge.blue{background:#eff6ff;color:#1d4ed8}
+.badge.green{background:#f0fdf4;color:var(--primary)}
+.toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:var(--dark);color:#fff;padding:12px 22px;border-radius:var(--radius-item);font-size:14px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:9999;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.option:focus-within,.radio-opt:focus-within{outline:3px solid var(--primary-light);outline-offset:2px}
+@media(max-width:600px){
+.header h1{font-size:19px}
+.options-grid{grid-template-columns:1fr}
+.btn-submit{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<h1>🤖 מיפוי משימות דיגיטליות חוזרות</h1>
+<div class="sub">עובדים חכם יותר: אילו משימות נוכל לקצר או להפוך לאוטומטיות?</div>
+<div class="badge-fill">⏱️ זמן מילוי: כ-4 דקות</div>
+</div>
+
+<div class="intro">
+במסגרת פרויקט דיגיטציה ארגוני אנחנו מזהים משימות שחוזרות על עצמן וגוזלות זמן, ובודקים אם אפשר לבצע אותן מהר ופשוט יותר באמצעות <b>אוטומציה או כלי AI</b>. השאלון מיועד לעובדים שמבצעים משימות מול מחשב, גם אם רק בחלק מיום העבודה.
+</div>
+
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-text" id="progressText">0% הושלם</div>
+</div>
+
+<div class="success-msg" id="successMsg">
+<h3>✅ נשלח בהצלחה!</h3>
+<p>תודה על שיתוף הפעולה. נעבור על הרעיונות ונבחר משימות לפיילוט האוטומציה הראשון.</p>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">👤</div> 1. פרטים אישיים</div>
+<div class="field"><label class="field-label" for="fullName">שם מלא</label>
+<input type="text" id="fullName" placeholder="לדוגמה: ישראל ישראלי"></div>
+<div class="field"><label class="field-label" for="department">באיזו מחלקה את/ה עובד/ת?</label>
+<select id="department">
+<option value="">— בחר/י מחלקה —</option>
+<option>שיווק</option><option>מכירות</option><option>כספים</option><option>רכש</option>
+<option>לוגיסטיקה ושרשרת אספקה</option><option>איכות</option><option>משאבי אנוש</option>
+<option>מערכות מידע</option><option>פיתוח</option><option>תפעול</option><option>ייצור</option><option>מחלקה אחרת</option>
+</select></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">💻</div> 2. אילו פעולות את/ה מבצע/ת באופן קבוע במחשב?</div>
+<div class="section-desc">אפשר לבחור יותר מתשובה אחת</div>
+<div class="options-grid" id="actionsGrid"></div>
+<div class="field" style="margin-top:12px" id="otherActionWrap">
+<label class="field-label" for="otherActions">אחר — נא לפרט:</label>
+<textarea id="otherActions" placeholder="תיאור קצר של הפעולה הנוספת"></textarea></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">🎯</div> 3. מתוך כל הפעולות — איזו פעולה היית הכי רוצה לקצר או להפסיק לבצע ידנית?</div>
+<div class="section-desc">תאר/י מה עושים, מתי וכמה פעמים</div>
+<textarea id="taskToShorten" placeholder="לדוגמה: בכל בוקר אני פותח/ת קובץ שמגיע במייל, מסנן/ת שורות ושולח/ת את התוצאה לאנשים קבועים..."></textarea>
+<div class="hint">דוגמאות: העתקה שבועית מכמה קבצי Excel לקובץ מרכזי · דוח חודשי קבוע · מיילים דומים לספקים · מעקב אחרי משימות פתוחות · סיכומי פגישות · השוואה בין טבלאות · תזכורות לעובדים.</div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">🔁</div> 4. כמה פעמים מבצעים את הפעולה?</div>
+<div class="radio-group" id="freqGroup"></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">⏱️</div> 5. כמה זמן בערך לוקח לבצע אותה בכל פעם?</div>
+<div class="radio-group" id="timeGroup"></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">👥</div> 6. האם עובדים נוספים מבצעים פעולה דומה?</div>
+<div class="radio-group" id="sharedGroup"></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">🛠️</div> 7. באילו מערכות או כלים הפעולה מבוצעת?</div>
+<div class="section-desc">שאלה חדשה — עוזרת לנו לדעת מול מה אפשר לחבר אוטומציה · אפשר לבחור יותר מתשובה אחת</div>
+<div class="options-grid" id="systemsGrid"></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">😤</div> 8. מה הכי מפריע לך בפעולה הזו?</div>
+<div class="section-desc">שאלה חדשה — מסייעת לנו לתעדף מה מקצרים קודם</div>
+<div class="radio-group" id="painGroup"></div>
+</div>
+
+<div class="section">
+<div class="section-title"><div class="section-icon">🚀</div> 9. האם תרצה/י שהפעולה שלך תיבחר לפיילוט אוטומציה?</div>
+<div class="section-desc">שאלה חדשה — פיילוט ראשון ייבחר מבין ההגשות</div>
+<div class="radio-group" id="pilotGroup"></div>
+</div>
+
+<div class="submit-section">
+<button class="btn-submit" id="submitBtn" onclick="submitForm()">שמור ושלח 📤</button>
+<p style="margin-top:12px;color:var(--text-muted);font-size:13.5px;">הנתונים נשמרים + נשלחים אוטומטית למייל של IT</p>
+<div class="admin-bar">
+<button class="btn-export" onclick="loadSubmissions()">רענן 🔄</button>
+<button class="btn-export" onclick="exportToExcel()">ייצוא לאקסל 📊</button>
+</div>
+<div id="submissionsList"></div>
+</div>
+
+<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Puratos Israel — Digital Task Mapping | 2026</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+const ACTIONS=["שולח/ת מיילים דומים בכל פעם","מעתיק/ה נתונים ממייל לקובץ","מעתיק/ה נתונים מקובץ אחד לקובץ אחר","מעדכן/ת טבלאות Excel באופן ידני","מאחד/ת מידע ממספר קבצים","מכין/ה דוח קבוע","בודק/ת נתונים ומחפש/ת חריגות או טעויות","שולח/ת תזכורות לאנשים","עוקב/ת אחרי משימות פתוחות","קורא/ת הרבה מיילים ומחפש/ת בהם מידע","מסכם/ת פגישות, מיילים או מסמכים","מכין/ה מסמכים או מצגות במבנה שחוזר על עצמו","אוסף/ת מידע ממספר אנשים","שומר/ת ומסדר/ת קבצים או מסמכים","מזין/ה נתונים למערכת","מפיק/ה נתונים ממערכת","פעולה אחרת במחשב"];
+const SYSTEMS=["Outlook / מייל","Excel","ERP / Priority","Power BI","SharePoint / OneDrive","Chromeleon","WhatsApp","מערכת אחרת"];
+const FREQ=["כמה פעמים ביום","פעם ביום","כמה פעמים בשבוע","פעם בשבוע","כמה פעמים בחודש","פעם בחודש","לעיתים רחוקות יותר"];
+const TIME=["פחות מ-5 דקות","5 עד 15 דקות","15 עד 30 דקות","30 עד 60 דקות","שעה עד שעתיים","יותר משעתיים"];
+const SHARED=["כן, עובדים נוספים במחלקה שלי","כן, גם עובדים במחלקות אחרות","לא, רק אני","אני לא יודע/ת"];
+const PAIN=["הזמן שהיא לוקחת","נטייה לטעויות","שעמום וחוסר עניין","תלות באנשים אחרים"];
+const PILOT=["כן, אשמח! 🚀","אולי, תלוי בפרטים","לא בשלב הזה"];
+
+function buildCheckboxes(gridId,opts,name){
+  const g=document.getElementById(gridId);
+  g.innerHTML=opts.map((o,i)=>`<label class="option" data-name="${name}"><input type="checkbox" name="${name}" value="${o.replace(/"/g,'&quot;')}">${o}</label>`).join('');
+  g.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      inp.closest('.option').classList.toggle('checked',inp.checked);
+      updateProgress();
+    });
+  });
+}
+function buildRadios(groupId,opts,name){
+  const g=document.getElementById(groupId);
+  g.innerHTML=opts.map(o=>`<label class="radio-opt" data-name="${name}"><input type="radio" name="${name}" value="${o.replace(/"/g,'&quot;')}">${o}</label>`).join('');
+  g.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      g.querySelectorAll('.radio-opt').forEach(l=>l.classList.remove('checked'));
+      inp.closest('.radio-opt').classList.add('checked');
+      updateProgress();
+    });
+  });
+}
+buildCheckboxes('actionsGrid',ACTIONS,'act');
+buildCheckboxes('systemsGrid',SYSTEMS,'sys');
+buildRadios('freqGroup',FREQ,'freq');
+buildRadios('timeGroup',TIME,'time');
+buildRadios('sharedGroup',SHARED,'shared');
+buildRadios('painGroup',PAIN,'pain');
+buildRadios('pilotGroup',PILOT,'pilot');
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+function picked(name){return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i=>i.value);}
+function radioVal(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:'';}
+
+let progressFields=[];['fullName','department','taskToShorten','otherActions'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',updateProgress);
+});
+function updateProgress(){
+  const checks=[
+    !!document.getElementById('fullName').value.trim(),
+    !!document.getElementById('department').value,
+    picked('act').length>0,
+    !!document.getElementById('taskToShorten').value.trim(),
+    !!radioVal('freq'),
+    !!radioVal('time'),
+    !!radioVal('shared'),
+    picked('sys').length>0,
+    !!radioVal('pain'),
+    !!radioVal('pilot')
+  ];
+  const done=checks.filter(Boolean).length;
+  const pct=Math.round(done/checks.length*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=pct+'% הושלם';
+}
+
+function ailonRateLimit(){
+  const last=localStorage.getItem('ptm_last_submit');
+  if(last && Date.now()-Number(last)<20000){showToast('⏳ רגע... נסו שוב בעוד כ-20 שניות');return false;}
+  localStorage.setItem('ptm_last_submit',String(Date.now()));return true;
+}
+
+async function submitForm(){
+  if(!ailonRateLimit())return;
+  const n=document.getElementById('fullName').value.trim(),d=document.getElementById('department').value;
+  if(!n){showToast('⚠️ נא למלא שם');return;}
+  if(!d){showToast('⚠️ נא לבחור מחלקה');return;}
+  const payload={
+    full_name:n,department:d,
+    recurring_actions:picked('act'),
+    other_actions:document.getElementById('otherActions').value.trim(),
+    task_to_shorten:document.getElementById('taskToShorten').value.trim(),
+    frequency:radioVal('freq'),time_per_run:radioVal('time'),shared_with:radioVal('shared'),
+    systems:picked('sys'),pain_reason:radioVal('pain'),pilot_willingness:radioVal('pilot')
+  };
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='שולח...';
+  try{
+    const res=await fetch(`${API}/submitTaskMapping`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const result=await res.json();
+    if(result.success){
+      document.getElementById('successMsg').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+      showToast('✅ נשלח בהצלחה ל-IT');
+      setTimeout(()=>document.getElementById('successMsg').style.display='none',8000);
+    }else{throw new Error(result.error||'שגיאה');}
+  }catch(e){
+    let s=JSON.parse(localStorage.getItem('ptm_submissions')||'[]');
+    s.push({...payload,date:new Date().toISOString()});
+    localStorage.setItem('ptm_submissions',JSON.stringify(s));
+    showToast('⚠️ נשמר מקומית — נשלח בהמשך');
+  }
+  btn.disabled=false;btn.textContent='שמור ושלח 📤';
+  loadSubmissions();
+}
+
+let allSubmissions=[];
+async function loadSubmissions(){
+  const l=document.getElementById('submissionsList');
+  l.innerHTML='<p style="color:var(--text-muted);font-size:13.5px;">טוען...</p>';
+  try{
+    const r=await fetch(`${API}/getAllTaskMappings`);const res=await r.json();
+    allSubmissions=res.items||[];
+    renderSubs();
+  }catch(e){
+    const s=JSON.parse(localStorage.getItem('ptm_submissions')||'[]');
+    allSubmissions=s.map(x=>({...x,local:true}));
+    renderSubs();
+  }
+}
+function renderSubs(){
+  const l=document.getElementById('submissionsList');
+  if(!allSubmissions.length){l.innerHTML='<p style="color:var(--text-muted);font-size:13.5px;">אין הגשות עדיין.</p>';return;}
+  l.innerHTML=allSubmissions.map(s=>`<div class="submission-card"><h4>${s.department||'—'} <span class="badge blue">${s.full_name||'—'}</span> <span class="badge green">${s.local?'מקומי':new Date(s.created_date||s.date).toLocaleDateString('he-IL')}</span></h4><div>🔁 ${(s.recurring_actions||[]).length} פעולות · ⏱️ ${s.frequency||'—'} · 🚀 ${s.pilot_willingness||'—'}</div></div>`).join('');
+}
+function exportToExcel(){
+  if(!allSubmissions.length){showToast('⚠️ אין נתונים');return;}
+  let csv='\ufeff';
+  csv+='שם,מחלקה,תאריך,פעולות חוזרות,אחר,הפעולה לקיצור,תדירות,זמן לביצוע,עובדים נוספים,מערכות,מה מפריע,נכונות לפיילוט\n';
+  allSubmissions.forEach(s=>{
+    const row=[s.full_name||'',s.department||'',new Date(s.created_date||s.date).toLocaleDateString('he-IL'),(s.recurring_actions||[]).join('; '),s.other_actions||'',s.task_to_shorten||'',s.frequency||'',s.time_per_run||'',s.shared_with||'',(s.systems||[]).join('; '),s.pain_reason||'',s.pilot_willingness||''];
+    csv+=row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')+'\n';
+  });
+  const b=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`puratos_task_mapping_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  showToast('📊 אקסל הורד');
+}
+updateProgress();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+</script>
+</body>
+</html>

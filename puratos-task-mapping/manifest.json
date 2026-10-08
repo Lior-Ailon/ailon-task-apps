@@ -1,0 +1,16 @@
+{
+  "name": "מיפוי משימות דיגיטליות חוזרות — Puratos Israel",
+  "short_name": "משימות דיגיטליות",
+  "description": "שאלון לזיהוי משימות דיגיטליות חוזרות לאוטומציה — Puratos Israel",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "he",
+  "background_color": "#f4f6f8",
+  "theme_color": "#0d9488",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
