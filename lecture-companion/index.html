@@ -19,13 +19,13 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 #vu i{width:5px;background:#334155;border-radius:2px;height:4px;transition:height .12s}
 #vu.on i{background:#14b8a6}
 #miclabel{font-size:12.5px;color:#94a3b8;line-height:1.5;flex:1}
-#dirBtn{padding:10px 12px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-weight:bold;cursor:pointer;flex-shrink:0;font-size:14px}
-#dirBtn:active{background:#0d9488}
+#dirBtn,#newBtn{padding:10px 12px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-weight:bold;cursor:pointer;flex-shrink:0;font-size:14px}
+#dirBtn:active,#newBtn:active{background:#0d9488}
 #feed{flex:1;overflow-y:auto;background:#1e293b;border-radius:14px;padding:10px 12px;min-height:200px}
 .seg{margin-bottom:10px;padding:8px 10px;background:#0f172a;border-radius:10px}
+.seg .time{color:#64748b;font-size:11px;margin-bottom:2px}
 .seg .src{color:#cbd5e1;font-size:14px;line-height:1.55}
 .seg .tr{color:#5eead4;font-size:14px;line-height:1.6;margin-top:4px;font-weight:600}
-.seg .tr.warn{color:#fcd34d}
 .seg .tr.fail{color:#f87171}
 .dim{color:#64748b}
 .actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
@@ -43,6 +43,11 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 .ofoot input{flex:1;padding:12px;border-radius:12px;border:0;background:#f8fafc;font-size:15px}
 .ofoot button{padding:12px 18px;border:0;border-radius:12px;background:#14b8a6;font-weight:bold;cursor:pointer;color:#04201d}
 .spin{color:#fcd34d}
+.expRow{display:flex;gap:8px;margin-bottom:10px}
+.expRow button{flex:1;padding:13px 6px;border:0;border-radius:12px;font-weight:bold;cursor:pointer;font-size:14px}
+.expWord{background:#1d4ed8;color:#fff}
+.expPdf{background:#b91c1c;color:#fff}
+.expNew{background:#14b8a6;color:#04201d}
 </style></head><body>
 <header><span>🎧 AILON Interpreter</span><span id="status">כבוי</span></header>
 <main>
@@ -50,6 +55,7 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 <button id="mic" onclick="toggleMic()">🎙️</button>
 <div id="vu"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div id="miclabel">לחץ ודבר. כל 12 שניות הדיבור מתומלל ומתורגם אוטומטית (עברית ⇄ אנגלית).</div>
+<button id="newBtn" title="פתיחת סשן חדש" onclick="confirmNew()">↻</button>
 <button id="dirBtn" onclick="toggleDir()">EN→עב</button>
 </div>
 <div id="feed"><span class="dim">התמליל והתרגום יופיעו כאן...</span></div>
@@ -77,19 +83,24 @@ const OUT_RATE=16000;
 const CHUNK_SEC=parseFloat(new URLSearchParams(location.search).get('sec'))||12;
 let DIR=localStorage.getItem('lcDir')||'en2he';
 let ctx=null,stream=null,proc=null,micSrc=null,gain=null,recording=false;
-let acc=[],accSamples=0,segSeq=0;
+let acc=[],accSamples=0,wakeLock=null,keepAlive=null;
+const QUEUE=[];let inflight=0;
+const WAVSTORE={}; // מקטעים בטיפול — לניסיון חוזר
 let state=load();
 const feed=document.getElementById('feed'),status=document.getElementById('status');
 const vu=document.getElementById('vu'),vuBars=vu.querySelectorAll('i');
 
 function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.sessions)return s}catch(e){}
  return {sessions:[{id:Date.now(),start:new Date().toISOString(),segs:[]}],summaries:[]}}
-function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+function save(){
+ if(state.sessions.length>10)state.sessions=state.sessions.slice(-10);
+ if(state.summaries.length>20)state.summaries=state.summaries.slice(-20);
+ try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
 function cur(){return state.sessions[state.sessions.length-1]}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function fmtTime(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function setRec(v){document.getElementById('mic').classList.toggle('rec',v);vu.classList.toggle('on',v);
- if(!v)vuBars.forEach(b=>b.style.height='4px');
- status.textContent=v?'🔴 מקליט — מדברים...':'כבוי'}
+ if(!v)vuBars.forEach(b=>b.style.height='4px')}
 
 // ---------- direction ----------
 function applyDir(){
@@ -97,21 +108,30 @@ function applyDir(){
  document.getElementById('dirBtn').textContent=t?'עב→EN':'EN→עב';
  document.getElementById('miclabel').textContent=t?
   'לחץ ודבר בעברית. כל 12 שניות הדיבור מתומלל ומתורגם לאנגלית.':
-  'לחץ ודבר. כל 12 שניות הדיבור מתומלל ומתורגם לעברית (אנגלית או כל שפה).';}
-function toggleDir(){
- if(recording)stopMic();
+  'לחץ ודבר. כל 12 שניות הדיבור מתומלל ומתורגם לעברית (אנגלית או כל שפה).'}
+function toggleDir(){if(recording)stopMic();
  DIR=(DIR==='en2he')?'he2en':'en2he';localStorage.setItem('lcDir',DIR);
  newSession();applyDir()}
 
+// ---------- sessions ----------
+function newSession(){
+ state.sessions.push({id:Date.now(),start:new Date().toISOString(),segs:[]});save();
+ renderSegs();closeOv()}
+function confirmNew(){
+ const n=cur().segs.filter(s=>!s.pend).length;
+ if(n>0&&!confirm('לפתוח סשן חדש? התמליל הנוכחי יישמר בהיסטוריה עד הסיכום הבא.'))return;
+ newSession()}
+
 // ---------- mic / recording ----------
 async function toggleMic(){recording?stopMic():startMic()}
-
 async function startMic(){
  try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}})}
  catch(e){alert('נדרש אישור מיקרופון. אשר בחלון שנפתח.');return}
  try{ctx=new (window.AudioContext||window.webkitAudioContext)()}
  catch(e){alert('הדפדפן לא תומך בהקלטה.');return}
  if(ctx.state==='suspended')await ctx.resume();
+ try{if(navigator.wakeLock)wakeLock=await navigator.wakeLock.request('screen')}catch(e){}
+ keepAlive=setInterval(()=>{if(ctx&&ctx.state==='suspended')ctx.resume()},5000);
  micSrc=ctx.createMediaStreamSource(stream);
  proc=ctx.createScriptProcessor(4096,1,1);
  gain=ctx.createGain();gain.gain.value=0;
@@ -122,7 +142,7 @@ async function startMic(){
   updateVU(d);
   if(accSamples>=ctx.sampleRate*CHUNK_SEC)flushChunk(false)};
  micSrc.connect(proc);proc.connect(gain);gain.connect(ctx.destination);
- acc=[];accSamples=0;recording=true;setRec(true)}
+ acc=[];accSamples=0;recording=true;setRec(true);renderSegs()}
 
 function stopMic(){
  recording=false;
@@ -131,7 +151,10 @@ function stopMic(){
  try{if(proc)proc.disconnect()}catch(e){}
  try{if(micSrc)micSrc.disconnect()}catch(e){}
  try{if(ctx)ctx.close()}catch(e){}
- ctx=null;stream=null;proc=null;micSrc=null;acc=[];accSamples=0;setRec(false)}
+ try{if(wakeLock)wakeLock.release()}catch(e){}
+ if(keepAlive)clearInterval(keepAlive);
+ ctx=null;stream=null;proc=null;micSrc=null;wakeLock=null;acc=[];accSamples=0;
+ setRec(false);renderSegs()}
 
 function updateVU(d){
  let sum=0;for(let i=0;i<d.length;i++)sum+=d[i]*d[i];
@@ -178,72 +201,109 @@ function encodeWav(samples){
  return btoa(b64)}
 
 function sendChunk(wavB64){
- const target=DIR==='he2en'?'en':'he';
- const id='c'+Date.now()+Math.random();
- const seg={id,ts:Date.now(),src:'',tr:'',pend:true};
- cur().segs.push(seg);save();renderPend();
- fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
-  body:JSON.stringify({audio:wavB64,target})})
+ const id='c'+Date.now()+Math.random().toString(16).slice(2);
+ WAVSTORE[id]=wavB64;
+ const seg={id,ts:Date.now(),src:'',tr:'',pend:true,tries:0};
+ cur().segs.push(seg);save();renderSegs();
+ enqueue(seg)}
+
+function enqueue(seg){QUEUE.push(seg);pump()}
+function pump(){while(inflight<2&&QUEUE.length){const seg=QUEUE.shift();inflight++;
+ postChunk(seg).finally(()=>{inflight--;pump()})}}
+
+function postChunk(seg){
+ return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({audio:WAVSTORE[seg.id],target:DIR==='he2en'?'en':'he'})})
  .then(r=>r.json())
  .then(d=>{
-  if(d.success&&(d.t||d.tr)){seg.src=d.t;seg.tr=d.tr;seg.pend=false}
-  else if(d.success&&!d.t){ // אין דיבור — מסירים
-   const i=cur().segs.indexOf(seg);if(i>-1)cur().segs.splice(i,1)}
-  else{seg.pend=false;seg.fail=true;seg.tr='⚠ כשל — ייבדק שוב'}
+  if(d.success&&(d.t||d.tr)){seg.src=d.t;seg.tr=d.tr;seg.pend=false;delete WAVSTORE[seg.id]}
+  else if(d.success&&!d.t){const i=cur().segs.indexOf(seg);if(i>-1)cur().segs.splice(i,1)} // אין דיבור
+  else failSeg(seg);
   save();renderSegs()})
- .catch(()=>{seg.pend=false;seg.fail=true;seg.tr='⚠ שגיאת רשת';save();renderSegs()})}
+ .catch(()=>{failSeg(seg);save();renderSegs()})}
 
-function renderPend(){
- const dim=feed.querySelector('.dim');if(dim)dim.remove();
- const d=document.createElement('div');d.className='seg';d.id='p'+segSeq++;
- d.innerHTML='<div class="src"><span class="dim">🎙️ ...מתמלל</span></div>';
- feed.appendChild(d);feed.scrollTop=feed.scrollHeight}
+function failSeg(seg){
+ seg.tries++;
+ if(seg.tries<=5){seg.pend=true;
+  const delay=Math.min(30000,4000*Math.pow(2,seg.tries-1));
+  setTimeout(()=>{const c=cur();if(c.segs.includes(seg)&&seg.pend)enqueue(seg)},delay)}
+ else{seg.pend=false;seg.fail=true;seg.tr='⚠ המקטע נכשל אחרי 5 ניסיונות';
+  delete WAVSTORE[seg.id]}}
 
+// ---------- render ----------
 function renderSegs(){
- const dim=feed.querySelector('.dim');if(dim&&cur().segs.length)dim.remove();
- // הסרת שורות "מתמלל" ישנות
- feed.querySelectorAll('.seg').forEach(e=>{if(e.querySelector('.dim'))e.remove()});
- cur().segs.forEach(s=>{
-  if(document.getElementById('s'+s.id))return;
-  const pending=feed.querySelector('.seg .src .dim');if(pending)pending.closest('.seg').remove();
-  const d=document.createElement('div');d.className='seg';d.id='s'+s.id;
-  const srcDir=DIR==='he2en'?'rtl':'ltr';
-  const trDir=DIR==='he2en'?'ltr':'rtl';
-  d.innerHTML='<div class="src" dir="'+srcDir+'" style="text-align:'+(srcDir==='ltr'?'left':'right')+'">'+esc(s.src)+'</div>'+
-   '<div class="tr '+(s.fail?'fail':'')+'" dir="'+trDir+'" style="text-align:'+(trDir==='ltr'?'left':'right')+'">'+esc(s.fail?s.tr:'🇮🇱 '+s.tr)+'</div>';
+ const c=cur();
+ const pend=c.segs.filter(s=>s.pend).length,done=c.segs.filter(s=>!s.pend).length;
+ status.textContent=recording?('🔴 מקליט · '+done+' תורגמו'+(pend?' · '+pend+' בתמלול':'')):(pend?'⏳ מתמלל '+pend+' מקטעים...':'כבוי');
+ feed.innerHTML='';
+ if(!c.segs.length){feed.innerHTML='<span class="dim">התמליל והתרגום יופיעו כאן...</span>';return}
+ const srcDir=DIR==='he2en'?'rtl':'ltr',trDir=DIR==='he2en'?'ltr':'rtl';
+ const srcAl=srcDir==='ltr'?'left':'right',trAl=trDir==='ltr'?'left':'right';
+ c.segs.forEach(s=>{
+  const d=document.createElement('div');d.className='seg';
+  const t='<div class="time">⏱ '+fmtTime(s.ts)+'</div>';
+  if(s.pend)d.innerHTML=t+'<div class="src"><span class="dim">🎙️ ...מתמלל (ניסיון '+(s.tries+1)+'/3)</span></div>';
+  else d.innerHTML=t+
+   '<div class="src" dir="'+srcDir+'" style="text-align:'+srcAl+'">'+esc(s.src)+'</div>'+
+   '<div class="tr '+(s.fail?'fail':'')+'" dir="'+trDir+'" style="text-align:'+trAl+'">'+(s.fail?esc(s.tr):'🇮🇱 '+esc(s.tr))+'</div>';
   feed.appendChild(d)});
  feed.scrollTop=feed.scrollHeight}
 
 // ---------- AI text actions ----------
 async function callAPI(body){
+ let lastErr=null;
  for(let i=0;i<3;i++){try{
   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
   if(d.success&&d.text)return d.text;
- }catch(e){}
+  lastErr=d.message}catch(e){lastErr=String(e)}
   await new Promise(res=>setTimeout(res,3000))}
- return null}
+ console.warn('API fail',lastErr);return null}
 
-function ctxText(){return cur().segs.map(s=>s.src).join(' ')}
+function ctxText(){return cur().segs.filter(s=>!s.pend&&s.src).map(s=>'['+fmtTime(s.ts)+'] '+s.src).join(' ')}
 
 function busy(btn,b){btn.disabled=b;btn._t=btn.textContent;if(b)btn.textContent='...טוען'}
 function unbusy(btn){btn.disabled=false;btn.textContent=btn._t}
 
 function endSession(){const btn=document.getElementById('endBtn');
  const text=ctxText();
- if(!text.trim()){alert('אין עדיין תמליל בסשן הזה');return}
+ if(!text.trim()){alert('אין עדיין תמליל בסשן הזה. הקלט דיבור או לחץ ↻ לפתיחת סשן חדש.');return}
  busy(btn);openOv('📝 סיכום סשן');
  document.getElementById('obody').innerHTML='<div class="result spin">כותב סיכום, רגע...</div>';
  callAPI({action:'summarize',text:text.slice(0,20000)}).then(sum=>{
   unbusy(document.getElementById('endBtn'));
-  if(sum){state.summaries.push({ts:Date.now(),text:sum,count:cur().segs.length});save();
-   document.getElementById('obody').innerHTML='<div class="result">'+esc(sum)+'</div>'+
-   '<button style="width:100%;padding:14px;border:0;border-radius:12px;background:#14b8a6;font-weight:bold;font-size:15px;cursor:pointer;color:#04201d" onclick="newSession()">✅ קיבלתי — פתח סשן חדש</button>';
-  }else document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס כרגע. נסה שוב בעוד דקה.</div>'})}
+  if(!sum){document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס כרגע. נסה שוב בעוד דקה.</div>';return}
+  state.summaries.push({ts:Date.now(),text:sum,count:cur().segs.filter(s=>!s.pend).length});save();
+  document.getElementById('obody').innerHTML=
+   '<div class="expRow">'+
+   '<button class="expWord" onclick="exportWord()">📝 ייצוא Word</button>'+
+   '<button class="expPdf" onclick="exportPdf()">📄 ייצוא PDF</button></div>'+
+   '<div class="result">'+esc(sum)+'</div>'+
+   '<div class="expRow"><button class="expNew" onclick="newSession()">✅ קיבלתי — פתח סשן חדש</button></div>'})}
 
-function newSession(){
- state.sessions.push({id:Date.now(),start:new Date().toISOString(),segs:[]});save();
- feed.innerHTML='<span class="dim">סשן חדש נפתח...</span>';closeOv()}
+// ---------- export ----------
+function lastSummary(){return state.summaries[state.summaries.length-1]}
+function mdHtml(t){return esc(t)
+ .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+ .replace(/\*(.+?)\*/g,'<i>$1</i>')
+ .replace(/\n/g,'<br>')}
+function summaryDoc(){
+ const s=lastSummary();
+ return '<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="utf-8"><title>AILON סיכום '+
+  new Date(s.ts).toLocaleString('he-IL')+'</title><style>body{font-family:Arial,sans-serif;direction:rtl;padding:28px;line-height:1.8;color:#0f172a}h1{color:#0d9488;font-size:22px}h2{color:#0d9488;font-size:16px;margin-top:24px}.meta{color:#64748b;font-size:12px}</style></head><body>'+
+  '<h1>AILON Interpreter — סיכום סשן</h1><p class="meta">נוצר: '+new Date(s.ts).toLocaleString('he-IL')+' · '+s.count+' מקטעים</p>'+
+  mdHtml(s.text)+'</body></html>'}
+function exportWord(){
+ const blob=new Blob(['\ufeff'+summaryDoc()],{type:'application/msword'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+ const d=new Date(lastSummary().ts);
+ a.download='AILON-summary-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.doc';
+ a.click();URL.revokeObjectURL(a.href)}
+function exportPdf(){
+ const w=window.open('','_blank');
+ if(!w){exportWord();alert('הדפדפן חסם חלון הדפסה — הורדתי קובץ Word במקום.');return}
+ w.document.write(summaryDoc());w.document.close();
+ setTimeout(()=>{try{w.print()}catch(e){}},400)}
 
 function suggestQ(){const btn=document.getElementById('qBtn');
  if(!ctxText().trim()){alert('אין עדיין תמליל');return}
@@ -265,14 +325,15 @@ function sendQ(){const inp=document.getElementById('qinput');const q=inp.value.t
 function openArchive(){openOv('📚 סיכומים שמורים');
  const s=state.summaries;
  document.getElementById('obody').innerHTML=s.length?
-  [...s].reverse().map(r=>'<div class="archres">*'+new Date(r.ts).toLocaleString('he-IL',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'numeric'})+' — '+r.count+' משפטים*\n'+esc(r.text)+'</div>').join(''):
+  [...s].reverse().map(r=>'<div class="archres">*'+new Date(r.ts).toLocaleString('he-IL',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'numeric'})+' — '+r.count+' מקטעים*\n'+esc(r.text)+'</div>').join(''):
   '<div class="result">עדיין אין סיכומים שמורים</div>'}
 
 function openOv(t){document.getElementById('otitle').textContent=t;document.getElementById('obody').innerHTML='';document.getElementById('ofoot').style.display='none';document.getElementById('ov').classList.add('on')}
 function closeOv(){document.getElementById('ov').classList.remove('on')}
 
-// restore previous session text on load
+// restore: מנקה מקטעים שנתקעו בתמלול מסשנים קודמים, מציג את האחרון
 (function(){const c=cur();
- if(c.segs.length){feed.innerHTML='';renderSegs()}
+ c.segs=c.segs.filter(s=>!s.pend);
+ if(c.segs.length)renderSegs();
  applyDir()})();
 </script></body></html>
