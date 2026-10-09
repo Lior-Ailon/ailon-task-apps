@@ -1,6 +1,6 @@
 {
  "version": 1,
- "shulName": "בית הכנסת שיח יוסף",
+ "shulName": "בית כנסת שיח יוסף",
  "city": "נתיבות",
  "tz": "Asia/Jerusalem",
  "lat": 31.423,
@@ -191,7 +191,7 @@
   ]
  },
  "halachot": {},
- "dedication": "על שם הרב יוסף חדד",
+ "dedication": "על שם רבי יוסף חדאד",
  "board": {
   "panel_seconds": 7,
   "azk_page_seconds": 12

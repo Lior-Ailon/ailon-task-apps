@@ -53,7 +53,7 @@ function zmanimFor(date, s) {
 /* ---------- הגדרות ---------- */
 const DEFAULTS = {
   version: 1,
-  shulName: 'בית הכנסת שיח יוסף',
+  shulName: 'בית כנסת שיח יוסף',
   brand: 'AILON',
   city: 'נתיבות', tz: 'Asia/Jerusalem',
   lat: 31.423, lng: 34.589,

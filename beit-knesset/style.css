@@ -51,9 +51,8 @@ body{
 #hdrMid{flex:1;text-align:center;display:flex;flex-direction:column;gap:.4vh}
 #shulName{
   font-family:'Suez One',serif;font-size:clamp(30px,4.6vw,84px);line-height:1.12;
-  background:linear-gradient(180deg,var(--gold-pale) 0%,var(--gold-light) 45%,var(--gold) 75%,var(--gold-deep) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 2px 10px rgba(0,0,0,.55)) drop-shadow(0 0 18px rgba(var(--glow),.3));
+  color:var(--gold-light);
+  text-shadow:0 2px 10px rgba(0,0,0,.65),0 0 18px rgba(var(--glow),.35);
 }
 #shulDedication{
   font-family:'David Libre',serif;font-weight:500;
@@ -574,10 +573,7 @@ header,#main,footer{position:relative;z-index:1}
   --glass:rgba(40,14,18,.5);
   --ivory:#f5f7fa; --text:#f4f5f8; --dim:rgba(244,245,248,.75); --ink:#33121a;
 }
-[data-theme="red-silver"] #shulName{
-  background:linear-gradient(180deg,#f6f8fc 0%,#e05252 48%,#c7ceda 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
+[data-theme="red-silver"] #shulName{color:#f6f8fc}
 [data-theme="red-silver"] .panel-title{
   background:linear-gradient(180deg,#f6f8fc,#e05252 60%,#c7ceda);
   -webkit-background-clip:text;background-clip:text;color:transparent;
@@ -678,3 +674,11 @@ header,#main,footer{position:relative;z-index:1}
 .bless-names-d{gap:.3vh .8vw}
 .bless-names-d .bless-name{font-size:clamp(13px,1.15vw,20px)}
 .comm-bless .bless-sub{font-size:clamp(11px,.95vw,15px);margin-top:.6vh}
+
+/* v6.6.1 — כותרת תמיד גלויה גם במסכים צרים/טלפון */
+@media (max-aspect-ratio:4/3){
+  #hdr{flex-wrap:wrap}
+  #hdrMid{order:2;flex:1 1 100%}
+  #shulName{font-size:clamp(26px,8vw,48px)}
+  #shulDedication{font-size:clamp(15px,4.2vw,26px)}
+}
