@@ -43,7 +43,7 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:1000px;mar
 <main>
 <div id="top">
 <button id="mic" onclick="toggleMic()">🎙️</button>
-<div id="miclabel">לחץ להאזנה להרצאה. אנגלית למעלה, תרגום חי למטה.<br>טיפ לדיוק: מיקרופון אוזניות קרוב לפה</div>
+<div id="miclabel">לחץ להאזנה להרצאה. המיקרופון נשאר פתוח כל הזמן. כל משפט מתורגם מיד בסיומו.</div>
 </div>
 <div class="pane"><h2>English — live transcript <span class="st" id="enSt"></span></h2><div class="pbody" id="enBody"><span class="dim">התמליל החי יופיע כאן...</span></div></div>
 <div style="height:8px"></div>
@@ -67,21 +67,21 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:1000px;mar
 
 <script>
 const API="https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/lectureHelper";
-const LS="lectureCompanionV3";
-let recog=null,recording=false,translating=false,retryTimer=null,flushTimer=null;
+const LS="lectureCompanionV4";
+let recog=null,recording=false,lastEv=0,retryTimer=null,pendingHe='',lastIntTr=0,intTrBusy=false;
 let state=load();
 const enBody=document.getElementById('enBody'),heBody=document.getElementById('heBody'),
       status=document.getElementById('status'),enSt=document.getElementById('enSt'),heSt=document.getElementById('heSt');
 
 function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.sessions)return s}catch(e){}
- return {sessions:[{id:Date.now(),start:new Date().toISOString(),segs:[],he:"",upto:0}],summaries:[]}}
+ return {sessions:[{id:Date.now(),start:new Date().toISOString(),segs:[]}],summaries:[]}}
 function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
 function cur(){return state.sessions[state.sessions.length-1]}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function setRec(v){document.getElementById('mic').classList.toggle('rec',v);recording=v;
  status.textContent=v?'🔴 מאזין...':'כבוי'}
 
-// --- dedup: drop sentences that repeat the previous ones (Chrome continuous mode) ---
+// --- dedup: Chrome continuous mode re-emits the same sentence ---
 function norm(s){return (s||'').toLowerCase().replace(/[^a-z0-9\u05d0-\u05ea ]/g,' ').replace(/\s+/g,' ').trim()}
 function isDup(txt){
  const n=norm(txt); if(!n||n.length<4)return true;
@@ -89,8 +89,7 @@ function isDup(txt){
  for(let i=segs.length-1;i>=Math.max(0,segs.length-3);i--){
   const p=norm(segs[i].en);
   if(!p)continue;
-  if(n===p)return true;
-  if(n.includes(p)||p.includes(n))return true;
+  if(n===p||(n.includes(p)||p.includes(n)))return true;
  }
  return false}
 
@@ -99,16 +98,23 @@ function toggleMic(){
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SR){alert('הדפדפן לא תומך בתמלול חי. השתמש בכרום או אדג׳ במחשב.');return}
  recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;recog.maxAlternatives=1;
- recog.onstart=()=>setRec(true);
- recog.onresult=e=>{let interim='';let fin='';
+ lastEv=Date.now();
+ recog.onstart=()=>{setRec(true);lastEv=Date.now()};
+ recog.onresult=e=>{lastEv=Date.now();let interim='';let fin='';
   for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript;else interim+=r[0].transcript}
   renderEn(interim);
-  if(fin){const txt=fin.trim();if(txt.length>2&&!isDup(txt)){cur().segs.push({en:txt,ts:Date.now()});save();renderEn();maybeTranslate();scheduleFlush()}}};
+  onInterimTr(interim);
+  if(fin){const txt=fin.trim();if(txt.length>2&&!isDup(txt)){
+   const s={en:txt,he:null,fail:false,pend:false,ts:Date.now()};
+   cur().segs.push(s);save();renderEn();translateSeg(s)}}};
  recog.onerror=e=>{if(e.error==='not-allowed'){alert('נדרש אישור מיקרופון. אשר בחלון שנפתח.');setRec(false)}
   else if(e.error!=='no-speech')status.textContent='⚠ '+e.error};
  recog.onend=()=>{if(recording){try{recog.start()}catch(_){}} else setRec(false)};
  try{recog.start()}catch(e){alert('לא הצלחתי להתחיל: '+e)}
 }
+
+// keep mic alive: if no speech events for 12s, force restart (Chrome silently drops it)
+setInterval(()=>{if(recording&&Date.now()-lastEv>12000){try{recog.stop()}catch(e){}}},4000);
 
 function renderEn(interim){
  const c=cur();
@@ -120,57 +126,82 @@ function renderEn(interim){
 
 function renderHe(){
  const c=cur();
- if(c.he){const dim=heBody.querySelector('.dim');if(dim)dim.remove();
-  heBody.innerHTML=esc(c.he);heBody.scrollTop=heBody.scrollHeight}}
+ const done=c.segs.filter(s=>s.he).map(s=>s.he);
+ const pending=c.segs.some(s=>!s.he);
+ const dim=heBody.querySelector('.dim');if(dim)dim.remove();
+ let html=esc(done.join(' '));
+ if(pendingHe)html+=' <span class="interim">'+esc(pendingHe)+'</span>';
+ if(pending)html+=' <span class="interim">⏳</span>';
+ heBody.innerHTML=html;
+ heSt.textContent=pending?'⏳ מתרגם את המשפט...':'';
+ heBody.scrollTop=heBody.scrollHeight}
 
-function maybeTranslate(force){
- const c=cur();
- const newSegs=c.segs.slice(c.upto);
- if(!newSegs.length){heSt.textContent='';return}
- const newChars=newSegs.map(s=>s.en).join(' ').length;
- if(translating)return;
- if(!force&&newSegs.length<2&&newChars<120){heSt.textContent='⏳ ממתין להמשך דיבור...';return}
- if(flushTimer){clearTimeout(flushTimer);flushTimer=null}
- translating=true;heSt.textContent='⏳ מתרגם...';
- callAPI({action:'translate',text:newSegs.map(s=>s.en).join(' ')}).then(t=>{
-  c.upto=c.segs.length;
-  if(t){c.he=(c.he?c.he+' ':'')+t;save();renderHe();heSt.textContent=''}
-  else{heSt.textContent='⚠ נכשל — מנסה שוב';if(!retryTimer)retryTimer=setInterval(retryTransl,20000)}
-  translating=false;
-  if(c.upto<c.segs.length)maybeTranslate(); // more arrived meanwhile
- })}
+// translate the in-progress speech every 3s for a live feel
+function onInterimTr(t){
+ const now=Date.now();
+ if(!t||t.trim().length<15){pendingHe='';if(!intTrBusy)renderHe();return}
+ if(now-lastIntTr<3000||intTrBusy)return;
+ lastIntTr=now;intTrBusy=true;
+ fastTranslate(t).then(h=>{intTrBusy=false;if(h){pendingHe=h;renderHe()}})
+ .catch(()=>{intTrBusy=false})}
 
-function scheduleFlush(){if(flushTimer)clearTimeout(flushTimer);
- flushTimer=setTimeout(()=>{flushTimer=null;maybeTranslate(true)},5000)}
+function translateSeg(s){
+ s.pend=true;renderHe();
+ fastTranslate(s.en).then(t=>{
+  s.pend=false;
+  if(t){s.he=t;s.fail=false}
+  else{s.fail=true;queueRetry(s)}
+  save();renderHe()})}
 
-function retryTransl(){const c=cur();if(c.upto>=c.segs.length){clearInterval(retryTimer);retryTimer=null;heSt.textContent='';return}
- maybeTranslate()}
+function queueRetry(s){if(!retryTimer)retryTimer=setInterval(retryFailed,15000)}
+function retryFailed(){const c=cur();const bad=c.segs.filter(s=>s.fail);
+ if(!bad.length){clearInterval(retryTimer);retryTimer=null;return}
+ const s=bad[0];s.fail=false;
+ fastTranslate(s.en).then(t=>{if(t){s.he=t;save()}else s.fail=true;renderHe()})}
+
+async function fastTranslate(text){
+ // instant path: Google Translate directly from the browser (~0.3s, no API key)
+ try{
+  const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=iw&dt=t&q='+encodeURIComponent(text));
+  const d=await r.json();
+  const out=((d&&d[0])||[]).map(x=>(x&&x[0]?x[0]:'')).join('').trim();
+  if(out)return out;
+ }catch(e){}
+ // fallback: backend Gemini
+ return await callAPI({action:'translate',text});
+}
 
 async function callAPI(body){
- for(let i=0;i<3;i++){try{
+ try{
   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
   if(d.text)return d.text;
-  await new Promise(res=>setTimeout(res,3000));
- }catch(e){await new Promise(res=>setTimeout(res,3000))}}
- return null}
+  throw new Error('no text');
+ }catch(e){
+  // one retry after 2s (fallback to Gemini inside the function)
+  try{await new Promise(res=>setTimeout(res,2000));
+   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+   const d=await r.json();
+   if(d.text)return d.text;
+  }catch(e2){}
+  return null}}
 
 function ctx(){return cur().segs.map(s=>s.en).join(' ')}
 
 function endSession(){const btn=document.getElementById('endBtn');
  if(!cur().segs.length){alert('אין עדיין תמליל בסשן הזה');return}
  busy(btn,true,'...כותב');openOv('📝 סיכום סשן');
- document.getElementById('obody').innerHTML='<div class="result spin">כותב סיכום, רגע... (עד דקה אם ה-AI עמוס)</div>';
+ document.getElementById('obody').innerHTML='<div class="result spin">כותב סיכום, רגע...</div>';
  callAPI({action:'summarize',text:ctx().slice(0,20000)}).then(sum=>{busy(btn,false);
   if(sum){state.summaries.push({ts:Date.now(),text:sum,count:cur().segs.length});save();
    document.getElementById('obody').innerHTML='<div class="result">'+esc(sum)+'</div>'+
    '<button style="width:100%;padding:14px;border:0;border-radius:12px;background:#14b8a6;font-weight:bold;font-size:15px;cursor:pointer" onclick="newSession()">✅ קיבלתי — פתח סשן חדש</button>';
-  }else{document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס מאוד כרגע. נסה שוב בעוד דקה.</div>'}})}
+  }else{document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס כרגע. נסה שוב בעוד דקה.</div>'}})}
 
 function newSession(){
- state.sessions.push({id:Date.now(),start:new Date().toISOString(),segs:[],he:"",upto:0});save();
+ state.sessions.push({id:Date.now(),start:new Date().toISOString(),segs:[]});save();
  enBody.innerHTML='<span class="dim">התמליל החי יופיע כאן...</span>';heBody.innerHTML='<span class="dim">התרגום יופיע כאן...</span>';
- enSt.textContent='';heSt.textContent='';closeOv()}
+ enSt.textContent='';heSt.textContent='';pendingHe='';closeOv()}
 
 function busy(btn,b){btn.disabled=b;btn._t=btn.textContent;if(b)btn.textContent='...טוען'}
 
@@ -196,8 +227,9 @@ function openArchive(){openOv('📚 סיכומים שמורים');
 function openOv(t){document.getElementById('otitle').textContent=t;document.getElementById('obody').innerHTML='';document.getElementById('ofoot').style.display='none';document.getElementById('ov').classList.add('on')}
 function closeOv(){document.getElementById('ov').classList.remove('on')}
 
-// restore on load
+// restore on load: re-translate anything unfinished
 (function(){const c=cur();
- if(c.segs.length){renderEn();if(c.he)renderHe();else if(c.upto<c.segs.length){maybeTranslate();scheduleFlush()}}
+ if(c.segs.length){renderEn();renderHe();
+  c.segs.filter(s=>!s.he).forEach(s=>{s.fail=false;translateSeg(s)})}
 })();
 </script></body></html>
