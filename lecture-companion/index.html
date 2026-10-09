@@ -54,7 +54,7 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 <div id="top">
 <button id="mic" onclick="toggleMic()">🎙️</button>
 <div id="vu"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-<div id="miclabel">לחץ ודבר. כל 12 שניות הדיבור מתומלל ומתורגם אוטומטית (עברית ⇄ אנגלית).</div>
+<div id="miclabel">לחץ ודבר. כל 15 שניות הדיבור מתומלל ומתורגם אוטומטית (עברית ⇄ אנגלית).</div>
 <button id="newBtn" title="פתיחת סשן חדש" onclick="confirmNew()">↻</button>
 <button id="dirBtn" onclick="toggleDir()">EN→עב</button>
 </div>
@@ -80,11 +80,11 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 const API="https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/interpreterAudio";
 const LS="lectureCompanionV5";
 const OUT_RATE=16000;
-const CHUNK_SEC=parseFloat(new URLSearchParams(location.search).get('sec'))||12;
+const CHUNK_SEC=parseFloat(new URLSearchParams(location.search).get('sec'))||15;
 let DIR=localStorage.getItem('lcDir')||'en2he';
 let ctx=null,stream=null,proc=null,micSrc=null,gain=null,recording=false;
 let acc=[],accSamples=0,wakeLock=null,keepAlive=null;
-const QUEUE=[];let inflight=0;
+const QUEUE=[];let inflight=0,ratePauseUntil=0;
 const WAVSTORE={}; // מקטעים בטיפול — לניסיון חוזר
 let state=load();
 const feed=document.getElementById('feed'),status=document.getElementById('status');
@@ -107,8 +107,8 @@ function applyDir(){
  const t=DIR==='he2en';
  document.getElementById('dirBtn').textContent=t?'עב→EN':'EN→עב';
  document.getElementById('miclabel').textContent=t?
-  'לחץ ודבר בעברית. כל 12 שניות הדיבור מתומלל ומתורגם לאנגלית.':
-  'לחץ ודבר. כל 12 שניות הדיבור מתומלל ומתורגם לעברית (אנגלית או כל שפה).'}
+  'לחץ ודבר בעברית. כל 15 שניות הדיבור מתומלל ומתורגם לאנגלית.':
+  'לחץ ודבר. כל 15 שניות הדיבור מתומלל ומתורגם לעברית (אנגלית או כל שפה).'}
 function toggleDir(){if(recording)stopMic();
  DIR=(DIR==='en2he')?'he2en':'en2he';localStorage.setItem('lcDir',DIR);
  newSession();applyDir()}
@@ -208,7 +208,9 @@ function sendChunk(wavB64){
  enqueue(seg)}
 
 function enqueue(seg){QUEUE.push(seg);pump()}
-function pump(){while(inflight<2&&QUEUE.length){const seg=QUEUE.shift();inflight++;
+function pump(){
+ if(Date.now()<ratePauseUntil)return;
+ while(inflight<2&&QUEUE.length){const seg=QUEUE.shift();inflight++;
  postChunk(seg).finally(()=>{inflight--;pump()})}}
 
 function postChunk(seg){
@@ -218,9 +220,16 @@ function postChunk(seg){
  .then(d=>{
   if(d.success&&(d.t||d.tr)){seg.src=d.t;seg.tr=d.tr;seg.pend=false;delete WAVSTORE[seg.id]}
   else if(d.success&&!d.t){const i=cur().segs.indexOf(seg);if(i>-1)cur().segs.splice(i,1)} // אין דיבור
+  else if(d.message==='rate'){seg.tries++;ratePause(seg);return}
   else failSeg(seg);
   save();renderSegs()})
  .catch(()=>{failSeg(seg);save();renderSegs()})}
+
+function ratePause(seg){
+ ratePauseUntil=Date.now()+60000;
+ if(seg.tries>12){seg.pend=false;seg.fail=true;seg.tr='⚠ המקטע נכשל — מכסת ה-AI התמלאה';delete WAVSTORE[seg.id]}
+ else QUEUE.unshift(seg);
+ setTimeout(pump,61000);save();renderSegs()}
 
 function failSeg(seg){
  seg.tries++;
