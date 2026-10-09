@@ -244,8 +244,10 @@ function hebInfo(date, tz) {
     } catch (e) {}
 
     const m = hd.getMonth(), d = hd.getDate();
-    const geshem = (m === 8 && d >= 7) || (m > 8 && m <= 14);
-    info.talGeshem = geshem ? 'משיב הרוח ומוריד הגשם' : 'מוריד הטל';
+    const winter = (m === 8 && d >= 7) || m > 8 || (m === 1 && d < 15);
+    info.talGeshem = winter ? 'משיב הרוח ומוריד הגשם' : 'מוריד הטל';
+    info.vetTal = winter ? 'ותן טל ומטר לברכה' : 'ותן ברכה';
+    info.yaale = (d === 1 || d === 30);
     info.talTransition = (m === 1 && d === 15) || (m === 8 && d === 7);
     return info;
   } catch (e) { console.warn('hebInfo error', e); return null; }
@@ -800,8 +802,10 @@ function renderStatic() {
     $('#holidayLogo').innerHTML = logoFor(INFO.holiday);
     const isGeshem = INFO.talGeshem.includes('גשם');
     $('#tgIcon').innerHTML = wrap(isGeshem ? ICONS.geshem : ICONS.tal);
-    $('#talGeshem').textContent = INFO.talGeshem;
-    $('#ftrTal').textContent = 'בתפילה: ' + INFO.talGeshem;
+    const tefilaAdds = [INFO.talGeshem, INFO.vetTal, INFO.yaale ? 'יעלה ויבוא' : '']
+      .filter(Boolean).join(' · ');
+    $('#talGeshem').textContent = tefilaAdds;
+    $('#ftrTal').textContent = 'בתפילה: ' + tefilaAdds;
     $('#rainFx').style.display = isGeshem ? 'block' : 'none';
     if (isGeshem && !$('#rainFx').children.length)
       $('#rainFx').innerHTML = '<i style="right:8%;animation-delay:0s"></i><i style="right:24%;animation-delay:.5s"></i><i style="right:40%;animation-delay:.9s"></i><i style="right:56%;animation-delay:.3s"></i><i style="right:72%;animation-delay:1.2s"></i><i style="right:88%;animation-delay:.7s"></i>';
@@ -815,6 +819,8 @@ function renderStatic() {
       $('#omerBox').textContent = 'היום — ' + INFO.omer + ' ימים לעומר';
     } else $('#omerBox').style.display = 'none';
   } else $('#holidayLogo').innerHTML = logoFor('');
+  const dp = document.getElementById('dedicPlaque');
+  if (dp) { const t = S.boardDedication || ''; dp.style.display = t ? '' : 'none'; dp.textContent = t; }
   renderHalachaCards();
   const lh = $('#lashonCard');
   if (lh) lh.innerHTML = `<div class="lashon-title">הלכות לשון הרע</div><div class="lashon-text">${lashonOfDay()}</div>`;
@@ -870,11 +876,17 @@ function renderZmanim() {
     `<div class="z-row"><span class="z-label">${label}</span><span class="z-val">${fmt12(d)}</span></div>`
   ).join('');
   const sp = $('#zmanimSpecial');
-  if (INFO && INFO.isFriday)
-    sp.innerHTML = `<div class="lbl">כניסת שבת</div><div class="big">${fmt12(Z.candles)}</div>`;
-  else if (INFO && INFO.isShabbat)
-    sp.innerHTML = `<div class="lbl">יציאת שבת</div><div class="big">${fmt12(Z.tzeit)}</div>`;
-  else sp.innerHTML = '';
+  if (sp) {
+    const now = new Date(), dow = now.getDay();
+    const fri = new Date(now); fri.setDate(fri.getDate() + ((5 - dow + 7) % 7));
+    const sat = dow === 6 ? new Date(now) : new Date(fri);
+    if (dow !== 6) sat.setDate(sat.getDate() + 1);
+    const ZF = zmanimFor(fri, S), ZS = zmanimFor(sat, S);
+    const lbl = d => d.getDate() + '/' + (d.getMonth() + 1);
+    sp.innerHTML =
+      `<div class="zsp"><div class="lbl">כניסת שבת · ` + lbl(fri) + `</div><div class="big">${fmt12(ZF.candles)}</div></div>` +
+      `<div class="zsp"><div class="lbl">יציאת שבת · ` + lbl(sat) + `</div><div class="big">${fmt12(ZS.tzeit)}</div></div>`;
+  }
 }
 
 function renderMinyan() {
@@ -944,6 +956,55 @@ function renderHalachaCards() {
     '<div class="halacha-card">הלכות יומיות — ניתן לעריכה במסך הניהול</div>';
 }
 
+
+/* ---------- פריסת שני העמודים (בקשת הגבאי) ---------- */
+function buildDuo() {
+  const duo = (S.board || {}).duo;
+  const day = document.getElementById('panel-day');
+  const comm = document.getElementById('panel-community');
+  if (!duo || !day || !comm) return;
+  day.style.display = ''; comm.style.display = '';
+  if (!day.dataset.built) {
+    day.innerHTML = '<h2 class="panel-title">זמני היום · דף יומי · הלכה יומית</h2>';
+    ['zmanimCols', 'tgBanner', 'omerBox'].forEach(id => {
+      const el = document.getElementById(id); if (el) day.appendChild(el);
+    });
+    const row = document.createElement('div'); row.id = 'duoRow';
+    const tg = document.getElementById('talGeshemBox'); if (tg) row.appendChild(tg);
+    const hc = document.getElementById('halachaCards'); if (hc) row.appendChild(hc);
+    day.appendChild(row);
+    ['panel-zmanim', 'panel-halacha'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.remove();
+    });
+    day.dataset.built = '1';
+  }
+  const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const L = (S.lessons || []).filter(l => l.title);
+  const B = ((S.yearBlessing || {}).names || []).filter(Boolean);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const E = (S.events || []).filter(e => {
+    if (!e.title) return false;
+    const from = e.date ? new Date(e.date + 'T00:00:00') : null;
+    const until = e.until ? new Date(e.until + 'T00:00:00') : null;
+    return (!from || from <= today) && (!until || until >= today);
+  });
+  const fmtE = d => { const x = new Date(d + 'T00:00:00'); return x.getDate() + '/' + (x.getMonth() + 1); };
+  let html = '<h2 class="panel-title">הקהילה · שיעורים · ברכת השנה</h2><div id="commCols">';
+  html += `<div class="comm-col"><h3>שיעורים בבית הכנסת</h3><div class="lesson-list">` +
+    (L.length ? L.map(l => `
+      <div class="lesson-row">
+        <div class="lesson-when"><span class="lesson-day">יום ${DAYS[+l.day] || ''}</span><span class="lesson-time">${l.time || ''}</span></div>
+        <div class="lesson-body"><div class="lesson-title">${l.title}</div>${l.teacher ? `<div class="lesson-teacher">${l.teacher}</div>` : ''}</div>
+      </div>`).join('') : '<div class="comm-empty">ניתן לעריכה במסך הניהול</div>') + '</div></div>';
+  if (E.length) html += `<div class="comm-col"><h3>אירועי הקהילה</h3>` +
+    E.map(e => `<div class="ev-d"><div class="ev-t">${e.date ? fmtE(e.date) : ''}</div><div class="ev-x">${e.title}</div></div>`).join('') + '</div>';
+  if (B.length) html += `<div class="comm-col comm-bless"><h3>ברכת השנה</h3>
+      <div class="bless-names-d">${B.map(n => `<div class="bless-name">${n}</div>`).join('')}</div>
+      <div class="bless-sub">המתפללים יבואו עליהם ברכת השנה</div></div>`;
+  html += '</div>';
+  comm.innerHTML = html;
+}
+
 let PANELS = [];
 function computePanels() {
   const pages = (S.board || {}).pages;
@@ -974,6 +1035,7 @@ async function fullRefresh() {
   INFO = hebInfo(now, S.tz);
   NEXT = nextMinyan(now, S, INFO, Z);
   buildDynamicPanels();
+  buildDuo();
   computePanels();
   renderPrayerBar();
   renderStatic();

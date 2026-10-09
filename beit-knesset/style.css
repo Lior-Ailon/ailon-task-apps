@@ -618,3 +618,63 @@ header,#main,footer{position:relative;z-index:1}
   border:1px solid rgba(var(--glow2),.6);
 }
 .pb-cd{font-size:.78em;font-weight:700;opacity:.9}
+
+/* ---- פריסת שני העמודים (duo) ---- */
+#dedicPlaque{text-align:center;padding:5px 12px;font-size:clamp(13px,1.2vw,18px);
+  color:var(--gold-light,#f3d774);background:rgba(10,15,30,.55);letter-spacing:.5px}
+#panel-day{padding:0 clamp(10px,2vw,30px)}
+#panel-day .panel-title{margin-top:1vh}
+#duoRow{display:flex;gap:14px;margin-top:1vh;align-items:stretch}
+#duoRow #talGeshemBox{flex:1}
+#duoRow #halachaCards{flex:1.7;display:flex;flex-direction:column;gap:1vh}
+#commCols{display:flex;gap:14px;padding:1.2vh clamp(6px,1.5vw,24px);align-items:stretch}
+.comm-col{flex:1;background:rgba(8,14,32,.45);border:1px solid rgba(212,175,55,.25);
+  border-radius:14px;padding:1.4vh 1vw;overflow:hidden}
+.comm-col h3{margin:0 0 1vh;color:var(--gold-light,#f3d774);font-size:clamp(15px,1.5vw,22px);text-align:center}
+.comm-empty{color:#9aa4b8;text-align:center;font-size:clamp(13px,1.2vw,18px)}
+#commCols .lesson-list{display:flex;flex-direction:column;gap:.8vh}
+.ev-d{margin-bottom:1vh}.ev-t{color:var(--gold-light,#f3d774)}.ev-x{font-size:clamp(13px,1.3vw,20px)}
+.bless-names-d{display:grid;grid-template-columns:1fr 1fr;gap:.5vh 1vw;text-align:center}
+.bless-names-d .bless-name{font-size:clamp(14px,1.3vw,20px);color:#e8e2d4}
+.comm-bless .bless-sub{margin-top:1vh;text-align:center;color:#cbb98a;font-size:clamp(12px,1.1vw,16px)}
+.zsp{background:rgba(8,14,32,.45);border:1px solid rgba(212,175,55,.25);border-radius:12px;
+  padding:.6vh .6vw;text-align:center;margin-top:.8vh}
+.zsp .lbl{font-size:clamp(12px,1vw,16px);color:#cbb98a}
+.zsp .big{font-size:clamp(22px,2.2vw,34px);color:#f3d774;font-weight:bold}
+
+/* ---- דחיסה לפריסת duo (שני העמודים) ---- */
+#panel-day .panel-title,#panel-community .panel-title{margin:.6vh 0 0;font-size:clamp(15px,1.6vw,26px)}
+#panel-day #zmanimCols{gap:1.2vw;margin-top:.6vh;align-items:flex-start}
+#panel-day #zmanimMain{gap:.5vh}
+#panel-day #zmanimGrid{row-gap:.35vh}
+#panel-day .z-row{padding:.4vh .9vw}
+#panel-day .z-label{font-size:clamp(12px,1.05vw,18px)}
+#panel-day .z-val{font-size:clamp(13px,1.2vw,21px)}
+#panel-day #zmanimSide{gap:.7vh}
+#panel-day .side-title{font-size:clamp(11px,.95vw,16px)}
+#panel-day .side-val{font-size:clamp(13px,1.25vw,22px)}
+#panel-day .zsp{padding:.4vh .6vw;margin-top:.4vh}
+#panel-day .zsp .big{font-size:clamp(18px,1.8vw,30px)}
+#panel-day #tgBanner{font-size:clamp(12px,1vw,17px);padding:.4vh}
+#panel-day #omerBox{font-size:clamp(12px,1.1vw,18px);padding:.4vh 1vw}
+#duoRow{margin-top:.6vh;gap:1vw}
+#duoRow #talGeshemBox{width:100%;padding:.7vh 1vw}
+#duoRow .tg-title{font-size:clamp(10px,.85vw,14px)}
+#duoRow #talGeshem{font-size:clamp(14px,1.35vw,24px)}
+#duoRow .halacha-card{padding:.8vh 1.1vw}
+#duoRow .halacha-card h3{font-size:clamp(13px,1.2vw,20px);margin-bottom:.3vh}
+#duoRow .halacha-card p{font-size:clamp(12px,1.1vw,19px);line-height:1.35}
+#duoRow .halacha-card .halacha-source{font-size:clamp(10px,.85vw,14px)}
+#commCols{padding:.8vh 1vw;gap:1vw}
+.comm-col{padding:1vh 1vw}
+.comm-col h3{font-size:clamp(14px,1.4vw,22px);margin-bottom:.8vh}
+#commCols .lesson-list{gap:.7vh;width:100%;max-width:none;margin:0}
+#commCols .lesson-row{gap:1vw;padding:.7vh 1vw}
+#commCols .lesson-when{min-width:8vw}
+#commCols .lesson-day{font-size:clamp(12px,1.1vw,19px)}
+#commCols .lesson-time{font-size:clamp(16px,1.6vw,28px)}
+#commCols .lesson-title{font-size:clamp(14px,1.4vw,24px)}
+#commCols .lesson-teacher{font-size:clamp(11px,1.05vw,18px);margin-top:.15vh}
+.bless-names-d{gap:.3vh .8vw}
+.bless-names-d .bless-name{font-size:clamp(13px,1.15vw,20px)}
+.comm-bless .bless-sub{font-size:clamp(11px,.95vw,15px);margin-top:.6vh}
