@@ -68,7 +68,7 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:1000px;mar
 <script>
 const API="https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/lectureHelper";
 const LS="lectureCompanionV3";
-let recog=null,recording=false,translating=false,retryTimer=null;
+let recog=null,recording=false,translating=false,retryTimer=null,flushTimer=null;
 let state=load();
 const enBody=document.getElementById('enBody'),heBody=document.getElementById('heBody'),
       status=document.getElementById('status'),enSt=document.getElementById('enSt'),heSt=document.getElementById('heSt');
@@ -103,7 +103,7 @@ function toggleMic(){
  recog.onresult=e=>{let interim='';let fin='';
   for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript;else interim+=r[0].transcript}
   renderEn(interim);
-  if(fin){const txt=fin.trim();if(txt.length>2&&!isDup(txt)){cur().segs.push({en:txt,ts:Date.now()});save();renderEn();maybeTranslate()}}};
+  if(fin){const txt=fin.trim();if(txt.length>2&&!isDup(txt)){cur().segs.push({en:txt,ts:Date.now()});save();renderEn();maybeTranslate();scheduleFlush()}}};
  recog.onerror=e=>{if(e.error==='not-allowed'){alert('נדרש אישור מיקרופון. אשר בחלון שנפתח.');setRec(false)}
   else if(e.error!=='no-speech')status.textContent='⚠ '+e.error};
  recog.onend=()=>{if(recording){try{recog.start()}catch(_){}} else setRec(false)};
@@ -123,11 +123,14 @@ function renderHe(){
  if(c.he){const dim=heBody.querySelector('.dim');if(dim)dim.remove();
   heBody.innerHTML=esc(c.he);heBody.scrollTop=heBody.scrollHeight}}
 
-function maybeTranslate(){
+function maybeTranslate(force){
  const c=cur();
  const newSegs=c.segs.slice(c.upto);
+ if(!newSegs.length){heSt.textContent='';return}
  const newChars=newSegs.map(s=>s.en).join(' ').length;
- if(translating||newSegs.length<2&&newChars<180)return; // wait for a bit of material
+ if(translating)return;
+ if(!force&&newSegs.length<2&&newChars<120){heSt.textContent='⏳ ממתין להמשך דיבור...';return}
+ if(flushTimer){clearTimeout(flushTimer);flushTimer=null}
  translating=true;heSt.textContent='⏳ מתרגם...';
  callAPI({action:'translate',text:newSegs.map(s=>s.en).join(' ')}).then(t=>{
   c.upto=c.segs.length;
@@ -136,6 +139,9 @@ function maybeTranslate(){
   translating=false;
   if(c.upto<c.segs.length)maybeTranslate(); // more arrived meanwhile
  })}
+
+function scheduleFlush(){if(flushTimer)clearTimeout(flushTimer);
+ flushTimer=setTimeout(()=>{flushTimer=null;maybeTranslate(true)},5000)}
 
 function retryTransl(){const c=cur();if(c.upto>=c.segs.length){clearInterval(retryTimer);retryTimer=null;heSt.textContent='';return}
  maybeTranslate()}
@@ -192,6 +198,6 @@ function closeOv(){document.getElementById('ov').classList.remove('on')}
 
 // restore on load
 (function(){const c=cur();
- if(c.segs.length){renderEn();if(c.he)renderHe();else if(c.upto<c.segs.length){maybeTranslate()}}
+ if(c.segs.length){renderEn();if(c.he)renderHe();else if(c.upto<c.segs.length){maybeTranslate();scheduleFlush()}}
 })();
 </script></body></html>
