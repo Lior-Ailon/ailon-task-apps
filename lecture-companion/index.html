@@ -7,52 +7,50 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#f1f5f9;min-height:100vh;display:flex;flex-direction:column}
-header{padding:10px 14px;background:linear-gradient(135deg,#0d9488,#0e7490);font-size:16px;font-weight:bold;text-align:center}
-#status{font-size:11px;font-weight:normal;opacity:.9}
-main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:100%;overflow:hidden}
-#top{display:flex;gap:10px;align-items:center;margin-bottom:10px}
-#mic{width:72px;height:72px;border-radius:50%;border:0;background:#14b8a6;color:#04201d;font-size:30px;cursor:pointer;box-shadow:0 4px 14px rgba(20,184,166,.5);flex-shrink:0}
+header{padding:10px 14px;background:linear-gradient(135deg,#0d9488,#0e7490);font-size:16px;font-weight:bold;text-align:center;display:flex;justify-content:space-between;align-items:center}
+#status{font-size:12px;font-weight:normal;opacity:.95}
+main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:900px;margin:0 auto;width:100%;overflow:hidden}
+#top{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+#mic{width:74px;height:74px;border-radius:50%;border:0;background:#14b8a6;color:#04201d;font-size:30px;cursor:pointer;box-shadow:0 4px 14px rgba(20,184,166,.5);flex-shrink:0}
 #mic.rec{background:#ef4444;color:#fff;animation:pulse 1.2s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(239,68,68,.15)}}
-#miclabel{font-size:13px;color:#94a3b8}
-.panes{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:0}
-.pane{background:#1e293b;border-radius:14px;display:flex;flex-direction:column;min-height:0}
-.pane h2{margin:0;padding:10px 12px;font-size:14px;background:#334155;border-radius:14px 14px 0 0}
-.pane .body{flex:1;overflow-y:auto;padding:10px 12px;font-size:14px;line-height:1.6}
-#enBody{direction:ltr;text-align:left;color:#cbd5e1}
-#heBody{color:#e2e8f0}
+@keyframes pulse{50%{box-shadow:0 0 0 14px rgba(239,68,68,.15)}}
+#miclabel{font-size:13px;color:#94a3b8;line-height:1.5}
+#feed{flex:1;overflow-y:auto;background:#1e293b;border-radius:14px;padding:10px 12px;min-height:200px}
+.seg{margin-bottom:10px;padding:8px 10px;background:#0f172a;border-radius:10px}
+.seg .en{direction:ltr;text-align:left;color:#cbd5e1;font-size:14px;line-height:1.5}
+.seg .he{color:#5eead4;font-size:14px;line-height:1.6;margin-top:4px}
+.seg .he.warn{color:#fcd34d}
+.seg .he.fail{color:#f87171}
+.interim{color:#64748b;direction:ltr;text-align:left;font-size:14px;font-style:italic;padding:6px}
 .dim{color:#64748b}
-.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.actions button{flex:1;min-width:110px;padding:11px 8px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-size:14px;font-weight:bold;cursor:pointer}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.actions button{padding:13px 6px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-size:14px;font-weight:bold;cursor:pointer}
 .actions button:disabled{opacity:.5}
-#chatBtn{background:#0d9488;color:#fff}
-.overlay{position:fixed;inset:0;background:rgba(2,6,23,.88);display:none;flex-direction:column;z-index:10}
+#endBtn{background:#14b8a6;color:#04201d;grid-column:span 3;font-size:16px;padding:15px}
+.overlay{position:fixed;inset:0;background:rgba(2,6,23,.92);display:none;flex-direction:column;z-index:10}
 .overlay.on{display:flex}
-.oh{padding:12px 14px;background:#0d9488;font-weight:bold;display:flex;justify-content:space-between;font-size:15px}
+.oh{padding:12px 14px;background:#0d9480;font-weight:bold;display:flex;justify-content:space-between;font-size:15px}
 .oh button{background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
 .obody{flex:1;overflow-y:auto;padding:12px;max-width:820px;margin:0 auto;width:100%}
 .result{background:#1e293b;border-radius:12px;padding:12px;white-space:pre-wrap;font-size:14px;line-height:1.7;margin-bottom:10px}
+.archres{background:#134e4a;border-radius:12px;padding:12px;white-space:pre-wrap;font-size:14px;line-height:1.7;margin-bottom:10px}
 .ofoot{padding:10px;display:flex;gap:8px;max-width:820px;margin:0 auto;width:100%}
 .ofoot input{flex:1;padding:12px;border-radius:12px;border:0;background:#f8fafc;font-size:15px}
 .ofoot button{padding:12px 18px;border:0;border-radius:12px;background:#14b8a6;font-weight:bold;cursor:pointer}
 .spin{color:#fcd34d}
-@media (max-width:760px){.panes{grid-template-columns:1fr;grid-template-rows:1fr 1fr}}
 </style></head><body>
-<header>🎧 עוזר הרצאה חי <span id="status">כבוי</span></header>
+<header><span>🎧 עוזר הרצאה חי</span><span id="status">כבוי</span></header>
 <main>
 <div id="top">
 <button id="mic" onclick="toggleMic()">🎙️</button>
-<div id="miclabel">לחץ להתחלת האזנה להרצאה<br>(כרום/אדג' במחשב, רצוי אוזניות)</div>
+<div id="miclabel">לחץ להאזנה להרצאה. כל משפט יופיע באנגלית ומתחתיו תרגום לעברית.<br>טיפ לדיוק: מיקרופון אוזניות קרוב לפה > מיקרופון מחשב</div>
 </div>
-<div class="panes">
-<div class="pane"><h2>English (live)</h2><div class="body" id="enBody"><span class="dim">התמלול יופיע כאן...</span></div></div>
-<div class="pane"><h2>עברית (תרגום חי)</h2><div class="body" id="heBody"><span class="dim">התרגום יופיע כאן...</span></div></div>
-</div>
+<div id="feed"><span class="dim">התמליל והתרגום יופיעו כאן...</span></div>
 <div class="actions">
-<button id="sumBtn" onclick="summarize()">📝 סכם עד עכשיו</button>
-<button id="qBtn" onclick="suggestQ()">❓ הצע שאלות למרצה</button>
-<button id="chatBtn" onclick="openChat()">💬 שאל את הצ'אט</button>
-<button onclick="downloadTxt()">⬇️ שמור תמליל</button>
+<button id="endBtn" onclick="endSession()">📝 סיכום סוף סשן (לפני הפסקה לחץ כאן)</button>
+<button id="qBtn" onclick="suggestQ()">❓ הצע שאלות</button>
+<button id="chatBtn" onclick="openChat()">💬 צ׳אט</button>
+<button id="archBtn" onclick="openArchive()">📚 סיכומים שמורים</button>
 </div>
 </main>
 
@@ -67,69 +65,121 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:100%;overf
 
 <script>
 const API="https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/lectureHelper";
-let recog=null,recording=false,transcript=[],pending="",translating=false;
-const enBody=document.getElementById('enBody'),heBody=document.getElementById('heBody'),status=document.getElementById('status');
+const LS="lectureCompanionV1";
+let recog=null,recording=false,interimEl=null,retryQueue=[],retryTimer=null;
+let state=load();
+const feed=document.getElementById('feed'),status=document.getElementById('status');
 
+function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.sessions)return s}catch(e){}
+ return {sessions:[{id:Date.now(),start:new Date().toISOString(),segs:[]}],summaries:[]}}
+function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+function cur(){return state.sessions[state.sessions.length-1]}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function setRec(v){document.getElementById('mic').classList.toggle('rec',v);recording=v;
-status.textContent=v?'🔴 מאזין...':'כבוי'}
+ status.textContent=v?'🔴 מאזין...':'כבוי'}
 
 function toggleMic(){
  if(recording){recog.stop();return}
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SR){alert('הדפדפן לא תומך בתמלול חי. השתמש בכרום או אדג׳ במחשב.');return}
- recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;
+ recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;recog.maxAlternatives=1;
  recog.onstart=()=>setRec(true);
  recog.onresult=e=>{let interim='';let fin='';
   for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript;else interim+=r[0].transcript}
-  if(fin){transcript.push(fin.trim());render(interim);maybeTranslate()}
-  else render(interim)};
- recog.onerror=e=>{if(e.error==='not-allowed'){alert('נדרש אישור מיקרופון. אשר בחלון שייפתח.');setRec(false)}
+  showInterim(interim);
+  if(fin){const txt=fin.trim();if(txt.length>2){addFinal(txt)}}};
+ recog.onerror=e=>{if(e.error==='not-allowed'){alert('נדרש אישור מיקרופון. אשר בחלון שנפתח.');setRec(false)}
   else if(e.error!=='no-speech')status.textContent='⚠ '+e.error};
  recog.onend=()=>{if(recording){try{recog.start()}catch(_){}} else setRec(false)};
  try{recog.start()}catch(e){alert('לא הצלחתי להתחיל: '+e)}
 }
-function render(interim){
- const full=transcript.join(' ');
- enBody.innerHTML=esc(full)+(interim?'<span class="dim">'+esc(interim)+'</span>':'');
- enBody.scrollTop=enBody.scrollHeight}
-function maybeTranslate(){if(translating)return;const t=transcript.join(' ');
- if(t.length-pending.length<220)return;translating=true;
- call({action:'translate',text:t.slice(pending.length||0)},d=>{pending=t;
-  heBody.innerHTML=esc(d.text);heBody.scrollTop=heBody.scrollHeight},()=>{},()=>{translating=false})}
 
-async function call(body,onOk,onErr,onDone){
+function showInterim(t){
+ if(!interimEl){interimEl=document.createElement('div');interimEl.className='interim';feed.appendChild(interimEl)}
+ interimEl.textContent=t;feed.scrollTop=feed.scrollHeight}
+function clearInterim(){if(interimEl){interimEl.remove();interimEl=null}}
+
+function addFinal(txt){
+ clearInterim();
+ const s={en:txt,he:null,fail:false,ts:Date.now()};
+ cur().segs.push(s);save();renderSeg(s);translateSeg(s,cur().segs.length-1)}
+
+function renderSeg(s){
+ const d=document.createElement('div');d.className='seg';d.id='seg'+s.ts;
+ d.innerHTML='<div class="en">'+esc(s.en)+'</div><div class="he warn">⏳ מתרגם...</div>';
+ const dim=feed.querySelector('.dim');if(dim)dim.remove();
+ feed.appendChild(d);feed.scrollTop=feed.scrollHeight}
+
+function setHe(s,txt,cls){const el=document.getElementById('seg'+s.ts);if(!el)return;
+ const h=el.querySelector('.he');h.className='he '+(cls||'');h.textContent=txt}
+
+async function callAPI(body){
  for(let i=0;i<3;i++){try{
   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
-  if(d.text){onOk(d);return}}catch(e){}}
- onErr();if(onDone)onDone()}
+  if(d.text)return d.text;
+  await new Promise(res=>setTimeout(res,3000));
+ }catch(e){await new Promise(res=>setTimeout(res,3000))}}
+ return null}
 
-function busy(btn,b,txt){btn.disabled=b;btn._t=btn.textContent;if(b)btn.textContent=txt||'...טוען'}
+function translateSeg(s,idx){
+ setHe(s,'⏳ מתרגם...');
+ callAPI({action:'translate',text:s.en}).then(t=>{
+  if(t){s.he=t;s.fail=false;save();setHe(s,'🇮🇱 '+t)}
+  else{s.fail=true;save();setHe(s,'❌ תרגום נכשל — אנסה שוב בעוד רגע','fail');queueRetry(s)}})}
 
-function summarize(){const btn=document.getElementById('sumBtn');if(!transcript.length){alert('אין עדיין תמליל');return}
-busy(btn,true,'...כותב סיכום');openOv('📝 סיכום');
-document.getElementById('obody').innerHTML='<div class="result spin">כותב סיכום, רגע...</div>';
-call({action:'summarize',text:transcript.join(' ')},d=>{busy(btn,false);
- document.getElementById('obody').innerHTML='<div class="result">'+esc(d.text)+'</div>'},
- ()=>{busy(btn,false);document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס כרגע, נסה שוב בעוד רגע</div>'})}
+function queueRetry(s){if(!retryQueue.includes(s)&&s.fail)retryQueue.push(s);
+ if(!retryTimer)retryTimer=setInterval(retryFailed,20000)}
+function retryFailed(){if(!retryQueue.length){clearInterval(retryTimer);retryTimer=null;return}
+ const s=retryQueue.shift();if(!s||!s.fail||s.he)return;
+ setHe(s,'🔁 מנסה שוב...','warn');
+ callAPI({action:'translate',text:s.en}).then(t=>{if(t){s.he=t;s.fail=false;save();setHe(s,'🇮🇱 '+t)}else queueRetry(s)})}
 
-function suggestQ(){const btn=document.getElementById('qBtn');busy(btn,true,'...חושב');openOv('❓ שאלות למרצה');
-document.getElementById('obody').innerHTML='<div class="result spin">מנסח שאלות...</div>';
-call({action:'ask',question:'איזה שאלות כדאי לי לשאול את המרצה על מה שנאמר עד עכשיו? תן 3 שאלות: נוסח באנגלית להגיד בקול + הסבר קצר בעברית.',context:transcript.join(' ')},
- d=>{busy(btn,false);document.getElementById('obody').innerHTML='<div class="result">'+esc(d.text)+'</div>'},
- ()=>{busy(btn,false);document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס כרגע, נסה שוב</div>'})}
+function ctx(){return cur().segs.map(s=>s.en).join(' ')}
+
+function endSession(){const btn=document.getElementById('endBtn');
+ if(!cur().segs.length){alert('אין עדיין תמליל בסשן הזה');return}
+ busy(btn,true,'...כותב סיכום');openOv('📝 סיכום סשן');
+ const t=ctx();
+ document.getElementById('obody').innerHTML='<div class="result spin">כותב סיכום, רגע... (אם ה-AI עמוס זה יכול לקחת עד דקה)</div>';
+ callAPI({action:'summarize',text:t.slice(0,20000)}).then(sum=>{busy(btn,false);
+  if(sum){const rec={ts:Date.now(),text:sum,count:cur().segs.length};state.summaries.push(rec);save();
+   document.getElementById('obody').innerHTML='<div class="result">'+esc(sum)+'</div>'+
+   '<button class="actions" style="width:100%;padding:14px;border:0;border-radius:12px;background:#14b8a6;font-weight:bold;font-size:15px;cursor:pointer" onclick="newSession()">✅ קיבלתי — פתח סשן חדש</button>';
+   document.querySelector('.actions[style]').onclick=newSession;
+  }else{document.getElementById('obody').innerHTML='<div class="result">שירות ה-AI עמוס מאוד כרגע. לחץ על "סיכום סוף סשן" שוב בעוד דקה.</div>'}})}
+
+function newSession(){
+ state.sessions.push({id:Date.now(),start:new Date().toISOString(),segs:[]});save();
+ feed.innerHTML='<span class="dim">סשן חדש נפתח. התמליל יופיע כאן...</span>';
+ retryQueue=[];closeOv()}
+
+function busy(btn,b){btn.disabled=b;btn._t=btn.textContent;if(b)btn.textContent='...טוען'}
+
+function suggestQ(){const btn=document.getElementById('qBtn');if(!cur().segs.length){alert('אין עדיין תמליל');return}
+ busy(btn,true);openOv('❓ שאלות למרצה');
+ document.getElementById('obody').innerHTML='<div class="result spin">מנסח שאלות...</div>';
+ callAPI({action:'ask',question:'איזה שאלות כדאי לי לשאול את המרצה על מה שנאמר עד עכשיו? תן 3 שאלות: נוסח באנגלית להגיד בקול + הסבר קצר בעברית.',context:ctx().slice(-4000)}).then(t=>{busy(btn,false);
+ document.getElementById('obody').innerHTML=t?'<div class="result">'+esc(t)+'</div>':'<div class="result">ה-AI עמוס, נסה שוב בעוד דקה</div>'})}
 
 function openChat(){openOv('💬 צ׳אט הרצאה');document.getElementById('ofoot').style.display='flex';
  document.getElementById('qinput').focus()}
 function sendQ(){const inp=document.getElementById('qinput');const q=inp.value.trim();if(!q)return;inp.value='';
  const b=document.getElementById('obody');b.innerHTML+='<div class="result" style="background:#134e4a">אתה: '+esc(q)+'</div><div class="result spin" id="wait">סוכן AI חושב...</div>';b.scrollTop=b.scrollHeight;
- call({action:'ask',question:q,context:transcript.join(' ')},d=>{const w=document.getElementById('wait');if(w)w.remove();
-  b.innerHTML+='<div class="result">'+esc(d.text)+'</div>';b.scrollTop=b.scrollHeight},
- ()=>{const w=document.getElementById('wait');if(w)w.remove();b.innerHTML+='<div class="result">שירות ה-AI עמוס, נסה שוב</div>'})}
+ callAPI({action:'ask',question:q,context:ctx().slice(-4000)}).then(d=>{const w=document.getElementById('wait');if(w)w.remove();
+  b.innerHTML+=d?'<div class="result">'+esc(d)+'</div>':'<div class="result">ה-AI עמוס, נסה שוב</div>';b.scrollTop=b.scrollHeight})}
+
+function openArchive(){openOv('📚 סיכומים שמורים');
+ const s=state.summaries;
+ document.getElementById('obody').innerHTML=s.length?
+  s.map(r=>'<div class="archres">*סשן '+new Date(r.ts).toLocaleString('he-IL',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'numeric'})+' ('+r.count+' משפטים)*\n'+esc(r.text)+'</div>').reverse().join(''):
+  '<div class="result">עדיין אין סיכומים שמורים</div>'}
+
 function openOv(t){document.getElementById('otitle').textContent=t;document.getElementById('obody').innerHTML='';document.getElementById('ofoot').style.display='none';document.getElementById('ov').classList.add('on')}
 function closeOv(){document.getElementById('ov').classList.remove('on')}
-function downloadTxt(){const t=transcript.join('\n');const b=new Blob([t],{type:'text/plain'});const a=document.createElement('a');
- a.href=URL.createObjectURL(b);a.download='lecture_'+new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')+'.txt';a.click()}
-window.addEventListener('beforeunload',e=>{if(transcript.length){e.preventDefault();e.returnValue=''}});
+
+// restore saved session on load
+function restore(){const segs=cur().segs;const dim=feed.querySelector('.dim');if(segs.length&&dim)dim.remove();
+ segs.forEach(s=>{renderSeg(s);if(s.he)setHe(s,'🇮🇱 '+s.he);else if(s.fail){setHe(s,'❌ תרגום נכשל — אנסה שוב','fail');queueRetry(s)}else setHe(s,'⏳ מתרגם...')})}
+restore();
 </script></body></html>
