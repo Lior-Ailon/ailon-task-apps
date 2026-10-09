@@ -1,6 +1,6 @@
 {
-  "name": "עוזר הרצאה חי",
-  "short_name": "Lecture AI",
+  "name": "AILON Interpreter",
+  "short_name": "AILON Interpreter",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
