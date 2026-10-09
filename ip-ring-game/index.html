@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d9488">
+<link rel="manifest" href="manifest.json">
+<title>משחק זיכרון: IP Ring ומרכזי נתונים</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#f1f5f9;min-height:100vh}
+header{padding:14px 16px;background:linear-gradient(135deg,#0d9488,#0e7490);text-align:center}
+h1{margin:0;font-size:19px}
+.sub{font-size:13px;opacity:.9;margin-top:4px}
+.bar{display:flex;justify-content:space-around;padding:10px;background:#1e293b;font-size:14px}
+.menu,.end{padding:20px;text-align:center}
+.cats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.chip{padding:8px 14px;border-radius:20px;background:#1e293b;border:2px solid #334155;font-size:14px}
+.chip.on{border-color:#14b8a6;background:#0d9488}
+.btn{display:block;width:100%;max-width:340px;margin:12px auto;padding:16px;font-size:18px;font-weight:bold;border:0;border-radius:14px;background:#14b8a6;color:#04201d}
+.btn.sec{background:#334155;color:#e2e8f0;font-size:15px;padding:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;max-width:620px;margin:0 auto}
+.card{min-height:92px;border-radius:12px;perspective:600px;cursor:pointer}
+.in{position:relative;width:100%;height:100%;min-height:92px;transition:transform .45s;transform-style:preserve-3d}
+.card.flip .in{transform:rotateY(180deg)}
+.f,.b{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;backface-visibility:hidden}
+.b{background:linear-gradient(135deg,#0d9488,#0e7490);font-size:30px}
+.f{transform:rotateY(180deg);background:#f8fafc;color:#0f172a;font-size:12px;line-height:1.35;font-weight:bold}
+.f.en{background:#ecfeff;color:#155e75;direction:ltr;font-size:13px}
+.card.done .f{background:#bbf7d0;color:#14532d}
+.hint{text-align:center;font-size:13px;color:#94a3b8;padding:6px}
+.big{font-size:44px}
+.learn{padding:12px;max-width:620px;margin:0 auto}
+.lc{background:#1e293b;border-radius:12px;padding:12px;margin:8px 0}
+.lc b{direction:ltr;display:block;color:#5eead4;font-size:16px}
+.lc small{color:#fcd34d}
+.lc p{margin:6px 0 0;font-size:14px}
+.lc button{margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:#0d9488;color:#fff}
+</style></head><body>
+<header><h1>🎧 משחק זיכרון: IP Ring ומרכזי נתונים</h1><div class="sub">מצא זוגות: מונח באנגלית ↔ ההסבר בעברית. כל מונח מושמע בקול</div></header>
+
+<div id="menu" class="menu">
+<div class="big">🧠</div>
+<p>בחר נושאים ולחץ התחל. בכל משחק 6 זוגות.</p>
+<div class="cats" id="cats"></div>
+<button class="btn" onclick="start()">▶ התחל משחק</button>
+<button class="btn sec" onclick="learn()">📖 למד קודם (הקשבה למילים)</button>
+</div>
+
+<div id="game" style="display:none">
+<div class="bar"><span>ניסיונות: <b id="tries">0</b></span><span>זוגות: <b id="pairs">0</b>/6</span><span>⏱ <b id="time">0</b>s</span></div>
+<div class="hint">לחיצה על קלף אנגלי משמיעה את המונח</div>
+<div class="grid" id="grid"></div>
+<button class="btn sec" onclick="menu()">חזרה לתפריט</button>
+</div>
+
+<div id="end" class="end" style="display:none">
+<div class="big">🏆</div><h2>כל הכבוד!</h2>
+<p id="res"></p>
+<button class="btn" onclick="start()">משחק חדש</button>
+<button class="btn sec" onclick="menu()">תפריט</button>
+</div>
+
+<div id="learn" style="display:none"><div class="learn" id="llist"></div><button class="btn sec" onclick="menu()">חזרה</button></div>
+
+<script>
+const W=[["Ring Topology", "רינג טופולוגי", "טופולוגיית טבעת: חיבור רכיבי הרשת במעגל סגור", "רשת"], ["ERPS", "אי-אר-פי-אס", "פרוטוקול תקן ללולאות והתאוששות מהירה בטבעת (פחות מ-50 מילישניות)", "רשת"], ["RPL (Ring Protection Link)", "אר-פי-אל", "החוליה החסומה בטבעת למניעת לולאות בזמן עבודה תקין", "רשת"], ["RPL Owner Node", "אר-פי-אל אוונר נוד", "הרכיב האחראי על חסימת ופתיחת חוליית ה-RPL בזמן תקלה", "רשת"], ["RPL Neighbor Node", "אר-פי-אל נייבור נוד", "הרכיב הסמוך לחוליית ה-RPL החוסם את הצד השני של הקישור", "רשת"], ["Hold-off Timer", "הולד-אוף טיימר", "מנגנון השהיה המונע מעבר מהיר למצב חירום בעקבות נפילות קצרות", "רשת"], ["WTB (Wait-to-Block) Timer", "וויית-טו-בלוק טיימר", "טיימר הממתין לפני חסימה מחדש של ה-RPL לאחר תיקון תקלה", "רשת"], ["WTR (Wait-to-Restore) Timer", "וויית-טו-ריסטור טיימר", "זמן המתנה לוודא יציבות הקישור המתוקן לפני חזרה לשגרה", "רשת"], ["Loop Prevention", "לופ פריוונשן", "מנגנון למניעת לולאות תקשורת ברשת שכבה 2", "רשת"], ["Dual-Homing Ring", "דיואל-הומינג רינג", "חיבור כפול של הטבעת לליבת הרשת למניעת נקודת כשל בודדת", "רשת"], ["Sub-Ring / Major Ring", "סאב-רינג / מייג'ור רינג", "טבעת משנית החוברת לטבעת מרכזית ראשית", "רשת"], ["Link Aggregation (LAG / LACP)", "לינק אגרגיישן", "איחוד מספר קווים פיזיים לצינור אופקי אחד להגדלת נפח ויתירות", "רשת"], ["VLAN Trunking / Tagging", "וי-לאן טראנקינג / טאגינג", "העברת מספר מקטעי רשת וירטואליים על גבי קישור אחד", "רשת"], ["BGP / OSPF Dynamic Routing", "בי-ג'י-פי / או-אס-פי-אף", "פרוטוקולי ניתוב דינמיים ברמת שכבה 3", "רשת"], ["BFD (Bidirectional Forwarding)", "בי-אף-די", "פרוטוקול לגילוי מהיר במיוחד של נתקי תקשורת (מילי-שניות)", "רשת"], ["MPLS", "אם-פי-אל-אס", "טכנולוגיית ניתוב מתקדמת המבוססת על תוויות לניתוב מהיר", "רשת"], ["Broadcast Storm Suppression", "ברודקאסט סטורם סופרשן", "הגנה המגבילה שידורי הצפה ברשת למניעת קריסה", "רשת"], ["Rack / Cabinet", "ראק / קבינט", "ארון השרתים / התקשורת בחווה", "תשתית"], ["Patch Panel / ODF", "פאץ' פאנל / או-די-אף", "לוח ניתוב מרכזי / פאנל חלוקת סיבים אופטיים", "תשתית"], ["Single-Mode / Multi-Mode Fiber", "סינגל-מוד / מאלטי-מוד פייבר", "סיב לטווח ארוך (Single) לעומת טווח קצר בתוך החווה (Multi)", "תשתית"], ["SFP / SFP+ / QSFP Transceiver", "אס-אף-פי / קיו-אס-אף-פי", "רכיבי קצה אופטיים מהירים להמרת אות חשמלי לאופטי", "תשתית"], ["Fiber Attenuation / Loss", "פייבר אטנואיישן / לוס", "ניתוח והנחתת אות אופטי (נמדד ב-dB)", "תשתית"], ["OTDR Testing", "או-טי-די-אר טסטינג", "מכשיר בדיקה לאיתור מדויק של מקום פגיעה/נתק בסיב", "תשתית"], ["Patch Cord / Fiber Jumper", "פאץ' קורד / פייבר ג'אמפר", "כבל גישור קצר בין ציוד לפאנל", "תשתית"], ["Cross-Connect", "קרוס-קונקט", "חיבור ישיר בין שני ארונות או ספקים בתוך החווה", "תשתית"], ["Top of Rack (ToR) Switch", "טופ אוף ראק סוויץ'", "מתג תקשורת בחלק העליון של כל ארון שרתים", "תשתית"], ["Spine-Leaf Architecture", "ספיין-ליף ארכיטקצ'ר", "ארכיטקטורת רשת מודרנית להשהיה נמוכה וקבועה בחווה", "תשתית"], ["PDU (Power Distribution Unit)", "פי-די-יו", "פס שקעים/חלוקת חשמל מבוקר בתוך ארון השרתים", "חשמל"], ["ATS (Automatic Transfer Switch)", "איי-טי-אס", "מתג העברה אוטומטי בין מקורות הזנת חשמל שונים", "חשמל"], ["Cable Tray / Ladder Bar", "קייבל טריי / לאדר בר", "תעלת כבלים / סולם נושאת כבלים עילי", "תשתית"], ["UPS (Uninterruptible Power Supply)", "יו-פי-אס", "אל-פסק המבטיח אספקת חשמל רציפה בזמן נפילת רשת החשמל", "חשמל"], ["Dual Feed Power Supply", "דיואל פיד פאואר ספלאי", "הזנת חשמל כפולה ובלתי תלויה (Feed A / Feed B) לכל ארון/שרת", "חשמל"], ["Hot Containment / Cold Aisle", "הוט קונטיינמנט / קולד אייל", "שיטות הפרדת אוויר חם ואוויר קר לקירור יעיל בחווה", "תשתית"], ["Grounding Bar / Earthing System", "גראונדינג באר / ארת'ינג", "פס הארקה מרכזי ומערכת הארקה להגנה על ציוד התקשורת", "חשמל"], ["Fiber Cut / Degradation", "פייבר קאט / דגראדיישן", "נתק מוחלט בסיב / ירידה באיכות השידור והאיכות האופטית", "תקלות"], ["Flapping Link / Port Flap", "פלאפינג לינק / פורט פלאפ", "קו או פורט שעולה ויורד במהירות (גורם לחוסר יציבות)", "תקלות"], ["Packet Loss / Drop", "פאקט לוס / דרופ", "איבוד או השמטת חבילות מידע במהלך השידור", "תקלות"], ["Latency / Jitter", "לייטנסי / ג'יטר", "שיהוי זמן תגובה / תנודתיות בקצב הגעת החבילות", "תקלות"], ["Loop Detected", "לופ דיטקטד", "זיהוי לולאת תקשורת ברשת (מצב שעלול להפיל את הרשת)", "תקלות"], ["Rx / Tx Optical Power Level", "אר-איקס / טי-איקס פאואר", "עוצמת שידור (Tx) ועוצמת קליטה (Rx) אופטית ב-dBm", "תקלות"], ["Clean the Fiber Connector", "קלין דה פייבר קונקטור", "ניקוי ראש הסיב האופטי מלכלוך/אבק באמצעות ערכת ניקוי", "תקלות"], ["Trace Route / Ping Test", "טרייס רוט / פינג טסט", "בדיקת נתיב מעבר החבילות ובדיקת רציפות התקשורת", "תקלות"], ["SNMP Monitoring / Telemetry", "אס-אן-אם-פי / טלמטרי", "פרוטוקול ושיטות לאיסוף מדדים ואירועים בזמן אמת", "ניטור"], ["Out-of-Band (OOB) Management", "אאוט אוף באנד מנג'מנט", "רשת ניהול נפרדת ועוקפת לגישה לציוד גם במקרה של קריסת הרשת הראשית", "ניטור"], ["Syslog Server / Event Logs", "סיסלוג סרבר / איבנט לוגס", "שרת רישום אירועים מרכזי לניתוח שגיאות והיסטוריית תקלות", "ניטור"], ["Packet Inspection / Wireshark Capture", "פאקט אינספקשן / ווירשארק", "לכידה וניתוח של חבילות המידע ברמת התוכן והפרוטוקול", "ניטור"]];
+const cats=[...new Set(W.map(w=>w[3]))];
+let sel=new Set(cats);
+const catsEl=document.getElementById('cats');
+cats.forEach(c=>{const d=document.createElement('div');d.className='chip on';d.textContent=c;
+d.onclick=()=>{if(sel.has(c)){if(sel.size>1){sel.delete(c);d.classList.remove('on')}}else{sel.add(c);d.classList.add('on')}};catsEl.appendChild(d)});
+
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/\(.*?\)/g,' ').replace(/\//g,' ').replace(/-/g,' '));u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function show(id){['menu','game','end','learn'].forEach(x=>document.getElementById(x).style.display=x==id?'block':'none')}
+function menu(){clearInterval(tm);show('menu')}
+function learn(){const l=document.getElementById('llist');l.innerHTML='';
+W.filter(w=>sel.has(w[3])).forEach(w=>{const d=document.createElement('div');d.className='lc';
+d.innerHTML='<b>'+w[0]+'</b><small>'+w[1]+'</small><p>'+w[2]+'</p>';
+const b=document.createElement('button');b.textContent='🔊 השמע';b.onclick=()=>speak(w[0]);d.appendChild(b);l.appendChild(d)});show('learn')}
+
+let first=null,lock=false,tries=0,pairs=0,t0=0,tm;
+function start(){
+ const pool=W.filter(w=>sel.has(w[3]));
+ const pick=pool.sort(()=>Math.random()-.5).slice(0,6);
+ const cards=[];pick.forEach((w,i)=>{cards.push({id:i,en:true,txt:w[0],w});cards.push({id:i,en:false,txt:w[2],w})});
+ cards.sort(()=>Math.random()-.5);
+ const g=document.getElementById('grid');g.innerHTML='';tries=0;pairs=0;first=null;lock=false;
+ document.getElementById('tries').textContent=0;document.getElementById('pairs').textContent='0/'+pick.length;
+ document.getElementById('pairs').parentElement.innerHTML='זוגות: <b id="pairs">0</b>/'+pick.length;
+ cards.forEach(c=>{const e=document.createElement('div');e.className='card';
+  e.innerHTML='<div class="in"><div class="b">❓</div><div class="f '+(c.en?'en':'')+'">'+c.txt+'</div></div>';
+  e.onclick=()=>flip(e,c);g.appendChild(e)});
+ t0=Date.now();clearInterval(tm);tm=setInterval(()=>document.getElementById('time').textContent=Math.floor((Date.now()-t0)/1000),500);
+ window._n=pick.length;show('game')}
+function flip(e,c){if(lock||e.classList.contains('flip'))return;
+ e.classList.add('flip');if(c.en)speak(c.txt);
+ if(!first){first={e,c};return}
+ tries++;document.getElementById('tries').textContent=tries;
+ if(first.c.id==c.id&&first.c.en!=c.en){first.e.classList.add('done');e.classList.add('done');pairs++;document.getElementById('pairs').textContent=pairs;
+  if(!c.en)speak(first.c.txt);first=null;
+  if(pairs==window._n){clearInterval(tm);setTimeout(()=>{document.getElementById('res').textContent='סיימת ב-'+tries+' ניסיונות ו-'+Math.floor((Date.now()-t0)/1000)+' שניות';show('end')},900)}}
+ else{lock=true;const a=first.e;first=null;setTimeout(()=>{a.classList.remove('flip');e.classList.remove('flip');lock=false},1000)}}
+</script></body></html>
