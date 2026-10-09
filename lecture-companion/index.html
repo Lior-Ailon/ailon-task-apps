@@ -2,6 +2,7 @@
 <html lang="he" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0d9488">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>AILON Interpreter</title>
 <link rel="manifest" href="manifest.json">
 <style>
@@ -14,6 +15,8 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:1000px;mar
 #mic{width:70px;height:70px;border-radius:50%;border:0;background:#14b8a6;color:#04201d;font-size:28px;cursor:pointer;box-shadow:0 4px 14px rgba(20,184,166,.5);flex-shrink:0}
 #mic.rec{background:#ef4444;color:#fff;animation:pulse 1.2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 14px rgba(239,68,68,.15)}}
+#dirBtn{padding:10px 12px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-weight:bold;cursor:pointer;flex-shrink:0;font-size:14px}
+#dirBtn:active{background:#0d9488}
 #miclabel{font-size:12.5px;color:#94a3b8;line-height:1.5}
 .pane{flex:1;background:#1e293b;border-radius:14px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .pane h2{margin:0;padding:8px 12px;font-size:13px;background:#334155;display:flex;justify-content:space-between}
@@ -43,11 +46,12 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:1000px;mar
 <main>
 <div id="top">
 <button id="mic" onclick="toggleMic()">🎙️</button>
+<button id="dirBtn" onclick="toggleDir()" title="החלפת כיוון תרגום">EN→עב</button>
 <div id="miclabel">לחץ להאזנה להרצאה. המיקרופון נשאר פתוח כל הזמן. כל משפט מתורגם מיד בסיומו.</div>
 </div>
-<div class="pane"><h2>English — live transcript <span class="st" id="enSt"></span></h2><div class="pbody" id="enBody"><span class="dim">התמליל החי יופיע כאן...</span></div></div>
+<div class="pane"><h2><span id="enH">English — live transcript</span> <span class="st" id="enSt"></span></h2><div class="pbody" id="enBody"><span class="dim">התמליל החי יופיע כאן...</span></div></div>
 <div style="height:8px"></div>
-<div class="pane"><h2>עברית — תרגום חי <span class="st" id="heSt"></span></h2><div class="pbody" id="heBody"><span class="dim">התרגום יופיע כאן...</span></div></div>
+<div class="pane"><h2><span id="heH">עברית — תרגום חי</span> <span class="st" id="heSt"></span></h2><div class="pbody" id="heBody"><span class="dim">התרגום יופיע כאן...</span></div></div>
 <div class="actions">
 <button id="endBtn" onclick="endSession()">📝 סיכום סוף סשן</button>
 <button id="qBtn" onclick="suggestQ()">❓ הצע שאלות</button>
@@ -68,6 +72,7 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:1000px;mar
 <script>
 const API="https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/lectureHelper";
 const LS="lectureCompanionV4";
+let DIR=localStorage.getItem('lcDir')||'en2he';
 let recog=null,recording=false,lastEv=0,retryTimer=null,pendingHe='',lastIntTr=0,intTrBusy=false;
 let state=load();
 const enBody=document.getElementById('enBody'),heBody=document.getElementById('heBody'),
@@ -78,6 +83,19 @@ function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.session
 function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
 function cur(){return state.sessions[state.sessions.length-1]}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function applyDir(){
+ const srcHe=(DIR==='he2en');
+ document.getElementById('dirBtn').textContent=srcHe?'עב→EN':'EN→עב';
+ document.getElementById('enH').textContent=srcHe?'עברית — תמליל חי':'English — live transcript';
+ document.getElementById('heH').textContent=srcHe?'English — translation':'עברית — תרגום חי';
+ enBody.style.direction=srcHe?'rtl':'ltr'; enBody.style.textAlign=srcHe?'right':'left';
+ heBody.style.direction=srcHe?'ltr':'rtl'; heBody.style.textAlign=srcHe?'left':'right'}
+function toggleDir(){
+ if(recording){setRec(false);try{recog.stop()}catch(e){}}
+ DIR=(DIR==='en2he')?'he2en':'en2he';localStorage.setItem('lcDir',DIR);
+ newSession();applyDir();
+ document.getElementById('miclabel').textContent='הכיוון הוחלף. לחץ שוב על המיקרופון כדי להתחיל לתמלל.'}
+
 function setRec(v){document.getElementById('mic').classList.toggle('rec',v);recording=v;
  status.textContent=v?'🔴 מאזין...':'כבוי'}
 
@@ -97,7 +115,7 @@ function toggleMic(){
  if(recording){recog.stop();return}
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SR){alert('הדפדפן לא תומך בתמלול חי. השתמש בכרום או אדג׳ במחשב.');return}
- recog=new SR();recog.lang='en-US';recog.continuous=true;recog.interimResults=true;recog.maxAlternatives=1;
+ recog=new SR();recog.lang=(DIR==='he2en')?'he-IL':'en-US';recog.continuous=true;recog.interimResults=true;recog.maxAlternatives=1;
  lastEv=Date.now();
  recog.onstart=()=>{setRec(true);lastEv=Date.now()};
  recog.onresult=e=>{lastEv=Date.now();let interim='';let fin='';
@@ -162,7 +180,8 @@ function retryFailed(){const c=cur();const bad=c.segs.filter(s=>s.fail);
 async function fastTranslate(text){
  // instant path: Google Translate directly from the browser (~0.3s, no API key)
  try{
-  const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=iw&dt=t&q='+encodeURIComponent(text));
+  const sl=(DIR==='he2en')?'iw':'en', tl=(DIR==='he2en')?'en':'iw';
+  const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text));
   const d=await r.json();
   const out=((d&&d[0])||[]).map(x=>(x&&x[0]?x[0]:'')).join('').trim();
   if(out)return out;
@@ -228,6 +247,7 @@ function openOv(t){document.getElementById('otitle').textContent=t;document.getE
 function closeOv(){document.getElementById('ov').classList.remove('on')}
 
 // restore on load: re-translate anything unfinished
+applyDir();
 (function(){const c=cur();
  if(c.segs.length){renderEn();renderHe();
   c.segs.filter(s=>!s.he).forEach(s=>{s.fail=false;translateSeg(s)})}
