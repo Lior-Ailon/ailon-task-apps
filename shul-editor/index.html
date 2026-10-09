@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>עריכת הלוח — שיח יוסף</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1a38">
+<link href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;700&family=Suez+One&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1a38;--navy2:#12244a;--gold:#d4af37;--goldL:#f3d774;--cream:#f8f4e8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'David Libre',serif;background:linear-gradient(180deg,#0b1a38,#071229);color:#e8e2d4;min-height:100vh;padding:14px;padding-bottom:90px}
+.wrap{max-width:720px;margin:0 auto}
+h1{font-family:'Suez One',serif;text-align:center;color:var(--goldL);font-size:clamp(20px,5vw,28px)}
+.sub{text-align:center;color:#cbb98a;font-size:15px;margin:4px 0 14px}
+details{background:rgba(18,36,74,.65);border:1px solid rgba(212,175,55,.35);border-radius:14px;margin-bottom:12px;overflow:hidden}
+details summary{cursor:pointer;padding:13px 16px;font-family:'Suez One',serif;font-size:18px;color:var(--goldL);list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'▾';color:#cbb98a}
+details[open] summary::after{content:'▴'}
+details .body{padding:0 14px 14px}
+.hint{color:#8a94ab;font-size:13px;margin:6px 0}
+input[type=text],input[type=time],input[type=date],textarea,select{
+  width:100%;background:rgba(7,18,41,.75);border:1px solid rgba(212,175,55,.3);border-radius:10px;
+  color:#e8e2d4;padding:9px 11px;font-family:'David Libre',serif;font-size:16px}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+label{display:block;font-size:13px;color:#cbb98a;margin:8px 0 3px}
+.item{background:rgba(7,18,41,.55);border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:10px;margin-bottom:10px;position:relative}
+.del{position:absolute;top:8px;left:8px;background:none;border:none;color:#ff9d9d;font-size:20px;cursor:pointer;line-height:1}
+.add{width:100%;padding:10px;background:rgba(212,175,55,.12);border:1px dashed rgba(212,175,55,.55);border-radius:12px;color:var(--goldL);font-family:'David Libre',serif;font-size:16px;cursor:pointer}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.savebar{position:fixed;bottom:0;left:0;right:0;background:rgba(7,18,41,.92);border-top:1px solid rgba(212,175,55,.4);padding:10px 14px;z-index:9}
+.savebar .wrap{display:flex;gap:10px;align-items:center}
+.primary{flex:1;padding:13px;font-family:'Suez One',serif;font-size:18px;color:#071229;background:linear-gradient(135deg,#f8e7b0,#d4af37);border:none;border-radius:12px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.primary:disabled{opacity:.5;cursor:default}
+.msg{font-size:15px;min-height:20px}.msg.ok{color:#8fe3a8}.msg.err{color:#ff9d9d}
+.login{max-width:360px;margin:12vh auto 0;background:rgba(18,36,74,.65);border:1px solid rgba(212,175,55,.35);border-radius:16px;padding:22px}
+.login h2{font-family:'Suez One',serif;color:var(--goldL);text-align:center;margin-bottom:12px}
+.hidden{display:none}
+.ailon{position:fixed;top:10px;left:12px;font-family:'Suez One',serif;font-size:13px;color:rgba(212,175,55,.7);letter-spacing:2px;text-decoration:none}
+.view-link{display:block;text-align:center;margin-top:14px;color:#cbb98a;font-size:14px;text-decoration:none}
+.preview{width:100%;aspect-ratio:16/9;border:1px solid rgba(212,175,55,.35);border-radius:10px;overflow:hidden;position:relative;background:#071229;margin:8px 0}
+.preview iframe{position:absolute;top:0;left:0;width:1920px;height:1080px;border:0;transform-origin:0 0;pointer-events:none}
+.pv-nav{display:flex;gap:8px;margin-top:8px}
+.pv-btn{flex:1;padding:8px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.4);border-radius:10px;color:var(--goldL);font-family:'David Libre',serif;font-size:15px;cursor:pointer}
+.pv-btn.on{background:rgba(212,175,55,.3)}
+</style>
+</head>
+<body>
+<a class="ailon" href="https://lior-ailon.github.io/ailon-task-apps/">AILON</a>
+<div class="wrap">
+
+  <div id="loginView" class="login">
+    <h2>כניסת גבאי</h2>
+    <label>שם משתמש</label>
+    <input type="text" id="lu" autocomplete="username">
+    <label>סיסמה</label>
+    <input type="password" id="lp" autocomplete="current-password" style="width:100%;background:rgba(7,18,41,.75);border:1px solid rgba(212,175,55,.3);border-radius:10px;color:#e8e2d4;padding:9px 11px;font-family:'David Libre',serif;font-size:16px">
+    <button class="primary" id="loginBtn" style="margin-top:16px">כניסה</button>
+    <div class="msg" id="loginMsg" style="text-align:center;margin-top:8px"></div>
+  </div>
+
+  <div id="editView" class="hidden">
+    <h1>עריכת הלוח — שיח יוסף</h1>
+    <div class="sub">עורכים, שומרים, והלוח מתעדכן</div>
+
+    <details open>
+      <summary>שיעורים · עמוד 2</summary>
+      <div class="body">
+        <div class="hint">השיעורים מופיעים בעמוד השני של הלוח</div>
+        <div id="lessonsBox"></div>
+        <button class="add" id="addLesson">+ הוסף שיעור</button>
+      </div>
+    </details>
+
+    <details>
+      <summary>ברכת השנה · עמוד 2</summary>
+      <div class="body">
+        <div class="hint">שם אחד בכל שורה</div>
+        <textarea id="blessNames" placeholder="משפחת כהן&#10;משפחת לוי"></textarea>
+      </div>
+    </details>
+
+    <details>
+      <summary>הודעות לציבור · טיקר תחתון</summary>
+      <div class="body">
+        <div class="hint">ההודעות רצות בפס התחתון של הלוח, בין התאריכים שנקבעו</div>
+        <div id="noticesBox"></div>
+        <button class="add" id="addNotice">+ הוסף הודעה</button>
+      </div>
+    </details>
+
+    <details>
+      <summary>הלכה יומית · עמוד 1</summary>
+      <div class="body">
+        <div class="hint">הלכה אחת בכל שורה. הלוח מציג שתיים בכל יום, מתחלפות אוטומטית</div>
+        <textarea id="halacha" style="min-height:180px"></textarea>
+      </div>
+    </details>
+
+    <details>
+      <summary>הקדשות · כותרת הלוח</summary>
+      <div class="body">
+        <label>השורה מתחת לשם בית הכנסת</label>
+        <input type="text" id="dedication" placeholder="על שם רבי יוסף חדד">
+        <label>לוחית "הלוח נתרם לעילוי נשמת..." (ריק = לא מוצג)</label>
+        <input type="text" id="boardDedication" placeholder="הלוח נתרם לעילוי נשמת ...">
+      </div>
+    </details>
+
+    <details>
+      <summary>תצוגה מקדימה</summary>
+      <div class="body">
+        <div class="pv-nav">
+          <button class="pv-btn on" data-p="panel-day">עמוד 1 · זמני היום</button>
+          <button class="pv-btn" data-p="panel-community">עמוד 2 · הקהילה</button>
+        </div>
+        <div class="preview"><iframe id="pv"></iframe></div>
+      </div>
+    </details>
+
+    <div class="savebar"><div class="wrap">
+      <button class="primary" id="save">שמירה ועדכון הלוח</button>
+    </div><div class="wrap"><div class="msg" id="msg"></div></div></div>
+  </div>
+
+</div>
+<script>
+const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/shulApi';
+const BOARD='https://lior-ailon.github.io/ailon-task-apps/beit-knesset/?shul=shach-yosef&p=';
+const CODE='shach-yosef', SHUL_ID='6abe1a870793b2ce9f06478b';
+const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+let TOKEN=localStorage.getItem('se.tok')||'', S=null;
+
+const $=id=>document.getElementById(id);
+const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+async function api(body){
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({...body,session_token:TOKEN})});
+  return r.json();
+}
+
+function lessonCard(l,i){
+  return `<div class="item" data-lesson="${i}">
+    <button class="del" title="מחיקה">✕</button>
+    <div class="row">
+      <div><label>יום</label><select class="l-day">${DAYS.map((d,k)=>`<option value="${k}"${+l.day===k?' selected':''}>${d}</option>`).join('')}</select></div>
+      <div><label>שעה</label><input type="time" class="l-time" value="${esc(l.time||'')}"></div>
+    </div>
+    <label>שם השיעור</label><input type="text" class="l-title" value="${esc(l.title||'')}">
+    <label>הרב / המעביר</label><input type="text" class="l-teacher" value="${esc(l.teacher||'')}">
+  </div>`;
+}
+function noticeCard(n,i){
+  return `<div class="item" data-notice="${i}">
+    <button class="del" title="מחיקה">✕</button>
+    <label>כותרת</label><input type="text" class="n-title" value="${esc(n.title||'')}">
+    <label>תוכן</label><textarea class="n-text">${esc(n.text||'')}</textarea>
+    <div class="row">
+      <div><label>מתאריך</label><input type="date" class="n-from" value="${esc(n.from||'')}"></div>
+      <div><label>עד תאריך</label><input type="date" class="n-until" value="${esc(n.until||'')}"></div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  $('lessonsBox').innerHTML=(S.lessons||[]).map((l,i)=>lessonCard(l,i)).join('')||'<div class="hint">אין שיעורים — הוסיפו</div>';
+  $('noticesBox').innerHTML=(S.notices||[]).map((n,i)=>noticeCard(n,i)).join('')||'<div class="hint">אין הודעות — הוסיפו</div>';
+  $('blessNames').value=((S.yearBlessing||{}).names||[]).join('\n');
+  $('halacha').value=(S.halacha||[]).join('\n');
+  $('dedication').value=S.dedication||'';
+  $('boardDedication').value=S.boardDedication||'';
+}
+
+function collect(){
+  S.lessons=[...document.querySelectorAll('[data-lesson]')].map(it=>({
+    day:(it.querySelector('.l-day').value||'0'),time:it.querySelector('.l-time').value,
+    title:it.querySelector('.l-title').value.trim(),teacher:it.querySelector('.l-teacher').value.trim()
+  })).filter(l=>l.title);
+  S.notices=[...document.querySelectorAll('[data-notice]')].map(it=>({
+    title:it.querySelector('.n-title').value.trim(),text:it.querySelector('.n-text').value.trim(),
+    from:it.querySelector('.n-from').value||'',until:it.querySelector('.n-until').value||''
+  })).filter(n=>n.title||n.text);
+  S.yearBlessing={names:$('blessNames').value.split('\n').map(x=>x.trim()).filter(Boolean)};
+  S.halacha=$('halacha').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  S.dedication=$('dedication').value.trim();
+  S.boardDedication=$('boardDedication').value.trim();
+}
+
+$('addLesson').onclick=()=>{collect();S.lessons.push({day:'6',time:'20:30',title:'',teacher:''});render();};
+$('addNotice').onclick=()=>{collect();S.notices.push({title:'',text:'',from:'',until:''});render();};
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('del')){
+    collect();
+    const item=e.target.closest('.item');
+    if(item.hasAttribute('data-lesson'))S.lessons.splice(+item.dataset.lesson,1);
+    else S.notices.splice(+item.dataset.notice,1);
+    render();
+  }
+});
+
+$('save').onclick=async()=>{
+  collect();
+  const btn=$('save');btn.disabled=true;btn.textContent='שומר...';
+  try{
+    const d=await api({action:'save_settings',shul_id:SHUL_ID,settings:S});
+    if(!d.success)throw new Error(d.message||'שגיאה');
+    $('msg').textContent='נשמר! הלוח יתעדכן תוך דקות ✅';$('msg').className='msg ok';
+    refreshPreview();
+  }catch(err){$('msg').textContent='שמירה נכשלה: '+err.message;$('msg').className='msg err';}
+  btn.disabled=false;btn.textContent='שמירה ועדכון הלוח';
+};
+
+// preview
+let curPanel='panel-day';
+function refreshPreview(){
+  const f=$('pv');f.src=BOARD+curPanel+'&nc='+Date.now();
+  requestAnimationFrame(()=>{f.style.transform='scale('+($('pv').parentElement.clientWidth/1920)+')'});
+}
+document.querySelectorAll('.pv-btn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.pv-btn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');curPanel=b.dataset.p;refreshPreview();
+});
+
+// login
+async function tryLogin(){
+  const d=await api({action:'login',username:$('lu').value.trim(),password:$('lp').value});
+  if(!d.success){$('loginMsg').textContent=d.message||'שגיאה';$('loginMsg').className='msg err';return;}
+  TOKEN=d.token;localStorage.setItem('se.tok',TOKEN);
+  start();
+}
+$('loginBtn').onclick=tryLogin;
+$('lp').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+
+async function start(){
+  const d=await api({action:'get_shul',shul_id:SHUL_ID});
+  if(!d.success){TOKEN='';localStorage.removeItem('se.tok');$('loginMsg').textContent='אין הרשאה לבית כנסת זה';$('loginMsg').className='msg err';return;}
+  S=d.data.settings||{};
+  $('loginView').classList.add('hidden');
+  $('editView').classList.remove('hidden');
+  render();refreshPreview();
+}
+
+if(TOKEN)start();
+</script>
+</body>
+</html>
