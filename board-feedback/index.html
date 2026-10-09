@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לוח שיח יוסף — הצבעה והערכה</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1a38">
+<link rel="icon" href="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;700&family=Suez+One&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1a38;--navy2:#12244a;--gold:#d4af37;--goldL:#f3d774;--cream:#f8f4e8;--ink:#12244a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'David Libre',serif;background:linear-gradient(180deg,#0b1a38,#071229);color:#e8e2d4;min-height:100vh;padding:14px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-family:'Suez One',serif;text-align:center;color:var(--goldL);font-size:clamp(20px,5vw,30px)}
+.sub{text-align:center;color:#cbb98a;font-size:15px;margin:4px 0 14px}
+.card{background:rgba(18,36,74,.65);border:1px solid rgba(212,175,55,.35);border-radius:16px;padding:14px;margin-bottom:14px}
+.card h2{font-family:'Suez One',serif;color:var(--goldL);font-size:19px;margin-bottom:8px}
+.preview{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1px solid rgba(212,175,55,.4);margin-bottom:10px;background:#071229}
+.preview iframe{position:absolute;top:0;left:0;width:1920px;height:1080px;border:0;transform-origin:0 0;pointer-events:none}
+.stars{display:flex;gap:6px;justify-content:center;margin:6px 0;direction:ltr}
+.stars button{font-size:30px;background:none;border:none;color:#3a4a6e;cursor:pointer;transition:.15s;line-height:1}
+.stars button.on{color:var(--goldL);text-shadow:0 0 12px rgba(243,215,116,.6)}
+.stars button:hover{transform:scale(1.15)}
+.star-lbl{text-align:center;font-size:14px;color:#cbb98a;min-height:18px}
+textarea{width:100%;background:rgba(7,18,41,.7);border:1px solid rgba(212,175,55,.3);border-radius:10px;color:#e8e2d4;padding:10px;font-family:'David Libre',serif;font-size:16px;resize:vertical;min-height:56px}
+input[type=text]{width:100%;background:rgba(7,18,41,.7);border:1px solid rgba(212,175,55,.3);border-radius:10px;color:#e8e2d4;padding:10px 12px;font-family:'David Libre',serif;font-size:16px}
+.primary{display:block;width:100%;padding:14px;margin-top:16px;font-family:'Suez One',serif;font-size:20px;color:#071229;background:linear-gradient(135deg,#f8e7b0,#d4af37);border:none;border-radius:12px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.primary:disabled{opacity:.55;cursor:default}
+.msg{text-align:center;margin-top:12px;font-size:17px;min-height:24px}
+.msg.ok{color:#8fe3a8}.msg.err{color:#ff9d9d}
+.ailon{position:fixed;top:10px;left:12px;font-family:'Suez One',serif;font-size:13px;color:rgba(212,175,55,.7);letter-spacing:2px;text-decoration:none}
+.tiny{text-align:center;color:#8a94ab;font-size:12px;margin-top:8px}
+/* results mode */
+.res-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stat{flex:1;min-width:140px;background:rgba(18,36,74,.65);border:1px solid rgba(212,175,55,.35);border-radius:14px;padding:12px;text-align:center}
+.stat .n{font-family:'Suez One',serif;font-size:28px;color:var(--goldL)}
+.fb-item{background:rgba(18,36,74,.55);border-right:3px solid var(--gold);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:16px}
+.fb-item .who{color:#cbb98a;font-size:13px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<a class="ailon" href="https://lior-ailon.github.io/ailon-task-apps/">AILON</a>
+<div class="wrap">
+
+  <!-- מצב הצבעה -->
+  <div id="voteView">
+    <h1>הצבעה והערכה — לוח שיח יוסף</h1>
+    <div class="sub">שני העמודים של הלוח החדש. צופים, מדרגים, ואם יש הערה — כותבים 🙂</div>
+
+    <div class="card">
+      <label style="font-size:15px;color:#cbb98a">השם שלך (רשות)</label>
+      <input type="text" id="voter" placeholder="למשל: שלום הגבאי">
+    </div>
+
+    <div class="card">
+      <h2>עמוד 1 · זמני היום ודף יומי</h2>
+      <div class="preview"><iframe id="f1" loading="lazy" title="עמוד 1"></iframe></div>
+      <div class="stars" data-page="day"></div>
+      <div class="star-lbl" data-lbl="day"></div>
+      <textarea id="c1" placeholder="הערה על עמוד זה (רשות)"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>עמוד 2 · שיעורים וברכת השנה</h2>
+      <div class="preview"><iframe id="f2" loading="lazy" title="עמוד 2"></iframe></div>
+      <div class="stars" data-page="comm"></div>
+      <div class="star-lbl" data-lbl="comm"></div>
+      <textarea id="c2" placeholder="הערה על עמוד זה (רשות)"></textarea>
+    </div>
+
+    <button class="primary" id="send">שליחת ההערכה</button>
+    <div class="msg" id="msg"></div>
+    <div class="tiny">הלוח נתרם לעילוי נשמת השמות שיסופקו · בית כנסת שיח יוסף נתיבות</div>
+  </div>
+
+  <!-- מצב תוצאות -->
+  <div id="resView" class="hidden">
+    <h1>תוצאות ההערכה</h1>
+    <div class="sub" id="resSub"></div>
+    <div class="res-stats" id="resStats"></div>
+    <div id="resList"></div>
+    <button class="primary" id="refresh">רענון</button>
+  </div>
+
+</div>
+<script>
+const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/shulApi';
+const BOARD='https://lior-ailon.github.io/ailon-task-apps/beit-knesset/?shul=shach-yosef&p=';
+const LBL={1:'לא בסדר',2:'חסר',3:'בסדר',4:'טוב מאוד',5:'מעולה! השאירו ככה'};
+const state={day:0,comm:0};
+
+function scalePreviews(){
+  document.querySelectorAll('.preview').forEach(pv=>{
+    const f=pv.querySelector('iframe');
+    f.style.transform='scale('+(pv.clientWidth/1920)+')';
+  });
+}
+function buildStars(el,page){
+  for(let i=1;i<=5;i++){
+    const b=document.createElement('button');
+    b.textContent='★';b.dataset.v=i;
+    b.onclick=()=>{
+      state[page]=i;
+      el.querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.v<=i));
+      const lbl=document.querySelector('[data-lbl='+page+']');
+      if(lbl)lbl.textContent=LBL[i];
+    };
+    el.appendChild(b);
+  }
+}
+buildStars(document.querySelector('[data-page=day]'),'day');
+buildStars(document.querySelector('[data-page=comm]'),'comm');
+
+document.getElementById('f1').src=BOARD+'panel-day';
+document.getElementById('f2').src=BOARD+'panel-community';
+window.addEventListener('resize',scalePreviews);
+document.fonts.ready.then(scalePreviews);scalePreviews();
+
+document.getElementById('send').onclick=async()=>{
+  const msg=document.getElementById('msg');
+  if(!state.day&&!state.comm){msg.textContent='בחרו לפחות דירוג אחד בכוכבים';msg.className='msg err';return;}
+  const voter=document.getElementById('voter').value.trim();
+  const jobs=[];
+  if(state.day)jobs.push({page:'day',rating:state.day,comment:document.getElementById('c1').value.trim()});
+  if(state.comm)jobs.push({page:'comm',rating:state.comm,comment:document.getElementById('c2').value.trim()});
+  const btn=document.getElementById('send');btn.disabled=true;btn.textContent='שולח...';
+  try{
+    for(const j of jobs){
+      const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'add_feedback',shul_code:'shach-yosef',page:j.page,rating:j.rating,comment:j.comment,voter})});
+      const d=await r.json();
+      if(!d.success)throw new Error(d.message||'שגיאה');
+    }
+    msg.textContent='תודה רבה! ההערכה נשלחה 🙏';msg.className='msg ok';
+    document.querySelectorAll('.stars button').forEach(b=>b.classList.remove('on'));
+    state.day=0;state.comm=0;
+    document.querySelectorAll('textarea').forEach(t=>t.value='');
+    document.querySelectorAll('.star-lbl').forEach(l=>l.textContent='');
+  }catch(e){msg.textContent='לא הצלחנו לשלוח: '+e.message;msg.className='msg err';}
+  btn.disabled=false;btn.textContent='שליחת ההרה';
+  btn.textContent='שליחת ההערכה';
+};
+
+// מצב תוצאות: ?mode=results (דורש התחברות lior)
+const params=new URLSearchParams(location.search);
+if(params.get('mode')==='results'){
+  document.getElementById('voteView').classList.add('hidden');
+  document.getElementById('resView').classList.remove('hidden');
+  let TOKEN=localStorage.getItem('fb.tok')||'';
+  const api=async body=>{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({...body,session_token:TOKEN})});
+    return r.json();
+  };
+  const loadResults=async()=>{
+    const d=await api({action:'get_feedbacks',shul_code:'shach-yosef'});
+    if(!d.success){loginFlow();return;}
+    render(d.items||[]);
+  };
+  const loginFlow=async()=>{
+    const u=prompt('שם משתמש (lior)');if(!u)return;
+    const p=prompt('סיסמה');if(!p)return;
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'login',username:u,password:p})});
+    const d=await r.json();
+    if(!d.success){alert('התחברות נכשלה');return;}
+    TOKEN=d.token;localStorage.setItem('fb.tok',TOKEN);
+    loadResults();
+  };
+  const render=items=>{
+    const names={day:'עמוד 1 · זמני היום',comm:'עמוד 2 · שיעורים וברכת השנה'};
+    const stats=document.getElementById('resStats');
+    stats.innerHTML='';
+    ['day','comm'].forEach(pg=>{
+      const arr=items.filter(i=>i.page===pg);
+      const avg=arr.length?(arr.reduce((s,i)=>s+i.rating,0)/arr.length).toFixed(1):'—';
+      stats.innerHTML+='<div class="stat"><div style="color:#cbb98a;font-size:14px">'+names[pg]+'</div><div class="n">'+avg+' ★</div><div style="color:#8a94ab;font-size:13px">'+arr.length+' מדרגים</div></div>';
+    });
+    const list=document.getElementById('resList');
+    list.innerHTML=items.length?'':'<div style="text-align:center;color:#8a94ab">אין עדיין הערכות</div>';
+    items.slice().reverse().forEach(i=>{
+      if(!i.comment&&i.rating==null)return;
+      const d=new Date(i.ts||'');
+      list.innerHTML+='<div class="fb-item">'+(i.comment?i.comment+' ':'')+'<span style="color:var(--goldL)">'+'★'.repeat(i.rating||0)+'</span><div class="who">'+(i.user_identifier||'אנונימי')+' · '+names[i.page]+' · '+(isNaN(d.getTime())?'':d.toLocaleDateString('he-IL'))+'</div></div>';
+    });
+    document.getElementById('resSub').textContent='סה״כ '+items.length+' הערכות';
+  };
+  document.getElementById('refresh').onclick=loadResults;
+  loadResults();
+}
+</script>
+</body>
+</html>
