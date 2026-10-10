@@ -22,6 +22,8 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 #dirBtn,#newBtn{padding:10px 12px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-weight:bold;cursor:pointer;flex-shrink:0;font-size:14px}
 #newBtn:active{background:#0d9488}
 #langSel{padding:10px 8px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-weight:bold;cursor:pointer;flex-shrink:0;font-size:14px;max-width:96px}
+#convBtn{padding:10px 12px;border:0;border-radius:12px;background:#334155;color:#e2e8f0;font-weight:bold;cursor:pointer;flex-shrink:0;font-size:16px}
+#convBtn.on{background:#14b8a6;color:#04201d}
 #bigov{position:fixed;inset:0;background:#000;display:none;z-index:20;flex-direction:column}
 #bigov.on{display:flex}
 #bigtext{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:clamp(30px,10vw,80px);font-weight:bold;line-height:1.25;color:#5eead4;overflow:auto}
@@ -67,6 +69,7 @@ main{flex:1;display:flex;flex-direction:column;padding:10px;max-width:820px;marg
 <option value="en">לאנגלית</option>
 <option value="it">לאיטלקית</option>
 </select>
+<button id="convBtn" title="מצב שיחה חיה" onclick="toggleConv()">🗣</button>
 </div>
 <div id="feed"><span class="dim">התמליל והתרגום יופיעו כאן...</span></div>
 <div class="actions">
@@ -98,7 +101,7 @@ let TARGET=(()=>{const t=localStorage.getItem('lcTarget');
  if(t)return t;const d=localStorage.getItem('lcDir');return d==='he2en'?'en':'he'})()
 function flagOf(t){return t==='he'?'🇮🇱':t==='it'?'🇮🇹':'🇬🇧'}
 let ctx=null,stream=null,proc=null,micSrc=null,gain=null,recording=false;
-let acc=[],accSamples=0,wakeLock=null,keepAlive=null;
+let acc=[],accSamples=0,silSamples=0,wakeLock=null,keepAlive=null,CONV=false;
 const QUEUE=[];let inflight=0,ratePauseUntil=0;
 const WAVSTORE={}; // מקטעים בטיפול — לניסיון חוזר
 let state=load();
@@ -120,7 +123,10 @@ function setRec(v){document.getElementById('mic').classList.toggle('rec',v);vu.c
 // ---------- target language ----------
 function applyTarget(){
  document.getElementById('langSel').value=TARGET;
- document.getElementById('miclabel').textContent=TARGET==='he'?
+ const pair=TARGET==='he'?'en':TARGET,pairHe=pair==='it'?'איטלקית':'אנגלית';
+ document.getElementById('miclabel').textContent=CONV?
+  ('🗣 מצב שיחה חיה: עברית ⇄ '+pairHe+'. כל דובר מתורגם אוטומטית — שתיקה של שנייה סוגרת משפט והתרגום מופיע.'):
+  TARGET==='he'?
   'לחץ ודבר. כל 15 שניות הדיבור מתומלל ומתורגם לעברית (כל שפה שידברו).':
   TARGET==='it'?
   'לחץ ודבר. התרגום יוצג באיטלקית — לשיחות עם מקומיים.':
@@ -129,6 +135,14 @@ function changeTarget(v){
  if(recording)stopMic();
  TARGET=v;localStorage.setItem('lcTarget',TARGET);
  newSession();applyTarget()}
+function toggleConv(){
+ if(recording)stopMic();
+ CONV=!CONV;
+ newSession();applyMode()}
+function applyMode(){
+ document.getElementById('convBtn').classList.toggle('on',CONV);
+ ['qBtn','chatBtn','archBtn'].forEach(id=>document.getElementById(id).style.display=CONV?'none':'');
+ applyTarget()}
 
 // ---------- sessions ----------
 function newSession(){
@@ -156,10 +170,16 @@ async function startMic(){
   if(!recording)return;
   const d=e.inputBuffer.getChannelData(0);
   acc.push(new Float32Array(d));accSamples+=d.length;
+  let sum=0;for(let i=0;i<d.length;i++)sum+=d[i]*d[i];
+  const rms=Math.sqrt(sum/d.length);
   updateVU(d);
-  if(accSamples>=ctx.sampleRate*CHUNK_SEC)flushChunk(false)};
+  if(CONV){
+   if(rms<0.004)silSamples+=d.length;else silSamples=0;
+   if(accSamples>8000&&silSamples>=ctx.sampleRate*1.2)flushChunk(false);
+   else if(accSamples>=ctx.sampleRate*8)flushChunk(false)}
+  else if(accSamples>=ctx.sampleRate*CHUNK_SEC)flushChunk(false)};
  micSrc.connect(proc);proc.connect(gain);gain.connect(ctx.destination);
- acc=[];accSamples=0;recording=true;setRec(true);renderSegs()}
+ acc=[];accSamples=0;silSamples=0;recording=true;setRec(true);renderSegs()}
 
 function stopMic(){
  recording=false;
@@ -184,7 +204,7 @@ function updateVU(d){
 // ---------- WAV encode + send ----------
 function flushChunk(final){
  const samples=mergeAcc();
- acc=[];accSamples=0;
+ acc=[];accSamples=0;silSamples=0;
  if(!samples.length)return;
  let sum=0;for(let i=0;i<samples.length;i++)sum+=samples[i]*samples[i];
  if(Math.sqrt(sum/samples.length)<0.003)return; // שקט — לא שולחים
@@ -232,7 +252,7 @@ function pump(){
 
 function postChunk(seg){
  return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
-  body:JSON.stringify({audio:WAVSTORE[seg.id],target:TARGET})})
+  body:JSON.stringify({audio:WAVSTORE[seg.id],target:CONV?('auto:'+(TARGET==='he'?'en':TARGET)):TARGET})})
  .then(r=>r.json())
  .then(d=>{
   if(d.success&&(d.t||d.tr)){seg.src=d.t;seg.tr=d.tr;seg.pend=false;delete WAVSTORE[seg.id]}
@@ -260,7 +280,7 @@ function failSeg(seg){
 function renderSegs(){
  const c=cur();
  const pend=c.segs.filter(s=>s.pend).length,done=c.segs.filter(s=>!s.pend).length;
- status.textContent=recording?('🔴 מקליט · '+done+' תורגמו'+(pend?' · '+pend+' בתמלול':'')):(pend?'⏳ מתמלל '+pend+' מקטעים...':'כבוי');
+ status.textContent=CONV?'🗣 שיחה חיה':(recording?('🔴 מקליט · '+done+' תורגמו'+(pend?' · '+pend+' בתמלול':'')):(pend?'⏳ מתמלל '+pend+' מקטעים...':'כבוי'));
  feed.innerHTML='';
  if(!c.segs.length){feed.innerHTML='<span class="dim">התמליל והתרגום יופיעו כאן...</span>';return}
  c.segs.forEach(s=>{
@@ -269,7 +289,7 @@ function renderSegs(){
   if(s.pend)d.innerHTML=t+'<div class="src"><span class="dim">🎙️ ...מתמלל (ניסיון '+(s.tries+1)+')</span></div>';
   else d.innerHTML=t+
    '<div class="src" dir="auto">'+esc(s.src)+'</div>'+
-   '<div class="tr '+(s.fail?'fail':'')+'" dir="auto">'+(s.fail?esc(s.tr):flagOf(TARGET)+' '+esc(s.tr))+'</div>';
+   '<div class="tr '+(s.fail?'fail':'')+'" dir="auto">'+(s.fail?esc(s.tr):(CONV?'🗣 ':'')+flagOf(TARGET)+' '+esc(s.tr))+'</div>';
   feed.appendChild(d)});
  feed.scrollTop=feed.scrollHeight;
  updateBig()}
@@ -371,5 +391,5 @@ function closeOv(){document.getElementById('ov').classList.remove('on')}
 (function(){const c=cur();
  c.segs=c.segs.filter(s=>!s.pend);
  if(c.segs.length)renderSegs();
- applyTarget()})();
+ applyMode()})();
 </script></body></html>
