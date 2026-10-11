@@ -863,6 +863,19 @@ function collectData(status){
   };
 }
 
+// ===== SharePoint R&D sync (background) =====
+async function pushToSharepoint(reportId,data){
+  try{
+    const kind=document.getElementById('excelTemplate')?.value||'bakery';
+    const tpl=await fetch(`./templates/${kind}.xlsx?v=4.2`);
+    if(!tpl.ok)return;
+    const blob=await BakeryXlsxExporter.build(await tpl.arrayBuffer(),data,kind);
+    const b64=await new Promise(done=>{const fr=new FileReader();fr.onload=()=>done(fr.result.split(',')[1]);fr.readAsDataURL(blob);});
+    fetch(API_BASE+'/bakeryReportSync',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({reportId,kind,xlsxBase64:b64,photos:data.photos||[],report:data})}).catch(()=>{});
+  }catch(e){/* סנכרון שקט ברקע */}
+}
+
 function saveDraft(){doSave('draft','טיוטה נשמרה ✓');}
 function submitReport(){
   if(!val('projectName')){alert('נא למלא שם פרויקט');return;}
@@ -883,6 +896,7 @@ function doSave(status,msg){
     if(res.success){
       currentReportId=res.id;
       lockApprovedFields();
+      pushToSharepoint(res.id,data);
       updateStatusBadge(status);
       m.textContent=msg;m.classList.add('show');
       setTimeout(()=>m.classList.remove('show'),3000);
