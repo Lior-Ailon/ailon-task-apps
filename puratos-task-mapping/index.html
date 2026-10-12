@@ -240,9 +240,10 @@ function updateProgress(){
 
 function ailonRateLimit(){
   const last=localStorage.getItem('ptm_last_submit');
-  if(last && Date.now()-Number(last)<20000){showToast('⏳ רגע... נסו שוב בעוד כ-20 שניות');return false;}
-  localStorage.setItem('ptm_last_submit',String(Date.now()));return true;
+  if(last && Date.now()-Number(last)<20000){showToast('⏳ נשלח כבר — אם לא קיבלתם אישור, המתינו 20 שניות ונסו שוב');return false;}
+  return true;
 }
+function ailonMarkSubmitted(){localStorage.setItem('ptm_last_submit',String(Date.now()));}
 
 async function submitForm(){
   if(!ailonRateLimit())return;
@@ -262,6 +263,7 @@ async function submitForm(){
     const res=await fetch(`${API}/submitTaskMapping`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const result=await res.json();
     if(result.success){
+      ailonMarkSubmitted();
       document.getElementById('successMsg').style.display='block';
       window.scrollTo({top:0,behavior:'smooth'});
       showToast('✅ נשלח בהצלחה ל-IT');
