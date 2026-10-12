@@ -1,5 +1,5 @@
 /* לוח הקהילה — בית הכנסת שיח יוסף, נתיבות | AILON Task v1.2.0 */
-const VERSION = '1.2.2';
+const VERSION = '1.2.3';
 const RAD = Math.PI / 180, DAY = 86400000, J0 = 2440587.5, J2000 = 2451545;
 const $ = s => document.querySelector(s);
 
@@ -1078,7 +1078,28 @@ async function fullRefresh() {
   if (curPanel >= PANELS.length) showPanel(0);
 }
 
+/* ---------- רענון אוטומטי כשמתפרסמת גרסה חדשה (בדיקה כל 5 דקות) + ניקוי מטמון עם ?refresh=1 ---------- */
+async function wipeCaches() {
+  try {
+    if ('caches' in window) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
+    if (navigator.serviceWorker) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); }
+  } catch (e) {}
+}
+async function checkNewVersion() {
+  try {
+    const r = await fetch('index.html?_=' + Date.now(), { cache: 'no-store' });
+    const m = (await r.text()).match(/app\.js\?v=([0-9.]+)/);
+    const cur = (document.querySelector('script[src*="app.js"]').getAttribute('src').match(/v=([0-9.]+)/) || [])[1];
+    if (m && cur && m[1] !== cur) { await wipeCaches(); location.reload(true); }
+  } catch (e) {}
+}
+
 (async function main() {
+  if (new URLSearchParams(location.search).get('refresh')) {
+    await wipeCaches();
+    const u = new URL(location.href); u.searchParams.delete('refresh'); location.replace(u.toString()); return;
+  }
+  setInterval(checkNewVersion, 5 * 60 * 1000);
   await initHebcal();
   await loadKitzur();
   await fullRefresh();

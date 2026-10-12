@@ -76,6 +76,7 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
   <div id="userBar">
     <span id="hello"></span>
     <button class="btn-sec" onclick="openPwModal()">שינוי סיסמה</button>
+    <button class="btn-sec" onclick="clearCacheReload()">🔄 ניקוי מטמון ורענון</button>
     <button class="btn-sec" onclick="doLogout()">התנתקות</button>
   </div>
   <div id="shulList"></div>
@@ -198,5 +199,14 @@ button{cursor:pointer;border:none;border-radius:10px;padding:12px 22px;font-size
   </div>
 </div>
 <script src="app.js?v=1.0.2"></script>
+<script>
+async function clearCacheReload(){
+  try{
+    if('caches' in window){ const ks=await caches.keys(); await Promise.all(ks.map(k=>caches.delete(k))); }
+    if(navigator.serviceWorker){ const rs=await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r=>r.unregister())); }
+  }catch(e){}
+  const u=new URL(location.href); u.searchParams.set('_r',Date.now()); location.replace(u.toString());
+}
+</script>
 </body>
 </html>
