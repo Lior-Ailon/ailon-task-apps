@@ -1,5 +1,5 @@
 /* לוח הקהילה — בית הכנסת שיח יוסף, נתיבות | AILON Task v1.2.0 */
-const VERSION = '1.2.0';
+const VERSION = '1.2.1';
 const RAD = Math.PI / 180, DAY = 86400000, J0 = 2440587.5, J2000 = 2451545;
 const $ = s => document.querySelector(s);
 
@@ -244,11 +244,16 @@ function hebInfo(date, tz) {
     } catch (e) {}
 
     const m = hd.getMonth(), d = hd.getDate();
-    const winter = (m === 8 && d >= 7) || m > 8 || (m === 1 && d < 15);
-    info.talGeshem = winter ? 'משיב הרוח ומוריד הגשם' : 'מוריד הטל';
-    info.vetTal = winter ? 'ותן טל ומטר לברכה' : 'ותן ברכה';
+    /* משיב הרוח ומוריד הגשם — ממוסף של שמיני עצרת (כ״ב בתשרי) עד מוסף של פסח; ותן טל ומטר — מז׳ במרחשון (מנהג ארץ ישראל) */
+    const geshemSeason = (m === 7 && d >= 22) || (m > 7 && m < 14) || (m === 1 && d < 15);
+    const vetalSeason = (m === 8 && d >= 7) || (m > 8 && m < 14) || (m === 1 && d < 15);
+    info.talGeshem = geshemSeason ? 'משיב הרוח ומוריד הגשם' : 'מוריד הטל';
+    info.vetTal = vetalSeason ? 'ותן טל ומטר לברכה' : 'ותן ברכה';
     info.yaale = (d === 1 || d === 30);
-    info.talTransition = (m === 1 && d === 15) || (m === 8 && d === 7);
+    info.talTransition = (m === 7 && d === 22) || (m === 8 && d === 7) || (m === 1 && d === 15);
+    info.talNewAdd = (m === 7 && d === 22) ? 'משיב הרוח ומוריד הגשם'
+      : (m === 8 && d === 7) ? 'ותן טל ומטר לברכה'
+      : (m === 1 && d === 15) ? 'מוריד הטל · ותן ברכה' : '';
     return info;
   } catch (e) { console.warn('hebInfo error', e); return null; }
 }
@@ -812,7 +817,7 @@ function renderStatic() {
     const banner = $('#tgBanner');
     if (INFO.talTransition) {
       banner.style.display = 'block';
-      banner.textContent = '★ החל מהיום בתפילת העמידה: ' + INFO.talGeshem + ' ★';
+      banner.textContent = '★ החל מהיום בתפילת העמידה: ' + (INFO.talNewAdd || INFO.talGeshem) + ' ★';
     } else banner.style.display = 'none';
     if (INFO.omer) {
       $('#omerBox').style.display = 'block';
@@ -859,8 +864,8 @@ const LASHON_LAWS = [
   'אם שמעת לשון הרע — השתדל לשנות את הנושא, ובלב שלם דון את חברך לכף זכות.',
 ];
 function lashonOfDay() {
-  const doy = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / DAY);
-  return LASHON_LAWS[doy % LASHON_LAWS.length];
+  const k = INFO ? INFO.hd.abs() : Math.floor(Date.now() / DAY);
+  return LASHON_LAWS[k % LASHON_LAWS.length];
 }
 
 function renderZmanim() {
@@ -946,7 +951,9 @@ function renderHalachaCards() {
   const dated = hdKey ? (S.halachot || {})[hdKey] : null;
   if (dated) picks.push(dated);
   if (hal.length) {
-    const idx = halIdx % hal.length;
+    /* רוטציה יומית לפי התאריך העברי — כל המאגר מסתובב, מתחלף בשקיעה */
+    const base = INFO ? INFO.hd.abs() : Math.floor(Date.now() / DAY);
+    const idx = base % hal.length;
     picks.push(hal[idx], hal[(idx + 1) % hal.length]);
   }
   const uniq = [...new Set(picks)].filter(Boolean).slice(0, 2);
@@ -1023,7 +1030,6 @@ function showPanel(i) {
   curPanel = ((i % ps.length) + ps.length) % ps.length;
   ps.forEach((p, k) => p.classList.toggle('active', k === curPanel));
   const cur = ps[curPanel];
-  if (cur && cur.id === 'panel-halacha' && S) { halIdx += 2; renderHalachaCards(); }
 }
 
 async function fullRefresh() {
@@ -1032,7 +1038,10 @@ async function fullRefresh() {
   document.documentElement.dataset.theme = S.theme || 'kotel-gold';
   const now = new Date();
   Z = zmanimFor(now, S);
-  INFO = hebInfo(now, S.tz);
+  /* התאריך העברי מתחלף בשקיעה של אותו היום — לא בחצות (הנחיית ליאור 12.10.26) */
+  let hebNow = now;
+  if (Z && Z.shkiya && now >= Z.shkiya) hebNow = new Date(now.getTime() + DAY);
+  INFO = hebInfo(hebNow, S.tz);
   NEXT = nextMinyan(now, S, INFO, Z);
   buildDynamicPanels();
   buildDuo();
