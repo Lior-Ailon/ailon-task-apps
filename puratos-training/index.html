@@ -162,33 +162,12 @@
         <input type="text" id="courseProvider" placeholder="לדוגמה: John Bryce, האוניברסיטה הפתוחה, פנימי">
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>הערכת עלות (₪)</label>
-          <input type="number" id="costEstimate" placeholder="0" min="0" step="50">
-        </div>
-        <div class="form-group">
-          <label>מספר משתתפים</label>
-          <input type="number" id="numParticipants" value="1" min="1" max="100">
-        </div>
+      <div class="form-group">
+        <label>הערכת עלות (₪)</label>
+        <input type="number" id="costEstimate" placeholder="0" min="0" step="50">
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>עדיפות</label>
-          <div class="select-wrapper">
-            <select id="priority">
-              <option value="גבוהה">🔴 גבוהה — דחוף</option>
-              <option value="בינונית" selected>🟡 בינונית</option>
-              <option value="נמוכה">🟢 נמוכה — כדאי</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>תאריך יעד</label>
-          <input type="date" id="targetDate">
-        </div>
-      </div>
+
 
       <div class="form-group">
         <label>קישור לקורס / אתר הספק</label>
@@ -201,6 +180,7 @@
       </div>
 
       <button class="submit-btn" id="submitBtn" onclick="submitRequest()">שלח בקשת הדרכה</button>
+      <p style="text-align:center;margin-top:18px;font-size:14px;color:#64748b;">🙏 תודה על שיתוף הפעולה</p>
     </div>
   </div>
 
@@ -309,9 +289,6 @@ async function submitRequest() {
     target_employees: targetEmp,
     course_provider: document.getElementById("courseProvider").value,
     cost_estimate: parseFloat(document.getElementById("costEstimate").value) || 0,
-    num_participants: parseInt(document.getElementById("numParticipants").value) || 1,
-    priority: document.getElementById("priority").value,
-    target_date: document.getElementById("targetDate").value,
     course_link: document.getElementById("courseLink").value,
     justification: document.getElementById("justification").value,
   };
