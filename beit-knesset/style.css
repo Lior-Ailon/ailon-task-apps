@@ -682,3 +682,25 @@ header,#main,footer{position:relative;z-index:1}
   #shulName{font-size:clamp(26px,8vw,48px)}
   #shulDedication{font-size:clamp(15px,4.2vw,26px)}
 }
+
+
+/* ═══ v1.2.2 — ברכת השנה בשורה אחת גדולה + פרשה מוגדלת ═══ */
+#blessStrip{
+  margin:1vh clamp(6px,1.5vw,24px) 0;padding:1.2vh 2vw;
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.6vh 1.6vw;
+  background:rgba(8,14,32,.55);border:1px solid rgba(212,175,55,.45);border-radius:14px;
+  box-shadow:inset 0 0 0 2px rgba(212,175,55,.12);text-align:center;
+}
+#blessStrip .bs-title{font-family:'Suez One','David Libre',serif;color:var(--gold-light,#f3d774);
+  font-size:clamp(20px,2.4vw,42px);white-space:nowrap}
+#blessStrip .bs-names{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.3vh 1.1vw}
+#blessStrip .bless-name{font-family:'David Libre',serif;font-weight:900;color:#f4eedd;
+  font-size:clamp(20px,2.5vw,46px);white-space:nowrap}
+#blessStrip .bs-dot{color:var(--gold,#d4af37);font-size:clamp(12px,1.2vw,22px)}
+#blessStrip .bs-sub{flex-basis:100%;color:#cbb98a;font-size:clamp(13px,1.3vw,22px)}
+
+#parsha{font-size:clamp(24px,2.9vw,50px) !important;letter-spacing:.02em;
+  text-shadow:0 2px 10px rgba(0,0,0,.6),0 0 18px rgba(var(--glow),.35)}
+#hebDate{font-size:clamp(18px,1.9vw,32px) !important}
+
+.halacha-card .hal-src{display:block;margin-top:.8vh;font-size:.7em;color:var(--gold-light,#f3d774);opacity:.85}

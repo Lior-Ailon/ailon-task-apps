@@ -1,5 +1,5 @@
 /* לוח הקהילה — בית הכנסת שיח יוסף, נתיבות | AILON Task v1.2.0 */
-const VERSION = '1.2.1';
+const VERSION = '1.2.2';
 const RAD = Math.PI / 180, DAY = 86400000, J0 = 2440587.5, J2000 = 2451545;
 const $ = s => document.querySelector(s);
 
@@ -139,6 +139,15 @@ const HEB_MONTHS = ['תשרי', 'חשוון', 'כסלו', 'טבת', 'שבט', '�
   'סיון', 'תמוז', 'אב', 'אלול'];
 const monthName = (m, leap) => m === 13 ? 'אדר ב׳' : (m === 12 && leap) ? 'אדר א׳' : HEB_MONTHS[(m > 6 ? m - 7 : m + 5)];
 
+/* ---------- מאגר ההלכות: קיצור שולחן ערוך (ספריא, נחלת הכלל) ---------- */
+let KITZUR = [];
+async function loadKitzur() {
+  try {
+    const r = await fetch('kitzur.json?v=1.2.2');
+    KITZUR = await r.json();
+  } catch (e) { console.warn('kitzur.json לא נטען', e); }
+}
+
 async function initHebcal() {
   try { H = await import('https://cdn.jsdelivr.net/npm/@hebcal/core@6/+esm'); }
   catch (e) { console.warn('hebcal לא נטען', e); }
@@ -164,6 +173,11 @@ function toGematria(n) {
   let out = '';
   for (const [ch, v] of map) while (n >= v) { out += ch; n -= v; }
   return out || 'א';
+}
+
+function toGematriaSiman(n) {
+  if (n >= 200) return 'ר' + (n > 200 ? toGematria(n - 200) : '');
+  return toGematria(n);
 }
 
 function dafYomiFor(abs) {
@@ -956,7 +970,14 @@ function renderHalachaCards() {
     const idx = base % hal.length;
     picks.push(hal[idx], hal[(idx + 1) % hal.length]);
   }
-  const uniq = [...new Set(picks)].filter(Boolean).slice(0, 2);
+  /* קיצור שולחן ערוך — מתקדם שני כרטיסים ליום לפי התאריך העברי (מתחלף בשקיעה) */
+  const kBase = INFO ? INFO.hd.abs() : Math.floor(Date.now() / DAY);
+  const kitzurPicks = KITZUR.length
+    ? [0, 1].map(i => { const c = KITZUR[(kBase * 2 + i) % KITZUR.length];
+        return c.t + ' <span class="hal-src">(קיצור שו״ע, סימן ' + toGematriaSiman(c.s) + ')</span>'; })
+    : [];
+  const manual = [...new Set(picks)].filter(Boolean);
+  const uniq = (kitzurPicks.length ? kitzurPicks : manual).slice(0, 2);
   const box = $('#halachaCards');
   if (box) box.innerHTML = uniq.map(h =>
     `<div class="halacha-card">${h}</div>`).join('') ||
@@ -1005,10 +1026,10 @@ function buildDuo() {
       </div>`).join('') : '<div class="comm-empty">ניתן לעריכה במסך הניהול</div>') + '</div></div>';
   if (E.length) html += `<div class="comm-col"><h3>אירועי הקהילה</h3>` +
     E.map(e => `<div class="ev-d"><div class="ev-t">${e.date ? fmtE(e.date) : ''}</div><div class="ev-x">${e.title}</div></div>`).join('') + '</div>';
-  if (B.length) html += `<div class="comm-col comm-bless"><h3>ברכת השנה</h3>
-      <div class="bless-names-d">${B.map(n => `<div class="bless-name">${n}</div>`).join('')}</div>
-      <div class="bless-sub">המתפללים יבואו עליהם ברכת השנה</div></div>`;
   html += '</div>';
+  if (B.length) html += `<div id="blessStrip"><span class="bs-title">ברכת השנה</span>
+      <span class="bs-names">${B.map(n => `<span class="bless-name">${n}</span>`).join('<span class="bs-dot">✦</span>')}</span>
+      <span class="bs-sub">המתפללים יבואו עליהם ברכת השנה</span></div>`;
   comm.innerHTML = html;
 }
 
@@ -1059,6 +1080,7 @@ async function fullRefresh() {
 
 (async function main() {
   await initHebcal();
+  await loadKitzur();
   await fullRefresh();
   // פרמטר ?p=panel-xxx — קיבוע מסך בודד לתצוגה מוקדמת
   const forcePanel = new URLSearchParams(location.search).get('p');
@@ -1073,7 +1095,7 @@ async function fullRefresh() {
   }
   setInterval(tick, 1000);
   setInterval(fullRefresh, 60000);
-  const panelSecs = Math.max(3, (S.board || {}).panel_seconds || 14);
+  const panelSecs = Math.max(3, (S.board || {}).panel_seconds || 12);
   if (!forcePanel) setInterval(() => showPanel(curPanel + 1), panelSecs * 1000);
   document.addEventListener('click', () => showPanel(curPanel + 1));
   document.addEventListener('keydown', e => {
