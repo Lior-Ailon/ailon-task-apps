@@ -45,6 +45,13 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
 .coming-soon.show{display:block}
 @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
 .open-note{margin-top:16px;font-size:13px;color:var(--soft)}
+/* ===== מה מקבלים כל שבוע ===== */
+.get-card{margin-top:22px;background:#fff;border-radius:28px;padding:clamp(20px,4vw,30px);box-shadow:0 14px 34px rgba(157,93,229,.12);border:3px solid #fff}
+.get-card h3{font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.get-item{display:flex;gap:14px;align-items:flex-start;padding:10px 0}
+.get-item .em{font-size:26px;flex-shrink:0}
+.get-item b{display:block;font-size:clamp(15px,2.6vw,17px)}
+.get-item span{font-size:14px;color:var(--soft)}
 /* ===== שאלות לשולחן שבת ===== */
 .shabbat-card{margin-top:22px;background:linear-gradient(135deg,#ffffff,#fffbe8);border-radius:28px;padding:clamp(20px,4vw,30px);box-shadow:0 14px 34px rgba(255,209,102,.22);border:3px solid #fff}
 .shabbat-card h3{font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -52,6 +59,15 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
 .shabbat-card ol{padding-inline-start:22px;line-height:2;font-size:clamp(15px,2.6vw,17px)}
 .share-btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;background:var(--teal);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:15px;padding:12px 26px;border-radius:40px;cursor:pointer;box-shadow:0 8px 20px rgba(6,214,160,.35);text-decoration:none}
 .share-btn:active{transform:scale(.96)}
+/* ===== המלצות ===== */
+.reco-card{margin-top:22px;background:#fff;border-radius:28px;padding:clamp(18px,4vw,26px);box-shadow:0 12px 30px rgba(76,201,240,.15);border:3px solid #fff}
+.reco-card blockquote{font-size:clamp(15px,2.6vw,17px);line-height:1.8;font-style:italic}
+.reco-card .who{margin-top:8px;font-size:14px;color:var(--soft)}
+/* ===== הצטרפות ===== */
+.join-card{margin-top:22px;text-align:center;background:linear-gradient(135deg,#3d3a4a,#57516b);color:#fff;border-radius:28px;padding:clamp(20px,4vw,32px)}
+.join-card h3{font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);margin-bottom:8px}
+.join-card p{font-size:clamp(14px,2.4vw,16px);opacity:.85;margin-bottom:14px}
+.join-btn{display:inline-block;background:var(--sun);color:var(--ink);font-weight:900;text-decoration:none;font-size:16px;padding:12px 30px;border-radius:40px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
 /* ===== כרטיס היכרות אישי וחם ===== */
 .about-card{margin-top:26px;background:linear-gradient(135deg,#ffffff,#f0fbff);border-radius:34px;padding:clamp(24px,5vw,40px);box-shadow:0 18px 44px rgba(76,201,240,.14);border:3px solid #fff}
 .about-card h2{font-family:'Varela Round',sans-serif;font-size:clamp(20px,4vw,26px);margin-bottom:14px;display:flex;align-items:center;gap:10px}
@@ -60,11 +76,6 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
 .about-card .hello .nm{font-family:'Varela Round',sans-serif;font-size:20px}
 .about-card .hello .rl{font-size:14px;color:var(--soft)}
 .about-card p{font-size:clamp(15px,2.6vw,17px);line-height:1.8;color:var(--ink)}
-/* ===== הצטרפות (מנוי קבוצה) ===== */
-.join-card{margin-top:22px;text-align:center;background:linear-gradient(135deg,#3d3a4a,#57516b);color:#fff;border-radius:28px;padding:clamp(20px,4vw,32px)}
-.join-card h3{font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);margin-bottom:8px}
-.join-card p{font-size:clamp(14px,2.4vw,16px);opacity:.85;margin-bottom:14px}
-.join-btn{display:inline-block;background:var(--sun);color:var(--ink);font-weight:900;text-decoration:none;font-size:16px;padding:12px 30px;border-radius:40px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
 /* דסקטופ */
 @media(min-width:820px){
   .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:start}
@@ -97,16 +108,30 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
         <div class="open-note">כל פרק נפתח בניגון ״אשר בחר בנו״ 🎵</div>
       </div>
 
+      <!-- מה מקבלים כל שבוע -->
+      <div class="get-card">
+        <h3>🎁 מה מקבלים כל שבוע?</h3>
+        <div class="get-item"><div class="em">🎧</div><div><b>סיפור מוקלט לפרשת השבוע</b><span>בקול חם ואישי, שילדים ירצו לשמוע שוב ושוב</span></div></div>
+        <div class="get-item"><div class="em">🕯️</div><div><b>עלון שאלות לשולחן השבת</b><span>שאלות ופעילות שמעשירות את האווירה בבית</span></div></div>
+        <div class="get-item"><div class="em">💬</div><div><b>הסיפור מגיע ישר לוואטסאפ</b><span>בקבוצה ייחודית למנויים — בלי לחפש שום דבר</span></div></div>
+      </div>
+
       <!-- שאלות לשולחן שבת -->
       <div class="shabbat-card">
         <h3>🕯️ שאלות לשולחן שבת</h3>
         <p class="hint2">אחרי הסיפור — תנו לילדים במה להרשים את המשפחה:</p>
         <ol>
           <li>מה הכי אהבתם בסיפור?</li>
-          <li>מה אותו דמות יכלה לעשות אחרת?</li>
+          <li>מה אותה דמות יכלה לעשות אחרת?</li>
           <li>מה למדנו לשבוע הקרוב?</li>
         </ol>
         <a class="share-btn" id="shareBtn" href="#">💬 שתפו את הסיפור בקבוצה</a>
+      </div>
+
+      <!-- המלצות -->
+      <div class="reco-card">
+        <blockquote>"הילדים מחכים לסיפור כל שבוע. הליכה לישון הפכה לזמן שהם הכי אוהבים."</blockquote>
+        <div class="who">— אמא לארבעה, אשקלון (דוגמה להמלצה — תועלף בהמלצה אמיתית)</div>
       </div>
 
       <!-- הצטרפות -->
@@ -155,7 +180,6 @@ btn.addEventListener('click',()=>{
     audio.paused?audio.play():audio.pause();
   }
 });
-// שיתוף בקבוצות — על פי מודל "שותפים לחזון"
 const url=location.href.split('?')[0].split('#')[0];
 document.getElementById('shareBtn').href='https://wa.me/?text='+encodeURIComponent('סיפור חדש לילדים לקראת השבת 🌙✨ '+url);
 </script>
