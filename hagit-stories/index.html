@@ -168,13 +168,22 @@ const introLine=document.getElementById('introLine');
 const comingSoon=document.getElementById('comingSoon');
 const btn=document.getElementById('playBtn');
 let started=false;
+function noAudio(){
+  introLine.classList.add('show');
+  comingSoon.classList.add('show');
+  btn.innerHTML='<span class="ic">🌙</span> הסיפור בדרך — בקרוב';
+  btn.disabled=true;btn.style.opacity=.55;btn.style.cursor='default';
+  btn.onclick=null;
+}
+if(audio.error||audio.networkState===audio.NETWORK_NO_SOURCE){noAudio();}
+audio.addEventListener('error',()=>{ if(!started) noAudio(); });
 btn.addEventListener('click',()=>{
   if(!started){
     started=true;
     introLine.classList.add('show');
     comingSoon.classList.add('show');
     btn.innerHTML='<span class="ic">🎵</span> מנגן את הפתיחה…';
-    audio.play().catch(()=>{ setTimeout(()=>btn.innerHTML='<span class="ic">▶</span> להאזין לסיפור',2500); });
+    audio.play().catch(()=>noAudio());
     audio.onended=()=>{btn.innerHTML='<span class="ic">▶</span> להאזין שוב';};
   }else{
     audio.paused?audio.play():audio.pause();
