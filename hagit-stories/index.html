@@ -51,6 +51,21 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
 .sub-strip .lbl{display:block;font-size:11px;color:var(--sun);margin-bottom:4px;letter-spacing:1px}
 .episode-photo img{border-radius:50%}
 .story-card p.hl{background:linear-gradient(90deg,#fff3f8,#fde8ff);border-inline-start:4px solid var(--coral);border-radius:12px;padding:10px 14px}
+.act-card{margin-top:22px;background:#fff;border-radius:28px;padding:clamp(20px,4vw,32px);box-shadow:0 16px 40px rgba(61,58,74,.1);border:3px solid #fff}
+.act-tabs{display:flex;gap:8px;margin-bottom:16px}
+.act-tab{flex:1;background:linear-gradient(135deg,#fff3f8,#fdf0ff);border:2px solid #ffe3ef;color:var(--ink);font-weight:700;font-size:14px;padding:10px 6px;border-radius:16px;cursor:pointer;text-align:center}
+.act-tab.on{border-color:var(--coral);background:linear-gradient(135deg,#ffe3ec,#ffd9f0)}
+.act-body{display:none}.act-body.on{display:block;animation:pop .3s}
+.trivia-q{background:#fff8fc;border:2px solid #ffe3ef;border-radius:18px;padding:14px 16px;margin-bottom:12px}
+.trivia-q .qt{font-weight:700;font-size:15.5px;margin-bottom:10px}
+.ans-btn{background:var(--purple);color:#fff;border:none;font-family:inherit;font-weight:900;font-size:14px;padding:8px 18px;border-radius:30px;cursor:pointer}
+.ans-btn:hover{filter:brightness(1.1)}
+.trivia-a{display:none;background:#f4fff9;border:2px solid #bfe9d0;border-radius:14px;padding:10px 14px;margin-top:10px;font-size:14.5px;font-weight:600;color:#1b7a3f}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:420px;margin:0 auto}
+.mem-card{aspect-ratio:1;border-radius:16px;background:linear-gradient(135deg,var(--purple),#7a3fd1);display:flex;align-items:center;justify-content:center;font-size:clamp(26px,6vw,38px);cursor:pointer;transition:transform .2s;user-select:none}
+.mem-card.open{background:linear-gradient(135deg,#fff3f8,#fdf0ff);transform:rotateY(180deg)}
+.mem-card.done{background:linear-gradient(135deg,#d6f5e3,#bfe9d0);cursor:default;opacity:.85}
+.mem-score{text-align:center;font-weight:800;margin-top:14px;font-size:16px}
 /* ===== מה מקבלים כל שבוע ===== */
 .get-card{margin-top:22px;background:#fff;border-radius:28px;padding:clamp(20px,4vw,30px);box-shadow:0 14px 34px rgba(157,93,229,.12);border:3px solid #fff}
 .get-card h3{font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);margin-bottom:14px;display:flex;align-items:center;gap:10px}
@@ -181,6 +196,26 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
       <div class="reco-card">
         <blockquote>"הילדים מחכים לסיפור כל שבוע. הליכה לישון הפכה לזמן שהם הכי אוהבים."</blockquote>
         <div class="who">— אמא לארבעה, אשקלון (דוגמה להמלצה — תועלף בהמלצה אמיתית)</div>
+      </div>
+
+      <!-- פעילות לסוף הפרשה -->
+      <div class="act-card" id="actCard">
+        <h3 style="font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);margin-bottom:14px;text-align:center">🎈 משחק לסוף הפרשה</h3>
+        <div class="act-tabs">
+          <div class="act-tab on" onclick="actTab(0,this)">❓ טריוויה</div>
+          <div class="act-tab" onclick="actTab(1,this)">🃏 משחק זיכרון</div>
+        </div>
+        <div class="act-body on" id="act0">
+          <div class="trivia-q"><div class="qt">1. למה אברהם הסכים שלוט יבחר ראשון את המקום?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">כי שלום בין אחים היה חשוב לו יותר מכל הרכוש! "כי אנשים אחים אנחנו"</div></div>
+          <div class="trivia-q"><div class="qt">2. איזה אזור לוט בחר?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">את ככר הירדן — ירוק, עם הרבה מים ודשא לכבשים</div></div>
+          <div class="trivia-q"><div class="qt">3. מה הטעות שלוט עשה בבחירה?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">הוא הסתכל רק על הדשא והמים — ושכח לבדוק מי השכנים: אנשי סדום, רעים וחטאים</div></div>
+          <div class="trivia-q"><div class="qt">4. מה היה אצל אברהם ולוט שגרם לריב בין הרועים?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">הרבה מאוד כבשים ובקר — עד שהארץ לא הספיקה לכולם!</div></div>
+          <div class="trivia-q"><div class="qt">5. מה למדנו מאברהם?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">שכדאי לוותר כדי שיהיה שלום — ושצריך לבדוק לא רק מה יש במקום, אלא גם מי נמצא שם</div></div>
+        </div>
+        <div class="act-body" id="act1">
+          <div class="mem-grid" id="memGrid"></div>
+          <div class="mem-score" id="memScore">מצאו 8 זוגות מהסיפור! 🎯</div>
+        </div>
       </div>
 
       <!-- תוכניות מנוי -->
