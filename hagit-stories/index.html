@@ -66,10 +66,14 @@ body{background:var(--bg);min-height:100vh;color:#fff;}
   </div>
 </div>
 
+<audio id="introAudio" src="intro.mp3" preload="auto"></audio>
 <script>
-// הפתיח הקבוע — מוצג בלחיצה על הכפתור הראשי (חוק היק: פעולה ראשית אחת)
+// פתיח קבוע: ניגון "אשר בחר בנו" -> שורת הפתיחה הקבועה -> הסיפור
+const audio=document.getElementById('introAudio');
+const introLine=document.getElementById('introLine');
 document.getElementById('playBtn').addEventListener('click',()=>{
-  document.getElementById('introLine').style.display='block';
+  introLine.style.display='block';
+  audio.play().catch(()=>{ /* אם intro.mp3 עדיין לא הועלה — ממשיכים בלי מוזיקה */ });
 });
 </script>
 </body>
