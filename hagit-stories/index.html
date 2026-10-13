@@ -45,6 +45,12 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
 .coming-soon.show{display:block}
 @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
 .open-note{margin-top:16px;font-size:13px;color:var(--soft)}
+.sub-strip{display:none;margin:18px auto 0;max-width:560px;background:#3d3a4a;color:#fff;border-radius:18px;padding:14px 20px;text-align:center;font-size:clamp(15px,2.8vw,19px);line-height:1.7;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.sub-strip.show{display:block;animation:pop .4s}
+.sub-strip .now{font-weight:700}
+.sub-strip .lbl{display:block;font-size:11px;color:var(--sun);margin-bottom:4px;letter-spacing:1px}
+.episode-photo img{border-radius:50%}
+.story-card p.hl{background:linear-gradient(90deg,#fff3f8,#fde8ff);border-inline-start:4px solid var(--coral);border-radius:12px;padding:10px 14px}
 /* ===== מה מקבלים כל שבוע ===== */
 .get-card{margin-top:22px;background:#fff;border-radius:28px;padding:clamp(20px,4vw,30px);box-shadow:0 14px 34px rgba(157,93,229,.12);border:3px solid #fff}
 .get-card h3{font-family:'Varela Round',sans-serif;font-size:clamp(18px,3.4vw,22px);margin-bottom:14px;display:flex;align-items:center;gap:10px}
@@ -103,13 +109,14 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
     <div>
       <!-- כרטיס פרק השבוע -->
       <div class="episode-card">
-        <div class="episode-photo">📖</div>
+        <div class="episode-photo"><img id="epImg" src="ep1.png" alt="אברהם ולוט" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
         <div class="parasha-badge" id="parashaBadge">פרשת לך לך</div>
         <div class="program-name" id="epTitle">אברהם ולוט נפרדים</div>
         <div class="episode-name" id="epName">פרק 1 · אברהם ולוט נפרדים</div>
         <button class="play-btn" id="playBtn"><span class="ic">▶</span> להאזין לסיפור</button>
         <div class="intro-line" id="introLine">שלום ילדים אהובים 👋<br>בואו נקשיב היום לסיפור ממש מיוחד, ממש מעניין…</div>
         <div class="coming-soon" id="comingSoon">🚧 הפרק הראשון עוד לא הועלה — בקרוב!</div>
+        <div class="sub-strip" id="subStrip"><span class="lbl">✨ הסיפור זורם</span><span class="now" id="subNow"></span></div>
         <div class="open-note">כל פרק נפתח בניגון ״אשר בחר בנו״ 🎵</div>
       </div>
 
@@ -192,36 +199,59 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
 
 <audio id="introAudio" src="intro.mp3" preload="auto"></audio>
 <script>
-const audio=document.getElementById('introAudio');
-const introLine=document.getElementById('introLine');
-const comingSoon=document.getElementById('comingSoon');
-const btn=document.getElementById('playBtn');
-let started=false;
-function noAudio(){
-  introLine.classList.add('show');
-  comingSoon.classList.add('show');
-  btn.innerHTML='<span class="ic">📖</span> לקרוא את הסיפור';
-  btn.style.background='linear-gradient(135deg,#9b5de5,#7a3fd1)';
-  btn.style.boxShadow='0 14px 30px rgba(157,93,229,.42)';
-  btn.onclick=null;
-  btn.addEventListener('click',()=>{document.getElementById('storyCard').scrollIntoView({behavior:'smooth'});});
+// פיצול הסיפור לשורות כתוביות לפי פסקאות הטקסט
+const storyParas=[...document.querySelectorAll('.story-card p')].map(p=>p.textContent.trim()).filter(t=>t.length>0);
+const subs=[];storyParas.forEach(p=>{const parts=p.split(/(?<=[.!?…])\s+/);parts.forEach(x=>{if(x.trim().length>2)subs.push(x.trim())})});
+let si=0,subTimer=null,timerKind=null;
+const strip=document.getElementById('subStrip'),nowEl=document.getElementById('subNow');
+const storyCard=document.getElementById('storyCard');
+function showSub(i){
+  if(i>=subs.length){stopSubs(true);return;}
+  si=i;
+  nowEl.textContent=subs[i];
+  if(!strip.classList.contains('show'))strip.classList.add('show');
+  // הדגשת הפסקה המתאימה בגוף הסיפור
+  document.querySelectorAll('.story-card p').forEach(p=>p.classList.remove('hl'));
+  let acc=0;const ps=document.querySelectorAll('.story-card p');
+  for(let k=0;k<ps.length;k++){const t=ps[k].textContent.trim();const n=(t.match(/(?<=[.!?…])\s+/g)||[]).length;acc+=n;if(acc>i){ps[k].classList.add('hl');break}}
+  const ms=Math.max(2200,subs[i].length*90); // קצב קריאה ~11 מילישניות לתו
+  subTimer=setTimeout(()=>showSub(si+1),ms);
 }
-if(audio.error||audio.networkState===audio.NETWORK_NO_SOURCE){noAudio();}
-audio.addEventListener('error',()=>{ if(!started) noAudio(); });
-btn.addEventListener('click',()=>{
-  if(!started){
-    started=true;
-    introLine.classList.add('show');
-    comingSoon.classList.add('show');
-    btn.innerHTML='<span class="ic">🎵</span> מנגן את הפתיחה…';
-    audio.play().catch(()=>noAudio());
-    audio.onended=()=>{btn.innerHTML='<span class="ic">▶</span> להאזין שוב';};
-  }else{
-    audio.paused?audio.play():audio.pause();
-  }
+function stopSubs(done){
+  clearTimeout(subTimer);subTimer=null;timerKind=null;
+  strip.classList.remove('show');
+  document.querySelectorAll('.story-card p').forEach(p=>p.classList.remove('hl'));
+  btn.innerHTML=done?'<span class="ic">📖</span> לקרוא שוב את הסיפור':'<span class="ic">📖</span> לקרוא את הסיפור';
+}
+const audio=document.getElementById('introAudio');
+const btn=document.getElementById('playBtn');
+// האזנה: אם יש קובץ אודיו — ניגון עם כתוביות מסונכרנות לפי משך
+audio.addEventListener('canplaythrough',()=>{
+  btn.innerHTML='<span class="ic">▶</span> להאזין לסיפור';
+  btn.onclick=null;
+  btn.addEventListener('click',listenClick);
+},{once:true});
+let listening=false;
+function listenClick(){
+  if(audio.paused){audio.play();listening=true;btn.innerHTML='<span class="ic">⏸</span> עוצרים רגע…';}
+  else{audio.pause();listening=false;clearTimeout(subTimer);strip.classList.remove('show');btn.innerHTML='<span class="ic">▶</span> ממשיכים להאזין';}
+}
+audio.addEventListener('timeupdate',()=>{
+  const d=audio.duration||1;
+  const pos=audio.currentTime/d; // מיקום יחסי
+  const target=Math.min(subs.length-1,Math.floor(pos*subs.length));
+  if(target!==si&&audio.paused===false){clearTimeout(subTimer);showSub(target);}
 });
-const url=location.href.split('?')[0].split('#')[0];
-document.getElementById('shareBtn').href='https://wa.me/?text='+encodeURIComponent('סיפור חדש לילדים לקראת השבת 🌙✨ '+url);
+audio.addEventListener('error',()=>{
+  // אין הקלטה עדיין — מצב קריאה מודרכת
+  btn.innerHTML='<span class="ic">📖</span> קריאה מודרכת';
+  btn.addEventListener('click',()=>{
+    if(timerKind==='read')  {stopSubs(false);return;}
+    storyCard.scrollIntoView({behavior:'smooth',block:'start'});
+    timerKind='read';showSub(0);
+    btn.innerHTML='<span class="ic">⏸</span> עוצרים רגע…';
+  });
+},{once:true});
 </script>
 </body>
 </html>
