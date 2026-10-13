@@ -142,12 +142,6 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <div class="radio-group" id="painGroup"></div>
 </div>
 
-<div class="section">
-<div class="section-title"><div class="section-icon">🚀</div> 7. האם תרצה/י שהפעולה שלך תיבחר לפיילוט אוטומציה?</div>
-<div class="section-desc">שאלה חדשה — פיילוט ראשון ייבחר מבין ההגשות</div>
-<div class="radio-group" id="pilotGroup"></div>
-</div>
-
 <div class="submit-section">
 <button class="btn-submit" id="submitBtn" onclick="submitForm()">שמור ושלח 📤</button>
 <p style="margin-top:12px;color:var(--text-muted);font-size:13.5px;">הנתונים נשמרים + נשלחים אוטומטית למייל של IT</p>
@@ -168,7 +162,6 @@ const ACTIONS=["שולח/ת מיילים דומים בכל פעם","מעתיק/�
 const FREQ=["כמה פעמים ביום","פעם ביום","כמה פעמים בשבוע","פעם בשבוע","כמה פעמים בחודש","פעם בחודש","לעיתים רחוקות יותר"];
 const TIME=["פחות מ-5 דקות","5 עד 15 דקות","15 עד 30 דקות","30 עד 60 דקות","שעה עד שעתיים","יותר משעתיים"];
 const PAIN=["הזמן שהיא לוקחת","נטייה לטעויות","שעמום וחוסר עניין","תלות באנשים אחרים"];
-const PILOT=["כן, אשמח! 🚀","אולי, תלוי בפרטים","לא בשלב הזה"];
 
 function buildCheckboxes(gridId,opts,name){
   const g=document.getElementById(gridId);
@@ -195,7 +188,6 @@ buildCheckboxes('actionsGrid',ACTIONS,'act');
 buildRadios('freqGroup',FREQ,'freq');
 buildRadios('timeGroup',TIME,'time');
 buildRadios('painGroup',PAIN,'pain');
-buildRadios('pilotGroup',PILOT,'pilot');
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
 function picked(name){return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i=>i.value);}
@@ -213,7 +205,6 @@ function updateProgress(){
     !!radioVal('freq'),
     !!radioVal('time'),
     !!radioVal('pain'),
-    !!radioVal('pilot')
   ];
   const done=checks.filter(Boolean).length;
   const pct=Math.round(done/checks.length*100);
@@ -239,7 +230,7 @@ async function submitForm(){
     other_actions:document.getElementById('otherActions').value.trim(),
     task_to_shorten:document.getElementById('taskToShorten').value.trim(),
     frequency:radioVal('freq'),time_per_run:radioVal('time'),
-    pain_reason:radioVal('pain'),pilot_willingness:radioVal('pilot')
+    pain_reason:radioVal('pain')
   };
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='שולח...';
   try{
