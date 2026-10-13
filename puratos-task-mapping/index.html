@@ -137,24 +137,13 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 </div>
 
 <div class="section">
-<div class="section-title"><div class="section-icon">👥</div> 6. האם עובדים נוספים מבצעים פעולה דומה?</div>
-<div class="radio-group" id="sharedGroup"></div>
-</div>
-
-<div class="section">
-<div class="section-title"><div class="section-icon">🛠️</div> 7. באילו מערכות או כלים הפעולה מבוצעת?</div>
-<div class="section-desc">שאלה חדשה — עוזרת לנו לדעת מול מה אפשר לחבר אוטומציה · אפשר לבחור יותר מתשובה אחת</div>
-<div class="options-grid" id="systemsGrid"></div>
-</div>
-
-<div class="section">
-<div class="section-title"><div class="section-icon">😤</div> 8. מה הכי מפריע לך בפעולה הזו?</div>
+<div class="section-title"><div class="section-icon">😤</div> 6. מה הכי מפריע לך בפעולה הזו?</div>
 <div class="section-desc">שאלה חדשה — מסייעת לנו לתעדף מה מקצרים קודם</div>
 <div class="radio-group" id="painGroup"></div>
 </div>
 
 <div class="section">
-<div class="section-title"><div class="section-icon">🚀</div> 9. האם תרצה/י שהפעולה שלך תיבחר לפיילוט אוטומציה?</div>
+<div class="section-title"><div class="section-icon">🚀</div> 7. האם תרצה/י שהפעולה שלך תיבחר לפיילוט אוטומציה?</div>
 <div class="section-desc">שאלה חדשה — פיילוט ראשון ייבחר מבין ההגשות</div>
 <div class="radio-group" id="pilotGroup"></div>
 </div>
@@ -176,10 +165,8 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <script>
 const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
 const ACTIONS=["שולח/ת מיילים דומים בכל פעם","מעתיק/ה נתונים ממייל לקובץ","מעתיק/ה נתונים מקובץ אחד לקובץ אחר","מעדכן/ת טבלאות Excel באופן ידני","מאחד/ת מידע ממספר קבצים","מכין/ה דוח קבוע","בודק/ת נתונים ומחפש/ת חריגות או טעויות","שולח/ת תזכורות לאנשים","עוקב/ת אחרי משימות פתוחות","קורא/ת הרבה מיילים ומחפש/ת בהם מידע","מסכם/ת פגישות, מיילים או מסמכים","מכין/ה מסמכים או מצגות במבנה שחוזר על עצמו","אוסף/ת מידע ממספר אנשים","שומר/ת ומסדר/ת קבצים או מסמכים","מזין/ה נתונים למערכת","מפיק/ה נתונים ממערכת","פעולה אחרת במחשב"];
-const SYSTEMS=["Outlook / מייל","Excel","ERP / Priority","Power BI","SharePoint / OneDrive","Chromeleon","WhatsApp","מערכת אחרת"];
 const FREQ=["כמה פעמים ביום","פעם ביום","כמה פעמים בשבוע","פעם בשבוע","כמה פעמים בחודש","פעם בחודש","לעיתים רחוקות יותר"];
 const TIME=["פחות מ-5 דקות","5 עד 15 דקות","15 עד 30 דקות","30 עד 60 דקות","שעה עד שעתיים","יותר משעתיים"];
-const SHARED=["כן, עובדים נוספים במחלקה שלי","כן, גם עובדים במחלקות אחרות","לא, רק אני","אני לא יודע/ת"];
 const PAIN=["הזמן שהיא לוקחת","נטייה לטעויות","שעמום וחוסר עניין","תלות באנשים אחרים"];
 const PILOT=["כן, אשמח! 🚀","אולי, תלוי בפרטים","לא בשלב הזה"];
 
@@ -205,10 +192,8 @@ function buildRadios(groupId,opts,name){
   });
 }
 buildCheckboxes('actionsGrid',ACTIONS,'act');
-buildCheckboxes('systemsGrid',SYSTEMS,'sys');
 buildRadios('freqGroup',FREQ,'freq');
 buildRadios('timeGroup',TIME,'time');
-buildRadios('sharedGroup',SHARED,'shared');
 buildRadios('painGroup',PAIN,'pain');
 buildRadios('pilotGroup',PILOT,'pilot');
 
@@ -227,8 +212,6 @@ function updateProgress(){
     !!document.getElementById('taskToShorten').value.trim(),
     !!radioVal('freq'),
     !!radioVal('time'),
-    !!radioVal('shared'),
-    picked('sys').length>0,
     !!radioVal('pain'),
     !!radioVal('pilot')
   ];
@@ -255,8 +238,8 @@ async function submitForm(){
     recurring_actions:picked('act'),
     other_actions:document.getElementById('otherActions').value.trim(),
     task_to_shorten:document.getElementById('taskToShorten').value.trim(),
-    frequency:radioVal('freq'),time_per_run:radioVal('time'),shared_with:radioVal('shared'),
-    systems:picked('sys'),pain_reason:radioVal('pain'),pilot_willingness:radioVal('pilot')
+    frequency:radioVal('freq'),time_per_run:radioVal('time'),
+    pain_reason:radioVal('pain'),pilot_willingness:radioVal('pilot')
   };
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='שולח...';
   try{
