@@ -268,8 +268,7 @@ textarea { resize:vertical; min-height:70px; }
       <div class="form-field full"><label>מטרת הניסוי</label><textarea id="expPurpose" placeholder="תיאור מטרת הניסוי..." style="min-height:60px"></textarea></div>
     </div>
     <div class="form-row">
-      <div class="form-field"><label>שם החוקר/ת</label><select id="researcher"><option value="">בחר...</option><option>ליאור סופר</option><option>עומרי יקירון</option><option>שירה כהן</option><option>מאיר לוי</option><option>נועה אברהם</option><option value="other">אחר...</option></select></div>
-      <div class="form-field" id="researcherOtherWrap" style="display:none"><label>שם ידני</label><input id="researcherOther" placeholder="הזן שם"></div>
+      <div class="form-field"><label>שם החוקר/ת</label><input id="researcher" list="researcherList" placeholder="הקלד או בחר שם..." autocomplete="off"><datalist id="researcherList"><option value="יעל עמר"></option><option value="עדי גולן"></option><option value="נטשה שפטי"></option><option value="ליאור סופר"></option><option value="עומרי יקירון"></option><option value="שירה כהן"></option><option value="מאיר לוי"></option><option value="נועה אברהם"></option></datalist></div>
     </div>
     <!-- Tags -->
     <div class="form-field full" style="margin-top:14px">
@@ -483,9 +482,7 @@ function initState(){
 initState();
 
 // ===== Researcher dropdown =====
-document.getElementById('researcher').addEventListener('change',function(){
-  document.getElementById('researcherOtherWrap').style.display=this.value==='other'?'block':'none';
-});
+
 
 // ===== Tags =====
 function toggleTag(el){
@@ -836,7 +833,7 @@ function collectData(status){
     id:currentReportId,
     projectName:val('projectName'),
     expPurpose:val('expPurpose'),
-    researcher:document.getElementById('researcher').value==='other'?val('researcherOther'):document.getElementById('researcher').value,
+    researcher:val('researcher'),
     approver:val('approver'),
     execDate:val('execDate'),
     updateDate:val('updateDate'),
@@ -1116,6 +1113,7 @@ function clearForm(){
   renderPhotos();
   document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
   document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
+  document.getElementById('approver').value='ד"ר אנה אהרוני';
   document.getElementById('approver').readOnly=true;
   document.getElementById('updateDate').readOnly=true;
   document.getElementById('unlockRow').style.display='none';
@@ -1125,6 +1123,7 @@ function clearForm(){
 // ===== Init =====
 document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
 document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
+document.getElementById('approver').value='ד"ר אנה אהרוני';
 document.getElementById('approver').readOnly=true;
 document.getElementById('updateDate').readOnly=true;
 renderFixedIngs();
