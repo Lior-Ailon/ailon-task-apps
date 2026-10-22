@@ -228,6 +228,7 @@ textarea { resize:vertical; min-height:70px; }
   <div class="header-nav">
     <button class="nav-btn active" onclick="showForm()" id="navForm">📝 טופס ניסוי</button>
     <button class="nav-btn" onclick="showDashboard()" id="navDash">📊 דוחות שמורים</button>
+    <button class="nav-btn" onclick="showDrafts()" id="navDrafts">📝 ריכוז טיוטות</button>
     <span style="flex:1"></span>
     <span class="status-badge status-draft" id="statusBadge">טיוטה</span>
   </div>
@@ -268,7 +269,7 @@ textarea { resize:vertical; min-height:70px; }
       <div class="form-field full"><label>מטרת הניסוי</label><textarea id="expPurpose" placeholder="תיאור מטרת הניסוי..." style="min-height:60px"></textarea></div>
     </div>
     <div class="form-row">
-      <div class="form-field"><label>שם החוקר/ת</label><input id="researcher" list="researcherList" placeholder="הקלד או בחר שם..." autocomplete="off"><datalist id="researcherList"><option value="יעל עמר"></option><option value="עדי גולן"></option><option value="נטשה שפטי"></option><option value="ליאור סופר"></option><option value="עומרי יקירון"></option><option value="שירה כהן"></option><option value="מאיר לוי"></option><option value="נועה אברהם"></option></datalist></div>
+      <div class="form-field"><label>שם החוקר/ת</label><input id="researcher" list="researcherList" placeholder="הקלד או בחר שם..." autocomplete="off"><datalist id="researcherList"><option value="יעל עמר"></option><option value="עדי גולן"></option><option value="נטשה שפטיי"></option><option value="אנה אהרוני"></option></datalist></div>
     </div>
     <!-- Tags -->
     <div class="form-field full" style="margin-top:14px">
@@ -304,6 +305,8 @@ textarea { resize:vertical; min-height:70px; }
       <div class="actions-inline">
         <button class="copy-btn" onclick="copyFromExp1()">📋 העתק מניסוי 1</button>
         <button class="copy-btn" onclick="toggleCompare()">📊 תצוגה משווה</button>
+        <button class="copy-btn" style="background:#e6f6ec;border-color:#0a7d33;color:#0a7d33;font-weight:700" onclick="finishWeighing()">✅ סיום שקילה</button>
+        <span id="weighingBadge"></span>
       </div>
     </div>
     <div class="info-label">חומרי גלם שמשתנים בין הניסויים. העתק מניסוי 1 למילוי מהיר.</div>
@@ -315,6 +318,7 @@ textarea { resize:vertical; min-height:70px; }
       <div class="exp-tab" data-exp="5">ניסוי 5</div>
       <div class="exp-tab" data-exp="6">ניסוי 6</div>
     </div>
+    <div class="info-label" style="margin-top:6px">מספור ניסויים — ניתן לערוך ידנית (המשך מספור בין ימים): <span id="expNumbersStrip"></span></div>
     <div id="varIngContainer"></div>
     <!-- Comparison view -->
     <div id="compareView" style="display:none">
@@ -327,10 +331,13 @@ textarea { resize:vertical; min-height:70px; }
     <div class="card-title">📝 תנאים קבועים — משותף לכל הניסויים</div>
     <div class="section-divider"><span>🥖 הכנת הבצק</span><span class="line"></span></div>
     <div class="process-grid">
-      <div class="form-field"><label>זמן לישה משוער (דקות)</label><input type="number" id="kneadTimeEst" placeholder="דקות"></div>
-      <div class="form-field"><label>טמפ' בצק רצויה (°C)</label><input type="number" id="doughTemp" step="0.1" placeholder="°C"></div>
+      <div class="form-field"><label>זמן לישה משוער (דקות)</label><input type="text" id="kneadTimeEst" dir="ltr" style="direction:ltr;text-align:left" placeholder="לדוגמה: 2+8 (איטית+מהירה)"></div>
+      <div class="form-field"><label>טמפ' בצק רצויה (°C)</label><input type="text" id="doughTemp" dir="ltr" style="direction:ltr;text-align:left" placeholder="טווח, לדוגמה: 24-26"></div>
+      <div class="form-field"><label>טמפ' מים (°C)</label><input type="text" id="waterTemp" dir="ltr" style="direction:ltr;text-align:left" placeholder="°C"></div>
       <div class="form-field"><label>תפיחה ב-Bulk — זמן</label><input id="bulkFerment" placeholder="לדוגמה: 60 דקות"></div>
       <div class="form-field"><label>משקל יחידת בצק (גרם)</label><input type="number" id="doughWeight" step="1" placeholder="גרם"></div>
+      <div class="form-field"><label>עיצוב מאפה</label><input id="pastryShape" placeholder="טקסט חופשי — לדוגמה: כיכר עגולה"></div>
+      <div class="form-field"><label>סוג התבנית</label><input id="moldType" placeholder="טקסט חופשי — לדוגמה: תבנית אלומיניום"></div>
       <div class="form-field full"><label>נתוני מולדר</label><input id="moulder" placeholder=""></div>
     </div>
     <div class="section-divider"><span>🔥 אפייה</span><span class="line"></span></div>
@@ -343,8 +350,8 @@ textarea { resize:vertical; min-height:70px; }
 
   <!-- Variable Process Conditions -->
   <div class="card">
-    <div class="card-title">⚙️ תנאים משתנים — לפי ניסוי</div>
-    <div class="info-label">תנאים שיכולים להשתנות בין הניסויים (זמן לישה בפועל, תפיחה, טמפ' וכו').</div>
+    <div class="card-title">⚙️ תנאים משתנים ומדדי תהליך — לפי ניסוי</div>
+    <div class="info-label">כל המדדים שנמדדים בפועל בכל ניסוי — זמן לישה, טמפ' בצק ומרקם, תפיחה (טמפ', לחות, זמן) ונפח בסוף התפיחה.</div>
     <div class="exp-tabs" id="varCondTabs">
       <div class="exp-tab active" data-exp="1">ניסוי 1</div>
       <div class="exp-tab" data-exp="2">ניסוי 2</div>
@@ -354,21 +361,6 @@ textarea { resize:vertical; min-height:70px; }
       <div class="exp-tab" data-exp="6">ניסוי 6</div>
     </div>
     <div id="varCondContainer"></div>
-  </div>
-
-  <!-- Process Metrics -->
-  <div class="card">
-    <div class="card-title">📊 מדדי תהליך במהלך הניסוי — לפי ניסוי</div>
-    <div class="info-label">תיעוד נפרד לכל ניסוי לצורך השוואה מהירה.</div>
-    <div class="exp-tabs" id="metricsTabs">
-      <div class="exp-tab active" data-exp="1">ניסוי 1</div>
-      <div class="exp-tab" data-exp="2">ניסוי 2</div>
-      <div class="exp-tab" data-exp="3">ניסוי 3</div>
-      <div class="exp-tab" data-exp="4">ניסוי 4</div>
-      <div class="exp-tab" data-exp="5">ניסוי 5</div>
-      <div class="exp-tab" data-exp="6">ניסוי 6</div>
-    </div>
-    <div id="metricsContainer"></div>
   </div>
 
   <!-- Per-experiment baking improver composition annex -->
@@ -413,7 +405,9 @@ textarea { resize:vertical; min-height:70px; }
   <!-- Actions -->
   <div class="actions">
     <button class="btn btn-secondary" onclick="saveDraft()">💾 שמור טיוטה</button>
+    <button class="btn btn-secondary" onclick="saveAsReport()">📋 שמירה בשם</button>
     <button class="btn btn-green" onclick="submitReport()">✓ הגש דו"ח</button>
+    <div class="export-template"><label for="targetFolder">תיקיית יעד (SharePoint)</label><input type="text" id="targetFolder" placeholder="ריק = לפי תאריך הניסוי" style="width:150px;padding:6px;border:1.5px solid var(--gray-200);border-radius:8px"></div>
     <div class="export-template"><label for="excelTemplate">תבנית לייצוא</label>
     <select id="excelTemplate" aria-label="תבנית Excel לייצוא">
       <option value="bakery">Bakery · לחמים</option>
@@ -426,7 +420,7 @@ textarea { resize:vertical; min-height:70px; }
     <button class="btn btn-secondary" onclick="window.print()">🖨️ הדפסה</button>
     <button class="btn btn-secondary" onclick="clearForm()">🗑️ נקה</button>
   </div>
-  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.2</div>
+  <div class="footer-note">Puratos Israel · R&D Bakery · דוח ניסויים דיגיטלי v4.3</div>
 </div>
 
 <!-- ============ DASHBOARD VIEW ============ -->
@@ -445,8 +439,8 @@ textarea { resize:vertical; min-height:70px; }
   </div>
 </div>
 
-<script src="./jszip.min.js?v=4.2"></script>
-<script src="./xlsx-export.js?v=4.2"></script>
+<script src="./jszip.min.js?v=4.3"></script>
+<script src="./xlsx-export.js?v=4.3"></script>
 <script>
 // ===== Constants =====
 const INGREDIENTS=['מים','גלוקוז','דקסטרוזה מונוהידרט','קונספי לי','תמצית ליים','CMC סודיום','אבקת אפור','פוליול','קרופלוס','קמח 90% טחון','קמח 70% טחון','קמח קשה','קמח כוסמין','קמח שיבולת שוער','קמח מלא','קמח רך','Nutralys W','קסנתן גום','שמן פלמה','OVAM 25','GMS 90','SSL3000 Puratos','SC200 ספיר','C-75','P95','Magnasweet','מלטיטול','שמרים טריים','שמרים יבשים','מלח','סוכר','שמן','חמאה','חלב','ביצים','אחר'];
@@ -465,6 +459,8 @@ let currentVarExp=1;
 let currentCondExp=1;
 let currentMetricsExp=1;
 let currentAnnexExp=1;
+let expNumbers=[1,2,3,4,5,6];
+let draftsOnly=false;
 
 // Initialize with defaults
 function initState(){
@@ -713,24 +709,66 @@ function renderCompareTable(){
 function renderVarConditions(expNum){
   const c=document.getElementById('varCondContainer');
   const cond=varConditions[expNum];
+  const m=processMetrics[expNum]||{};
+  const ltr='dir="ltr" style="direction:ltr;text-align:left"';
   c.innerHTML=`<div class="process-grid">
-    <div class="form-field"><label>זמן לישה בפועל (דקות)</label><input type="number" value="${cond.actualKneadTime||''}" oninput="varConditions[${expNum}].actualKneadTime=this.value" placeholder="דקות"></div>
-    <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="number" value="${cond.finalFermentTime||''}" oninput="varConditions[${expNum}].finalFermentTime=this.value" placeholder="דקות"></div>
-    <div class="form-field"><label>טמפ' תפיחה (°C)</label><input type="number" step="0.1" value="${cond.fermentTemp||''}" oninput="varConditions[${expNum}].fermentTemp=this.value" placeholder="°C"></div>
-    <div class="form-field"><label>לחות בתא התפיחה (%)</label><input type="number" value="${cond.fermentHumidity||''}" oninput="varConditions[${expNum}].fermentHumidity=this.value" placeholder="%"></div>
+    <div class="form-field"><label>זמן לישה בפועל (דקות)</label><input type="text" ${ltr} value="${esc(cond.actualKneadTime)||''}" oninput="varConditions[${expNum}].actualKneadTime=this.value" placeholder="לדוגמה: 2+8"></div>
+    <div class="form-field"><label>טמפ' בצק בפועל (°C)</label><input type="text" ${ltr} value="${esc(m.actualDoughTemp)||''}" oninput="processMetrics[${expNum}].actualDoughTemp=this.value" placeholder="°C"></div>
+    <div class="form-field"><label>מרקם הבצק</label><input type="text" value="${esc(m.doughTexture)||''}" oninput="processMetrics[${expNum}].doughTexture=this.value" placeholder="תאר את מרקם הבצק..."></div>
+    <div class="form-field"><label>טמפ' תפיחה (°C)</label><input type="text" ${ltr} value="${esc(cond.fermentTemp)||''}" oninput="varConditions[${expNum}].fermentTemp=this.value" placeholder="°C"></div>
+    <div class="form-field"><label>לחות בתא התפיחה (%)</label><input type="text" ${ltr} value="${esc(cond.fermentHumidity)||''}" oninput="varConditions[${expNum}].fermentHumidity=this.value" placeholder="%"></div>
+    <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="text" ${ltr} value="${esc(cond.finalFermentTime||m.actualFermentTime)||''}" oninput="varConditions[${expNum}].finalFermentTime=this.value;processMetrics[${expNum}].actualFermentTime=this.value" placeholder="דקות"></div>
+    <div class="form-field"><label>נפח ויציבות בסוף התפיחה</label><select onchange="processMetrics[${expNum}].volumeStability=this.value"><option value="">בחר...</option><option ${m.volumeStability==='נפח נמוך — לא יציב'?'selected':''}>נפח נמוך — לא יציב</option><option ${m.volumeStability==='נפח בינוני — יציב חלקית'?'selected':''}>נפח בינוני — יציב חלקית</option><option ${m.volumeStability==='נפח טוב — יציב'?'selected':''}>נפח טוב — יציב</option><option ${m.volumeStability==='נפח גבוה — יציב מאוד'?'selected':''}>נפח גבוה — יציב מאוד</option></select></div>
+    <div class="form-field"><label>סטטוס שקילה</label><input type="text" value="${cond.weighingDone?'✅ שקילה הושלמה':'טרם סומנה'}" readonly style="background:#f8f9fa"></div>
   </div>`;
 }
 
-// ===== Process Metrics =====
-function renderMetrics(expNum){
-  const c=document.getElementById('metricsContainer');
-  const m=processMetrics[expNum];
-  c.innerHTML=`<div class="process-grid">
-    <div class="form-field"><label>טמפ' בצק בפועל (°C)</label><input type="number" step="0.1" value="${m.actualDoughTemp||''}" oninput="processMetrics[${expNum}].actualDoughTemp=this.value" placeholder="°C"></div>
-    <div class="form-field"><label>מרקם הבצק (טקסט חופשי)</label><input type="text" value="${esc(m.doughTexture)||''}" oninput="processMetrics[${expNum}].doughTexture=this.value" placeholder="תאר את מרקם הבצק..."></div>
-    <div class="form-field"><label>זמן תפיחה בפועל (דקות)</label><input type="number" value="${m.actualFermentTime||''}" oninput="processMetrics[${expNum}].actualFermentTime=this.value" placeholder="דקות"></div>
-    <div class="form-field"><label>נפח ויציבות בסוף התפיחה</label><select onchange="processMetrics[${expNum}].volumeStability=this.value"><option value="">בחר...</option><option ${m.volumeStability==='נפח נמוך — לא יציב'?'selected':''}>נפח נמוך — לא יציב</option><option ${m.volumeStability==='נפח בינוני — יציב חלקית'?'selected':''}>נפח בינוני — יציב חלקית</option><option ${m.volumeStability==='נפח טוב — יציב'?'selected':''}>נפח טוב — יציב</option><option ${m.volumeStability==='נפח גבוה — יציב מאוד'?'selected':''}>נפח גבוה — יציב מאוד</option></select></div>
-  </div>`;
+// ===== Weighing control =====
+function finishWeighing(){
+  const exp=currentVarExp;
+  const missing=[];
+  fixedIngs.forEach(ing=>{
+    if(ing.name&&ing.name.trim()&&!ing.weighedByExperiment?.[exp]) missing.push(ing.name+' (קבוע)');
+  });
+  (varIngs[exp]||[]).forEach(ing=>{
+    if(ing.name&&ing.name.trim()&&!ing.weighed) missing.push(ing.name+' (משתנה)');
+  });
+  if(missing.length){
+    alert('לא כל הרכיבים סומנו כנשקלים בניסוי '+exp+':\n\n• '+missing.join('\n• ')+'\n\nסמן את כולם (עמודת נשקל) ואז לחץ שוב.');
+    return;
+  }
+  varConditions[exp]||={};
+  varConditions[exp].weighingDone=true;
+  renderVarConditions(exp);
+  updateWeighingBadge();
+  showMsg('סיום שקילה אושר לניסוי '+exp+' ✓',2500);
+}
+function updateWeighingBadge(){
+  const b=document.getElementById('weighingBadge');
+  if(!b)return;
+  const done=varConditions[currentVarExp]?.weighingDone;
+  b.textContent=done?'✅ שקילת ניסוי '+currentVarExp+' הושלמה':'לא סומן סיום שקילה לניסוי '+currentVarExp;
+  b.style.cssText='font-size:12px;font-weight:600;color:'+(done?'#0a7d33':'#8a6d00')+';background:'+(done?'#e6f6ec':'#fff7dc')+';padding:4px 10px;border-radius:999px';
+}
+
+// ===== Experiment numbering =====
+function renderExpNumbersStrip(){
+  const wrap=document.getElementById('expNumbersStrip');
+  if(!wrap)return;
+  wrap.innerHTML=expNumbers.map((n,i)=>'<input type="text" inputmode="numeric" value="'+esc(String(n))+'" onchange="setExpNumber('+i+',this.value)" aria-label="מספר ניסוי '+(i+1)+'" style="width:36px;padding:3px 5px;margin:0 2px;border:1.5px solid var(--gray-200);border-radius:6px;text-align:center;font-weight:700">').join('');
+}
+function setExpNumber(idx,v){
+  const clean=String(v).replace(/[^\d\-]/g,'');
+  expNumbers[idx]=clean||String(idx+1);
+  renderExpNumbersStrip();
+  renderExpTabsLabels();
+}
+function renderExpTabsLabels(){
+  ['varExpTabs','varCondTabs','annexTabs'].forEach(id=>{
+    document.querySelectorAll('#'+id+' .exp-tab').forEach((tab,i)=>{
+      tab.textContent='ניסוי '+(expNumbers[i]||i+1);
+    });
+  });
 }
 
 // ===== Tab handlers =====
@@ -743,9 +781,8 @@ function setupTabs(tabsId,onChange){
     });
   });
 }
-setupTabs('varExpTabs',e=>{currentVarExp=e;renderVarIngs(e);});
+setupTabs('varExpTabs',e=>{currentVarExp=e;renderVarIngs(e);updateWeighingBadge();});
 setupTabs('varCondTabs',e=>{currentCondExp=e;renderVarConditions(e);});
-setupTabs('metricsTabs',e=>{currentMetricsExp=e;renderMetrics(e);});
 setupTabs('annexTabs',e=>{currentAnnexExp=e;renderAnnex(e);});
 
 // ===== Baking-improver composition annex =====
@@ -845,13 +882,19 @@ function collectData(status){
     fixedConditions:{
       kneadTimeEst:val('kneadTimeEst'),
       doughTemp:val('doughTemp'),
+      waterTemp:val('waterTemp'),
       bulkFerment:val('bulkFerment'),
       doughWeight:val('doughWeight'),
+      pastryShape:val('pastryShape'),
+      moldType:val('moldType'),
       moulder:val('moulder'),
       ovenType:val('ovenType'),
       bakingProgram:val('bakingProgram'),
-      steam:val('steam')
+      steam:val('steam'),
+      expNumbers:expNumbers
     },
+    expNumbers:expNumbers,
+    targetFolder:(val('targetFolder')||'').trim(),
     variableConditions:varConditions,
     processMetrics:processMetrics,
     photos:photos,
@@ -864,7 +907,7 @@ function collectData(status){
 async function pushToSharepoint(reportId,data){
   try{
     const kind=document.getElementById('excelTemplate')?.value||'bakery';
-    const tpl=await fetch(`./templates/${kind}.xlsx?v=4.2`);
+    const tpl=await fetch(`./templates/${kind}.xlsx?v=4.3`);
     if(!tpl.ok)return;
     const blob=await BakeryXlsxExporter.build(await tpl.arrayBuffer(),data,kind);
     const b64=await new Promise(done=>{const fr=new FileReader();fr.onload=()=>done(fr.result.split(',')[1]);fr.readAsDataURL(blob);});
@@ -875,11 +918,26 @@ async function pushToSharepoint(reportId,data){
 
 function saveDraft(){doSave('draft','טיוטה נשמרה ✓');}
 function submitReport(){
-  if(!val('projectName')){alert('נא למלא שם פרויקט');return;}
+  const missing=[];
+  if(!val('projectName').trim())missing.push('שם הפרויקט');
+  if(!val('expPurpose').trim())missing.push('מטרת הניסוי');
+  if(!val('conclusions').trim())missing.push('מסקנות');
+  if(missing.length){alert('לפני הגשת הדו"ח הסופי יש למלא את שדות החובה:\n\n• '+missing.join('\n• '));return;}
   doSave('submitted','הדו"ח הוגש ✓');
+}
+function saveAsReport(){
+  const current=val('projectName')||'';
+  const name=prompt('שמירה בשם — שם הפרויקט לעותק החדש:',current?(current+' — עותק'):'');
+  if(name===null)return;
+  if(!name.trim()){alert('נא להזין שם');return;}
+  document.getElementById('projectName').value=name.trim();
+  currentReportId=null;
+  doSave('draft','נשמר כעותק חדש ✓');
 }
 
 function doSave(status,msg){
+  document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
+  document.getElementById('updateDate').readOnly=true;
   const data=collectData(status);
   const m=document.getElementById('successMsg');
   m.textContent='שומר...';m.classList.add('show');
@@ -923,13 +981,13 @@ async function exportExcel(){
   status.textContent='מכין את הקובץ...';
   try{
     const report=collectData('draft'); // Export must not submit or modify the report.
-    const response=await fetch(`./templates/${kind}.xlsx?v=4.2`);
+    const response=await fetch(`./templates/${kind}.xlsx?v=4.3`);
     if(!response.ok)throw new Error('לא ניתן לטעון את תבנית Excel');
     const blob=await BakeryXlsxExporter.build(await response.arrayBuffer(),report,kind);
     const link=document.createElement('a');
     const url=URL.createObjectURL(blob);
     link.href=url;
-    link.download='דוח_ניסוי_'+(report.projectName||'חדש').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+kind+'_'+(report.execDate||'')+'.xlsx';
+    link.download=(report.projectName||'דוח_ניסוי').replace(/[^\w\u0590-\u05FF\- ]/g,'').trim().replace(/\s+/g,'_')+'_'+(report.execDate||'')+'.xlsx';
     document.body.appendChild(link);
     link.click();link.remove();
     setTimeout(()=>URL.revokeObjectURL(url),60000);
@@ -948,11 +1006,15 @@ async function fetchReports(){
   }catch(e){return [];}
 }
 
-async function showDashboard(){
+async function showDashboard(){draftsOnly=false;await renderDashboardView();}
+async function showDrafts(){draftsOnly=true;await renderDashboardView();}
+async function renderDashboardView(){
   document.getElementById('formView').style.display='none';
   document.getElementById('dashboardView').style.display='block';
   document.getElementById('navForm').classList.remove('active');
-  document.getElementById('navDash').classList.add('active');
+  document.getElementById('navDash').classList.toggle('active',!draftsOnly);
+  document.getElementById('navDrafts').classList.toggle('active',draftsOnly);
+  document.querySelector('#dashboardView .card-title').textContent=draftsOnly?'📝 ריכוז טיוטות':'📊 דוחות שמורים';
   renderDashboard();
 }
 
@@ -970,7 +1032,9 @@ async function renderDashboard(){
   
   let filtered=reports.filter(r=>{
     const name=r.project_name||r.data?.project_name||'';
-    return !filter||name.toLowerCase().includes(filter);
+    const status=r.status||r.data?.status||'draft';
+    const matchFilter=!filter||name.toLowerCase().includes(filter);
+    return matchFilter&&(!draftsOnly||status!=='submitted');
   });
   
   // Group by project if no filter
@@ -1051,9 +1115,14 @@ async function loadReport(id){
     const fc=JSON.parse(r.fixed_conditions||r.data?.fixed_conditions||'{}');
     document.getElementById('kneadTimeEst').value=fc.kneadTimeEst||'';
     document.getElementById('doughTemp').value=fc.doughTemp||'';
+    document.getElementById('waterTemp').value=fc.waterTemp||'';
     document.getElementById('bulkFerment').value=fc.bulkFerment||'';
     document.getElementById('doughWeight').value=fc.doughWeight||'';
+    document.getElementById('pastryShape').value=fc.pastryShape||'';
+    document.getElementById('moldType').value=fc.moldType||'';
     document.getElementById('moulder').value=fc.moulder||'';
+    if(Array.isArray(fc.expNumbers)&&fc.expNumbers.length===6)expNumbers=fc.expNumbers;
+    document.getElementById('targetFolder').value=r.target_folder||r.data?.target_folder||'';
     document.getElementById('ovenType').value=fc.ovenType||'';
     document.getElementById('bakingProgram').value=fc.bakingProgram||'';
     document.getElementById('steam').value=fc.steam||'';
@@ -1063,7 +1132,9 @@ async function loadReport(id){
   renderFixedIngs();
   renderVarIngs(1);
   renderVarConditions(1);
-  renderMetrics(1);
+  renderExpNumbersStrip();
+  renderExpTabsLabels();
+  updateWeighingBadge();
   currentAnnexExp=1;
   document.querySelectorAll('#annexTabs .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
   renderAnnex(1);
@@ -1100,17 +1171,20 @@ function clearForm(){
   initState();
   document.getElementById('excelTemplate').value='bakery';
   currentVarExp=currentCondExp=currentMetricsExp=1;
-  ['varExpTabs','varCondTabs','metricsTabs'].forEach(id=>{
+  ['varExpTabs','varCondTabs'].forEach(id=>{
     document.querySelectorAll('#'+id+' .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
   });
   renderFixedIngs();
   renderVarIngs(1);
   renderVarConditions(1);
-  renderMetrics(1);
   currentAnnexExp=1;
   document.querySelectorAll('#annexTabs .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
   renderAnnex(1);
   renderPhotos();
+  expNumbers=[1,2,3,4,5,6];
+  renderExpNumbersStrip();
+  renderExpTabsLabels();
+  updateWeighingBadge();
   document.getElementById('execDate').value=new Date().toISOString().split('T')[0];
   document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
   document.getElementById('approver').value='ד"ר אנה אהרוני';
@@ -1129,7 +1203,8 @@ document.getElementById('updateDate').readOnly=true;
 renderFixedIngs();
 renderVarIngs(1);
 renderVarConditions(1);
-renderMetrics(1);
+renderExpNumbersStrip();
+updateWeighingBadge();
 renderAnnex(1);
 </script>
 <div id="ailon-loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.3s;"><div style="text-align:center;"><div style="width:40px;height:40px;border:4px solid #CC092F;border-top-color:transparent;border-radius:50%;animation:ailon-spin 1s linear infinite;margin:0 auto 12px;"></div><p style="color:#CC092F;font-family:Heebo,sans-serif;font-weight:600;font-size:14px;">טוען...</p></div></div>

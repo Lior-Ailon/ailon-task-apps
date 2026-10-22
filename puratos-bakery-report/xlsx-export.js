@@ -129,8 +129,11 @@
       ['משקל יחידת בצק',c.doughWeight],['זמן לישה משוער',c.kneadTimeEst],
       ["טמפ' בצק רצויה",c.doughTemp],['תפיחה ב-Bulk',c.bulkFerment],
       ['נתוני מולדר',c.moulder],['סוג תנור',c.ovenType],['תוכנית אפייה',c.bakingProgram],['קיטור',c.steam],
+      ["טמפ' מים",c.waterTemp],['עיצוב מאפה',c.pastryShape],['סוג התבנית',c.moldType],
       ['מספר תמונות מצורפות בדוח המקורי (לא מוטמעות בקובץ Excel)',(report.photos||[]).length || ''],
     ];
+    const nums=report.expNumbers||c.expNumbers||[];
+    nums.forEach((n,i)=>{ if(n!==undefined&&String(n)!==String(i+1)) extras.push([`מספר ניסוי ${i+1}`,n]); });
     for(let i=1;i<=6;i++){
       const v=conditions[i]||{},m=metrics[i]||{};
       for(const [name,value] of Object.entries({...v,...m})) {
