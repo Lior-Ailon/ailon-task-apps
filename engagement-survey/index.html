@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d3b66">
+<title>סקר מחוברות 2026</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d3b66;--navy2:#1a5276;--gold:#f4b41a;--bg:#eef3f8;--card:#fff;--txt:#22303f;--muted:#6b7a8c;--ok:#1e8e5a;--err:#c0392b}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Heebo',system-ui,sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+.wrap{max-width:560px;margin:0 auto;padding:16px;min-height:100vh;display:flex;flex-direction:column}
+header.bar{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:0 0 18px 18px;box-shadow:0 4px 14px rgba(13,59,102,.25)}
+header.bar img{width:52px;height:52px;object-fit:contain;border-radius:12px;background:#fff;padding:4px}
+header.bar .t{color:#fff;font-weight:800;font-size:1.15rem;line-height:1.25}
+header.bar .s{color:#ffd97a;font-size:.8rem;font-weight:600}
+.langbtn{margin-inline-start:auto;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:10px;padding:7px 12px;font-size:.85rem;font-weight:600;cursor:pointer}
+.card{background:var(--card);border-radius:16px;padding:22px 18px;margin-top:16px;box-shadow:0 2px 10px rgba(13,59,102,.08)}
+.hidden{display:none}
+h1{font-size:1.35rem;font-weight:800;color:var(--navy);margin-bottom:10px}
+p.lead{font-size:1rem;line-height:1.6;margin-bottom:8px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:#fff8e1;color:#7a5c00;border:1px solid #f4b41a;border-radius:999px;padding:6px 12px;font-size:.78rem;font-weight:700;margin:8px 0}
+.badge svg{flex:none}
+label.inp{display:block;font-weight:600;font-size:.9rem;margin:14px 0 6px}
+input[type=text]{width:100%;padding:14px;border:2px solid #cdd9e5;border-radius:12px;font-size:1.05rem;text-align:center;letter-spacing:1px;font-weight:600}
+input[type=text]:focus{outline:none;border-color:var(--navy)}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-top:14px;background:var(--navy);color:#fff}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.err{color:var(--err);font-weight:600;text-align:center;margin-top:10px;display:none}
+.info{color:var(--muted);font-size:.85rem;line-height:1.5;margin-top:8px}
+.langs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.lang-opt{padding:16px 10px;border:2px solid #cdd9e5;border-radius:14px;background:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;text-align:center;color:var(--txt)}
+.lang-opt.sel{border-color:var(--navy);background:#eaf2fb;box-shadow:0 0 0 3px rgba(13,59,102,.12)}
+.lang-opt small{display:block;font-weight:400;color:var(--muted);font-size:.72rem;margin-top:2px}
+.intro-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #eef2f6}
+.intro-item:last-child{border:none}
+.intro-item .ic{flex:none;width:26px;height:26px;border-radius:8px;background:#eaf2fb;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.intro-item b{font-size:.88rem}
+.progress{height:7px;background:#e0e8f0;border-radius:99px;overflow:hidden;margin-top:16px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--navy),var(--gold));border-radius:99px;transition:width .25s}
+.qcount{font-size:.8rem;color:var(--muted);font-weight:600;margin-top:8px;text-align:center}
+.stmt{font-size:1.12rem;font-weight:600;line-height:1.55;margin:6px 0 16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px solid #cdd9e5;border-radius:12px;cursor:pointer;background:#fff}
+.opt.sel{border-color:var(--navy);background:#eaf2fb}
+.opt .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.opt span{font-size:.92rem;font-weight:600}
+textarea{width:100%;min-height:88px;padding:12px;border:2px solid #cdd9e5;border-radius:12px;font-family:'Heebo',sans-serif;font-size:.95rem;resize:vertical}
+textarea:focus{outline:none;border-color:var(--navy)}
+.back{background:none;border:none;color:var(--navy);font-weight:700;cursor:pointer;padding:10px 4px;font-size:1rem}
+.thanks{text-align:center;padding:34px 10px}
+.thanks .em{font-size:3.2rem}
+.thanks h1{margin-top:8px}
+.thanks p{color:var(--muted);line-height:1.6;margin-top:8px}
+.spinner{width:18px;height:18px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;display:inline-block;vertical-align:middle;animation:sp .8s linear infinite;margin-inline-end:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+footer{text-align:center;color:var(--muted);font-size:.72rem;padding:18px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <img src="logo.jpg?v=1" alt="logo">
+    <div><div class="t" id="barTitle">סקר מחוברות 2026</div><div class="s" id="barSlogan"></div></div>
+    <button class="langbtn" id="langBtn" onclick="gotoLangSelect()">🌐</button>
+  </header>
+
+  <section id="scrLang">
+    <div class="card">
+      <h1 id="langTitle"></h1>
+      <p class="lead" id="langNote" style="color:var(--muted);font-size:.9rem"></p>
+      <div class="langs" id="langGrid"></div>
+      <button class="btn" id="langGo" onclick="confirmLang()" style="display:none"></button>
+    </div>
+  </section>
+
+  <section id="scrLogin" class="hidden">
+    <div class="card">
+      <h1 id="loginTitle"></h1>
+      <div class="badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a5 5 0 0 1 5 5v2h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg><span id="anonTxt"></span></div>
+      <label class="inp" for="uname" id="userLabel"></label>
+      <input type="text" id="uname" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <p class="info" id="userHelp"></p>
+      <div class="err" id="loginErr"></div>
+      <button class="btn" id="loginBtn" onclick="doLogin()"></button>
+    </div>
+  </section>
+
+  <section id="scrIntro" class="hidden">
+    <div class="card">
+      <h1 id="introTitle"></h1>
+      <p class="lead" id="introOpen"></p>
+      <p class="lead" id="introGoal" style="color:var(--muted);font-size:.92rem"></p>
+      <div class="badge" style="margin-top:14px"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a5 5 0 0 1 5 5v2h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg><span id="anonTxt2" style="font-size:.8rem;line-height:1.4"></span></div>
+      <p style="font-weight:700;margin-top:14px" id="beforeLbl"></p>
+      <div id="introItems"></div>
+      <button class="btn" id="startBtn" onclick="startQuiz()" style="background:var(--ok)"></button>
+    </div>
+  </section>
+
+  <section id="scrQuiz" class="hidden">
+    <div class="card">
+      <div class="progress"><i id="progBar" style="width:0"></i></div>
+      <div class="qcount" id="qCount"></div>
+      <button class="back" id="qBack" onclick="prevQ()">‹</button>
+      <p class="stmt" id="stmtTxt"></p>
+      <div class="opts" id="optWrap"></div>
+    </div>
+  </section>
+
+  <section id="scrOpen" class="hidden">
+    <div class="card">
+      <div class="progress"><i style="width:100%"></i></div>
+      <h1 id="openTitle" style="font-size:1.1rem"></h1>
+      <p class="info" id="openNote"></p>
+      <div id="openWrap"></div>
+      <button class="btn" id="submitBtn" onclick="doSubmit()" style="background:var(--ok)"></button>
+    </div>
+  </section>
+
+  <section id="scrThanks" class="hidden">
+    <div class="card thanks">
+      <div class="em">🎉</div>
+      <h1 id="thTitle"></h1>
+      <p id="thBody"></p>
+      <p class="badge" style="margin-top:16px" id="thAnon"></p>
+    </div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const I18N = {"intro": {"סלוגן": {"he": "הקול שלך מעצב את העתיד שלנו", "en": "Your voice shapes our future", "ru": "Твой голос формирует наше будущее", "ar": "صوتك يساهم في تشكيل مستقبلنا", "hi": "आपकी आवाज़ हमारे भविष्य को आकार देती है", "th": "เสียงของคุณช่วยกำหนดอนาคตของเรา"}, "כותרת": {"he": "ברוכים הבאים לסקר מחוברות 2026", "en": "Welcome to the 2026 Engagement Survey", "ru": "Добро пожаловать в опрос вовлечённости сотрудников 2026", "ar": "مرحبًا بك في استبيان ارتباط الموظفين لعام 2026", "hi": "2026 कर्मचारी जुड़ाव सर्वेक्षण में आपका स्वागत है", "th": "ยินดีต้อนรับสู่แบบสำรวจความผูกพันของพนักงาน ประจำปี 2026"}, "פתיחה": {"he": "תודה שבחרת להשתתף. מילוי הסקר יימשך פחות מ-10 דקות.", "en": "Thank you for taking part. The survey will take less than 10 minutes to complete.", "ru": "Спасибо за участие. Заполнение опроса займёт менее 10 минут.", "ar": "شكرًا لمشاركتك. سيستغرق إكمال الاستبيان أقل من 10 دقائق.", "hi": "भाग लेने के लिए धन्यवाद। सर्वेक्षण पूरा करने में 10 मिनट से कम समय लगेगा।", "th": "ขอขอบคุณที่เข้าร่วม การทำแบบสำรวจนี้ใช้เวลาไม่เกิน 10 นาที"}, "מטרה": {"he": "מטרת הסקר היא להבין טוב יותר את חוויית העבודה שלך ולזהות מה חשוב לשמר ומה כדאי לשפר.", "en": "The purpose of the survey is to better understand your work experience and identify what is important to preserve and what we can improve.", "ru": "Цель опроса — лучше понять ваш опыт работы в компании, определить, что важно сохранить и что стоит улучшить.", "ar": "يهدف الاستبيان إلى فهم تجربة عملك بشكل أفضل، وتحديد ما هو مهم للحفاظ عليه وما الذي يمكننا تحسينه.", "hi": "इस सर्वेक्षण का उद्देश्य आपके कार्य अनुभव को बेहतर ढंग से समझना और यह पहचानना है कि किन चीज़ों को बनाए रखना महत्वपूर्ण है और किनमें सुधार किया जा सकता है।", "th": "วัตถุประสงค์ของแบบสำรวจคือเพื่อทำความเข้าใจประสบการณ์การทำงานของคุณให้ดียิ่งขึ้น และระบุว่าสิ่งใดมีความสำคัญที่ควรรักษาไว้ และสิ่งใดที่เราควรปรับปรุง"}, "לפני שמתחילים": {"he": "לפני שמתחילים, חשוב לנו שתדע:", "en": "Before we begin, there are a few important things we would like you to know:", "ru": "Перед началом мы хотим обратить ваше внимание на несколько важных моментов:", "ar": "قبل أن نبدأ، من المهم أن تعرف ما يلي:", "hi": "शुरू करने से पहले, हम चाहते हैं कि आप कुछ महत्वपूर्ण बातें जानें:", "th": "ก่อนเริ่มต้น เราอยากให้คุณทราบข้อมูลสำคัญดังต่อไปนี้:"}, "דיסקרטיות": {"he": "התשובות חסויות ומטופלות באופן דיסקרטי.", "en": "Your responses are confidential and handled discreetly.", "ru": "Ваши ответы конфиденциальны и обрабатываются с соблюдением принципов конфиденциальности.", "ar": "إجاباتك سرية ويتم التعامل معها بسرية تامة.", "hi": "आपके उत्तर गोपनीय हैं और उन्हें पूरी सावधानी के साथ संभाला जाएगा।", "th": "คำตอบของคุณเป็นความลับและจะได้รับการดูแลอย่างเหมาะสม"}, "הצגת התוצאות": {"he": "לא ניתן לראות תשובות של עובד בודד. התוצאות יוצגו וינותחו ברמת מחלקה בלבד, ורק כאשר יש במחלקה יותר מ-5 עובדים.", "en": "Individual employee responses cannot be viewed. Results will only be presented and analyzed at department level, and only for departments with more than 5 employees.", "ru": "Ответы отдельных сотрудников не отображаются. Результаты представляются и анализируются только на уровне отдела и только в отделах, где работает более 5 сотрудников.", "ar": "لا يمكن الاطلاع على إجابات موظف بشكل فردي. سيتم عرض النتائج وتحليلها على مستوى القسم فقط، وذلك في الأقسام التي تضم أكثر من 5 موظفين.", "hi": "किसी व्यक्तिगत कर्मचारी के उत्तर नहीं देखे जा सकते। परिणाम केवल विभाग स्तर पर प्रस्तुत और विश्लेषित किए जाएंगे, और केवल उन विभागों के लिए जहाँ 5 से अधिक कर्मचारी हैं।", "th": "ไม่สามารถดูคำตอบของพนักงานเป็นรายบุคคลได้ ผลลัพธ์จะแสดงและวิเคราะห์ในระดับแผนกเท่านั้น และเฉพาะแผนกที่มีพนักงานมากกว่า 5 คน"}, "אין נכון/לא נכון": {"he": "אין תשובות נכונות או לא נכונות.", "en": "There are no right or wrong answers.", "ru": "Здесь нет правильных или неправильных ответов.", "ar": "لا توجد إجابات صحيحة أو خاطئة.", "hi": "कोई सही या गलत उत्तर नहीं है।", "th": "ไม่มีคำตอบที่ถูกหรือผิด"}, "בקשה למענה כן": {"he": "אנחנו מבקשים ממך לענות בכנות ובהתאם לחוויה האישית שלך.", "en": "We ask you to answer honestly, based on your personal experience.", "ru": "Мы просим вас отвечать честно, основываясь на вашем личном опыте.", "ar": "نطلب منك الإجابة بصراحة وبناءً على تجربتك الشخصية.", "hi": "हम आपसे अनुरोध करते हैं कि आप अपने व्यक्तिगत अनुभव के आधार पर ईमानदारी से उत्तर दें।", "th": "เราขอให้คุณตอบตามความเป็นจริงและตามประสบการณ์ส่วนตัวของคุณ"}, "למה הכנות חשובה": {"he": "רק תשובות כנות יאפשרו לנו ללמוד, להשתפר ולהתמקד בנושאים שבאמת חשובים לעובדים.", "en": "Only honest feedback will help us learn, improve, and focus on the topics that truly matter to our employees.", "ru": "Только искренние ответы помогут нам учиться, совершенствоваться и сосредоточиться на вопросах, которые действительно важны для сотрудников.", "ar": "فقط الإجابات الصادقة ستساعدنا على التعلم والتحسن والتركيز على المواضيع التي تهم موظفينا حقًا.", "hi": "केवल ईमानदार जवाब ही हमें सीखने, सुधार करने और उन विषयों पर ध्यान केंद्रित करने में मदद करेंगे जो हमारे कर्मचारियों के लिए वास्तव में महत्वपूर्ण हैं।", "th": "คำตอบที่ตรงไปตรงมาเท่านั้นที่จะช่วยให้เราเรียนรู้ พัฒนา และมุ่งเน้นไปที่เรื่องที่มีความสำคัญต่อพนักงานอย่างแท้จริง"}, "מה יקרה אחרי הסקר": {"he": "לאחר סיום הסקר נשתף את הממצאים המרכזיים ואת צעדי ההמשך שנבחר לקדם.", "en": "Once the survey is completed, we will share the key findings and the next steps we decide to take.", "ru": "После завершения опроса мы поделимся основными результатами и дальнейшими шагами, которые решим предпринять.", "ar": "بعد انتهاء الاستبيان، سنشارك النتائج الرئيسية والخطوات التالية التي سنقرر المضي قدمًا بها.", "hi": "सर्वेक्षण पूरा होने के बाद, हम मुख्य निष्कर्ष और आगे उठाए जाने वाले कदम साझा करेंगे।", "th": "หลังจากแบบสำรวจเสร็จสิ้น เราจะแบ่งปันผลสำรวจที่สำคัญและขั้นตอนต่อไปที่เราตัดสินใจดำเนินการ"}, "תודה": {"he": "תודה על שיתוף הפעולה ועל הנכונות להשמיע את קולך.", "en": "Thank you for your participation and for taking the time to make your voice heard.", "ru": "Спасибо за ваше участие и готовность высказать своё мнение.", "ar": "شكرًا لتعاونك واستعدادك لإسماع صوتك.", "hi": "आपकी भागीदारी और अपनी आवाज़ साझा करने की इच्छा के लिए धन्यवाद।", "th": "ขอขอบคุณสำหรับความร่วมมือและความเต็มใจของคุณในการแสดงความคิดเห็น"}, "הנעה לפעולה": {"he": "בואו נתחיל.", "en": "Let’s get started.", "ru": "Давайте начнём.", "ar": "لنبدأ.", "hi": "आइए शुरू करें।", "th": "มาเริ่มกันเลย"}, "יצירת קשר": {"he": "במקרה של שאלה או בעיה ניתן לפנות לצוות משאבי אנוש.", "en": "If you have any questions or encounter any issues, please contact the HR team.", "ru": "Если у вас возникнут вопросы или проблемы, пожалуйста, обратитесь в отдел HR.", "ar": "في حال وجود أي سؤال أو مشكلة، يرجى التواصل مع فريق الموارد البشرية.", "hi": "यदि आपके कोई प्रश्न हैं या किसी समस्या का सामना करना पड़ता है, तो कृपया HR टीम से संपर्क करें।", "th": "หากมีคำถามหรือพบปัญหา โปรดติดต่อทีมทรัพยากรบุคคล"}}, "scale": [{"he": "לא מסכים כלל", "en": "Strongly disagree", "ru": "Совершенно не согласен/согласна", "ar": "لا أوافق إطلاقًا", "hi": "पूर्णतः असहमत", "th": "ไม่เห็นด้วยอย่างยิ่ง"}, {"he": "לא מסכים", "en": "Disagree", "ru": "Не согласен/согласна", "ar": "لا أوافق", "hi": "असहमत", "th": "ไม่เห็นด้วย"}, {"he": "לא מסכים ולא מתנגד", "en": "Neither agree nor disagree", "ru": "Затрудняюсь ответить: ни согласен/согласна, ни не согласен/согласна", "ar": "لا أوافق ولا أعارض", "hi": "न तो सहमत, न ही असहमत", "th": "ไม่เห็นด้วยและไม่คัดค้าน"}, {"he": "מסכים", "en": "Agree", "ru": "Согласен/согласна", "ar": "أوافق", "hi": "सहमत", "th": "เห็นด้วย"}, {"he": "מסכים מאוד", "en": "Strongly agree", "ru": "Полностью согласен/согласна", "ar": "أوافق بشدة", "hi": "पूर्णतः सहमत", "th": "เห็นด้วยอย่างยิ่ง"}], "statements": [{"he": "יש עבודת צוות טובה ושיתוף פעולה בצוות שלי.", "en": "There is good teamwork and collaboration within my team.", "ru": "В моей команде налажены хорошая командная работа и сотрудничество.", "ar": "يوجد عمل جماعي وتعاون جيدان داخل فريقي.", "hi": "मेरी टीम में अच्छा टीमवर्क और सहयोग है।", "th": "ทีมของฉันมีการทำงานเป็นทีมและความร่วมมือที่ดี"}, {"he": "המנהל/ת הישיר/ה שלי תומך/ת בלמידה ובהתפתחות שלי.", "en": "My immediate manager supports my learning and development.", "ru": "Мой непосредственный руководитель поддерживает моё обучение и развитие.", "ar": "يدعمني مديري المباشر في التعلّم والتطور.", "hi": "मेरे प्रत्यक्ष प्रबंधक मेरे सीखने और विकास में मेरा समर्थन करते हैं।", "th": "ผู้จัดการโดยตรงของฉันสนับสนุนการเรียนรู้และการพัฒนาของฉัน"}, {"he": "יש לי ביטחון ואמון במנהל/ת הישיר/ה שלי.", "en": "I trust and have confidence in my immediate manager.", "ru": "Я доверяю своему непосредственному руководителю и уверен/уверена в нём.", "ar": "لدي ثقة بمديري المباشر.", "hi": "मुझे अपने प्रत्यक्ष प्रबंधक पर भरोसा और विश्वास है।", "th": "ฉันไว้วางใจและเชื่อมั่นในผู้จัดการโดยตรงของฉัน"}, {"he": "בפוראטוס קיימת תקשורת פתוחה וכנה.", "en": "There is open and honest communication at Puratos.", "ru": "В Puratos существует открытая и честная коммуникация.", "ar": "توجد في بوراتوس اتصالات منفتحة وصادقة.", "hi": "पुराटोस में खुला और ईमानदार संवाद होता है।", "th": "ที่ Puratos มีการสื่อสารอย่างเปิดเผยและจริงใจ"}, {"he": "החברה מתקשרת באופן ברור את ההחלטות והשינויים המשפיעים על עבודתי.", "en": "The company clearly communicates decisions and changes that affect my work.", "ru": "Компания чётко сообщает о решениях и изменениях, которые влияют на мою работу.", "ar": "تتواصل الشركة بوضوح بشأن القرارات والتغييرات التي تؤثر في عملي.", "hi": "कंपनी मेरे काम को प्रभावित करने वाले निर्णयों और परिवर्तनों के बारे में स्पष्ट रूप से संवाद करती है।", "th": "บริษัทสื่อสารอย่างชัดเจนเกี่ยวกับการตัดสินใจและการเปลี่ยนแปลงที่ส่งผลต่องานของฉัน"}, {"he": "אני יודע/ת מה מצופה ממני במסגרת תפקידי.", "en": "I know what is expected of me in my role.", "ru": "Я знаю, чего от меня ожидают в рамках моей должности.", "ar": "أعرف ما هو متوقع مني في إطار دوري الوظيفي.", "hi": "मुझे पता है कि मेरी भूमिका में मुझसे क्या अपेक्षित है।", "th": "ฉันรู้ว่าบทบาทหน้าที่ของฉันคาดหวังอะไรจากฉัน"}, {"he": "המשוב שאני מקבל/ת מהמנהל/ת הישיר/ה שלי עוזר לי להשתפר ולהתפתח.", "en": "The feedback I receive from my immediate manager helps me improve and develop.", "ru": "Обратная связь, которую я получаю от своего непосредственного руководителя, помогает мне совершенствоваться и развиваться.", "ar": "تساعدني الملاحظات التي أتلقاها من مديري المباشر على التحسن والتطور.", "hi": "मेरे प्रत्यक्ष प्रबंधक से मिलने वाली प्रतिक्रिया मुझे सुधारने और विकसित होने में मदद करती है।", "th": "ข้อเสนอแนะที่ฉันได้รับจากผู้จัดการโดยตรงช่วยให้ฉันปรับปรุงและพัฒนาตนเอง"}, {"he": "אני רואה את עצמי ממשיך/ה לעבוד בחברה גם בשנתיים הקרובות.", "en": "I see myself continuing to work for the company over the next two years.", "ru": "Я вижу себя продолжающим/продолжающей работать в компании в течение следующих двух лет.", "ar": "أرى نفسي مستمرًا في العمل لدى الشركة خلال السنتين المقبلتين.", "hi": "मैं अगले दो वर्षों तक कंपनी में काम जारी रखते हुए स्वयं को देखता/देखती हूँ।", "th": "ฉันมองเห็นว่าตนเองจะยังคงทำงานกับบริษัทต่อไปในอีกสองปีข้างหน้า"}, {"he": "אני זוכה ליחס הוגן ומכבד בפוראטוס.", "en": "I am treated fairly and with respect at Puratos.", "ru": "В Puratos ко мне относятся справедливо и с уважением.", "ar": "أُعامل بإنصاف واحترام في بوراتوس.", "hi": "पुराटोस में मेरे साथ निष्पक्षता और सम्मान से व्यवहार किया जाता है।", "th": "ฉันได้รับการปฏิบัติอย่างเป็นธรรมและด้วยความเคารพที่ Puratos"}, {"he": "המנהל/ת הישיר/ה שלי נגיש/ה וזמין/ה עבורי כאשר אני זקוק/ה לתמיכה.", "en": "My immediate manager is accessible and available when I need support.", "ru": "Мой непосредственный руководитель доступен и готов оказать поддержку, когда она мне необходима.", "ar": "يمكنني الوصول إلى مديري المباشر وهو متاح عندما أحتاج إلى الدعم.", "hi": "जब मुझे सहायता की आवश्यकता होती है, तब मेरे प्रत्यक्ष प्रबंधक सुलभ और उपलब्ध होते हैं।", "th": "ผู้จัดการโดยตรงของฉันเข้าถึงได้และพร้อมให้ความช่วยเหลือเมื่อฉันต้องการ"}, {"he": "יש לי את הכלים והמשאבים הנדרשים כדי לבצע היטב את עבודתי.", "en": "I have the tools and resources I need to do my job well.", "ru": "У меня есть инструменты и ресурсы, необходимые для качественного выполнения моей работы.", "ar": "لدي الأدوات والموارد التي أحتاج إليها لأداء عملي بشكل جيد.", "hi": "मेरे पास अपना काम अच्छी तरह करने के लिए आवश्यक उपकरण और संसाधन हैं।", "th": "ฉันมีเครื่องมือและทรัพยากรที่จำเป็นต่อการทำงานให้ดี"}, {"he": "הייתי ממליץ/ה על פוראטוס כמקום שטוב לעבוד בו.", "en": "I would recommend Puratos as a good place to work.", "ru": "Я рекомендовал/рекомендовала бы Puratos как хорошее место для работы.", "ar": "أوصي ببوراتوس كمكان جيد للعمل.", "hi": "मैं पुराटोस को काम करने के लिए एक अच्छी जगह के रूप में सुझाऊँगा/सुझाऊँगी।", "th": "ฉันจะแนะนำ Puratos ว่าเป็นสถานที่ทำงานที่ดี"}], "open": [{"he": "מהי, לדעתך, הסיבה הטובה ביותר לעבוד בפוראטוס?", "en": "In your opinion, what is the best reason to work for Puratos?", "ru": "По вашему мнению, какова главная причина работать в Puratos?", "ar": "برأيك، ما أفضل سبب للعمل لدى بوراتوس؟", "hi": "आपकी राय में, पुराटोस में काम करने का सबसे अच्छा कारण क्या है?", "th": "ในความเห็นของคุณ เหตุผลที่ดีที่สุดในการทำงานกับ Puratos คืออะไร"}, {"he": "מהו הדבר האחד שאם נשפר בשנה הקרובה ישפיע במידה הרבה ביותר על חוויית העבודה שלך?", "en": "What is the one thing that, if improved over the coming year, would have the greatest impact on your employee experience?", "ru": "Что одно, если мы улучшим это в течение следующего года, окажет наибольшее влияние на ваш опыт работы в компании?", "ar": "ما الشيء الواحد الذي، إذا حسّناه خلال السنة المقبلة، سيكون له أكبر أثر في تجربتك كموظف؟", "hi": "वह एक चीज़ क्या है जिसे आने वाले वर्ष में सुधारने से आपके कर्मचारी अनुभव पर सबसे अधिक प्रभाव पड़ेगा?", "th": "สิ่งหนึ่งที่หากเราปรับปรุงในปีหน้า จะส่งผลต่อประสบการณ์การทำงานของคุณมากที่สุดคืออะไร"}, {"he": "מה חשוב שההנהלה תדע ואולי אינה יודעת כיום?", "en": "What is important for management to know that it may not know today?", "ru": "Что важного руководству следует знать, чего оно, возможно, не знает сегодня?", "ar": "ما الأمر المهم الذي ينبغي للإدارة أن تعرفه وربما لا تعرفه اليوم؟", "hi": "ऐसी कौन-सी महत्वपूर्ण बात है जो प्रबंधन को जाननी चाहिए, लेकिन शायद अभी नहीं पता है?", "th": "มีเรื่องสำคัญอะไรที่ฝ่ายบริหารควรรู้ แต่อาจยังไม่ทราบในวันนี้"}], "ui": {"langNames": {"he": "עברית", "en": "English", "ru": "Русский", "ar": "العربية", "hi": "हिन्दी", "th": "ไทย"}, "anonymous": {"he": "הסקר אנונימי לחלוטין. לא ניתן לדעת מי מילא, והתשובות אינן מקושרות לשמך או לזהותך בשום שלב.", "en": "This survey is completely anonymous. No one can know who filled it in, and your answers are never linked to your name or identity.", "ru": "Этот опрос полностью анонимен. Невозможно узнать, кто его заполнил, и ваши ответы никогда не связываются с вашим именем.", "ar": "هذا الاستبيان مجهول تمامًا. لا يمكن لأحد أن يعرف من قام بتعبئته، ولا ترتبط إجاباتك باسمك أو هويتك.", "hi": "यह सर्वेक्षण पूर्णतः गुमनाम है। कोई नहीं जान सकता कि इसे किसने भरा, और आपके उत्तर कभी भी आपके नाम या पहचान से जुड़ते नहीं।", "th": "แบบสำรวจนี้เป็นความลับโดยสมบูรณ์ ไม่มีใครทราบได้ว่าใครเป็นผู้กรอก และคำตอบของคุณจะไม่ถูกเชื่อมโยงกับชื่อหรือตัวตนของคุณโดยเด็ดขาด"}, "usernameLabel": {"he": "שם משתמש", "en": "Username", "ru": "Имя пользователя", "ar": "اسم المستخدم", "hi": "उपयोगकर्ता नाम", "th": "ชื่อผู้ใช้"}, "usernameHelp": {"he": "את שם המשתמש קיבלת ממחלקת משאבי אנוש. הזן אותו כדי להיכנס לסקר.", "en": "Enter the username you received from HR to start the survey.", "ru": "Введите имя пользователя, полученное от отдела кадров, чтобы начать опрос.", "ar": "أدخل اسم المستخدم الذي حصلت عليه من الموارد البشرية لبدء الاستبيان.", "hi": "सर्वेक्षण शुरू करने के लिए HR से प्राप्त अपना यूज़रनेम दर्ज करें।", "th": "กรอกชื่อผู้ใช้ที่ได้รับจากฝ่ายทรัพยากรบุคคลเพื่อเริ่มแบบสำรวจ"}, "loginBtn": {"he": "כניסה לסקר", "en": "Start", "ru": "Начать", "ar": "ابدأ", "hi": "शुरू करें", "th": "เริ่มต้น"}, "invalidUser": {"he": "שם משתמש שגוי. נא לבדוק ולנסות שוב.", "en": "Incorrect username. Please check and try again.", "ru": "Неверное имя пользователя. Проверьте и попробуйте снова.", "ar": "اسم المستخدم غير صحيح. يرجى التحقق والمحاولة مجددًا.", "hi": "उपयोगकर्ता नाम गलत है। कृपया जाँचें और फिर प्रयास करें।", "th": "ชื่อผู้ใช้ไม่ถูกต้อง โปรดตรวจสอบและลองอีกครั้ง"}, "alreadyDone": {"he": "הסקר כבר מולא עם שם משתמש זה. תודה!", "en": "This survey was already submitted with this username. Thank you!", "ru": "Опрос уже был отправлен с этим именем пользователя. Спасибо!", "ar": "تم تعبئة الاستبيان بالفعل باسم المستخدم هذا. شكرًا!", "hi": "इस उपयोगकर्ता नाम से सर्वेक्षण पहले ही जमा किया जा चुका है। धन्यवाद!", "th": "แบบสำรวจนี้ถูกส่งไปแล้วด้วยชื่อผู้ใช้นี้ ขอบคุณ!"}, "next": {"he": "המשך", "en": "Next", "ru": "Далее", "ar": "التالي", "hi": "आगे", "th": "ถัดไป"}, "back": {"he": "חזרה", "en": "Back", "ru": "Назад", "ar": "رجوع", "hi": "वापस", "th": "ย้อนกลับ"}, "submit": {"he": "שליחת הסקר", "en": "Submit", "ru": "Отправить", "ar": "إرسال", "hi": "जमा करें", "th": "ส่งแบบสำรวจ"}, "submitting": {"he": "שולח...", "en": "Submitting...", "ru": "Отправка...", "ar": "جارٍ الإرسال...", "hi": "जमा हो रहा है...", "th": "กำลังส่ง..."}, "mustAnswer": {"he": "נא להשיב על כל 12 ההיגדים", "en": "Please answer all 12 statements", "ru": "Пожалуйста, ответьте на все 12 утверждений", "ar": "يرجى الإجابة على جميع العبارات الـ 12", "hi": "कृपया सभी 12 कथनों के उत्तर दें", "th": "กรุณาตอบคำชี้แจงทั้ง 12 ข้อ"}, "openOptional": {"he": "שאלות פתוחות (רשות)", "en": "Open questions (optional)", "ru": "Открытые вопросы (по желанию)", "ar": "أسئلة مفتوحة (اختياري)", "hi": "खुले प्रश्न (वैकल्पिक)", "th": "คำถามปลายเปิด (ไม่บังคับ)"}, "thanksTitle": {"he": "תודה רבה!", "en": "Thank you!", "ru": "Большое спасибо!", "ar": "شكرًا جزيلًا!", "hi": "बहुत धन्यवाद!", "th": "ขอบคุณมาก!"}, "thanksBody": {"he": "הסקר נשלח בהצלחה. התשובות נשמרות באופן אנונימי ומוצגות רק ברמה הכוללת.", "en": "Your survey was submitted successfully. Responses are stored anonymously and shown only in aggregated form.", "ru": "Опрос успешно отправлен. Ответы хранятся анонимно и отображаются только в обобщённом виде.", "ar": "تم إرسال الاستبيان بنجاح. تُحفظ الإجابات بشكل مجهول وتُعرض بشكل مجمّع فقط.", "hi": "आपका सर्वेक्षण सफलतापूर्वक जमा हो गया। उत्तर गुमनाम रूप से संग्रहित होते हैं और केवल समग्र रूप में दिखाए जाते हैं।", "th": "ส่งแบบสำรวจเรียบร้อยแล้ว คำตอบถูกเก็บอย่างไม่ระบุตัวตนและแสดงเป็นภาพรวมเท่านั้น"}, "errGeneric": {"he": "אירעה שגיאה. נא לנסות שוב.", "en": "Something went wrong. Please try again.", "ru": "Произошла ошибка. Попробуйте ещё раз.", "ar": "حدث خطأ. يرجى المحاولة مجددًا.", "hi": "एक त्रुटि हुई। कृपया पुनः प्रयास करें।", "th": "เกิดข้อผิดพลาด โปรดลองอีกครั้ง"}, "langTitle": {"he": "בחר שפה", "en": "Choose language", "ru": "Выберите язык", "ar": "اختر اللغة", "hi": "भाषा चुनें", "th": "เลือกภาษา"}, "changeLang": {"he": "שפה", "en": "Language", "ru": "Язык", "ar": "اللغة", "hi": "भाषा", "th": "ภาษา"}}};
+const API = 'https://super-688403df.base44.app/functions/';
+const LANGS=[['he','עברית','HE'],['en','English','EN'],['ru','Русский','RU'],['ar','العربية','AR'],['hi','हिन्दी','HI'],['th','ไทย','TH']];
+let lang = localStorage.getItem('svy_lang') || 'he';
+let username='', answers={}, open={o1:'',o2:'',o3:''}, qi=0, busy=false;
+
+const t = k => (I18N.ui[k]&&I18N.ui[k][lang]) || (I18N.ui[k]&&I18N.ui[k].he) || k;
+const tr = o => (o&&o[lang]) || (o&&o.he) || '';
+const rtl = l => l==='he'||l==='ar';
+function applyDir(){ document.documentElement.dir = rtl(lang)?'rtl':'ltr'; document.documentElement.lang = lang; }
+function show(id){ ['scrLang','scrLogin','scrIntro','scrQuiz','scrOpen','scrThanks'].forEach(s=>document.getElementById(s).classList.toggle('hidden', s!==id)); window.scrollTo(0,0); }
+
+function renderChrome(){
+  const intro = I18N.intro;
+  document.getElementById('barTitle').textContent = tr(intro['כותרת']).replace('ברוכים הבאים ל','');
+  document.getElementById('barSlogan').textContent = tr(intro['סלוגן']);
+  document.getElementById('foot').textContent = tr(intro['יצירת קשר']);
+}
+
+function renderLangSelect(){
+  renderChrome(); applyDir();
+  document.getElementById('langTitle').textContent = t('langTitle');
+  document.getElementById('langNote').textContent = t('usernameHelp');
+  const grid=document.getElementById('langGrid');
+  grid.innerHTML='';
+  LANGS.forEach(function(L){
+    const d=document.createElement('div');
+    d.className='lang-opt'+(L[0]===lang?' sel':'');
+    d.innerHTML='<div>'+L[1]+'</div><small>'+L[2]+'</small>';
+    d.onclick=function(){lang=L[0];localStorage.setItem('svy_lang',lang);renderLangSelect();};
+    grid.appendChild(d);
+  });
+  const go=document.getElementById('langGo');
+  go.style.display='block'; go.textContent=t('loginBtn');
+  show('scrLang');
+}
+function confirmLang(){ renderLogin(); show('scrLogin'); }
+function gotoLangSelect(){ renderLangSelect(); }
+
+function renderLogin(){
+  renderChrome(); applyDir();
+  document.getElementById('loginTitle').textContent = tr(I18N.intro['כותרת']);
+  document.getElementById('anonTxt').textContent = t('anonymous');
+  document.getElementById('userLabel').textContent = t('usernameLabel');
+  document.getElementById('userHelp').textContent = t('usernameHelp');
+  document.getElementById('loginBtn').textContent = t('loginBtn');
+  document.getElementById('loginErr').style.display='none';
+}
+
+async function doLogin(){
+  if(busy) return;
+  const u=document.getElementById('uname').value.trim().toUpperCase();
+  const err=document.getElementById('loginErr');
+  err.style.display='none';
+  if(!u){ err.textContent=t('invalidUser'); err.style.display='block'; return; }
+  busy=true;
+  const btn=document.getElementById('loginBtn'); btn.disabled=true;
+  try{
+    const r=await fetch(API+'engagementSurveyLogin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u})});
+    const j=await r.json();
+    if(!j.valid){ err.textContent=t('invalidUser'); err.style.display='block'; }
+    else if(j.used){ err.textContent=t('alreadyDone'); err.style.display='block'; }
+    else { username=u; renderIntro(); show('scrIntro'); }
+  }catch(e){ err.textContent=t('errGeneric'); err.style.display='block'; }
+  btn.disabled=false; busy=false;
+}
+
+function renderIntro(){
+  const intro=I18N.intro;
+  document.getElementById('introTitle').textContent = tr(intro['כותרת']);
+  document.getElementById('introOpen').textContent = tr(intro['פתיחה']) + ' ' + tr(intro['מטרה']);
+  document.getElementById('anonTxt2').textContent = t('anonymous');
+  document.getElementById('beforeLbl').textContent = tr(intro['לפני שמתחילים']);
+  const items=[['🔒','דיסקרטיות'],['📊','הצגת התוצאות'],['✅','אין נכון/לא נכון'],['💬','בקשה למענה כן'],['🌱','למה הכנות חשובה'],['📢','מה יקרה אחרי הסקר']];
+  const wrap=document.getElementById('introItems'); wrap.innerHTML='';
+  items.forEach(function(it){
+    const d=document.createElement('div'); d.className='intro-item';
+    d.innerHTML='<div class="ic">'+it[0]+'</div><div><b>'+tr(intro[it[1]])+'</b></div>';
+    wrap.appendChild(d);
+  });
+  document.getElementById('startBtn').textContent = tr(intro['הנעה לפעולה']);
+}
+
+function startQuiz(){ qi=0; answers={}; renderQ(); show('scrQuiz'); }
+function renderQ(){
+  const n=I18N.statements.length;
+  document.getElementById('progBar').style.width=Math.round(qi/n*100)+'%';
+  document.getElementById('qCount').textContent=(qi+1)+' / '+n;
+  document.getElementById('qBack').style.visibility = qi>0?'visible':'hidden';
+  document.getElementById('stmtTxt').textContent = tr(I18N.statements[qi]);
+  const wrap=document.getElementById('optWrap'); wrap.innerHTML='';
+  I18N.scale.forEach(function(s,idx){
+    const d=document.createElement('div');
+    d.className='opt'+(answers['q'+(qi+1)]===idx+1?' sel':'');
+    d.innerHTML='<div class="n">'+(idx+1)+'</div><span>'+tr(s)+'</span>';
+    d.onclick=function(){
+      answers['q'+(qi+1)]=idx+1; renderQ();
+      setTimeout(function(){ if(qi<n-1){qi++;renderQ();} else {renderOpen(); show('scrOpen');} },180);
+    };
+    wrap.appendChild(d);
+  });
+}
+function prevQ(){ if(qi>0){qi--;renderQ();} else show('scrIntro'); }
+
+function renderOpen(){
+  document.getElementById('openTitle').textContent = t('openOptional');
+  document.getElementById('openNote').textContent = tr(I18N.intro['תודה']);
+  const wrap=document.getElementById('openWrap'); wrap.innerHTML='';
+  I18N.open.forEach(function(o,i){
+    const lbl=document.createElement('label'); lbl.className='inp'; lbl.textContent=tr(o); lbl.setAttribute('for','open'+i);
+    const ta=document.createElement('textarea'); ta.id='open'+i;
+    ta.value=open['o'+(i+1)];
+    ta.oninput=function(){open['o'+(i+1)]=ta.value};
+    wrap.appendChild(lbl); wrap.appendChild(ta);
+  });
+  document.getElementById('submitBtn').textContent = t('submit');
+}
+
+async function doSubmit(){
+  if(busy) return;
+  for(let i=1;i<=12;i++){ if(!answers['q'+i]){ alert(t('mustAnswer')); return; } }
+  busy=true;
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>'+t('submitting');
+  try{
+    const r=await fetch(API+'engagementSurveySubmit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:username,language:lang,answers:answers,open:open})});
+    const j=await r.json();
+    if(j.success){
+      document.getElementById('thTitle').textContent=t('thanksTitle');
+      document.getElementById('thBody').textContent=t('thanksBody');
+      document.getElementById('thAnon').textContent=t('anonymous');
+      show('scrThanks');
+    } else if(j.error==='already_submitted'){
+      document.getElementById('thTitle').textContent=t('thanksTitle');
+      document.getElementById('thBody').textContent=t('alreadyDone');
+      document.getElementById('thAnon').textContent=t('anonymous');
+      show('scrThanks');
+    } else {
+      alert(t('errGeneric')); btn.disabled=false; btn.textContent=t('submit');
+    }
+  }catch(e){ alert(t('errGeneric')); btn.disabled=false; btn.textContent=t('submit'); }
+  busy=false;
+}
+
+document.getElementById('uname').addEventListener('keydown',function(e){ if(e.key==='Enter') doLogin(); });
+renderLangSelect();
+</script>
+</body>
+</html>
