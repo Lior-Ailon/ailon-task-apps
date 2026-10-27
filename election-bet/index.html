@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הימור בחירות כנסת 26 — AILON Task</title>
+<link rel="manifest" href="manifest.json">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Heebo, Varela Round, Arial, sans-serif; background:linear-gradient(135deg,#0f172a 0%,#134e4a 100%); min-height:100vh; padding:20px 14px 60px; color:#1e293b; }
+.wrap { max-width:560px; margin:0 auto; }
+.header { text-align:center; margin-bottom:18px; }
+.header .logo { font-size:28px; font-weight:800; color:#5eead4; letter-spacing:1px; }
+.header .sub { color:#94a3b8; font-size:14px; margin-top:2px; }
+.card { background:#fff; border-radius:16px; padding:22px 20px; box-shadow:0 10px 30px rgba(0,0,0,.35); margin-bottom:16px; }
+h1 { font-size:20px; color:#0d9488; margin-bottom:6px; }
+.step { color:#64748b; font-size:13px; margin-bottom:14px; }
+.names { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.nchip { padding:12px 22px; border-radius:12px; border:2px solid #e2e8f0; background:#f8fafc; font-size:17px; font-weight:700; cursor:pointer; transition:.15s; }
+.nchip.sel { border-color:#0d9488; background:#ccfbf1; color:#0f766e; }
+.prow { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9; }
+.prow:last-child { border-bottom:none; }
+.pname { font-size:16px; font-weight:600; }
+.avg { display:block; font-size:12px; color:#94a3b8; font-weight:400; }
+.pval { width:86px; padding:10px; border-radius:10px; border:2px solid #e2e8f0; font-size:18px; font-weight:700; text-align:center; color:#0f766e; }
+.pval:focus { outline:none; border-color:#14b8a6; }
+.pval.bad { border-color:#ef4444; background:#fef2f2; }
+.totalbar { position:sticky; bottom:0; background:#fff; border-radius:14px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,.25); }
+.totlab { font-weight:700; font-size:16px; }
+.totnum { font-size:22px; font-weight:800; color:#0d9488; }
+.totnum.over { color:#ef4444; }
+button.main { width:100%; margin-top:14px; padding:15px; border:none; border-radius:12px; background:linear-gradient(90deg,#0d9488,#14b8a6); color:#fff; font-size:19px; font-weight:800; cursor:pointer; }
+button.main:disabled { opacity:.45; cursor:not-allowed; }
+.err { color:#ef4444; font-size:14px; text-align:center; margin-top:10px; min-height:18px; }
+.okbox { text-align:center; padding:30px 10px; }
+.okbox .big { font-size:44px; }
+.okbox h2 { color:#0d9488; margin:10px 0 6px; }
+.okbox p { color:#64748b; }
+.hidden { display:none; }
+@media (max-width:420px) { .pval { width:72px; } .pname { font-size:14px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header"><div class="logo">AILON Task</div><div class="sub">🗳️ בחירות לכנסת ה-26 · 27.10.2026</div></div>
+
+  <div class="card" id="scrName">
+    <h1>מי מהמר הפעם?</h1>
+    <div class="step">בחרו את שמכם — ההימור יישלח לקבוצת איילון עם שמכם</div>
+    <div class="names" id="names"></div>
+    <div class="err" id="errName"></div>
+    <button class="main" id="toParties">לחיזוי המנדטים</button>
+  </div>
+
+  <div class="card hidden" id="scrBet">
+    <h1 id="betTitle"></h1>
+    <div class="step">חזו כמה מנדטים כל רשימה תקבל. סה"כ חייב להיות לכל היותר 120.</div>
+    <div id="plist">
+    <div class="prow">
+      <div class="pname">ישר! (איזנקוט)<span class="avg">ממוצע סקרים: 22</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="ישר! (איזנקוט)" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">הליכוד (נתניהו)<span class="avg">ממוצע סקרים: 20</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="הליכוד (נתניהו)" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">ביחד (בנט)<span class="avg">ממוצע סקרים: 15</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="ביחד (בנט)" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">הדמוקרטים (גולן)<span class="avg">ממוצע סקרים: 10</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="הדמוקרטים (גולן)" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">הרשימה המשותפת<span class="avg">ממוצע סקרים: 9</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="הרשימה המשותפת" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">ישראל ביתנו (ליברמן)<span class="avg">ממוצע סקרים: 8</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="ישראל ביתנו (ליברמן)" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">עוצמה יהודית<span class="avg">ממוצע סקרים: 8</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="עוצמה יהודית" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">ש"ס<span class="avg">ממוצע סקרים: 8</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="ש"ס" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">יהדות התורה<span class="avg">ממוצע סקרים: 8</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="יהדות התורה" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">הציונות הדתית<span class="avg">ממוצע סקרים: 7</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="הציונות הדתית" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">רע"ם<span class="avg">ממוצע סקרים: 6</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="רע"ם" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">המילואימניקים הכלכלית<span class="avg">ממוצע סקרים: 4</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="המילואימניקים הכלכלית" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">עמך ישראל (וינטר)<span class="avg">ממוצע סקרים: 0</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="עמך ישראל (וינטר)" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">הנדל-זליכה<span class="avg">ממוצע סקרים: 4</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="הנדל-זליכה" placeholder="0">
+    </div>
+    <div class="prow">
+      <div class="pname">הציבור החרדי<span class="avg">ממוצע סקרים: 0</span></div>
+      <input class="pval" type="number" min="0" max="120" data-party="הציבור החרדי" placeholder="0">
+    </div>
+    </div>
+  </div>
+
+  <div class="totalbar card hidden" id="bar">
+    <div class="totlab">סה"כ: <span class="totnum" id="tot">0</span> / 120</div>
+    <button class="main" style="width:auto;padding:12px 26px;margin-top:0;" id="sendBtn" disabled>שלח הימור 🗳️</button>
+  </div>
+
+  <div class="card okbox hidden" id="scrOk">
+    <div class="big">✅</div>
+    <h2>ההימור נשלח לקבוצת איילון!</h2>
+    <p id="okName"></p>
+    <p>בהצלחה! 🍀</p>
+  </div>
+
+  <div class="err" id="errSend"></div>
+</div>
+
+<script>
+const NAMES = ['עוז','נריה','ליאור'];
+let chosen = '';
+const namesEl = document.getElementById('names');
+NAMES.forEach(n => {
+  const c = document.createElement('div');
+  c.className = 'nchip'; c.textContent = n;
+  c.onclick = () => { document.querySelectorAll('.nchip').forEach(x=>x.classList.remove('sel')); c.classList.add('sel'); chosen = n; document.getElementById('errName').textContent=''; };
+  namesEl.appendChild(c);
+});
+const other = document.createElement('div');
+other.className = 'nchip'; other.textContent = 'אחר';
+other.onclick = () => {
+  const v = prompt('איך לקרוא לך?');
+  if (v && v.trim()) { chosen = v.trim(); document.querySelectorAll('.nchip').forEach(x=>x.classList.remove('sel')); other.classList.add('sel'); other.textContent = chosen; document.getElementById('errName').textContent=''; }
+};
+namesEl.appendChild(other);
+
+document.getElementById('toParties').onclick = () => {
+  if (!chosen) { document.getElementById('errName').textContent = 'בחרו שם כדי להמשיך'; return; }
+  document.getElementById('scrName').classList.add('hidden');
+  document.getElementById('scrBet').classList.remove('hidden');
+  document.getElementById('bar').classList.remove('hidden');
+  document.getElementById('betTitle').textContent = chosen + ' — מה יהיה בקלפי?';
+};
+
+const inputs = document.querySelectorAll('.pval');
+function upd() {
+  let t = 0;
+  inputs.forEach(i => t += Math.max(0, Number(i.value)||0));
+  const totEl = document.getElementById('tot');
+  totEl.textContent = t;
+  const over = t > 120;
+  totEl.classList.toggle('over', over);
+  inputs.forEach(i => i.classList.toggle('bad', over));
+  document.getElementById('sendBtn').disabled = over || t === 0;
+}
+inputs.forEach(i => i.addEventListener('input', upd));
+
+document.getElementById('sendBtn').onclick = async () => {
+  const predictions = {};
+  inputs.forEach(i => { const p = i.dataset.party; const v = Number(i.value)||0; if (v>0 || i.value==='0') predictions[p] = v; });
+  const total = Object.values(predictions).reduce((a,b)=>a+b,0);
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true; btn.textContent = 'שולח...';
+  try {
+    const r = await fetch('https://super-688403df.base44.app/functions/electionBetSubmit', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name: chosen, predictions, total })
+    });
+    const j = await r.json();
+    if (j.success) {
+      document.getElementById('scrBet').classList.add('hidden');
+      document.getElementById('bar').classList.add('hidden');
+      document.getElementById('scrOk').classList.remove('hidden');
+      document.getElementById('okName').textContent = chosen + ', ההימור שלך נשלח ל-Ailon-Team@ailon-task.com';
+    } else throw new Error(j.error||'שגיאה');
+  } catch(e) {
+    document.getElementById('errSend').textContent = 'השליחה נכשלה, נסו שוב: ' + e.message;
+    btn.disabled = false; btn.textContent = 'שלח הימור 🗳️';
+  }
+};
+</script>
+</body></html>
