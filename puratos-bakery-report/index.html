@@ -199,6 +199,8 @@ textarea { resize:vertical; min-height:70px; }
   .form-field:has(input:not([value]):not([type=checkbox])), .form-field:has(textarea:empty) { display:none; }
 }
 .print-title { display:none; }
+.onlyPat{display:none}
+.onlyBakery{}
 </style>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -221,7 +223,7 @@ textarea { resize:vertical; min-height:70px; }
       </svg>
     </div>
     <div class="header-right">
-      <h1>דוח ניסויים — תחום הלחמים <span class="header-tag">R&D</span></h1>
+      <h1 id="mainTitle">דוח ניסויים — תחום הלחמים <span class="header-tag">R&D</span></h1>
       <p>שייך לנוהל תכן ופיתוח</p>
     </div>
   </div>
@@ -249,7 +251,7 @@ textarea { resize:vertical; min-height:70px; }
   </div>
 </div>
 
-<div class="print-title">דוח ניסויים — תחום הלחמים (Bakery R&D)</div>
+<div class="print-title" id="printTitle">דוח ניסויים — תחום הלחמים (Bakery R&D)</div>
 <div class="success-msg" id="successMsg"></div>
 
 <!-- ============ FORM VIEW ============ -->
@@ -260,6 +262,14 @@ textarea { resize:vertical; min-height:70px; }
     <div class="card-title">📋 פרטים כלליים</div>
     <div class="form-row">
       <div class="form-field full"><label>שם הפרויקט</label><input id="projectName" placeholder="לדוגמה: פיתוח לחם כפרי חדש" list="projectList"><datalist id="projectList"></datalist></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>סוג ניסוי</label>
+        <select id="expType" onchange="switchExpType(this.value)">
+          <option value="bakery">אפייה — לחמים (Bakery)</option>
+          <option value="patisserie">קונדיטוריה (Patisserie)</option>
+        </select>
+      </div>
     </div>
     <div class="form-row">
       <div class="form-field"><label>שיוך לדו"ח קודם (מספר / שם)</label><input id="linkedReport" placeholder="אופציונלי" list="reportList"><datalist id="reportList"></datalist></div>
@@ -295,6 +305,9 @@ textarea { resize:vertical; min-height:70px; }
     </div>
     <div class="info-label">חומרי גלם שזהים בכל הניסויים. ניתן לסמן מספר סוגי קמח — המשקל הכולל ייחשב כ-100%.</div>
     <div class="ing-headers"><div class="ing-name">חומר גלם</div><div class="ing-gram">גרם</div><div class="ing-pct">% מתוך הקמח</div><div class="ing-type">קמח?</div><div class="spacer"></div></div>
+    <div class="form-row" style="margin-bottom:10px">
+      <div class="form-field"><label>💧 טמפ' המים (°C)</label><input type="text" id="waterTemp" dir="ltr" style="direction:ltr;text-align:left" placeholder="°C"></div>
+    </div>
     <div id="fixedIngContainer"></div>
   </div>
 
@@ -330,21 +343,28 @@ textarea { resize:vertical; min-height:70px; }
   <div class="card">
     <div class="card-title">📝 תנאים קבועים — משותף לכל הניסויים</div>
     <div class="section-divider"><span>🥖 הכנת הבצק</span><span class="line"></span></div>
-    <div class="process-grid">
+    <div class="process-grid onlyBakery">
       <div class="form-field"><label>זמן לישה משוער (דקות)</label><input type="text" id="kneadTimeEst" dir="ltr" style="direction:ltr;text-align:left" placeholder="לדוגמה: 2+8 (איטית+מהירה)"></div>
       <div class="form-field"><label>טמפ' בצק רצויה (°C)</label><input type="text" id="doughTemp" dir="ltr" style="direction:ltr;text-align:left" placeholder="טווח, לדוגמה: 24-26"></div>
-      <div class="form-field"><label>טמפ' מים (°C)</label><input type="text" id="waterTemp" dir="ltr" style="direction:ltr;text-align:left" placeholder="°C"></div>
+      
       <div class="form-field"><label>תפיחה ב-Bulk — זמן</label><input id="bulkFerment" placeholder="לדוגמה: 60 דקות"></div>
       <div class="form-field"><label>משקל יחידת בצק (גרם)</label><input type="number" id="doughWeight" step="1" placeholder="גרם"></div>
       <div class="form-field"><label>עיצוב מאפה</label><input id="pastryShape" placeholder="טקסט חופשי — לדוגמה: כיכר עגולה"></div>
       <div class="form-field"><label>סוג התבנית</label><input id="moldType" placeholder="טקסט חופשי — לדוגמה: תבנית אלומיניום"></div>
       <div class="form-field full"><label>נתוני מולדר</label><input id="moulder" placeholder=""></div>
     </div>
+    <div class="process-grid onlyPat">
+      <div class="form-field"><label>זמן בחישה</label><input id="patKneadTime" placeholder="טקסט חופשי — לדוגמה: 3 דק' איטי + 5 דק' מהיר"></div>
+      <div class="form-field"><label>מהירות בחישה</label><input id="patKneadSpeed" placeholder="טקסט חופשי — לדוגמה: מהירות 2"></div>
+      <div class="form-field"><label>משקל בתבנית (גרם)</label><input type="text" id="patMoldWeight" dir="ltr" style="direction:ltr;text-align:left" placeholder="גרם"></div>
+    </div>
     <div class="section-divider"><span>🔥 אפייה</span><span class="line"></span></div>
     <div class="process-grid">
       <div class="form-field"><label>סוג התנור</label><input id="ovenType" placeholder="לדוגמה: תנור קונבקציה"></div>
       <div class="form-field"><label>תוכנית אפייה</label><input id="bakingProgram" placeholder="לדוגמה: 220C 30 דק'"></div>
-      <div class="form-field"><label>קיטור (שניות)</label><input type="number" id="steam" placeholder="שניות"></div>
+      <div class="form-field onlyBakery"><label>קיטור (שניות)</label><input type="number" id="steam" placeholder="שניות"></div>
+      <div class="form-field onlyPat"><label>טמפרטורת אפייה (°C)</label><input type="text" id="patBakeTemp" dir="ltr" style="direction:ltr;text-align:left" placeholder="°C"></div>
+      <div class="form-field onlyPat"><label>זמן אפייה</label><input id="patBakeTime" placeholder="לדוגמה: 18 דקות"></div>
     </div>
   </div>
 
@@ -711,6 +731,18 @@ function renderVarConditions(expNum){
   const cond=varConditions[expNum];
   const m=processMetrics[expNum]||{};
   const ltr='dir="ltr" style="direction:ltr;text-align:left"';
+  if(window.expType==='patisserie'){
+    const vs=m.volumeStability||'';
+    c.innerHTML=`<div class="process-grid">
+      <div class="form-field"><label>נפח ויציבות המאפה</label><select onchange="processMetrics[${expNum}].volumeStability=this.value"><option value="">בחר...</option><option ${vs==='נפח נמוך — לא יציב'?'selected':''}>נפח נמוך — לא יציב</option><option ${vs==='נפח בינוני — יציב חלקית'?'selected':''}>נפח בינוני — יציב חלקית</option><option ${vs==='נפח טוב — יציב'?'selected':''}>נפח טוב — יציב</option><option ${vs==='נפח גבוה — יציב מאוד'?'selected':''}>נפח גבוה — יציב מאוד</option></select></div>
+      <div class="form-field"><label>צבע המאפה — פנימי</label><input value="${esc(m.colorInternal)||''}" oninput="processMetrics[${expNum}].colorInternal=this.value" placeholder="תאר את הגוון הפנימי..."></div>
+      <div class="form-field"><label>צבע המאפה — חיצוני</label><input value="${esc(m.colorExternal)||''}" oninput="processMetrics[${expNum}].colorExternal=this.value" placeholder="תאר את הגוון החיצוני..."></div>
+      <div class="form-field"><label>מרקם הבצק</label><input value="${esc(m.doughTexture)||''}" oninput="processMetrics[${expNum}].doughTexture=this.value" placeholder="תאר את מרקם הבצק..."></div>
+      <div class="form-field"><label>טעם וריח</label><input value="${esc(m.tasteAroma)||''}" oninput="processMetrics[${expNum}].tasteAroma=this.value" placeholder="תאר טעם וריח..."></div>
+      <div class="form-field"><label>טמפ' מים בפועל (°C)</label><input type="text" ${ltr} value="${esc(cond.waterTemp)||''}" oninput="varConditions[${expNum}].waterTemp=this.value" placeholder="°C"></div>
+    </div>`;
+    return;
+  }
   c.innerHTML=`<div class="process-grid">
     <div class="form-field"><label>זמן לישה בפועל (דקות)</label><input type="text" ${ltr} value="${esc(cond.actualKneadTime)||''}" oninput="varConditions[${expNum}].actualKneadTime=this.value" placeholder="לדוגמה: 2+8"></div>
     <div class="form-field"><label>טמפ' בצק בפועל (°C)</label><input type="text" ${ltr} value="${esc(m.actualDoughTemp)||''}" oninput="processMetrics[${expNum}].actualDoughTemp=this.value" placeholder="°C"></div>
@@ -750,6 +782,32 @@ function updateWeighingBadge(){
   b.textContent=done?'✅ שקילת ניסוי '+currentVarExp+' הושלמה':'לא סומן סיום שקילה לניסוי '+currentVarExp;
   b.style.cssText='font-size:12px;font-weight:600;color:'+(done?'#0a7d33':'#8a6d00')+';background:'+(done?'#e6f6ec':'#fff7dc')+';padding:4px 10px;border-radius:999px';
 }
+
+
+// ===== סוג ניסוי: אפייה / קונדיטוריה =====
+function switchExpType(v){
+  window.expType = v || 'bakery';
+  const pat = window.expType === 'patisserie';
+  document.querySelectorAll('.onlyBakery').forEach(el=>el.style.display=pat?'none':'');
+  document.querySelectorAll('.onlyPat').forEach(el=>{el.style.display=pat?'':'none';});
+  const tpl=document.getElementById('excelTemplate'); if(tpl) tpl.value=pat?'patisserie':'bakery';
+  const mt=document.getElementById('mainTitle');
+  if(mt) mt.innerHTML = (pat?'דוח ניסויים — קונדיטוריה':'דוח ניסויים — תחום הלחמים') + ' <span class="header-tag">R&D</span>';
+  const pt=document.getElementById('printTitle');
+  if(pt) pt.textContent = pat?'דוח ניסויים — קונדיטוריה (Patisserie R&D)':'דוח ניסויים — תחום הלחמים (Bakery R&D)';
+  if(typeof renderVarConditions==='function' && typeof currentCondExp!=='undefined') renderVarConditions(currentCondExp);
+}
+// עריכת מספר ניסוי בלחיצה כפולה על הלשונית
+document.addEventListener('dblclick', function(ev){
+  const tab = ev.target.closest && ev.target.closest('.exp-tab');
+  if(!tab) return;
+  const wrap = tab.closest('.exp-tabs'); if(!wrap) return;
+  const tabs = Array.from(wrap.querySelectorAll('.exp-tab'));
+  const idx = tabs.indexOf(tab);
+  const cur = expNumbers[idx] || String(idx+1);
+  const v = prompt('מספר הניסוי (המשך מספור בין ימים):', cur);
+  if(v!==null) setExpNumber(idx, v);
+});
 
 // ===== Experiment numbering =====
 function renderExpNumbersStrip(){
@@ -879,7 +937,14 @@ function collectData(status){
     tags:activeTags.join(', '),
     fixedIngredients:fixedIngs,
     variableIngredients:varIngs,
+    expType:(window.expType||'bakery'),
     fixedConditions:{
+      expType:(window.expType||'bakery'),
+      patKneadTime:val('patKneadTime'),
+      patKneadSpeed:val('patKneadSpeed'),
+      patMoldWeight:val('patMoldWeight'),
+      patBakeTemp:val('patBakeTemp'),
+      patBakeTime:val('patBakeTime'),
       kneadTimeEst:val('kneadTimeEst'),
       doughTemp:val('doughTemp'),
       waterTemp:val('waterTemp'),
@@ -936,8 +1001,9 @@ function saveAsReport(){
 }
 
 function doSave(status,msg){
-  document.getElementById('updateDate').value=new Date().toLocaleDateString('he-IL');
-  document.getElementById('updateDate').readOnly=true;
+  const ud=document.getElementById('updateDate');
+  if(!ud.value || !ud.value.trim()) ud.value=new Date().toLocaleDateString('he-IL');
+  ud.readOnly=true;
   const data=collectData(status);
   const m=document.getElementById('successMsg');
   m.textContent='שומר...';m.classList.add('show');
@@ -1126,6 +1192,14 @@ async function loadReport(id){
     document.getElementById('ovenType').value=fc.ovenType||'';
     document.getElementById('bakingProgram').value=fc.bakingProgram||'';
     document.getElementById('steam').value=fc.steam||'';
+    document.getElementById('patKneadTime').value=fc.patKneadTime||'';
+    document.getElementById('patKneadSpeed').value=fc.patKneadSpeed||'';
+    document.getElementById('patMoldWeight').value=fc.patMoldWeight||'';
+    document.getElementById('patBakeTemp').value=fc.patBakeTemp||'';
+    document.getElementById('patBakeTime').value=fc.patBakeTime||'';
+    const et=fc.expType||'bakery';
+    document.getElementById('expType').value=et;
+    switchExpType(et);
   }catch(e){}
   
   updateStatusBadge(r.status||r.data?.status||'draft');
@@ -1170,6 +1244,8 @@ function clearForm(){
   currentReportId=null;
   initState();
   document.getElementById('excelTemplate').value='bakery';
+  document.getElementById('expType').value='bakery';
+  switchExpType('bakery');
   currentVarExp=currentCondExp=currentMetricsExp=1;
   ['varExpTabs','varCondTabs'].forEach(id=>{
     document.querySelectorAll('#'+id+' .exp-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.exp==='1'));
