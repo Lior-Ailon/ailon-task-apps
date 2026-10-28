@@ -199,8 +199,8 @@ textarea { resize:vertical; min-height:70px; }
   .form-field:has(input:not([value]):not([type=checkbox])), .form-field:has(textarea:empty) { display:none; }
 }
 .print-title { display:none; }
-.onlyPat{display:none}
-.onlyBakery{}
+body:not(.pat-mode) .onlyPat{display:none!important}
+body.pat-mode .onlyBakery{display:none!important}
 </style>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -788,8 +788,7 @@ function updateWeighingBadge(){
 function switchExpType(v){
   window.expType = v || 'bakery';
   const pat = window.expType === 'patisserie';
-  document.querySelectorAll('.onlyBakery').forEach(el=>el.style.display=pat?'none':'');
-  document.querySelectorAll('.onlyPat').forEach(el=>{el.style.display=pat?'':'none';});
+  document.body.classList.toggle('pat-mode', pat);
   const tpl=document.getElementById('excelTemplate'); if(tpl) tpl.value=pat?'patisserie':'bakery';
   const mt=document.getElementById('mainTitle');
   if(mt) mt.innerHTML = (pat?'דוח ניסויים — קונדיטוריה':'דוח ניסויים — תחום הלחמים') + ' <span class="header-tag">R&D</span>';
