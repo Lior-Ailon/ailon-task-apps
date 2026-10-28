@@ -50,8 +50,10 @@
     if (mode === 'bakery') {
       for(const [ref,val] of Object.entries({J9:c.kneadTimeEst,J10:c.doughTemp,J11:c.bulkFerment,J13:c.moulder,J16:display('fermentTemp',conditions),J17:display('fermentHumidity',conditions),J20:c.ovenType,J21:c.bakingProgram,J22:c.steam})) put(ref,val);
     } else if (mode === 'patisserie') {
-      // Bakery's kneading time, dough weight and temperature are not equivalent to patisserie-specific fields.
+      // שדות ייעודיים לקונדיטוריה — לפי פריסת התבנית (J9-J11 הכנת בצק, J14-J17 אפייה)
+      put('J9',c.patKneadTime); put('J10',c.patKneadSpeed); put('J11',c.patMoldWeight);
       put('J14',c.ovenType); put('J15',c.bakingProgram);
+      put('J16',c.patBakeTemp); put('J17',c.patBakeTime);
     } else {
       for(const [ref,val] of Object.entries({F24:c.kneadTimeEst,F25:c.bulkFerment,F26:c.doughWeight,F28:c.moulder,M24:display('fermentTemp',conditions),M25:display('fermentHumidity',conditions),M29:c.steam})) put(ref,val);
     }
@@ -118,8 +120,9 @@
     for(let i=1;i<=6;i++){
       const col=expColumns[i-1];
       const m=metrics[i]||{}, v=conditions[i]||{};
+      const patColor=[m.colorInternal,m.colorExternal].filter(Boolean).join(' / ');
       const rowValues=mode==='patisserie'
-        ? ['', '', m.doughTexture,'']
+        ? [m.volumeStability||'', patColor, m.doughTexture||'', m.tasteAroma||'']
         : [m.actualDoughTemp,m.doughTexture,m.actualFermentTime || v.finalFermentTime,m.volumeStability];
       layout.metrics.forEach((row,j)=>put(`${col}${row}`,rowValues[j]));
     }
@@ -133,7 +136,10 @@
       ['מספר תמונות מצורפות בדוח המקורי (לא מוטמעות בקובץ Excel)',(report.photos||[]).length || ''],
     ];
     const nums=report.expNumbers||c.expNumbers||[];
-    nums.forEach((n,i)=>{ if(n!==undefined&&String(n)!==String(i+1)) extras.push([`מספר ניסוי ${i+1}`,n]); });
+    nums.forEach((n,i)=>{
+      if(n!==undefined&&String(n)!=='') put(`${expColumns[i]}24`,n);
+      if(n!==undefined&&String(n)!==String(i+1)) extras.push([`מספר ניסוי ${i+1}`,n]);
+    });
     for(let i=1;i<=6;i++){
       const v=conditions[i]||{},m=metrics[i]||{};
       for(const [name,value] of Object.entries({...v,...m})) {
