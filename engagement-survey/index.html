@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0d3b66">
+<meta name="theme-color" content="#ab0930">
 <title>סקר מחוברות 2026</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="logo.jpg">
 <link rel="apple-touch-icon" href="logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0d3b66;--navy2:#1a5276;--gold:#f4b41a;--bg:#eef3f8;--card:#fff;--txt:#22303f;--muted:#6b7a8c;--ok:#1e8e5a;--err:#c0392b}
+:root{--navy:#ab0930;--navy2:#850725;--gold:#f4b41a;--bg:#faf3f4;--card:#fff;--txt:#2d2226;--muted:#8a7076;--ok:#ab0930;--err:#c0392b}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Heebo',system-ui,sans-serif}
 body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+.herologo{display:block;width:min(190px,52vw);margin:6px auto 14px;border-radius:20px;box-shadow:0 8px 26px rgba(133,7,37,.28)}
 .wrap{max-width:560px;margin:0 auto;padding:16px;min-height:100vh;display:flex;flex-direction:column}
 header.bar{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:0 0 18px 18px;box-shadow:0 4px 14px rgba(13,59,102,.25)}
-header.bar img{width:76px;height:76px;object-fit:contain;border-radius:14px;background:#fff;padding:6px;box-shadow:0 3px 10px rgba(200,30,40,.25)}
+header.bar img{width:88px;height:88px;object-fit:contain;border-radius:16px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(133,7,37,.22)}
 header.bar .t{color:#fff;font-weight:800;font-size:1.15rem;line-height:1.25}
 header.bar .s{color:#ffd97a;font-size:.8rem;font-weight:600}
 .langbtn{margin-inline-start:auto;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:10px;padding:7px 12px;font-size:.85rem;font-weight:600;cursor:pointer}
@@ -46,9 +47,8 @@ input[type=text]:focus{outline:none;border-color:var(--navy)}
 .qcount{font-size:.8rem;color:var(--muted);font-weight:600;margin-top:8px;text-align:center}
 .stmt{font-size:1.12rem;font-weight:600;line-height:1.55;margin:6px 0 16px}
 .opts{display:flex;flex-direction:column;gap:8px}
-.opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px solid #cdd9e5;border-radius:12px;cursor:pointer;background:#fff}
-.opt.sel{border-color:var(--navy);background:#eaf2fb}
-.opt .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.opt{display:flex;align-items:center;gap:10px;padding:13px 15px;border:2px solid #e3c6cf;border-radius:12px;cursor:pointer;background:#fff}
+.opt.sel{border-color:var(--navy);background:#fbe9ee}
 .opt span{font-size:.92rem;font-weight:600}
 textarea{width:100%;min-height:88px;padding:12px;border:2px solid #cdd9e5;border-radius:12px;font-family:'Heebo',sans-serif;font-size:.95rem;resize:vertical}
 textarea:focus{outline:none;border-color:var(--navy)}
@@ -65,12 +65,13 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;padding:18px 0 8px}
 <body>
 <div class="wrap">
   <header class="bar">
-    <img src="logo.jpg?v=2" alt="logo">
+    <img src="logo.jpg?v=3" alt="logo">
     <div><div class="t" id="barTitle">סקר מחוברות 2026</div><div class="s" id="barSlogan"></div></div>
     <button class="langbtn" id="langBtn" onclick="gotoLangSelect()">🌐</button>
   </header>
 
   <section id="scrLang">
+    <img class="herologo" src="logo.jpg?v=3" alt="Puratos">
     <div class="card">
       <h1 id="langTitle"></h1>
       <p class="lead" id="langNote" style="color:var(--muted);font-size:.9rem"></p>
@@ -246,7 +247,7 @@ function renderQ(){
   I18N.scale.forEach(function(s,idx){
     const d=document.createElement('div');
     d.className='opt'+(answers['q'+(qi+1)]===idx+1?' sel':'');
-    d.innerHTML='<div class="n">'+(idx+1)+'</div><span>'+tr(s)+'</span>';
+    d.innerHTML='<span>'+tr(s)+'</span>';
     d.onclick=function(){
       answers['q'+(qi+1)]=idx+1; renderQ();
       setTimeout(function(){ if(qi<n-1){qi++;renderQ();} else {renderOpen(); show('scrOpen');} },180);
