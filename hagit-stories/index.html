@@ -130,6 +130,9 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
   </div>
 
   <div class="grid">
+      <div style="text-align:center;margin:6px 0 14px;font-size:14px">
+        <a href="toldot.html" style="color:#a24ad1;font-weight:700;text-decoration:none">פרק 2 · עשיו ויעקב — שני אחים, שני עולמות ←</a>
+      </div>
     <div>
       <!-- כרטיס פרק השבוע -->
       <div class="episode-card">
@@ -339,6 +342,52 @@ audio.addEventListener('error',()=>{
   btn.innerHTML='<span class="ic">📖</span> קריאה מודרכת';
   btn.addEventListener('click',()=>{readAlong();btn.innerHTML=timerKind==='read'?'<span class="ic">⏸</span> עוצרים רגע…':'<span class="ic">📖</span> קריאה מודרכת';});
 },{once:true});
+
+// ===== פעילות: טאבים, טריוויה, משחק זיכרון =====
+function actTab(i,el){
+  document.querySelectorAll('.act-tab').forEach(t=>t.classList.remove('on'));
+  if(el)el.classList.add('on');
+  document.querySelectorAll('.act-body').forEach((b,ix)=>b.classList.toggle('on',ix===i));
+}
+function reveal(btn){
+  const a=btn.nextElementSibling;
+  if(!a)return;
+  a.style.display='block';
+  btn.style.opacity='.35';
+  btn.disabled=true;
+  btn.textContent='✔';
+}
+function buildMemory(pairs){
+  const grid=document.getElementById('memGrid'); if(!grid)return;
+  const score=document.getElementById('memScore');
+  const total=pairs.length;
+  let deck=[...pairs,...pairs].map((e,i)=>({e,i})) ;
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  grid.innerHTML='';
+  let open=[],matched=0,lock=false;
+  deck.forEach((c,idx)=>{
+    const d=document.createElement('div');
+    d.className='mem-card'; d.textContent='❓'; d.dataset.e=c.e;
+    d.addEventListener('click',()=>{
+      if(lock||d.classList.contains('done')||open.includes(d))return;
+      d.classList.add('open'); d.textContent=c.e; open.push(d);
+      if(open.length===2){
+        lock=true;
+        if(open[0].dataset.e===open[1].dataset.e){
+          open.forEach(x=>{x.classList.add('done')});
+          matched++; open=[]; lock=false;
+          if(score)score.textContent=matched===total?'כל הכבוד! מצאתם את כל הזוגות 🎉':`מצאתם ${matched} מתוך ${total} זוגות 🎯`;
+        } else {
+          setTimeout(()=>{open.forEach(x=>{x.classList.remove('open');x.textContent='❓'});open=[];lock=false;},700);
+        }
+      }
+    });
+    grid.appendChild(d);
+  });
+  if(score)score.textContent=`מצאו ${total} זוגות מהסיפור! 🎯`;
+}
+const PAIRS=['🐑','🐪','⛺','🌿','🧑‍🌾','💰','🏞️','🏙️'];
+document.addEventListener('DOMContentLoaded',()=>buildMemory(PAIRS));
 </script>
 </body>
 </html>
