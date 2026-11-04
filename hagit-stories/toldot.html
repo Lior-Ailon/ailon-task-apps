@@ -187,16 +187,18 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
       </div>
 
 
-      <!-- הרחבות להורים -->
+      <!-- הרחבות להורים — לפי ההקלטה של חגית -->
       <div class="shabbat-card" id="parentsCard" style="background:linear-gradient(135deg,#f4fff9,#eef9ff);border:2px solid #bfe9d0">
-        <h3>👨‍👩‍👧 להורים — שלוש הרחבות לשבוע הזה</h3>
-        <p class="hint2">רעיונות קצרים שאפשר לעשות בבית, בלי הכנה מראש:</p>
+        <h3>👨‍👩‍👧 להורים — מה עושים עם זה השבוע</h3>
+        <p class="hint2">ארבעה רעיונות קצרים מהבית, בלי הכנה מראש:</p>
         <ol>
-          <li><b>מרק עדשים משותף.</b> תבשלו יחד מרק עדשים אדום — אותו מרק שבגללו עשיו מיהר להחליט. בזמן שהסיר על האש, שאלו: "מה הייתם נותנים בשביל משהו שכרגע ממש בא לכם?"</li>
-          <li><b>דבר והיפוכו.</b> משחק מילים לשולחן: איש ציד / יושב אוהלים, שעיר / חלק, שדה / בית. כל אחד אומר זוג ניגודים, והשני חייב להסביר למה שניהם יכולים להיות טובים.</li>
-          <li><b>חימר ועדשים.</b> מכינים קערית קטנה מחימר ומדביקים בתוכה עדשים יבשות. כל ילד כותב מתחת לקערה דבר אחד שהוא "אוהל" (מקום שנוח לו) ואחד שהוא "שדה" (מקום שמאתגר אותו).</li>
+          <li><b>תאומים במשפחה.</b> שאלו את הילדים: מי במשפחה שלנו דומה למי? יש תאומים במשפחה המורחבת? אפשר לספר שגם תאומים שנולדו באותו יום יכולים להיות שונים לגמרי — וזה בסדר.</li>
+          <li><b>דבר והיפוכו.</b> המשחק של הפרשה: איש ציד ↔ יושב אוהלים, שעיר ↔ חלק, שדה ↔ אוהל. כל אחד אומר זוג ניגודים, והשני מסביר למה שניהם טובים בדרכם. זה גם משחק לשוני — ומשם אפשר להמשיך לכל מילה והיפוכה.</li>
+          <li><b>מרק עדשים.</b> מבשלים יחד מרק עדשים אדום, כמו זה שעשיו הריח. בזמן שהסיר על האש שואלים: "מה היית נותן בשביל משהו שכרגע ממש בא לך?"</li>
+          <li><b>חימר ועדשים.</b> מכינים קערית מחימר ומדביקים לתוכה עדשים יבשות. עובד יפה, מחזיק 20 דקות שקט, ויוצא כלי שאפשר לשמור.</li>
         </ol>
-        <p class="hint2" style="margin-top:12px">💡 נקודה לשיחה: בפרשה יש תאומים שונים — אחד אוהב בחוץ, אחד אוהב בבית. הפרשה לא מכריעה מי טוב יותר. גם בבית שלכם, ה"שונה" הוא לא ה"פחות טוב".</p>
+        <p class="hint2" style="margin-top:12px">💡 נקודה לשיחה: עדשים הן קטניות, ועשירות בחלבון — אוכל פשוט שמשביע מאוד. אפשר להראות לילדים שדווקא מה שנראה "פשוט" הוא זה שנותן כוח.</p>
+        <p class="hint2">💡 ונקודה חשובה: הפרשה לא אומרת שאחד האחים טוב והשני רע. בבית שלכם, הילד ה"שונה" הוא לא ה"פחות טוב".</p>
       </div>
 
       <!-- המלצות -->
@@ -211,6 +213,7 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
         <div class="act-tabs">
           <div class="act-tab on" onclick="actTab(0,this)">❓ טריוויה</div>
           <div class="act-tab" onclick="actTab(1,this)">🃏 משחק זיכרון</div>
+          <div class="act-tab" onclick="actTab(2,this)">🔤 דבר והיפוכו</div>
         </div>
         <div class="act-body on" id="act0">
           <div class="trivia-q"><div class="qt">1. מי היו התאומים בפרשה?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">עשיו ויעקב — שני אחים שנולדו כמעט באותו רגע, אבל היו שונים לגמרי</div></div>
@@ -222,6 +225,14 @@ body{background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden
         <div class="act-body" id="act1">
           <div class="mem-grid" id="memGrid"></div>
           <div class="mem-score" id="memScore">מצאו 8 זוגות מהסיפור! 🎯</div>
+        </div>
+        <div class="act-body" id="act2">
+          <p class="hint2" style="text-align:center;margin-bottom:12px">בפרשה יש דבר והיפוכו בכל מקום. לחצו ותגלו את ההיפך 🎈</p>
+          <div class="trivia-q"><div class="qt">1. עשיו היה איש <b>יודע ציד</b> — ומה היה יעקב?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">איש תם, <b>יושב אוהלים</b> — אוהב בית, לימוד ושקט</div></div>
+          <div class="trivia-q"><div class="qt">2. הידיים של עשיו היו <b>שעירות</b> — ושל יעקב?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a"><b>חלקות</b> — ולכן יעקב שם על הידיים עורות של גדי</div></div>
+          <div class="trivia-q"><div class="qt">3. עשיו אהב <b>שדה</b> — ויעקב אהב?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a"><b>אוהל</b> — הבית, המשפחה, הלימוד</div></div>
+          <div class="trivia-q"><div class="qt">4. עשיו היה <b>עייף ורעב</b> כשחזר — מה ההפך של רעב?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a"><b>שבע</b> — ואדם שבע חושב אחרת לגמרי מאדם רעב</div></div>
+          <div class="trivia-q"><div class="qt">5. מה עוד היפך אפשר למצוא בסיפור?</div><button class="ans-btn" onclick="reveal(this)">לחשו לתשובה 🎈</button><div class="trivia-a">קול ↔ ידיים, ברכה ↔ בכורה, מהר ↔ בסבלנות. תמצאו עוד? זה המשחק!</div></div>
         </div>
       </div>
 
