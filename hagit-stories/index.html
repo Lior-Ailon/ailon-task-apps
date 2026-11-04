@@ -323,6 +323,12 @@ function withNiggun(cb){
   if(pr&&pr.catch)pr.catch(go);
 }
 function listenClick(){
+  if(!niggun.paused){               // לחיצה שנייה מדלגת על הניגון
+    niggun.pause(); niggunDone=true;
+    audio.play(); listening=true;
+    btn.innerHTML='<span class="ic">⏸</span> עוצרים רגע…';
+    return;
+  }
   if(audio.paused){
     if(!niggunDone){
       btn.innerHTML='<span class="ic">🎵</span> מתחילים…';

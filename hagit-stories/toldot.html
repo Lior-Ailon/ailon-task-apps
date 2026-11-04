@@ -427,6 +427,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     btn.innerHTML='<span class="ic">📖</span> קריאה מודרכת';
     btn.onclick=null;
     btn.addEventListener('click',()=>{
+      if(!niggun.paused){ niggun.pause(); niggunDone=true; readAlong(); btn.innerHTML='<span class="ic">⏸</span> עוצרים רגע…'; return; }
       if(timerKind==='read'){stopSubs(false);btn.innerHTML='<span class="ic">📖</span> קריאה מודרכת';return;}
       btn.innerHTML='<span class="ic">🎵</span> מתחילים…';
       withNiggun(()=>{
