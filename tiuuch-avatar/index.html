@@ -134,7 +134,7 @@ function say(file, fallbackText){
   if(!soundOn) return;
   stopAll();
   try{
-    audioEl=new Audio('voice/'+file+'.mp3?v=1');
+    audioEl=new Audio('voice/'+file+'.mp3?v=2');
     audioEl.preload='auto';
     audioEl.onplay=()=>$('stage').classList.add('speaking');
     audioEl.onended=()=>$('stage').classList.remove('speaking');
@@ -255,7 +255,7 @@ $('micBtn').onclick=()=>{
 };
 
 /* PWA */
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=1').catch(()=>{}); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=2').catch(()=>{}); }
 </script>
 </body>
 </html>
