@@ -69,7 +69,7 @@ body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(180deg,
   <div class="stage" id="stage">
     <div class="score hidden" id="score"></div>
     <div class="avatar-wrap"><img src="avatar.jpg" alt="אווטארית"></div>
-    <div id="voiceTag" style="text-align:center;font-size:11.5px;color:#6b8481;margin:-2px 0 6px">🔊 קול גברי · מהירות 1.2</div>
+    <div id="voiceTag" style="text-align:center;font-size:11.5px;color:#6b8481;margin:-2px 0 6px">🔊 קול גברי · מהירות 1.5</div>
     <div class="bubble" id="bubble">שלום, אני כאן כדי ללמוד איתך לבחינת התיווך. נדבר, אשאל, ואסביר כל תשובה.</div>
 
     <!-- מסך פתיחה -->
@@ -114,31 +114,24 @@ function pickBrowserVoice(){
   const vs=speechSynthesis.getVoices()||[];
   browserVoice=vs.find(v=>/he[-_]IL/i.test(v.lang)&&/male|avri|asaf/i.test(v.name))||vs.find(v=>/he[-_]IL/i.test(v.lang))||null;
 }
-if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=pickBrowserVoice; pickBrowserVoice(); }
+
+function silenceBrowser(){ try{ if('speechSynthesis' in window){ speechSynthesis.cancel(); speechSynthesis.pause&&speechSynthesis.pause(); } }catch(e){} }
 function stopAll(){
+  silenceBrowser();
   try{ if(audioEl){audioEl.pause();audioEl.currentTime=0;} }catch(e){}
   try{ speechSynthesis.cancel(); }catch(e){}
   $('stage').classList.remove('speaking');
 }
-function fallbackSpeak(text){
-  if(!soundOn||!('speechSynthesis' in window)) return;
-  try{
-    const u=new SpeechSynthesisUtterance(String(text).replace(/[*_#]/g,''));
-    if(browserVoice) u.voice=browserVoice;
-    u.lang='he-IL'; u.rate=0.98;
-    u.onstart=()=>$('stage').classList.add('speaking');
-    u.onend=()=>$('stage').classList.remove('speaking');
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
+function fallbackSpeak(text){ /* בוטל: לא מנגנים קול דפדפן כדי שלא יישמעו שני קולות יחד */ }
 function say(file, fallbackText){
   if(!soundOn) return;
   stopAll();
+  silenceBrowser();
   try{
-    audioEl=new Audio('voice/'+file+'.mp3?v=3');
+    audioEl=new Audio('voice/'+file+'.mp3?v=4');
     audioEl.preload='auto';
     audioEl.onplay=()=>{ $('stage').classList.add('speaking');
-      const t=document.getElementById('voiceTag'); if(t) t.textContent='🔊 קול גברי · מהירות 1.2'; };
+      const t=document.getElementById('voiceTag'); if(t) t.textContent='🔊 קול גברי · מהירות 1.5'; };
     audioEl.onended=()=>$('stage').classList.remove('speaking');
     audioEl.onerror=()=>{ $('stage').classList.remove('speaking');
       const t=document.getElementById('voiceTag'); if(t) t.textContent='⚠️ הקול הגברי לא נטען — מרענן לקול הדפדפן';
@@ -258,8 +251,10 @@ $('micBtn').onclick=()=>{
   rec.start(); $('micBtn').classList.add('rec');
 };
 
+silenceBrowser(); setInterval(silenceBrowser, 1500);
+
 /* PWA */
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=3').catch(()=>{}); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=4').catch(()=>{}); }
 </script>
 </body>
 </html>
