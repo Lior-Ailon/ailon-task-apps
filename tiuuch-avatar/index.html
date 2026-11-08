@@ -107,26 +107,43 @@ body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(180deg,
 let QS=[], state={mode:'quiz',topic:'',idx:0,score:0,answered:false,deck:[]};
 const $=id=>document.getElementById(id);
 
-/* ===== קול ===== */
-let voice=null, soundOn=true;
-function pickVoice(){
+/* ===== קול: הקלטות מראש בקול גברי (he-IL-AvriNeural) ===== */
+let soundOn=true, audioEl=null, browserVoice=null;
+function pickBrowserVoice(){
   const vs=speechSynthesis.getVoices()||[];
-  voice=vs.find(v=>/he[-_]IL/i.test(v.lang)) || vs.find(v=>/hebrew/i.test(v.name)) || null;
+  browserVoice=vs.find(v=>/he[-_]IL/i.test(v.lang)&&/male|avri|asaf/i.test(v.name))||vs.find(v=>/he[-_]IL/i.test(v.lang))||null;
 }
-speechSynthesis.onvoiceschanged=pickVoice; pickVoice();
-function speak(text){
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=pickBrowserVoice; pickBrowserVoice(); }
+function stopAll(){
+  try{ if(audioEl){audioEl.pause();audioEl.currentTime=0;} }catch(e){}
+  try{ speechSynthesis.cancel(); }catch(e){}
+  $('stage').classList.remove('speaking');
+}
+function fallbackSpeak(text){
   if(!soundOn||!('speechSynthesis' in window)) return;
   try{
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(text.replace(/[*_#]/g,''));
-    if(voice) u.voice=voice;
-    u.lang='he-IL'; u.rate=0.98; u.pitch=1.02;
+    const u=new SpeechSynthesisUtterance(String(text).replace(/[*_#]/g,''));
+    if(browserVoice) u.voice=browserVoice;
+    u.lang='he-IL'; u.rate=0.98;
     u.onstart=()=>$('stage').classList.add('speaking');
     u.onend=()=>$('stage').classList.remove('speaking');
     speechSynthesis.speak(u);
   }catch(e){}
 }
-$('soundBtn').onclick=()=>{soundOn=!soundOn;$('soundBtn').classList.toggle('off',!soundOn);$('soundBtn').textContent=soundOn?'🔊':'🔇';if(!soundOn)speechSynthesis.cancel();};
+function say(file, fallbackText){
+  if(!soundOn) return;
+  stopAll();
+  try{
+    audioEl=new Audio('voice/'+file+'.mp3?v=1');
+    audioEl.preload='auto';
+    audioEl.onplay=()=>$('stage').classList.add('speaking');
+    audioEl.onended=()=>$('stage').classList.remove('speaking');
+    audioEl.onerror=()=>{ $('stage').classList.remove('speaking'); if(fallbackText) fallbackSpeak(fallbackText); };
+    const pr=audioEl.play();
+    if(pr&&pr.catch) pr.catch(()=>{ if(fallbackText) fallbackSpeak(fallbackText); });
+  }catch(e){ if(fallbackText) fallbackSpeak(fallbackText); }
+}
+$('soundBtn').onclick=()=>{soundOn=!soundOn;$('soundBtn').classList.toggle('off',!soundOn);$('soundBtn').textContent=soundOn?'🔊':'🔇';if(!soundOn)stopAll();};
 
 /* ===== נתונים ===== */
 fetch('questions.json?v=1').then(r=>r.json()).then(d=>{
@@ -151,8 +168,8 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
   state.mode=t.dataset.mode;
 });
-$('startBtn').onclick=()=>{ $('startScreen').classList.add('hidden'); $('work').classList.remove('hidden'); $('score').classList.remove('hidden'); newRound(); };
-$('homeBtn').onclick=()=>{ speechSynthesis.cancel(); location.reload(); };
+$('startBtn').onclick=()=>{ say('intro','שלום, אני כאן כדי ללמוד איתך לבחינת התיווך.'); $('startScreen').classList.add('hidden'); $('work').classList.remove('hidden'); $('score').classList.remove('hidden'); newRound(); };
+$('homeBtn').onclick=()=>{ stopAll(); location.reload(); };
 
 function newRound(){
   let pool=QS.filter(q=>!state.topic||q.law===state.topic);
@@ -171,7 +188,7 @@ function render(){
   state.answered=false;
   if(state.mode==='quiz'){
     $('bubble').innerHTML='<b>שאלה:</b> '+q.q;
-    speak(q.q+'. '+q.opts.map((o,i)=>'אפשרות '+(i+1)+': '+o).join('. '));
+    say('q_'+q.id, q.q+'. '+q.opts.map((o,i)=>'אפשרות '+(i+1)+': '+o).join('. '));
     const host=$('opts'); host.innerHTML='';
     q.opts.forEach((o,i)=>{
       const b=document.createElement('button'); b.className='opt'; b.textContent=o;
@@ -179,7 +196,7 @@ function render(){
     });
   }else{
     $('bubble').innerHTML='<b>בוא נדבר על '+(q.law||'הנושא')+'.</b><br>'+q.q+'<br><br><span style="color:#6b8481;font-size:14px">ספר לי מה דעתך, ואחר כך אסביר את התשובה המלאה.</span>';
-    speak('בוא נדבר על '+(q.law||'הנושא')+'. '+q.q);
+    say('q_'+q.id, q.q);
     $('talkInput').value='';
   }
 }
@@ -195,9 +212,9 @@ function answer(i,btn){
   if(ok){state.score++;$('score').textContent='✅ '+state.score;}
   const lead= ok?'נכון מאוד. ':'לא בדיוק. ';
   $('bubble').innerHTML=(ok?'<b>✅ נכון.</b> ':'<b>❌ לא מדויק.</b> ')+(q.explain||'');
-  speak(lead+(q.explain||''));
+  say('e_'+q.id, (q.explain||''));
 }
-$('repeatBtn').onclick=()=>{const q=state.deck[state.idx]; if(q) speak(state.mode==='talk'?q.q:q.q+'. '+q.opts.map((o,i)=>'אפשרות '+(i+1)+': '+o).join('. '));};
+$('repeatBtn').onclick=()=>{const q=state.deck[state.idx]; if(q) say('q_'+q.id, q.q);};
 $('nextBtn').onclick=()=>{
   if(state.idx+1>=state.deck.length){ finish(); return; }
   state.idx++; render();
@@ -208,7 +225,7 @@ function finish(){
     ? `סיימנו סבב. ענית נכון על ${state.score} מתוך ${n}. `+(state.score>=n*0.8?'זה יופי, את/ה בכיוון של לעבור.':'בואו נחזור על הנושא הזה, זה בדיוק מה שהבחינה מחפשת.')
     : `סיימנו לדבר על ${n} שאלות בנושא. כל הכבוד על הסבלנות.`;
   $('bubble').innerHTML='<b>סיכום הסבב</b><br>'+msg;
-  speak(msg);
+  say(state.mode==='quiz'?(state.score>=n*0.8?'done':'next'):'done', msg);
   $('opts').innerHTML='';
   state.idx=n-1;
 }
@@ -221,7 +238,7 @@ function handleTalk(txt){
   const good=words>=4;
   $('bubble').innerHTML='<b>מה שאמרת:</b> '+txt+'<br><br><b>ומה שחשוב לדעת:</b> '+(q.explain||'')+
     '<br><br><span style="color:#6b8481;font-size:14px">'+(good?'יפה. עכשיו נעבור לשאלה הבאה.':'כדאי להרחיב קצת יותר בפעם הבאה. נעבור לשאלה הבאה.')+'</span>';
-  speak('תודה. ומה שחשוב לדעת: '+(q.explain||''));
+  say('e_'+q.id, (q.explain||''));
   state.idx=Math.min(state.idx+1,state.deck.length-1);
   setTimeout(render, 4200);
 }
