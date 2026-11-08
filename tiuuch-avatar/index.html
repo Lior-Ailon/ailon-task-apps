@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>אווטארית התיווך · העוצמה שבפרשה</title>
+<meta name="theme-color" content="#0d9488">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&family=Varela+Round&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#0d9488;--teal2:#14b8a6;--deep:#0b6b62;--bg:#eef7f6;--ink:#1c2b2a;--muted:#6b8481}
+body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(180deg,#e8f5f4,#f4fbfa 40%,#eef7f6);color:var(--ink);min-height:100dvh;display:flex;justify-content:center;padding:10px}
+.app{width:100%;max-width:520px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 10px}
+.brand{font-family:'Varela Round',sans-serif;font-size:15px;color:var(--deep)}
+.brand small{display:block;font-family:'Heebo';font-size:11px;color:var(--muted);font-weight:400}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:none;background:#fff;color:var(--deep);font-size:18px;box-shadow:0 4px 12px rgba(13,148,136,.12);cursor:pointer}
+.icon-btn.off{opacity:.45}
+.stage{position:relative;background:#fff;border-radius:28px;padding:18px 16px 16px;box-shadow:0 14px 36px rgba(13,148,136,.13);overflow:hidden}
+.avatar-wrap{position:relative;width:172px;height:172px;margin:0 auto 6px}
+.avatar-wrap img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;border-radius:50%;border:4px solid #d7f0ed;box-shadow:0 10px 26px rgba(13,148,136,.22)}
+.speaking .avatar-wrap::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:3px solid var(--teal2);animation:pulse 1.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.98);opacity:.9}100%{transform:scale(1.14);opacity:0}}
+.bubble{background:linear-gradient(135deg,#f0fbfa,#e6f6f4);border:1.5px solid #cdeae6;border-radius:20px;padding:14px 16px;font-size:16px;line-height:1.6;margin-top:10px;min-height:74px}
+.bubble b{color:var(--deep)}
+.opts{display:grid;gap:9px;margin-top:12px}
+.opt{padding:13px 14px;border-radius:16px;border:2px solid #dbeeec;background:#fff;font-size:15px;line-height:1.45;cursor:pointer;transition:.15s;text-align:right;font-family:'Heebo'}
+.opt:hover{border-color:var(--teal2);transform:translateY(-1px)}
+.opt.correct{border-color:#12a06d;background:#e8fbf1}
+.opt.wrong{border-color:#e06666;background:#fdeeee}
+.opt:disabled{opacity:.75;cursor:default}
+.primary{width:100%;padding:16px;border:none;border-radius:18px;background:linear-gradient(135deg,var(--teal),var(--deep));color:#fff;font-size:17px;font-weight:700;font-family:'Heebo';cursor:pointer;box-shadow:0 10px 24px rgba(13,148,136,.3);margin-top:14px}
+.primary.ghost{background:#fff;color:var(--deep);border:2px solid #cdeae6;box-shadow:none}
+.row{display:flex;gap:10px}
+.row .primary{margin-top:14px}
+.tabs{display:flex;gap:8px;background:#fff;padding:6px;border-radius:16px;box-shadow:0 6px 18px rgba(13,148,136,.10);margin:14px 0}
+.tab{flex:1;padding:11px;border-radius:12px;border:none;background:transparent;font-family:'Heebo';font-size:14.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.tab.on{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 8px}
+.chip{flex:0 0 auto;padding:8px 13px;border-radius:999px;border:1.5px solid #d3ece9;background:#fff;font-size:13px;color:var(--deep);cursor:pointer;font-family:'Heebo'}
+.chip.on{background:var(--deep);color:#fff;border-color:var(--deep)}
+.meta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:2px 6px 6px}
+.bar{height:7px;background:#dcefed;border-radius:99px;overflow:hidden;margin:2px 4px 10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal2),var(--teal));width:0;transition:width .4s}
+.talk{display:flex;gap:8px;margin-top:12px}
+.talk input{flex:1;padding:13px 14px;border-radius:14px;border:2px solid #dbeeec;font-family:'Heebo';font-size:15px;background:#fff}
+.mic{width:52px;border-radius:14px;border:2px solid #cdeae6;background:#fff;font-size:20px;cursor:pointer}
+.mic.rec{background:#ffe9e9;border-color:#f0a5a5;animation:pulse 1.2s infinite}
+.hint{font-size:12.5px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5}
+.foot{text-align:center;font-size:11.5px;color:#93a8a6;padding:16px 4px 26px}
+.foot img{width:22px;vertical-align:middle;margin-right:6px}
+.hidden{display:none!important}
+.score{position:absolute;top:14px;left:16px;font-size:12.5px;color:var(--muted)}
+@media(max-width:380px){.avatar-wrap{width:140px;height:140px}.bubble{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">אווטארית התיווך<small>· העוצמה שבפרשה</small></div>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" id="soundBtn" title="קול">🔊</button>
+      <button class="icon-btn" id="homeBtn" title="התחלה">↺</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="score hidden" id="score"></div>
+    <div class="avatar-wrap"><img src="avatar.jpg" alt="אווטארית"></div>
+    <div class="bubble" id="bubble">שלום, אני כאן כדי ללמוד איתך לבחינת התיווך. נדבר, אשאל, ואסביר כל תשובה.</div>
+
+    <!-- מסך פתיחה -->
+    <div id="startScreen">
+      <div class="tabs" style="margin-top:14px">
+        <button class="tab on" data-mode="quiz">🎯 נתרגל שאלות</button>
+        <button class="tab" data-mode="talk">💬 נדבר על הנושא</button>
+      </div>
+      <button class="primary" id="startBtn">מתחילים</button>
+      <div class="hint">125 שאלות מבחינה · 12 נושאים · אפשר גם לדבר אליי בקול</div>
+    </div>
+
+    <!-- אזור עבודה -->
+    <div id="work" class="hidden">
+      <div class="meta"><span id="topicLabel">נושא</span><span id="counter"></span></div>
+      <div class="bar"><i id="prog"></i></div>
+      <div class="chips" id="chips"></div>
+      <div class="opts" id="opts"></div>
+      <div class="row">
+        <button class="primary ghost" id="repeatBtn">🔁 חזור על השאלה</button>
+        <button class="primary" id="nextBtn">הבא</button>
+      </div>
+      <div class="talk hidden" id="talkBox">
+        <input id="talkInput" placeholder="כתוב או לחץ על המיקרופון וענה...">
+        <button class="mic" id="micBtn">🎤</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <img src="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/5a451ce5a_ailon_hex_navy2.png" alt="">AILON Task · Dream it. Plan it. Achieve it.
+  </div>
+</div>
+
+<script>
+let QS=[], state={mode:'quiz',topic:'',idx:0,score:0,answered:false,deck:[]};
+const $=id=>document.getElementById(id);
+
+/* ===== קול ===== */
+let voice=null, soundOn=true;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices()||[];
+  voice=vs.find(v=>/he[-_]IL/i.test(v.lang)) || vs.find(v=>/hebrew/i.test(v.name)) || null;
+}
+speechSynthesis.onvoiceschanged=pickVoice; pickVoice();
+function speak(text){
+  if(!soundOn||!('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text.replace(/[*_#]/g,''));
+    if(voice) u.voice=voice;
+    u.lang='he-IL'; u.rate=0.98; u.pitch=1.02;
+    u.onstart=()=>$('stage').classList.add('speaking');
+    u.onend=()=>$('stage').classList.remove('speaking');
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+$('soundBtn').onclick=()=>{soundOn=!soundOn;$('soundBtn').classList.toggle('off',!soundOn);$('soundBtn').textContent=soundOn?'🔊':'🔇';if(!soundOn)speechSynthesis.cancel();};
+
+/* ===== נתונים ===== */
+fetch('questions.json?v=1').then(r=>r.json()).then(d=>{
+  QS=d; buildChips(); 
+}).catch(()=>{ $('bubble').innerHTML='לא הצלחתי לטעון את בנק השאלות. נסו לרענן.'; });
+
+function topics(){ return [...new Set(QS.map(q=>q.law).filter(Boolean))]; }
+function buildChips(){
+  const t=topics(); const host=$('chips'); host.innerHTML='';
+  const all=document.createElement('button'); all.className='chip on'; all.textContent='כל הנושאים';
+  all.onclick=()=>{state.topic='';[...host.children].forEach(c=>c.classList.remove('on'));all.classList.add('on');newRound();};
+  host.appendChild(all);
+  t.forEach(name=>{
+    const b=document.createElement('button'); b.className='chip'; b.textContent=name;
+    b.onclick=()=>{state.topic=name;[...host.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');newRound();};
+    host.appendChild(b);
+  });
+}
+
+/* ===== זרימה ===== */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+  state.mode=t.dataset.mode;
+});
+$('startBtn').onclick=()=>{ $('startScreen').classList.add('hidden'); $('work').classList.remove('hidden'); $('score').classList.remove('hidden'); newRound(); };
+$('homeBtn').onclick=()=>{ speechSynthesis.cancel(); location.reload(); };
+
+function newRound(){
+  let pool=QS.filter(q=>!state.topic||q.law===state.topic);
+  state.deck=pool.sort(()=>Math.random()-.5).slice(0,10);
+  state.idx=0; state.score=0; state.answered=false;
+  $('talkBox').classList.toggle('hidden', state.mode!=='talk');
+  $('opts').classList.toggle('hidden', state.mode==='talk');
+  render();
+}
+function render(){
+  const q=state.deck[state.idx]; if(!q) return;
+  $('topicLabel').textContent=q.law||'כללי';
+  $('counter').textContent=(state.idx+1)+' / '+state.deck.length;
+  $('score').textContent='✅ '+state.score;
+  $('prog').style.width=((state.idx)/state.deck.length*100)+'%';
+  state.answered=false;
+  if(state.mode==='quiz'){
+    $('bubble').innerHTML='<b>שאלה:</b> '+q.q;
+    speak(q.q+'. '+q.opts.map((o,i)=>'אפשרות '+(i+1)+': '+o).join('. '));
+    const host=$('opts'); host.innerHTML='';
+    q.opts.forEach((o,i)=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+      b.onclick=()=>answer(i,b); host.appendChild(b);
+    });
+  }else{
+    $('bubble').innerHTML='<b>בוא נדבר על '+(q.law||'הנושא')+'.</b><br>'+q.q+'<br><br><span style="color:#6b8481;font-size:14px">ספר לי מה דעתך, ואחר כך אסביר את התשובה המלאה.</span>';
+    speak('בוא נדבר על '+(q.law||'הנושא')+'. '+q.q);
+    $('talkInput').value='';
+  }
+}
+function answer(i,btn){
+  if(state.answered) return; state.answered=true;
+  const q=state.deck[state.idx];
+  const ok=i===q.correct;
+  [...$('opts').children].forEach((b,j)=>{
+    b.disabled=true;
+    if(j===q.correct) b.classList.add('correct');
+    if(j===i&&!ok) b.classList.add('wrong');
+  });
+  if(ok){state.score++;$('score').textContent='✅ '+state.score;}
+  const lead= ok?'נכון מאוד. ':'לא בדיוק. ';
+  $('bubble').innerHTML=(ok?'<b>✅ נכון.</b> ':'<b>❌ לא מדויק.</b> ')+(q.explain||'');
+  speak(lead+(q.explain||''));
+}
+$('repeatBtn').onclick=()=>{const q=state.deck[state.idx]; if(q) speak(state.mode==='talk'?q.q:q.q+'. '+q.opts.map((o,i)=>'אפשרות '+(i+1)+': '+o).join('. '));};
+$('nextBtn').onclick=()=>{
+  if(state.idx+1>=state.deck.length){ finish(); return; }
+  state.idx++; render();
+};
+function finish(){
+  const n=state.deck.length;
+  let msg = state.mode==='quiz'
+    ? `סיימנו סבב. ענית נכון על ${state.score} מתוך ${n}. `+(state.score>=n*0.8?'זה יופי, את/ה בכיוון של לעבור.':'בואו נחזור על הנושא הזה, זה בדיוק מה שהבחינה מחפשת.')
+    : `סיימנו לדבר על ${n} שאלות בנושא. כל הכבוד על הסבלנות.`;
+  $('bubble').innerHTML='<b>סיכום הסבב</b><br>'+msg;
+  speak(msg);
+  $('opts').innerHTML='';
+  state.idx=n-1;
+}
+
+/* ===== דיבור חופשי (דיון) ===== */
+$('talkInput').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.value.trim()) handleTalk(e.target.value.trim()); });
+function handleTalk(txt){
+  const q=state.deck[state.idx]; if(!q) return;
+  const words=txt.split(/\s+/).length;
+  const good=words>=4;
+  $('bubble').innerHTML='<b>מה שאמרת:</b> '+txt+'<br><br><b>ומה שחשוב לדעת:</b> '+(q.explain||'')+
+    '<br><br><span style="color:#6b8481;font-size:14px">'+(good?'יפה. עכשיו נעבור לשאלה הבאה.':'כדאי להרחיב קצת יותר בפעם הבאה. נעבור לשאלה הבאה.')+'</span>';
+  speak('תודה. ומה שחשוב לדעת: '+(q.explain||''));
+  state.idx=Math.min(state.idx+1,state.deck.length-1);
+  setTimeout(render, 4200);
+}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null;
+$('micBtn').onclick=()=>{
+  if(!SR){ alert('הדפדפן הזה לא תומך בזיהוי דיבור. אפשר להקליד.'); return; }
+  if(rec){ rec.stop(); rec=null; $('micBtn').classList.remove('rec'); return; }
+  rec=new SR(); rec.lang='he-IL'; rec.interimResults=false; rec.maxAlternatives=1;
+  rec.onresult=e=>{ const t=e.results[0][0].transcript; $('talkInput').value=t; handleTalk(t); };
+  rec.onerror=()=>{ $('micBtn').classList.remove('rec'); rec=null; };
+  rec.onend=()=>{ $('micBtn').classList.remove('rec'); rec=null; };
+  rec.start(); $('micBtn').classList.add('rec');
+};
+
+/* PWA */
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=1').catch(()=>{}); }
+</script>
+</body>
+</html>
