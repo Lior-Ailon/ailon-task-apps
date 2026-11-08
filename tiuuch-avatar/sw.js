@@ -1,4 +1,4 @@
-const C='tiuuch-avatar-v2';
+const C='tiuuch-avatar-v3';
 const A=['./','questions.json','avatar.jpg','manifest.json','icon-192.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(A).catch(()=>{})))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});

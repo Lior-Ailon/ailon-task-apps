@@ -69,6 +69,7 @@ body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(180deg,
   <div class="stage" id="stage">
     <div class="score hidden" id="score"></div>
     <div class="avatar-wrap"><img src="avatar.jpg" alt="אווטארית"></div>
+    <div id="voiceTag" style="text-align:center;font-size:11.5px;color:#6b8481;margin:-2px 0 6px">🔊 קול גברי · מהירות 1.2</div>
     <div class="bubble" id="bubble">שלום, אני כאן כדי ללמוד איתך לבחינת התיווך. נדבר, אשאל, ואסביר כל תשובה.</div>
 
     <!-- מסך פתיחה -->
@@ -134,11 +135,14 @@ function say(file, fallbackText){
   if(!soundOn) return;
   stopAll();
   try{
-    audioEl=new Audio('voice/'+file+'.mp3?v=2');
+    audioEl=new Audio('voice/'+file+'.mp3?v=3');
     audioEl.preload='auto';
-    audioEl.onplay=()=>$('stage').classList.add('speaking');
+    audioEl.onplay=()=>{ $('stage').classList.add('speaking');
+      const t=document.getElementById('voiceTag'); if(t) t.textContent='🔊 קול גברי · מהירות 1.2'; };
     audioEl.onended=()=>$('stage').classList.remove('speaking');
-    audioEl.onerror=()=>{ $('stage').classList.remove('speaking'); if(fallbackText) fallbackSpeak(fallbackText); };
+    audioEl.onerror=()=>{ $('stage').classList.remove('speaking');
+      const t=document.getElementById('voiceTag'); if(t) t.textContent='⚠️ הקול הגברי לא נטען — מרענן לקול הדפדפן';
+      if(fallbackText) fallbackSpeak(fallbackText); };
     const pr=audioEl.play();
     if(pr&&pr.catch) pr.catch(()=>{ if(fallbackText) fallbackSpeak(fallbackText); });
   }catch(e){ if(fallbackText) fallbackSpeak(fallbackText); }
@@ -255,7 +259,7 @@ $('micBtn').onclick=()=>{
 };
 
 /* PWA */
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=2').catch(()=>{}); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js?v=3').catch(()=>{}); }
 </script>
 </body>
 </html>
