@@ -45,6 +45,13 @@ h1 b{color:var(--gold)}
 .act:active{transform:scale(.97)}
 .act:hover{border-color:var(--teal-l)}
 .act .e{font-size:20px;line-height:1}
+.last{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;margin:0 0 20px;box-shadow:0 6px 20px rgba(13,148,136,.07);text-align:center}
+.last .bd{display:inline-block;background:#fff4e0;color:#8a5a2b;font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:9px}
+.last .tt{font-family:'Varela Round',sans-serif;font-size:19px;color:var(--teal-d);margin-bottom:3px}
+.last .mt{font-size:12.5px;color:var(--soft);margin-bottom:12px}
+.btn-ep{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--mint);border:2px solid var(--teal-l);color:var(--teal-d);font-family:'Heebo',sans-serif;font-weight:800;font-size:15.5px;padding:12px;border-radius:14px;cursor:pointer}
+.btn-ep:active{transform:translateY(1px)}
+.last .wt{display:inline-block;margin-top:10px;color:var(--teal);font-weight:700;font-size:13.5px;text-decoration:none}
 .sec-title{font-family:'Varela Round',sans-serif;font-size:14px;color:var(--teal-d);margin:6px 0 10px;text-align:center}
 .links{display:grid;gap:9px}
 .link{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:15px;padding:13px 15px;
@@ -72,6 +79,14 @@ h1 b{color:var(--gold)}
 
   <button class="primary" id="wa"><span class="ico">💬</span> שתפו בוואטסאפ</button>
   <div class="hint">נפתחת רשימת הקבוצות והאנשים — בוחרים ושולחים</div>
+
+  <div class="last">
+    <div class="bd">החדש ביותר</div>
+    <div class="tt" id="epTitleCard">מחשבים מסלול מחדש</div>
+    <div class="mt" id="epMetaCard">5.11 · פרשת השבוע · העוצמה שבפרשה</div>
+    <button class="btn-ep" id="epShare"><span>📣</span> שתפו את הפרק הזה</button>
+    <a class="wt" id="epWatch" href="https://www.youtube.com/shorts/IV3h7ZG0kAg" target="_blank" rel="noopener">לצפייה בפרק ›</a>
+  </div>
 
   <div class="row">
     <button class="act" id="native"><span class="e">📤</span>שיתוף</button>
@@ -106,6 +121,16 @@ function toast(t){ const el=document.getElementById('toast'); el.textContent=t; 
 
 document.getElementById('wa').addEventListener('click',()=>{
   window.location.href = 'https://wa.me/?text=' + encodeURIComponent(MSG + ' ' + U);
+});
+
+const EP = {
+  title: 'מחשבים מסלול מחדש',
+  meta : '5.11 · פרשת השבוע',
+  url  : 'https://www.youtube.com/shorts/IV3h7ZG0kAg'
+};
+document.getElementById('epShare').addEventListener('click',()=>{
+  const txt = EP.title + ' · ' + EP.meta + '\n' + EP.url;
+  window.location.href = 'https://wa.me/?text=' + encodeURIComponent(txt);
 });
 
 document.getElementById('fb').addEventListener('click',()=>{
