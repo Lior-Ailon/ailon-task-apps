@@ -121,6 +121,11 @@ tr:hover td{background:var(--bg)}
 .badge-relevant{background:#dcfce7;color:#166534}
 .badge-converted{background:#fef3c7;color:#92400e}
 .badge-lost{background:#fee2e2;color:#991b1b}
+.badge-cold{background:#e8eef2;color:#4a6572}
+.lead-tabs{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap}
+.lead-tab{background:#fff;border:1.5px solid var(--border,#e5e7eb);border-radius:999px;padding:8px 16px;font-family:'Rubik',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:#6b7280}
+.lead-tab.active{background:#0d9488;border-color:#0d9488;color:#fff}
+.lead-tab .n{opacity:.75;font-weight:500}
 .badge-draft{background:#e0e7ff;color:#3730a3}
 .badge-sent{background:#fef3c7;color:#92400e}
 .badge-approved{background:#dcfce7;color:#166534}
@@ -673,13 +678,38 @@ c.innerHTML = `<div class="page-header"><div class="page-title">🎯 לידים<
 <div id="leadsList"><div class="loading"><div class="spinner"></div></div></div>`;
 const { data } = await sb.from('leads').select('*').order('created_at',{ascending:false});
 window._leads = data||[];
-renderLeadsList(data||[]);
+window._leadTab = window._leadTab || 'active';
+renderLeadTabs();
 }
 
-function renderLeadsList(leads) {
+const LEAD_INACTIVE = ['cold','קר','lost','לא רלוונטי','converted','הפך ללקוח'];
+function isLeadActive(l){ return !LEAD_INACTIVE.includes(l.status); }
+
+function renderLeadTabs(){
+const all = window._leads||[];
+const act = all.filter(isLeadActive);
+const inact = all.filter(l=>!isLeadActive(l));
+const tab = window._leadTab||'active';
+const host = document.getElementById('leadsList');
+const tabsHtml = `<div class="lead-tabs">
+<button class="lead-tab ${tab==='active'?'active':''}" onclick="setLeadTab('active')">🔥 לידים אקטואליים <span class="n">${act.length}</span></button>
+<button class="lead-tab ${tab==='inactive'?'active':''}" onclick="setLeadTab('inactive')">❄️ לידים לא אקטואליים <span class="n">${inact.length}</span></button>
+</div>`;
+if(!host) return;
+host.dataset.tabs='1';
+renderLeadsList(tab==='active'?act:inact, tab, tabsHtml);
+}
+
+function setLeadTab(t){ window._leadTab=t; renderLeadTabs(); }
+
+function renderLeadsList(leads, tab, tabsHtml) {
 const el = document.getElementById('leadsList');
-if(!leads || leads.length === 0){ el.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>אין לידים עדיין</p></div>'; return; }
-el.innerHTML = `<div class="grid grid-2">${leads.map(l=>`
+const head = tabsHtml || '';
+if(!leads || leads.length === 0){
+  el.innerHTML = head + `<div class="empty"><div class="empty-icon">${tab==='inactive'?'❄️':'🎯'}</div><p>${tab==='inactive'?'אין לידים לא אקטואליים':'אין לידים אקטואליים'}</p></div>`;
+  return;
+}
+el.innerHTML = head + `<div class="grid grid-2">${leads.map(l=>`
 <div class="lead-card">
 <div class="lead-card-actions">
 <button onclick="deleteLead(${l.id})" title="מחק">🗑️</button>
@@ -693,6 +723,7 @@ ${l.deal_value?`<div class="lead-value">${l.deal_value.toLocaleString()} ₪</di
 <span class="badge ${leadBadgeClass(l.status)}">${leadStatusLabel(l.status)}</span>
 ${l.follow_up_date?`<div class="lead-contact" style="margin-top:6px">📅 ${formatDate(l.follow_up_date)}</div>`:''}
 ${l.status!=='converted'&&l.status!=='הפך ללקוח'?`<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="convertLead(${l.id})">המר ללקוח</button>`:''}
+${isLeadActive(l)?`<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="setLeadInactive(${l.id})">❄️ ללא אקטואלי</button>`:`<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="setLeadActive(${l.id})">🔥 החזר לאקטואלי</button>`}
 </div>
 `).join('')}</div>`;
 }
@@ -710,6 +741,7 @@ openModal('ליד חדש', `
 <option value="relevant" ${l.status==='relevant'?'selected':''}>רלוונטי</option>
 <option value="converted" ${l.status==='converted'?'selected':''}>הפך ללקוח</option>
 <option value="lost" ${l.status==='lost'?'selected':''}>לא רלוונטי</option>
+<option value="cold" ${l.status==='cold'?'selected':''}>לא אקטואלי (קר)</option>
 </select></div>
 <div class="modal-field"><label>שווי עסקה (₪)</label><input type="number" id="lf_value" value="${l.deal_value||''}"></div>
 <div class="modal-field"><label>תאריך מעקב</label><input type="datetime-local" id="lf_followup" value="${l.follow_up_date?new Date(l.follow_up_date).toISOString().slice(0,16):''}"></div>
@@ -726,6 +758,17 @@ closeModal(); renderLeads();
 });
 }
 
+async function setLeadInactive(id){
+  await sb.from('leads').update({status:'cold'}).eq('id',id);
+  toast('הליד הועבר ללא אקטואלי ❄️');
+  notifyCrmUpdate && notifyCrmUpdate('lead','update','ליד הועבר ללא אקטואלי', window._leads?.find(x=>x.id==id)?.name||'');
+  renderLeads();
+}
+async function setLeadActive(id){
+  await sb.from('leads').update({status:'relevant'}).eq('id',id);
+  toast('הליד הוחזר ללידים אקטואליים 🔥');
+  renderLeads();
+}
 async function deleteLead(id){ if(!confirm('למחוק ליד?'))return; await sb.from('leads').delete().eq('id',id); toast('ליד נמחק'); renderLeads(); }
 async function convertLead(id){ await sb.from('leads').update({status:'converted'}).eq('id',id); const l = window._leads.find(x=>x.id==id); if(l){ await sb.from('customers').insert({name:l.name,company:l.company,phone:l.phone,email:l.email}); } toast('ליד הומר ללקוח 🎉'); notifyCrmUpdate('customer','create', l.name||'לקוח מהמרת ליד', 'נוצר בהמרת ליד | חברה: '+(l.company||'-')+' | טלפון: '+(l.phone||'-')); renderLeads(); }
 
@@ -737,16 +780,15 @@ c.innerHTML = `<div class="page-header"><div class="page-title">📋 לוח לי
 <div id="kanbanBoard"><div class="loading"><div class="spinner"></div></div></div>`;
 const { data } = await sb.from('leads').select('*');
 window._leads = data||[];
+const boardLeads = (data||[]).filter(l=>!['cold','קר','lost','לא רלוונטי','converted','הפך ללקוח'].includes(l.status));
 const cols = [
 {key:'new',label:'חדש',badge:'badge-new'},
 {key:'contacted',label:'יצרנו קשר',badge:'badge-contact'},
-{key:'relevant',label:'רלוונטי',badge:'badge-relevant'},
-{key:'converted',label:'הפך ללקוח',badge:'badge-converted'},
-{key:'lost',label:'לא רלוונטי',badge:'badge-lost'}
+{key:'relevant',label:'רלוונטי',badge:'badge-relevant'}
 ];
 const board = document.getElementById('kanbanBoard');
 board.innerHTML = `<div class="kanban">${cols.map(col=>{
-const items = (data||[]).filter(l=>l.status===col.key||l.status===col.label);
+const items = (boardLeads||[]).filter(l=>l.status===col.key||l.status===col.label);
 const total = items.reduce((s,l)=>s+(l.deal_value||0),0);
 return `<div class="kanban-col" data-status="${col.key}" ondragover="event.preventDefault()" ondrop="dropLead(event,'${col.key}')">
 <div class="kanban-col-header">${col.label}<span class="kanban-col-count">${items.length} לידים${total>0?' · '+total.toLocaleString()+' ₪':''}</span></div>
@@ -1588,8 +1630,8 @@ document.getElementById('modalOverlay').addEventListener('click',(e)=>{ if(e.tar
 function val(id){ const el=document.getElementById(id); return el?el.value:''; }
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 function formatDate(d){ if(!d) return '-'; const dt=new Date(d); return dt.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+dt.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); }
-function leadBadgeClass(s){ return {new:'badge-new',contacted:'badge-contact',relevant:'badge-relevant',converted:'badge-converted',lost:'badge-lost','חדש':'badge-new','יצרנו קשר':'badge-contact','רלוונטי':'badge-relevant','הפך ללקוח':'badge-converted','לא רלוונטי':'badge-lost'}[s]||'badge-new'; }
-function leadStatusLabel(s){ return {new:'חדש',contacted:'יצרנו קשר',relevant:'רלוונטי',converted:'הפך ללקוח',lost:'לא רלוונטי','חדש':'חדש','יצרנו קשר':'יצרנו קשר','רלוונטי':'רלוונטי','הפך ללקוח':'הפך ללקוח','לא רלוונטי':'לא רלוונטי'}[s]||s||'חדש'; }
+function leadBadgeClass(s){ return {cold:'badge-cold','קר':'badge-cold',new:'badge-new',contacted:'badge-contact',relevant:'badge-relevant',converted:'badge-converted',lost:'badge-lost','חדש':'badge-new','יצרנו קשר':'badge-contact','רלוונטי':'badge-relevant','הפך ללקוח':'badge-converted','לא רלוונטי':'badge-lost'}[s]||'badge-new'; }
+function leadStatusLabel(s){ return {cold:'לא אקטואלי',new:'חדש',contacted:'יצרנו קשר',relevant:'רלוונטי',converted:'הפך ללקוח',lost:'לא רלוונטי','חדש':'חדש','יצרנו קשר':'יצרנו קשר','רלוונטי':'רלוונטי','הפך ללקוח':'הפך ללקוח','לא רלוונטי':'לא רלוונטי'}[s]||s||'חדש'; }
 function projectBadgeClass(s){ return {active:'badge-relevant',completed:'badge-approved',paused:'badge-sent',cancelled:'badge-lost'}[s]||'badge-draft'; }
 function projectStatusLabel(s){ return {active:'פעיל',completed:'הושלם',paused:'מושהה',cancelled:'בוטל'}[s]||s; }
 function quoteStatusLabel(s){ return {draft:'טיוטה',sent:'נשלח',approved:'אושר'}[s]||s||'טיוטה'; }

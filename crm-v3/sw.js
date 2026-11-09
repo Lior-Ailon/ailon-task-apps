@@ -1,4 +1,4 @@
-const CACHE = 'ailon-crm-v20260913';
+const CACHE = 'ailon-crm-v20261109';
 const CORE = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
