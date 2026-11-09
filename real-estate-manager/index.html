@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="version" content="4.1-formulas">
+<meta name="version" content="4.2-procurement">
 <title>ציון ישראל — ניהול פרויקטים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -46,6 +46,12 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);line-
 .badge-on_hold{background:rgba(239,68,68,.15);color:var(--red)}
 .badge-not_started{background:rgba(255,255,255,.06);color:var(--text-mute)}
 .badge-in_progress{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-pending{background:rgba(245,158,11,.18);color:var(--amber)}
+.badge-approved{background:rgba(34,197,94,.18);color:var(--green)}
+.badge-rejected{background:rgba(239,68,68,.18);color:var(--red)}
+.badge-delivered{background:rgba(13,148,136,.22);color:#0d9488}
+.badge-delayed{background:rgba(239,68,68,.22);color:var(--red)}
+
 .form-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .form-field{flex:1;min-width:180px}
 .form-field.full{flex:100%}
@@ -104,15 +110,49 @@ select option{background:var(--bg-3);color:var(--text)}
 <meta name="apple-mobile-web-app-title" content="ציון ישראל —">
 </head>
 <body>
-<div class="hero-banner"><div class="hero-overlay"></div><div class="hero-content"><div class="hero-top"><div class="header-logo"><div class="logo-mark">ZI</div><div class="header-logo-text"><h1>ציון ישראל</h1><span>ייזום ובנייה · ZION ISRAEL</span></div></div><div class="hero-nav"><button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button><button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button><button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג</button><button class="nav-btn" onclick="showView('calc')" id="navCalc">🧮 חישוב חומרים</button><button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button></div></div><div class="hero-tagline"><div class="hero-tagline-text">WE BELIEVE · WE DO</div><div class="hero-tagline-sub">מערכת ניהול פרויקטי בנייה</div></div></div></div>
+<div class="hero-banner"><div class="hero-overlay"></div><div class="hero-content"><div class="hero-top"><div class="header-logo"><div class="logo-mark">ZI</div><div class="header-logo-text"><h1>ציון ישראל</h1><span>ייזום ובנייה · ZION ISRAEL</span></div></div><div class="hero-nav"><button class="nav-btn active" onclick="showView('dash')" id="navDash">📊 לוח בקרה</button><button class="nav-btn" onclick="showView('projects')" id="navProjects">🏢 פרויקטים</button><button class="nav-btn" onclick="showView('catalog')" id="navCatalog">📋 קטלוג</button><button class="nav-btn" onclick="showView('calc')" id="navCalc">🧮 חישוב חומרים</button><button class="nav-btn" onclick="showView('procurement')" id="navProcurement">📦 רכש והצעות</button><button class="nav-btn" onclick="showView('insights')" id="navInsights">🤖 תובנות AI</button></div></div><div class="hero-tagline"><div class="hero-tagline-text">WE BELIEVE · WE DO</div><div class="hero-tagline-sub">מערכת ניהול פרויקטי בנייה</div></div></div></div>
 <div class="container">
 <div id="viewDash"><div class="stats-grid"><div class="stat-card"><div class="num" id="statProjects">—</div><div class="label">פרויקטים פעילים</div></div><div class="stat-card"><div class="num" id="statFloors">—</div><div class="label">קומות בעבודה</div></div><div class="stat-card"><div class="num" id="statMaterials">—</div><div class="label">פריטים בקטלוג</div></div><div class="stat-card"><div class="num" id="statBudget">—</div><div class="label">תקציב כולל ₪</div></div></div><div class="card"><div class="card-title">📊 סקירת פרויקטים</div><div id="dashProjects"></div></div></div>
-<div id="viewProjects" style="display:none"><div class="card"><div class="card-title"><span>🏢 פרויקטים</span><div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openProjectModal()">+ פרויקט חדש</button></div></div><div id="projectsList"></div></div></div>
+<div id="viewProjects" style="display:none"><div class="card"><div class="card-title"><span>🏢 פרויקטים</span><div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="openProjectModal()">+ פרויקט חדש</button></div></div>
+<div class="form-row" style="margin-bottom:14px;background:var(--bg-3);padding:12px;border-radius:var(--r-sm);border:1px solid var(--border)">
+<div class="form-field" style="min-width:140px"><label>סינון שלבי קומה</label><select id="flrStageFilter" onchange="renderProjects()"><option value="all">כל השלבים</option><option value="not_started">טרם החל</option><option value="in_progress">בביצוע</option><option value="completed">הושלם</option><option value="delayed">מעוכב</option></select></div>
+<div class="form-field" style="min-width:140px"><label>מיון קומות לפי</label><select id="flrSortBy" onchange="renderProjects()"><option value="num_asc">מספר קומה (עולה)</option><option value="num_desc">מספר קומה (יורד)</option><option value="sqm_desc">שטח מ"ר (מהגבוה לנמוך)</option><option value="days_desc">ימים משוערים</option></select></div>
+<div class="form-field" style="display:flex;align-items:flex-end"><button class="btn btn-secondary btn-sm" onclick="exportFloorsCSV()" style="width:100%">📥 ייצוא קומות ל-CSV</button></div>
+</div>
+<div id="projectsList"></div></div></div>
 <div id="viewCatalog" style="display:none"><div class="card"><div class="card-title"><span>📋 קטלוג חומרי גלם</span><div class="actions-inline"><button class="btn btn-primary btn-sm" onclick="seedDefaultMaterials()">📦 טען חומרי בניין סטנדרטיים</button> <button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ הוסף חומר</button></div></div><div style="margin-bottom:16px"><input type="text" id="matSearch" placeholder="חיפוש חומר..." oninput="renderCatalog()"></div><div id="catalogList"></div></div></div>
 <div id="viewCalc" style="display:none"><div class="card"><div class="card-title">🧮 מחשבון חומרים</div><div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">הזן מידות כל דירה בקומה. המערכת תחשב אוטומטית כמויות חומרים לפי נוסחאות סטנדרטיות.</div><div class="form-row"><div class="form-field"><label>בחר פרויקט</label><select id="calcProject" onchange="updateCalcFloors()"></select></div><div class="form-field"><label>בחר קומה</label><select id="calcFloor" onchange="loadCalcUnits()"></select></div></div><div class="form-row"><div class="form-field"><label>גובה קומה (מ')</label><input type="number" id="calcHeight" value="2.70" step="0.01" oninput="recalcMaterials()"></div><div class="form-field"><label>מקדם קירות</label><input type="number" id="calcWallFactor" value="3.5" step="0.1" oninput="recalcMaterials()"></div><div class="form-field"><label>אחוז בזבוז (%)</label><input type="number" id="calcWaste" value="7" oninput="recalcMaterials()"></div></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">דירות בקומה</div><div id="calcUnits"></div><div style="margin:12px 0"><button class="btn btn-secondary btn-sm" onclick="addCalcUnit()">+ הוסף דירה</button></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">תוצאות חישוב</div><div id="calcResults"></div><div class="actions"><button class="btn btn-primary" onclick="saveCalcToFloor()">💾 שמור חישוב לקומה</button></div></div><div class="card"><div class="card-title">🧱 חישוב בלוקים לפי שרטוט</div><div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">כל קטע קיר בשרטוט: סוג בלוק (לפי סימון הצבע) + אורך הקיר + גובה הקיר. הכמות = אורך × גובה × בלוקים למ"ר (ברירת מחדל 12.5, ניתן לכוונן לפי סוג).</div><div class="form-row"><div class="form-field"><label>אחוז בזבוז בלוקים (%)</label><input type="number" id="blkWaste" value="5" oninput="recalcBlocks()"></div><div class="form-field"><label>בלוקים למ"ר — בלוק 5</label><input type="number" id="blkDensity5" value="12.5" step="0.1" oninput="recalcBlocks()"></div><div class="form-field"><label>בלוקים למ"ר — בלוק 10</label><input type="number" id="blkDensity10" value="12.5" step="0.1" oninput="recalcBlocks()"></div><div class="form-field"><label>בלוקים למ"ר — בלוק 15</label><input type="number" id="blkDensity15" value="12.5" step="0.1" oninput="recalcBlocks()"></div></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">📐 שרטוט הקומה — מדידה אינטראקטיבית</div><div id="blkBpWrap" style="border:2px dashed var(--border);border-radius:12px;padding:16px;margin-bottom:14px"><div id="blkBpEmpty"><div style="text-align:center;font-size:26px;margin-bottom:6px">📐</div><div style="text-align:center;font-size:14px;color:var(--text-soft);font-weight:600;margin-bottom:10px">העלה שרטוט — ואז סמן קירות בלחיצה כפולה: נקודה א' ואז נקודה ב'. הקיר נמדד אוטומטית במטרים.</div><div style="text-align:center"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('blkBpFile').click()">📄 העלה שרטוט</button> <button class="btn btn-secondary btn-sm" onclick="loadBlueprintFromFloor()">🔄 טען שרטוט אחרון מהקומה</button><input type="file" id="blkBpFile" accept="image/*" style="display:none" onchange="loadBlueprintFile(this)"></div></div><div id="blkBpTools" style="display:none"><div class="form-row" style="margin-bottom:10px"><div class="form-field"><label>סוג בלוק לסימון הבא</label><select id="blkBpType" onchange="updateBpType()"><option value="b5">בלוק 5</option><option value="b10">בלוק 10</option><option value="b15">בלוק 15</option></select></div><div class="form-field"><label>גובה קיר לסימון הבא (מ')</label><input type="number" id="blkBpHeight" value="2.73" step="0.01"></div><div class="form-field"><label>&nbsp;</label><button class="btn btn-secondary btn-sm" onclick="undoBpLine()">↩️ בטל סימון אחרון</button></div><div class="form-field"><label>&nbsp;</label><button class="btn btn-secondary btn-sm" onclick="clearBpLines()">🗑️ נקה סימונים</button></div></div><div id="blkBpScaleHint" style="font-size:13px;color:var(--gold-light);margin-bottom:8px">סמן קטע ראשון — תתבקש להזין את אורכו האמיתי במטרים לכיול סקאלה</div><canvas id="blkCanvas" style="width:100%;border-radius:10px;cursor:crosshair;background:#0d1a26" onclick="bpCanvasClick(event)"></canvas><div style="margin-top:10px;text-align:center"><button class="btn btn-primary btn-sm" onclick="saveBlueprintToFloor()">💾 שמור שרטוט עם הסימונים לקומה</button></div></div></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">קטעי קירות מהשרטוט</div><div id="blkSegments"></div><div style="margin:12px 0"><button class="btn btn-secondary btn-sm" onclick="addBlockSegment()">+ הוסף קטע קיר</button></div><div style="margin:20px 0 10px;font-size:15px;font-weight:700;color:var(--gold)">תוצאות בלוקים</div><div id="blkResults"></div><div class="actions"><button class="btn btn-primary" onclick="saveBlockCalcToFloor()">💾 שמור חישוב בלוקים לקומה</button></div></div>
 <div class="card"><div class="card-title">📐 נוסחאות חישוב</div><div style="color:var(--text-soft);font-size:14px;line-height:2.2"><b style="color:var(--gold-light)">בלוק:</b> אורך × גובה = שטח קיר ÷ 0.08 = כמות יחידות<br><b style="color:var(--gold-light)">ריצוף:</b> אורך × רוחב = שטח (מ"ר)<br><b style="color:var(--gold-light)">פנל:</b> אורך × גובה = שטח (מ"ר)<br><b style="color:var(--gold-light)">בטון:</b> אורך × גובה × עובי = נפח (מ"ק)<br><b style="color:var(--gold-light)">טיח גבס:</b> (שטח קירות + תקרה) × 16 ק"ג/מ"ר<br><b style="color:var(--gold-light)">דבק ריצוף:</b> שטח ריצוף × 1.5 ק"ג/מ"ר<br><b style="color:var(--gold-light)">צבע אקרילי:</b> שטח קירות × 0.2 ליטר/מ"ר<br><b style="color:var(--gold-light)">טיט לריצוף:</b> שטח רצפה × 16 ק"ג/מ"ר<br><b style="color:var(--gold-light)">איטום אקרילי:</b> שטח רצפה × 2 ק"ג/מ"ר (חדרים רטובים)<br><b style="color:var(--gold-light)">חומרים נוספים (טיח, דבק וכו'):</b> (אורך × רוחב + עובי) × צפיפות = כמות</div></div></div>
+
+<div id="viewProcurement" style="display:none">
+<div class="card">
+<div class="card-title"><span>📦 מעקב רכש והצעות מחיר (אביעד)</span><div class="actions-inline"><button class="btn btn-secondary btn-sm" onclick="exportQuotesCSV()">📥 ייצוא CSV</button> <button class="btn btn-primary btn-sm" onclick="openQuoteModal()">+ הצעת מחיר חדשה</button></div></div>
+<div class="form-row" style="margin-bottom:16px;background:var(--bg-3);padding:12px;border-radius:var(--r-sm);border:1px solid var(--border)">
+<div class="form-field" style="min-width:140px"><label>סינון לפי סטטוס</label><select id="quoteStatusFilter" onchange="renderProcurement()"><option value="all">כל הסטטוסים</option><option value="pending">ממתין לאישור</option><option value="approved">אושר</option><option value="delivered">סופק</option><option value="rejected">נדחה</option></select></div>
+<div class="form-field" style="min-width:160px"><label>חיפוש ספק / חומר</label><input type="text" id="quoteSupplierFilter" placeholder="ספק או חומר..." oninput="renderProcurement()"></div>
+<div class="form-field" style="min-width:160px"><label>מיון לפי</label><select id="quoteSortBy" onchange="renderProcurement()"><option value="date_desc">תאריך (חדש לישן)</option><option value="date_asc">תאריך (ישן לחדש)</option><option value="price_desc">מחיר (מהגבוה לנמוך)</option><option value="price_asc">מחיר (מהנמוך לגבוה)</option><option value="supplier">שם ספק</option></select></div>
+</div>
+<div class="stats-grid" style="margin-bottom:16px">
+<div class="stat-card" style="padding:12px"><div class="num" id="statQuotesTotal">0</div><div class="label">סה"כ הצעות מחיר</div></div>
+<div class="stat-card" style="padding:12px"><div class="num" id="statQuotesApproved">₪0</div><div class="label">הצעות שאושרו</div></div>
+<div class="stat-card" style="padding:12px"><div class="num" id="statQuotesPending">0</div><div class="label">ממתינות לאישור</div></div>
+</div>
+<div id="quotesList"></div>
+</div>
+</div>
+
 <div id="viewInsights" style="display:none"><div class="card"><div class="card-title">🤖 תובנות AI</div><div style="color:var(--text-soft);font-size:14px;margin-bottom:16px">המערכת לומדת מנתוני קומות שהושלמו ומפיקה המלצות לחיסכון בעלויות.</div><div id="insightsList"></div></div></div>
 </div>
+
+<div class="modal-overlay" id="quoteModal">
+<div class="modal"><h2 id="quoteModalTitle">הצעת מחיר / הזמנת רכש</h2><input type="hidden" id="quoteId">
+<div class="form-row"><div class="form-field"><label>שם הספק</label><input id="quoteSupplier" placeholder="לדוגמה: איטונג / נירלט"></div><div class="form-field"><label>שם הפריט / חומר</label><input id="quoteMaterial" placeholder="לדוגמה: בלוק 20 ס''מ"></div></div>
+<div class="form-row"><div class="form-field"><label>פרויקט</label><select id="quoteProject"></select></div><div class="form-field"><label>כמות</label><input type="number" id="quoteQty" value="1" oninput="calcQuoteTotal()"></div><div class="form-field"><label>מחיר ליחידה (₪)</label><input type="number" id="quoteUnitPrice" value="0" step="0.1" oninput="calcQuoteTotal()"></div></div>
+<div class="form-row"><div class="form-field"><label>סה"כ מחיר (₪)</label><input type="number" id="quoteTotalPrice" value="0"></div><div class="form-field"><label>תאריך הצעת מחיר</label><input type="date" id="quoteDate"></div><div class="form-field"><label>סטטוס</label><select id="quoteStatus"><option value="pending">ממתין לאישור</option><option value="approved">אושר</option><option value="delivered">סופק</option><option value="rejected">נדחה</option></select></div></div>
+<div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="quoteNotes" placeholder="תנאי תשלום, הובלה, הערות..."></textarea></div></div>
+<div class="modal-actions"><button class="btn-save" onclick="saveQuote()">💾 שמור הצעה</button><button class="btn-cancel" onclick="closeModal('quoteModal')">ביטול</button></div>
+</div></div>
+
 <!-- Modals -->
 <div class="modal-overlay" id="projectModal"><div class="modal"><h2 id="projectModalTitle">פרויקט חדש</h2><input type="hidden" id="projId"><div class="form-row"><div class="form-field full"><label>שם הפרויקט</label><input id="projName" placeholder="לדוגמה: ארט ארגמן — נס ציונה"></div></div><div class="form-row"><div class="form-field"><label>כתובת</label><input id="projAddress"></div><div class="form-field"><label>לקוח</label><input id="projClient"></div></div><div class="form-row"><div class="form-field"><label>טלפון לקוח</label><input id="projPhone"></div><div class="form-field"><label>סטטוס</label><select id="projStatus"><option value="planning">תכנון</option><option value="active">פעיל</option><option value="completed">הושלם</option><option value="on_hold">מושהה</option></select></div></div><div class="form-row"><div class="form-field"><label>מספר קומות</label><input type="number" id="projFloors"></div><div class="form-field"><label>מ"ר לקומה</label><input type="number" id="projSqm"></div><div class="form-field"><label>תקציב (₪)</label><input type="number" id="projBudget"></div></div><div class="form-row"><div class="form-field"><label>תאריך התחלה</label><input type="date" id="projStart"></div><div class="form-field"><label>תאריך סיום משוער</label><input type="date" id="projEnd"></div></div><div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="projNotes"></textarea></div></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('projectModal')">ביטול</button><button class="btn-save" onclick="saveProject()">שמור</button></div></div></div>
 <div class="modal-overlay" id="floorModal"><div class="modal"><h2 id="floorModalTitle">קומה חדשה</h2><input type="hidden" id="flrId"><input type="hidden" id="flrProjectId"><div class="form-row"><div class="form-field"><label>מספר קומה</label><input type="number" id="flrNumber"></div><div class="form-field"><label>סוג קומה</label><select id="flrType"><option>דירת גן</option><option>דירה רגילה</option><option>פנטהאוז</option><option>קומת מסחר</option><option>אחר</option></select></div><div class="form-field"><label>מ"ר</label><input type="number" id="flrSqm"></div></div><div class="form-row"><div class="form-field"><label>סטטוס</label><select id="flrStage"><option value="not_started">טרם התחילה</option><option value="in_progress">בעבודה</option><option value="completed">הושלמה</option><option value="on_hold">מושהית</option></select></div><div class="form-field"><label>ימים משוערים</label><input type="number" id="flrEstDays"></div></div><div class="form-row"><div class="form-field full"><label>עובדים</label><textarea id="flrWorkers" placeholder="3 טפסנים, 2 עוזרים, 1 חשמלאי"></textarea></div></div><div class="form-row"><div class="form-field"><label>תאריך התחלה</label><input type="date" id="flrStart"></div><div class="form-field"><label>תאריך סיום</label><input type="date" id="flrEnd"></div></div><div class="form-row"><div class="form-field full"><label>הערות</label><textarea id="flrNotes"></textarea></div></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('floorModal')">ביטול</button><button class="btn-save" onclick="saveFloor()">שמור</button></div></div></div>
@@ -125,6 +165,201 @@ select option{background:var(--bg-3);color:var(--text)}
 
 <script>
 const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/realEstateAPI';
+
+let quotes = JSON.parse(localStorage.getItem('rem_quotes') || 'null');
+if (!quotes || !quotes.length) {
+  quotes = [
+    {id:'q1', supplier:'איטונג', material:'בלוק 20 ס"מ איטונג', project:'ארט ארגמן', quantity:1200, unit_price:7, total_price:8400, date:'2026-10-01', status:'approved', notes:'כולל הובלה לפרויקט'},
+    {id:'q2', supplier:'נשר', material:'מלט אפור 50 ק"ג', project:'ארט ארגמן', quantity:150, unit_price:32, total_price:4800, date:'2026-10-05', status:'pending', notes:'ממתין לאישור מנהל עבודה'},
+    {id:'q3', supplier:'טמבור', material:'צבע אקרילי לקירות 18L', project:'ארט ארגמן', quantity:40, unit_price:180, total_price:7200, date:'2026-10-08', status:'approved', notes:'אספקה עד 15 באוקטובר'},
+    {id:'q4', supplier:'מפעלי ריצוף', material:'אריח פורצלן 60x60', project:'ארט ארגמן', quantity:650, unit_price:120, total_price:78000, date:'2026-10-10', status:'delivered', notes:'סופק לאתר ברחוב ארגמן'}
+  ];
+  localStorage.setItem('rem_quotes', JSON.stringify(quotes));
+}
+
+function quoteStatusLabel(s) {
+  switch(s) {
+    case 'approved': return 'אושר';
+    case 'delivered': return 'סופק';
+    case 'rejected': return 'נדחה';
+    default: return 'ממתין';
+  }
+}
+
+function stageLabel(s) {
+  switch(s) {
+    case 'in_progress': return 'בביצוע';
+    case 'completed': return 'הושלם';
+    case 'delayed': return 'מעוכב';
+    default: return 'טרם החל';
+  }
+}
+
+function saveQuotesState() {
+  localStorage.setItem('rem_quotes', JSON.stringify(quotes));
+}
+
+function openQuoteModal(id) {
+  document.getElementById('quoteId').value = id || '';
+  document.getElementById('quoteModalTitle').textContent = id ? 'עריכת הצעת מחיר' : 'הצעת מחיר חדשה';
+  var pSel = document.getElementById('quoteProject');
+  pSel.innerHTML = projects.map(function(p){ return '<option value="'+esc(p.project_name||'')+'">'+esc(p.project_name||'פרויקט')+'</option>'; }).join('') || '<option value="כללי">כללי</option>';
+  if(id) {
+    var q = quotes.find(function(x){ return x.id === id; });
+    if(q) {
+      document.getElementById('quoteSupplier').value = q.supplier || '';
+      document.getElementById('quoteMaterial').value = q.material || '';
+      if(q.project) pSel.value = q.project;
+      document.getElementById('quoteQty').value = q.quantity || 1;
+      document.getElementById('quoteUnitPrice').value = q.unit_price || 0;
+      document.getElementById('quoteTotalPrice').value = q.total_price || 0;
+      document.getElementById('quoteDate').value = (q.date || '').substring(0,10);
+      document.getElementById('quoteStatus').value = q.status || 'pending';
+      document.getElementById('quoteNotes').value = q.notes || '';
+    }
+  } else {
+    ['quoteSupplier','quoteMaterial','quoteNotes'].forEach(function(i){ document.getElementById(i).value=''; });
+    document.getElementById('quoteQty').value = 1;
+    document.getElementById('quoteUnitPrice').value = 0;
+    document.getElementById('quoteTotalPrice').value = 0;
+    document.getElementById('quoteDate').value = new Date().toISOString().substring(0,10);
+    document.getElementById('quoteStatus').value = 'pending';
+  }
+  document.getElementById('quoteModal').classList.add('show');
+}
+
+function calcQuoteTotal() {
+  var q = parseFloat(document.getElementById('quoteQty').value) || 0;
+  var u = parseFloat(document.getElementById('quoteUnitPrice').value) || 0;
+  document.getElementById('quoteTotalPrice').value = (q * u).toFixed(0);
+}
+
+function saveQuote() {
+  var id = document.getElementById('quoteId').value;
+  var supplier = val('quoteSupplier');
+  var material = val('quoteMaterial');
+  if(!supplier || !material) { showToast('נא למלא ספק ותיאור חומר'); return; }
+  var obj = {
+    id: id || ('q_' + Date.now()),
+    supplier: supplier,
+    material: material,
+    project: val('quoteProject') || 'כללי',
+    quantity: parseFloat(val('quoteQty')) || 1,
+    unit_price: parseFloat(val('quoteUnitPrice')) || 0,
+    total_price: parseFloat(val('quoteTotalPrice')) || 0,
+    date: val('quoteDate') || new Date().toISOString().substring(0,10),
+    status: val('quoteStatus') || 'pending',
+    notes: val('quoteNotes') || ''
+  };
+  if(id) {
+    var idx = quotes.findIndex(function(x){ return x.id === id; });
+    if(idx !== -1) quotes[idx] = obj;
+  } else {
+    quotes.unshift(obj);
+  }
+  saveQuotesState();
+  closeModal('quoteModal');
+  showToast(id ? 'הצעה עודכנה ✓' : 'הצעה נוצרה ✓');
+  renderProcurement();
+}
+
+function deleteQuote(id) {
+  if(!confirm('למחוק הצעת מחיר זו?')) return;
+  quotes = quotes.filter(function(x){ return x.id !== id; });
+  saveQuotesState();
+  showToast('נמחקה ✓');
+  renderProcurement();
+}
+
+function renderProcurement() {
+  var stFilter = document.getElementById('quoteStatusFilter') ? document.getElementById('quoteStatusFilter').value : 'all';
+  var supFilter = (document.getElementById('quoteSupplierFilter') ? document.getElementById('quoteSupplierFilter').value : '').toLowerCase().trim();
+  var sortBy = document.getElementById('quoteSortBy') ? document.getElementById('quoteSortBy').value : 'date_desc';
+
+  var filtered = quotes.filter(function(q){
+    if(stFilter !== 'all' && q.status !== stFilter) return false;
+    if(supFilter) {
+      var matchSup = (q.supplier || '').toLowerCase().indexOf(supFilter) !== -1;
+      var matchMat = (q.material || '').toLowerCase().indexOf(supFilter) !== -1;
+      if(!matchSup && !matchMat) return false;
+    }
+    return true;
+  });
+
+  filtered.sort(function(a,b){
+    if(sortBy === 'date_desc') return (b.date||'').localeCompare(a.date||'');
+    if(sortBy === 'date_asc') return (a.date||'').localeCompare(b.date||'');
+    if(sortBy === 'price_desc') return (b.total_price||0) - (a.total_price||0);
+    if(sortBy === 'price_asc') return (a.total_price||0) - (b.total_price||0);
+    if(sortBy === 'supplier') return (a.supplier||'').localeCompare(b.supplier||'');
+    return 0;
+  });
+
+  var totalApproved = quotes.filter(function(q){ return q.status==='approved'||q.status==='delivered'; }).reduce(function(s,q){ return s+(q.total_price||0); },0);
+  var pendingCount = quotes.filter(function(q){ return q.status==='pending'; }).length;
+
+  if(document.getElementById('statQuotesTotal')) document.getElementById('statQuotesTotal').textContent = quotes.length;
+  if(document.getElementById('statQuotesApproved')) document.getElementById('statQuotesApproved').textContent = '₪' + totalApproved.toLocaleString();
+  if(document.getElementById('statQuotesPending')) document.getElementById('statQuotesPending').textContent = pendingCount;
+
+  var container = document.getElementById('quotesList');
+  if(!container) return;
+
+  if(!filtered.length) {
+    container.innerHTML = '<div class="empty">אין הצעות מחיר לפי הסינון הנבחר.</div>';
+    return;
+  }
+
+  container.innerHTML = '<table class="data-table"><thead><tr><th>תאריך</th><th>ספק</th><th>חומר / פריט</th><th>פרויקט</th><th>כמות</th><th>מחיר יח'</th><th>סה"כ ₪</th><th>סטטוס</th><th>פעולות</th></tr></thead><tbody>' +
+    filtered.map(function(q){
+      return '<tr>' +
+        '<td>' + (q.date||'') + '</td>' +
+        '<td><b>' + esc(q.supplier||'') + '</b></td>' +
+        '<td>' + esc(q.material||'') + '</td>' +
+        '<td>' + esc(q.project||'—') + '</td>' +
+        '<td>' + (q.quantity||0) + '</td>' +
+        '<td>₪' + (q.unit_price||0).toLocaleString() + '</td>' +
+        '<td><b>₪' + (q.total_price||0).toLocaleString() + '</b></td>' +
+        '<td><span class="badge badge-' + (q.status||'pending') + '">' + quoteStatusLabel(q.status) + '</span></td>' +
+        '<td>' +
+          '<button class="btn btn-secondary btn-sm" onclick="openQuoteModal('' + q.id + '')">ערוך</button> ' +
+          '<button class="btn btn-danger btn-sm" onclick="deleteQuote('' + q.id + '')">✕</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('') +
+  '</tbody></table>';
+}
+
+function exportQuotesCSV() {
+  var csv = '﻿';
+  csv += 'תאריך,ספק,חומר/פריט,פרויקט,כמות,מחיר יחידה,סה"כ מחיר (₪),סטטוס,הערות
+';
+  quotes.forEach(function(q){
+    csv += '"' + (q.date||'') + '","' + (q.supplier||'').replace(/"/g,'""') + '","' + (q.material||'').replace(/"/g,'""') + '","' + (q.project||'').replace(/"/g,'""') + '",' + (q.quantity||0) + ',' + (q.unit_price||0) + ',' + (q.total_price||0) + ',"' + quoteStatusLabel(q.status) + '","' + (q.notes||'').replace(/"/g,'""') + '"
+';
+  });
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'הצעות_מחיר_ורכש_' + new Date().toISOString().substring(0,10) + '.csv';
+  link.click();
+}
+
+function exportFloorsCSV() {
+  var csv = '﻿';
+  csv += 'פרויקט,מספר קומה,סוג קומה,שטח (מ"ר),סטטוס/שלב,ימים משוערים,ימים בפועל,עובדים
+';
+  floors.forEach(function(f){
+    csv += '"' + (f.project_name||'').replace(/"/g,'""') + '",' + (f.floor_number||'') + ',"' + (f.floor_type||'').replace(/"/g,'""') + '",' + (f.sqm||0) + ',"' + stageLabel(f.stage) + '",' + (f.estimated_days||0) + ',' + (f.actual_days||0) + ',"' + (f.workers||'').replace(/"/g,'""') + '"
+';
+  });
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'דוח_קומות_פרויקטים_' + new Date().toISOString().substring(0,10) + '.csv';
+  link.click();
+}
+
 let projects=[],floors=[],materials=[],calcUnits=[];
 const DEFAULT_MATERIALS=[
   {product_code:'BLK-20',product_name:'בלוק 20 ס"מ איטונג',category:'שלד',description:'בלוק בטון חלול 40×20×20',unit:'יחידה',estimated_price:7,supplier:'איטונג'},
@@ -158,12 +393,32 @@ const DEFAULT_MATERIALS=[
   {product_code:'PROF-AL',product_name:'פרופיל אלומיניום לפוגה',category:'פרופילים וגמר',description:'פרופיל לפוגות ריצוף',unit:'מטר רץ',estimated_price:15,supplier:'אלום'},
   {product_code:'PROF-CRN',product_name:'פרופיל פינה לגבס',category:'פרופילים וגמר',description:'פרופיל פח לפינות גבס',unit:'מטר רץ',estimated_price:6,supplier:'קנד וגבס'}
 ];
-function showView(v){['dash','projects','catalog','calc','insights'].forEach(function(x){var el=document.getElementById('view'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.style.display=x===v?'block':'none';});document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});var nav=document.getElementById('nav'+v.charAt(0).toUpperCase()+v.slice(1));if(nav)nav.classList.add('active');if(v==='calc')initCalcProjects();}
+function showView(v){['dash','projects','catalog','calc','procurement','insights'].forEach(function(x){var el=document.getElementById('view'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.style.display=x===v?'block':'none';});document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});var nav=document.getElementById('nav'+v.charAt(0).toUpperCase()+v.slice(1));if(nav)nav.classList.add('active');if(v==='calc')initCalcProjects();if(v==='procurement')renderProcurement();}
 async function apiCall(body){var res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return res.json();}
 async function fetchAll(){try{var data=await apiCall({action:'getAll'});if(data.success){projects=data.projects||[];floors=data.floors||[];materials=data.materials||[];}}catch(e){projects=[];floors=[];materials=[];}document.getElementById('loadingOverlay').style.display='none';renderAll();}
-function renderAll(){renderDashboard();renderProjects();renderCatalog();renderInsights();}
+function renderAll(){renderDashboard();renderProjects();renderCatalog();renderProcurement();renderInsights();}
 function renderDashboard(){document.getElementById('statProjects').textContent=projects.filter(function(p){return p.status==='active';}).length;document.getElementById('statFloors').textContent=floors.filter(function(f){return f.stage==='in_progress';}).length;document.getElementById('statMaterials').textContent=materials.length;var tb=projects.reduce(function(s,p){return s+(p.budget||0);},0);document.getElementById('statBudget').textContent=tb>0?tb.toLocaleString():'—';var l=document.getElementById('dashProjects');if(!projects.length){l.innerHTML='<div class="empty">אין פרויקטים עדיין.</div>';return;}l.innerHTML=projects.map(function(p){var pf=floors.filter(function(f){return f.project_id===p.id;});var c=pf.filter(function(f){return f.stage==='completed';}).length;var ip=pf.filter(function(f){return f.stage==='in_progress';}).length;return '<div class="floor-card" style="cursor:pointer" onclick="showView(\'projects\')"><div class="floor-header"><h3>'+esc(p.project_name||'')+'</h3><span class="badge badge-'+(p.status||'planning')+'">'+statusLabel(p.status)+'</span></div><div class="floor-meta"><span>🏢 '+(p.num_floors||0)+' קומות</span><span>✅ '+c+' הושלמו</span><span>🔄 '+ip+' בעבודה</span>'+(p.budget?'<span>💰 ₪'+p.budget.toLocaleString()+'</span>':'')+'</div></div>';}).join('');}
-function renderProjects(){var l=document.getElementById('projectsList');if(!projects.length){l.innerHTML='<div class="empty">אין פרויקטים.</div>';return;}l.innerHTML=projects.map(function(p){var pf=floors.filter(function(f){return f.project_id===p.id;}).sort(function(a,b){return (a.floor_number||0)-(b.floor_number||0);});return '<div class="card" style="margin-bottom:14px"><div class="floor-header"><h3 style="font-size:18px">🏢 '+esc(p.project_name||'')+'</h3><span class="badge badge-'+(p.status||'planning')+'">'+statusLabel(p.status)+'</span></div><div class="floor-meta">'+(p.address?'<span>📍 '+esc(p.address)+'</span>':'')+(p.client_name?'<span>👤 '+esc(p.client_name)+'</span>':'')+'<span>🏢 '+(p.num_floors||0)+' קומות</span>'+(p.budget?'<span>💰 ₪'+(p.budget||0).toLocaleString()+'</span>':'')+'</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="openFloorModal(\''+p.id+'\')">+ קומה</button><button class="btn btn-secondary btn-sm" onclick="editProject(\''+p.id+'\')">ערוך</button><button class="btn btn-danger btn-sm" onclick="deleteProject(\''+p.id+'\')">מחק</button></div>'+(pf.length?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים</th><th>בפועל</th><th>פעולות</th></tr></thead><tbody>'+pf.map(function(f){return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';}).join('')+'</tbody></table></div>':'')+'</div>';}).join('');}
+function renderProjects(){
+  var l=document.getElementById('projectsList');
+  if(!projects.length){l.innerHTML='<div class="empty">אין פרויקטים.</div>';return;}
+  var stageF = document.getElementById('flrStageFilter') ? document.getElementById('flrStageFilter').value : 'all';
+  var sortF = document.getElementById('flrSortBy') ? document.getElementById('flrSortBy').value : 'num_asc';
+
+  l.innerHTML=projects.map(function(p){
+    var pf=floors.filter(function(f){
+      if(f.project_id!==p.id) return false;
+      if(stageF!=='all' && f.stage!==stageF) return false;
+      return true;
+    }).sort(function(a,b){
+      if(sortF==='num_desc') return (b.floor_number||0)-(a.floor_number||0);
+      if(sortF==='sqm_desc') return (b.sqm||0)-(a.sqm||0);
+      if(sortF==='days_desc') return (b.estimated_days||0)-(a.estimated_days||0);
+      return (a.floor_number||0)-(b.floor_number||0);
+    });
+
+    return '<div class="card" style="margin-bottom:14px"><div class="floor-header"><h3 style="font-size:18px">🏢 '+esc(p.project_name||'')+'</h3><span class="badge badge-'+(p.status||'planning')+'">'+statusLabel(p.status)+'</span></div><div class="floor-meta">'+(p.address?'<span>📍 '+esc(p.address)+'</span>':'')+(p.client_name?'<span>👤 '+esc(p.client_name)+'</span>':'')+'<span>🏢 '+(p.num_floors||0)+' קומות</span>'+(p.budget?'<span>💰 ₪'+(p.budget||0).toLocaleString()+'</span>':'')+'</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="openFloorModal(\''+p.id+'\')">+ קומה</button><button class="btn btn-secondary btn-sm" onclick="editProject(\''+p.id+'\')">ערוך</button><button class="btn btn-danger btn-sm" onclick="deleteProject(\''+p.id+'\')">מחק</button></div>'+(pf.length?'<div style="margin-top:14px"><table class="data-table"><thead><tr><th>קומה</th><th>סוג</th><th>מ"ר</th><th>סטטוס</th><th>ימים</th><th>בפועל</th><th>פעולות</th></tr></thead><tbody>'+pf.map(function(f){return '<tr><td>'+(f.floor_number||'')+'</td><td>'+esc(f.floor_type||'')+'</td><td>'+(f.sqm||'')+'</td><td><span class="badge badge-'+(f.stage||'not_started')+'">'+stageLabel(f.stage)+'</span></td><td>'+(f.estimated_days||'')+'</td><td>'+(f.actual_days||'—')+'</td><td><button class="btn btn-secondary btn-sm" onclick="openFloorReport(\''+f.id+'\')">דוח</button> <button class="btn btn-danger btn-sm" onclick="deleteFloor(\''+f.id+'\')">✕</button></td></tr>';}).join('')+'</tbody></table></div>':'<div style="margin-top:10px;font-size:13px;color:var(--text-mute)">אין קומות תואמות לסינון.</div>')+'</div>';
+  }).join('');
+}
 function openProjectModal(){document.getElementById('projId').value='';document.getElementById('projectModalTitle').textContent='פרויקט חדש';['projName','projAddress','projClient','projPhone','projFloors','projSqm','projBudget','projStart','projEnd','projNotes'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('projStatus').value='planning';document.getElementById('projectModal').classList.add('show');}
 function editProject(id){var p=projects.find(function(x){return x.id===id;});if(!p)return;document.getElementById('projId').value=id;document.getElementById('projectModalTitle').textContent='עריכת פרויקט';document.getElementById('projName').value=p.project_name||'';document.getElementById('projAddress').value=p.address||'';document.getElementById('projClient').value=p.client_name||'';document.getElementById('projPhone').value=p.client_phone||'';document.getElementById('projFloors').value=p.num_floors||'';document.getElementById('projSqm').value=p.sqm_per_floor||'';document.getElementById('projBudget').value=p.budget||'';document.getElementById('projStart').value=(p.start_date||'').substring(0,10);document.getElementById('projEnd').value=(p.estimated_end||'').substring(0,10);document.getElementById('projStatus').value=p.status||'planning';document.getElementById('projNotes').value=p.notes||'';document.getElementById('projectModal').classList.add('show');}
 async function saveProject(){var id=document.getElementById('projId').value;var d={project_name:val('projName'),address:val('projAddress'),client_name:val('projClient'),client_phone:val('projPhone'),num_floors:parseInt(val('projFloors'))||0,sqm_per_floor:parseInt(val('projSqm'))||0,budget:parseInt(val('projBudget'))||0,start_date:val('projStart'),estimated_end:val('projEnd'),status:val('projStatus'),notes:val('projNotes'),total_sqm:(parseInt(val('projFloors'))||0)*(parseInt(val('projSqm'))||0)};if(!d.project_name){showToast('נא למלא שם');return;}try{await apiCall({action:id?'update':'create',entity:'RealEstateProject',id:id||undefined,data:d});closeModal('projectModal');showToast(id?'עודכן ✓':'נוצר ✓');await fetchAll();}catch(e){showToast('שגיאה');}}

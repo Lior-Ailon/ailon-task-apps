@@ -7,7 +7,7 @@
   <meta name="version" content="2026-09-13-v1">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="manifest.json?v=2.0.0">
   <meta name="theme-color" content="#0d9488">
   <title>דשבורד מאמן (דמו) | MentorLON - AILON Coaching</title>
   
@@ -935,6 +935,7 @@
       .modal-content { padding: 20px; }
     }
   </style>
+  <link rel="apple-touch-icon" href="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png">
 </head>
 <body>
 
@@ -1149,7 +1150,7 @@
   </div>
 
   <!-- SCRIPT LOGIC & DEMO ENGINE -->
-  <script src="demo-data.js"></script>
+  <script src=1?v=2.0.0></script>
   <script>
     // Suite Tools Master Mapping
     const SUITE_TOOLS = [
@@ -1570,5 +1571,25 @@
       }
     });
   </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    });
+  }
+</script>
+<!-- Floating Back to Top -->
+<button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="חזרה לראש העמוד" class="fixed bottom-6 left-6 z-50 hidden bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-lg transition-all transform hover:scale-105" style="position:fixed; bottom:24px; left:24px; z-index:9999; display:none; background-color:#0d9488; color:#ffffff; border:none; border-radius:50%; width:44px; height:44px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); align-items:center; justify-content:center;">
+  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+</button>
+<script>
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('backToTopBtn');
+    if (btn) {
+      if (window.scrollY > 250) { btn.style.display = 'flex'; }
+      else { btn.style.display = 'none'; }
+    }
+  });
+</script>
 </body>
 </html>

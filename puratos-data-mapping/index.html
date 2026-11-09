@@ -558,10 +558,64 @@ input:focus,select:focus,textarea:focus{
 @media (max-width:768px){
   button,.btn,.submit-btn{min-height:48px;min-width:48px;font-size:16px}
 }
+
+/* Validation and Hick's Law UX Improvements */
+.invalid {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+.field-error-msg {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+.invalid + .field-error-msg {
+  display: block;
+}
+details.sub-details {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  margin-top: 24px;
+  box-shadow: var(--shadow-sm);
+}
+details.sub-details summary {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dark);
+  cursor: pointer;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+details.sub-details summary::-webkit-details-marker { display: none; }
+details.sub-details summary::after {
+  content: '▼';
+  font-size: 12px;
+  color: var(--primary);
+  transition: transform 0.2s;
+}
+details.sub-details[open] summary::after {
+  transform: rotate(180deg);
+}
+.search-box {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  margin-bottom: 12px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
 </style>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json?v=20261013">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=20261013">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261013">
 <meta name="theme-color" content="#0d9488">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -589,8 +643,8 @@ input:focus,select:focus,textarea:focus{
 <div class="section-title"><div class="section-icon">👤</div> פרטי המנהל/ת</div>
 <div class="section-desc">מי ממלא/ה את השאלון</div>
 <div class="form-row">
-<div class="form-group"><label>שם מלא <span class="required">*</span></label><input type="text" id="manager_name" placeholder="שם מלא"></div>
-<div class="form-group"><label>מחלקה <span class="required">*</span></label><input type="text" id="department" placeholder="ייצור, שיווק, פיננסים..."></div>
+<div class="form-group"><label>שם מלא <span class="required">*</span></label><input type="text" id="manager_name" placeholder="שם מלא" oninput="this.classList.remove('invalid')"><div class="field-error-msg" id="manager_name_err">נא להזין שם מלא</div></div>
+<div class="form-group"><label>מחלקה <span class="required">*</span></label><input type="text" id="department" placeholder="ייצור, שיווק, פיננסים..." oninput="this.classList.remove('invalid')"><div class="field-error-msg" id="department_err">נא להזין מחלקה</div></div>
 </div>
 </div>
 
@@ -738,12 +792,17 @@ input:focus,select:focus,textarea:focus{
 </div>
 <div class="success-msg" id="successMsg"><h3>✅ נשמר ונשלח!</h3><p>תודה! הנתונים התקבלו.</p></div>
 
-<div class="section">
-<div class="section-title"><div class="section-icon">📤</div> צפייה וייצוא</div>
-<button class="btn-export" onclick="loadSubmissions()">רענן 🔄</button>
-<button class="btn-export gray" onclick="exportToExcel()">ייצא לאקסל 📊</button>
-<div id="submissionsList" style="margin-top:16px;"></div>
+<details class="sub-details">
+<summary>📁 צפייה וייצוא הגשות קודמות (אופציונלי)</summary>
+<div style="margin-top:16px;">
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="btn-export" style="background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;" onclick="loadSubmissions()">רענן הגשות 🔄</button>
+    <button class="btn-export gray" style="background:#e2e8f0;color:var(--text-main);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;" onclick="exportToExcel()">ייצא ל-CSV 📊</button>
+  </div>
+  <input type="text" id="subSearch" class="search-box" placeholder="🔍 חפש לפי שם מנהל או מחלקה..." oninput="filterSubmissions()">
+  <div id="submissionsList"></div>
 </div>
+</details>
 
 <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">Puratos Israel — AI Adoption | 2026</div>
 </div>
@@ -782,6 +841,20 @@ function addPlatformRow(d={}){
   tb.appendChild(r);
   updateProgress();
   attachInputListeners();
+}
+
+
+function filterSubmissions(){
+  const q=(document.getElementById('subSearch')?.value||'').toLowerCase();
+  const items=window.allSubmissions||[];
+  const l=document.getElementById('submissionsList');
+  if(!l) return;
+  const filtered=items.filter(i=> (i.submitted_by||'').toLowerCase().includes(q)||(i.department||'').toLowerCase().includes(q));
+  if(filtered.length){
+    l.innerHTML=filtered.map(i=>`<div class="submission-card"><h4>${i.department} <span class="badge blue">${i.submitted_by}</span></h4><div class="meta">${i.submission_date ? new Date(i.submission_date).toLocaleDateString('he-IL') : ''}</div><div class="stats">📋 ${(i.data_gaps||[]).length} | 💻 ${(i.platform_requests||[]).length}</div></div>`).join('');
+  } else {
+    l.innerHTML='<p style="color:var(--text-muted);font-size:14px;">לא נמצאו הגשות תואמות.</p>';
+  }
 }
 
 function showToast(m){
@@ -887,8 +960,18 @@ function fmtEmail(n,d,g,t){
 
 async function submitForm(){
   if(typeof ailonRateLimit === 'function' && !ailonRateLimit()) return;
-  const n=document.getElementById('manager_name').value.trim(),d=document.getElementById('department').value.trim();
-  if(!n){showToast('⚠️ נא למלא שם');return;}if(!d){showToast('⚠️ נא למלא מחלקה');return;}
+  const nameEl=document.getElementById('manager_name');
+  const deptEl=document.getElementById('department');
+  const n=nameEl.value.trim(),d=deptEl.value.trim();
+  let hasErr=false;
+  if(!n){ nameEl.classList.add('invalid'); hasErr=true; }
+  if(!d){ deptEl.classList.add('invalid'); hasErr=true; }
+  if(hasErr){
+    showToast('⚠️ נא למלא את שדות החובה: שם מלא ומחלקה');
+    const firstInvalid=document.querySelector('.invalid');
+    if(firstInvalid){ firstInvalid.scrollIntoView({behavior:'smooth',block:'center'}); firstInvalid.focus(); }
+    return;
+  }
   const g=collectGuided(),t=collectTables();
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='שולח...';
   try{
@@ -958,8 +1041,62 @@ addDataRow();addDataRow();addPlatformRow();addPlatformRow();loadSubmissions();up
         .modal { width: 95% !important; padding: 20px !important; }
     }
 /* === AILON Task — Accessibility & Design Upgrade === */
-    </style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script><script>
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
+    
+/* Validation and Hick's Law UX Improvements */
+.invalid {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+.field-error-msg {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+.invalid + .field-error-msg {
+  display: block;
+}
+details.sub-details {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  margin-top: 24px;
+  box-shadow: var(--shadow-sm);
+}
+details.sub-details summary {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dark);
+  cursor: pointer;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+details.sub-details summary::-webkit-details-marker { display: none; }
+details.sub-details summary::after {
+  content: '▼';
+  font-size: 12px;
+  color: var(--primary);
+  transition: transform 0.2s;
+}
+details.sub-details[open] summary::after {
+  transform: rotate(180deg);
+}
+.search-box {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  margin-bottom: 12px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+</style><script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300)}});</script><script>var ailonSubmissions=0;var ailonLastSubmit=0;function ailonRateLimit(){var now=Date.now();if(now-ailonLastSubmit<5000){alert("נא להמתין מספר שניות בין הגשות");return false}ailonLastSubmit=now;ailonSubmissions++;if(ailonSubmissions>5){alert("הגעת למספר ההגשות המקסימלי");return false}return true}</script><script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js?v=20261013').catch(()=>{})});}
 </script>
 </body>
 </html>

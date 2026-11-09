@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="version" content="2026-10-08-v1">
 <title>מיפוי משימות דיגיטליות חוזרות | Puratos Israel</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=20261013">
 <meta name="theme-color" content="#0d9488">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png?v=20261013">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261013">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -72,6 +72,50 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .options-grid{grid-template-columns:1fr}
 .btn-submit{width:100%}
 }
+
+.invalid {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+details.admin-details {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  margin-top: 24px;
+}
+details.admin-details summary {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--dark);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+details.admin-details summary::-webkit-details-marker { display: none; }
+details.admin-details summary::after {
+  content: '▼';
+  font-size: 12px;
+  color: var(--primary);
+  transition: transform 0.2s;
+}
+details.admin-details[open] summary::after {
+  transform: rotate(180deg);
+}
+.search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-item);
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
 </style>
 </head>
 <body>
@@ -100,9 +144,9 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 <div class="section">
 <div class="section-title"><div class="section-icon">👤</div> 1. פרטים אישיים</div>
 <div class="field"><label class="field-label" for="fullName">שם מלא</label>
-<input type="text" id="fullName" placeholder="לדוגמה: ישראל ישראלי"></div>
+<input type="text" id="fullName" placeholder="לדוגמה: ישראל ישראלי" oninput="this.classList.remove('invalid')"></div>
 <div class="field"><label class="field-label" for="department">באיזו מחלקה את/ה עובד/ת?</label>
-<select id="department">
+<select id="department" onchange="this.classList.remove('invalid')">
 <option value="">— בחר/י מחלקה —</option>
 <option>שיווק</option><option>מכירות</option><option>כספים</option><option>רכש</option>
 <option>לוגיסטיקה ושרשרת אספקה</option><option>איכות</option><option>משאבי אנוש</option>
@@ -221,9 +265,18 @@ function ailonMarkSubmitted(){localStorage.setItem('ptm_last_submit',String(Date
 
 async function submitForm(){
   if(!ailonRateLimit())return;
-  const n=document.getElementById('fullName').value.trim(),d=document.getElementById('department').value;
-  if(!n){showToast('⚠️ נא למלא שם');return;}
-  if(!d){showToast('⚠️ נא לבחור מחלקה');return;}
+  const nameEl=document.getElementById('fullName');
+  const deptEl=document.getElementById('department');
+  const n=nameEl.value.trim(),d=deptEl.value;
+  let hasErr=false;
+  if(!n){ nameEl.classList.add('invalid'); hasErr=true; }
+  if(!d){ deptEl.classList.add('invalid'); hasErr=true; }
+  if(hasErr){
+    showToast('⚠️ נא למלא את שדות החובה: שם מלא ומחלקה');
+    const firstInvalid=document.querySelector('.invalid');
+    if(firstInvalid){ firstInvalid.scrollIntoView({behavior:'smooth',block:'center'}); firstInvalid.focus(); }
+    return;
+  }
   const payload={
     full_name:n,department:d,
     recurring_actions:picked('act'),
@@ -269,8 +322,11 @@ async function loadSubmissions(){
 }
 function renderSubs(){
   const l=document.getElementById('submissionsList');
-  if(!allSubmissions.length){l.innerHTML='<p style="color:var(--text-muted);font-size:13.5px;">אין הגשות עדיין.</p>';return;}
-  l.innerHTML=allSubmissions.map(s=>`<div class="submission-card"><h4>${s.department||'—'} <span class="badge blue">${s.full_name||'—'}</span> <span class="badge green">${s.local?'מקומי':new Date(s.created_date||s.date).toLocaleDateString('he-IL')}</span></h4><div>🔁 ${(s.recurring_actions||[]).length} פעולות · ⏱️ ${s.frequency||'—'} · 🚀 ${s.pilot_willingness||'—'}</div></div>`).join('');
+  if(!l) return;
+  const q=(document.getElementById('taskSubSearch')?.value||'').toLowerCase();
+  const filtered=allSubmissions.filter(s=> (s.full_name||'').toLowerCase().includes(q) || (s.department||'').toLowerCase().includes(q));
+  if(!filtered.length){l.innerHTML='<p style="color:var(--text-muted);font-size:13.5px;">אין הגשות תואמות.</p>';return;}
+  l.innerHTML=filtered.map(s=>`<div class="submission-card"><h4>${s.department||'—'} <span class="badge blue">${s.full_name||'—'}</span> <span class="badge green">${s.local?'מקומי':(s.created_date||s.date ? new Date(s.created_date||s.date).toLocaleDateString('he-IL'):'')}</span></h4><div>🔁 ${(s.recurring_actions||[]).length} פעולות · ⏱️ ${s.frequency||'—'}</div></div>`).join('');
 }
 function exportToExcel(){
   if(!allSubmissions.length){showToast('⚠️ אין נתונים');return;}
@@ -285,7 +341,7 @@ function exportToExcel(){
   showToast('📊 אקסל הורד');
 }
 updateProgress();
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js?v=20261013').catch(()=>{});}
 </script>
 </body>
 </html>

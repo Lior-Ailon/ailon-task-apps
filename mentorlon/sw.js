@@ -1,18 +1,27 @@
 // Mentor-IT Service Worker
-const CACHE_NAME = 'mentor-it-v2';
+const CACHE_NAME = 'mentor-it-v3';
 const ASSETS = [
   './index.html',
-  './dashboard.html',
-  './signup.html',
-  './trainee-login.html',
-  './trainee-dashboard.html',
   './admin-dashboard.html',
+  './coach-dashboard.html',
   './coaching-session.html',
+  './dashboard.html',
+  './emotions.html',
   './equation-solver.html',
-  './strengths-finder.html',
-  './wheel-of-life.html',
+  './lecture-effortless.html',
+  './parenting.html',
+  './positive-thinking.html',
+  './relationships.html',
+  './signup.html',
   './solution-engine.html',
-  './lecture-effortless.html'
+  './strengths-finder.html',
+  './trainee-dashboard.html',
+  './trainee-login.html',
+  './wheel-of-life.html',
+  './manifest.json',
+  './demo-data.js',
+  './feedback.js',
+  './onboarding.js'
 ];
 
 self.addEventListener('install', (e) => {
@@ -32,9 +41,8 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // Network-first for API calls, cache-first for static assets
   if (e.request.url.includes('/functions/')) {
-    return; // Don't cache API responses
+    return;
   }
   e.respondWith(
     fetch(e.request)

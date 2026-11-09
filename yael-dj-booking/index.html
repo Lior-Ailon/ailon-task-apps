@@ -670,7 +670,21 @@
             <div class="step-dot" id="dot3">3</div>
         </div>
 
-        <!-- Step 1: Event Type -->
+        
+    <!-- Upcoming Bookings View -->
+    <div id="upcomingView" class="card hidden">
+        <div class="card-title"><span class="icon">📅</span> אירועים קרובים ופגישות (052-395-0886)</div>
+        <div style="margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">
+            צפייה וניהול אירועים קרובים שנרשמו במערכת עם יהל כהן.
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+            <input type="text" id="upcomingSearch" class="form-input" style="flex:1;min-width:180px;" placeholder="חיפוש לפי שם לקוח / סוג אירוע..." oninput="renderUpcomingBookings()">
+            <button class="btn btn-outline btn-sm" onclick="exportUpcomingCSV()">📥 ייצוא CSV</button>
+        </div>
+        <div id="upcomingList"></div>
+    </div>
+
+<!-- Step 1: Event Type -->
         <div id="step1" class="card">
             <div class="card-title"><span class="icon">🎶</span> בחרו סוג אירוע</div>
             <div class="event-cards" id="eventCards">
@@ -805,9 +819,113 @@
 
     <script>
         const API_URL = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/createYaelBooking';
-        const YAEL_PHONE = '972536754971';
+        const YAEL_PHONE = '972523950886';
         const HE_MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
         const HE_DAYS = ['א','ב','ג','ד','ה','ו','ש'];
+        
+        let bookings = JSON.parse(localStorage.getItem('yael_dj_bookings') || 'null');
+        if (!bookings || !bookings.length) {
+          const now = new Date();
+          const d1 = new Date(now.getTime() + 3 * 86400000);
+          const d2 = new Date(now.getTime() + 10 * 86400000);
+          bookings = [
+            { id: 'b1', client_name: 'יוסי לוי', phone: '052-395-0886', event_type: 'חתונה', event_date: formatDate(d1), event_time: '20:00', notes: 'פגישת תיאום מוזיקה לחופה', status: 'confirmed' },
+            { id: 'b2', client_name: 'מיכל אברהם', phone: '054-9876543', event_type: 'בר / בת מצווה', event_date: formatDate(d2), event_time: '18:00', notes: 'אירוע בראשון לציון', status: 'confirmed' }
+          ];
+          localStorage.setItem('yael_dj_bookings', JSON.stringify(bookings));
+        }
+
+        function showBookingTab(tab) {
+          if (tab === 'new') {
+            document.getElementById('upcomingView').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('navNewBookingBtn').className = 'btn btn-primary btn-sm';
+            document.getElementById('navUpcomingBtn').className = 'btn btn-outline btn-sm';
+          } else {
+            for (let i = 1; i <= 4; i++) {
+              var el = document.getElementById('step' + i);
+              if (el) el.classList.add('hidden');
+            }
+            document.getElementById('successScreen').classList.add('hidden');
+            document.getElementById('upcomingView').classList.remove('hidden');
+            document.getElementById('navNewBookingBtn').className = 'btn btn-outline btn-sm';
+            document.getElementById('navUpcomingBtn').className = 'btn btn-primary btn-sm';
+            renderUpcomingBookings();
+          }
+        }
+
+        function renderUpcomingBookings() {
+          const listEl = document.getElementById('upcomingList');
+          if (!listEl) return;
+          const search = (document.getElementById('upcomingSearch') ? document.getElementById('upcomingSearch').value : '').toLowerCase().trim();
+          const today = new Date();
+          today.setHours(0,0,0,0);
+
+          const filtered = bookings.filter(b => {
+            if (!search) return true;
+            return (b.client_name || '').toLowerCase().includes(search) || (b.event_type || '').toLowerCase().includes(search) || (b.phone || '').includes(search);
+          });
+
+          filtered.sort((a,b) => new Date(a.event_date) - new Date(b.event_date));
+
+          if (!filtered.length) {
+            listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted)">אין אירועים קרובים ביומן.</div>';
+            return;
+          }
+
+          let html = '';
+          filtered.forEach(b => {
+            const bDate = new Date(b.event_date + 'T00:00:00');
+            const diffDays = Math.ceil((bDate - today) / (1000 * 60 * 60 * 24));
+            let daysText = diffDays > 0 ? ('בעוד ' + diffDays + ' ימים') : (diffDays === 0 ? 'היום!' : 'עבר');
+            let daysClass = diffDays >= 0 ? 'background:rgba(13,148,136,.15);color:#0d9488;' : 'background:rgba(239,68,68,.15);color:#ef4444;';
+
+            let waMsg = 'היי יהל (052-395-0886), מציג אישור פגישה/אירוע:\n';
+            waMsg += 'שם: ' + b.client_name + '\n';
+            waMsg += 'סוג אירוע: ' + b.event_type + '\n';
+            waMsg += 'תאריך: ' + b.event_date + '\n';
+            waMsg += 'שעה: ' + b.event_time;
+            const waUrl = 'https://wa.me/972523950886?text=' + encodeURIComponent(waMsg);
+
+            html += '<div style="background:var(--bg-light,#f8fafc);border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:12px;">';
+            html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">';
+            html += '<span style="font-weight:700;font-size:16px;color:var(--navy);">🎵 ' + escapeHtml(b.event_type) + ' — ' + escapeHtml(b.client_name) + '</span>';
+            html += '<span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;' + daysClass + '">' + daysText + '</span>';
+            html += '</div>';
+            html += '<div style="font-size:14px;color:#475569;margin-bottom:10px;">';
+            html += '📅 תאריך: <b>' + b.event_date + '</b> בשעה <b>' + b.event_time + '</b><br>';
+            html += '📞 טלפון: ' + escapeHtml(b.phone) + (b.notes ? '<br>📝 הערות: ' + escapeHtml(b.notes) : '');
+            html += '</div>';
+            html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+            html += '<a href="' + waUrl + '" target="_blank" class="btn btn-whatsapp btn-sm" style="padding:8px 14px;font-size:13px;text-decoration:none;">📱 אישור ב-WhatsApp (052-395-0886)</a>';
+            html += '<button class="btn btn-outline btn-sm" onclick="cancelBooking('' + b.id + '')" style="padding:8px 12px;font-size:13px;color:#ef4444;border-color:#fca5a5;">מחיקה</button>';
+            html += '</div>';
+            html += '</div>';
+          });
+          listEl.innerHTML = html;
+        }
+
+        function cancelBooking(id) {
+          if (!confirm('האם למחוק הזמנה זו?')) return;
+          bookings = bookings.filter(b => b.id !== id);
+          localStorage.setItem('yael_dj_bookings', JSON.stringify(bookings));
+          renderUpcomingBookings();
+        }
+
+        function exportUpcomingCSV() {
+          let csv = '﻿תאריך,שעה,שם לקוח,טלפון,סוג אירוע,הערות,סטטוס
+';
+          bookings.forEach(b => {
+            csv += `"${b.event_date}","${b.event_time}","${(b.client_name||'').replace(/"/g,'""')}","${b.phone}","${(b.event_type||'').replace(/"/g,'""')}","${(b.notes||'').replace(/"/g,'""')}","${b.status||'confirmed'}"
+`;
+          });
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'אירועי_DJ_יהל_' + new Date().toISOString().substring(0,10) + '.csv';
+          link.click();
+        }
+
         const TIME_SLOTS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 
         let currentMonth = new Date();
@@ -850,6 +968,12 @@
         }
 
         function selectDate(date, el) {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            if (date < today) {
+                alert('לא ניתן לבחור תאריך בעבר. אנא בחרו תאריך עתידי בלבד.');
+                return;
+            }
             selectedDate = date;
             document.querySelectorAll('.date-slot').forEach(function(s) { s.classList.remove('selected'); });
             el.classList.add('selected');
@@ -1006,8 +1130,23 @@
                     waMsg += 'תאריך: ' + formatDateHebrew(selectedDate) + '\n';
                     waMsg += 'שעה: ' + selectedTime;
                     if (notes) waMsg += '\nהערות: ' + notes;
-                    const waLink = 'https://wa.me/' + YAEL_PHONE + '?text=' + encodeURIComponent(waMsg);
+                    const waLink = 'https://wa.me/972523950886?text=' + encodeURIComponent(waMsg);
                     document.getElementById('whatsappBtn').href = waLink;
+                    document.getElementById('whatsappBtn').textContent = '📱 אישור ב-WhatsApp עם יהל (052-395-0886)';
+                    
+                    // Save to local bookings
+                    const newBk = {
+                      id: 'b_' + Date.now(),
+                      client_name: name,
+                      phone: phone,
+                      event_type: selectedEventType,
+                      event_date: formatDate(selectedDate),
+                      event_time: selectedTime,
+                      notes: notes,
+                      status: 'confirmed'
+                    };
+                    bookings.unshift(newBk);
+                    localStorage.setItem('yael_dj_bookings', JSON.stringify(bookings));
                 } else {
                     throw new Error('שגיאה');
                 }

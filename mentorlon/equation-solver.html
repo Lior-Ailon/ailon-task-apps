@@ -249,6 +249,8 @@ body {
 .step-num.emotion-num { background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:#fff; }
 
 </style>
+  <link rel="manifest" href="manifest.json?v=2.0.0">
+  <link rel="apple-touch-icon" href="https://base44.app/api/apps/69f63b4536d7a2c6688403df/files/mp/public/69f63b4536d7a2c6688403df/2212f6c08_ailon_hex_final_v3.png">
 </head>
 <body>
 <canvas id="math-canvas"></canvas>
@@ -879,9 +881,29 @@ function loadExample(key) {
 // Init
 renderHistory();
 </script>
-<script src="./feedback.js?v=1.0.0"></script>
+<script src="./feedback.js?v=2.0.0"></script>
 <!-- AILON Task Feedback Widget -->
-<!-- Include this before </body> on any app page -->
+<!-- Include this before <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    });
+  }
+</script>
+<!-- Floating Back to Top -->
+<button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="חזרה לראש העמוד" class="fixed bottom-6 left-6 z-50 hidden bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-lg transition-all transform hover:scale-105" style="position:fixed; bottom:24px; left:24px; z-index:9999; display:none; background-color:#0d9488; color:#ffffff; border:none; border-radius:50%; width:44px; height:44px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); align-items:center; justify-content:center;">
+  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+</button>
+<script>
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('backToTopBtn');
+    if (btn) {
+      if (window.scrollY > 250) { btn.style.display = 'flex'; }
+      else { btn.style.display = 'none'; }
+    }
+  });
+</script>
+</body> on any app page -->
 <style>
 .ailon-fab{position:fixed;bottom:16px;left:16px;width:48px;height:48px;background:#0d9488;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(13,148,136,0.4);z-index:9998;transition:all .2s}
 .ailon-fab:hover{transform:scale(1.1)}
@@ -971,6 +993,26 @@ function ailonSubmitFeedback(){
   ailonRatingValue=0;
   document.getElementById('ailonRating').querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
 }
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    });
+  }
+</script>
+<!-- Floating Back to Top -->
+<button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="חזרה לראש העמוד" class="fixed bottom-6 left-6 z-50 hidden bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-full shadow-lg transition-all transform hover:scale-105" style="position:fixed; bottom:24px; left:24px; z-index:9999; display:none; background-color:#0d9488; color:#ffffff; border:none; border-radius:50%; width:44px; height:44px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); align-items:center; justify-content:center;">
+  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+</button>
+<script>
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('backToTopBtn');
+    if (btn) {
+      if (window.scrollY > 250) { btn.style.display = 'flex'; }
+      else { btn.style.display = 'none'; }
+    }
+  });
 </script>
 </body>
 </html>

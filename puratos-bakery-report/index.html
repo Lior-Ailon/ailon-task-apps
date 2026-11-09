@@ -427,7 +427,12 @@ body.pat-mode .onlyBakery{display:none!important}
     <button class="btn btn-secondary" onclick="saveDraft()">💾 שמור טיוטה</button>
     <button class="btn btn-secondary" onclick="saveAsReport()">📋 שמירה בשם</button>
     <button class="btn btn-green" onclick="submitReport()">✓ הגש דו"ח</button>
-    <div class="export-template"><label for="targetFolder">תיקיית יעד (SharePoint)</label><input type="text" id="targetFolder" placeholder="ריק = לפי תאריך הניסוי" style="width:150px;padding:6px;border:1.5px solid var(--gray-200);border-radius:8px"></div>
+    <div class="export-template"><label for="targetFolder">תיקיית יעד (SharePoint)</label>
+    <select id="targetFolder" aria-label="תיקיית יעד ב-SharePoint" style="width:190px;padding:6px;border:1.5px solid var(--gray-200);border-radius:8px">
+      <option value="">אוטומטי — לפי סוג הטופס</option>
+      <option value="Bakery">Bakery · לחמים</option>
+      <option value="Patisserie">Patisserie · קונדיטוריה</option>
+    </select></div>
     <div class="export-template"><label for="excelTemplate">תבנית לייצוא</label>
     <select id="excelTemplate" aria-label="תבנית Excel לייצוא">
       <option value="bakery">Bakery · לחמים</option>
@@ -980,6 +985,14 @@ async function pushToSharepoint(reportId,data){
   }catch(e){/* סנכרון שקט ברקע */}
 }
 
+function syncFolderToTemplate(){
+  try{
+    const kind=document.getElementById('excelTemplate')?.value||'bakery';
+    const sel=document.getElementById('targetFolder'); if(!sel) return;
+    if(sel.dataset.manual==='1') return;
+    sel.value = kind==='patisserie' ? 'Patisserie' : 'Bakery';
+  }catch(e){}
+}
 function saveDraft(){doSave('draft','טיוטה נשמרה ✓');}
 function submitReport(){
   const missing=[];
@@ -1187,7 +1200,9 @@ async function loadReport(id){
     document.getElementById('moldType').value=fc.moldType||'';
     document.getElementById('moulder').value=fc.moulder||'';
     if(Array.isArray(fc.expNumbers)&&fc.expNumbers.length===6)expNumbers=fc.expNumbers;
-    document.getElementById('targetFolder').value=r.target_folder||r.data?.target_folder||'';
+    const tfEl=document.getElementById('targetFolder');
+    const tfVal=(r.target_folder||r.data?.target_folder||'').trim();
+    tfEl.value=['Bakery','Patisserie'].includes(tfVal)?tfVal:'';
     document.getElementById('ovenType').value=fc.ovenType||'';
     document.getElementById('bakingProgram').value=fc.bakingProgram||'';
     document.getElementById('steam').value=fc.steam||'';
@@ -1287,6 +1302,21 @@ renderAnnex(1);
 <script>window.addEventListener("load",function(){var o=document.getElementById("ailon-loading-overlay");if(o){o.style.opacity="0";setTimeout(function(){o.remove()},300);}});</script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
+</script>
+
+<script>
+/* בחירת תיקיית יעד: ברירת מחדל לפי סוג הטופס, ואפשרות לבחור ידנית */
+(function(){
+  function init(){
+    const sel=document.getElementById('targetFolder');
+    const tpl=document.getElementById('excelTemplate');
+    if(!sel||!tpl) return;
+    sel.addEventListener('change',()=>{ sel.dataset.manual = sel.value ? '1' : '0'; });
+    tpl.addEventListener('change',()=>{ sel.dataset.manual='0'; if(typeof syncFolderToTemplate==='function') syncFolderToTemplate(); });
+    if(!sel.value && typeof syncFolderToTemplate==='function') syncFolderToTemplate();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
 </script>
 </body>
 </html>
