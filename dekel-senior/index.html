@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>מועדון לאזרחים ותיקים נוה שרת · Info Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sc:1;
+  --forest:#1e4a3d;--forest-light:#2f6b57;--forest-deep:#14201c;
+  --cream:#fbf7ee;--cream-2:#fffdf8;--edge:#e3d9c6;
+  --ink:#1b2320;--ink-soft:#4a554f;
+  --gold:#d9a441;--gold-light:#e8c274;
+  --sand:#f4ead6;
+  --red:#b4442f;--blue:#1f5f8b;--green:#2f7d4f;
+  --pad:clamp(8px,1.1vw,28px);
+  --gap:clamp(6px,.85vw,20px);
+  --r:clamp(10px,1.1vw,28px);
+  --fs-clock:calc((clamp(2rem,5.2vw,8rem)) * var(--sc));
+  --fs-date:calc((clamp(.75rem,1.5vw,2.4rem)) * var(--sc));
+  --fs-title:calc((clamp(1.2rem,2.9vw,4.6rem)) * var(--sc));
+  --fs-sub:calc((clamp(.6rem,1.1vw,1.6rem)) * var(--sc));
+  --fs-h:calc((clamp(.85rem,1.7vw,2.7rem)) * var(--sc));
+  --fs-row:calc((clamp(.75rem,1.5vw,2.4rem)) * var(--sc));
+  --fs-time:calc((clamp(.8rem,1.6vw,2.6rem)) * var(--sc));
+  --fs-big:calc((clamp(1rem,2.1vw,3.4rem)) * var(--sc));
+  --fs-foot:calc((clamp(.65rem,1.2vw,1.9rem)) * var(--sc));
+}
+html,body{height:100%;width:100%}
+body{font-family:'Heebo',system-ui,sans-serif;background:var(--cream);color:var(--ink);overflow:hidden;line-height:1.35}
+#frame{height:100%;width:100%;display:flex;flex-direction:column;gap:var(--gap);padding:var(--pad)}
+
+/* ---------- header ---------- */
+.topbar{display:flex;gap:var(--gap);align-items:stretch;flex-shrink:0}
+.box{border-radius:var(--r);box-shadow:0 4px 14px rgba(50,40,20,.12)}
+.clockbox{flex-shrink:0;width:clamp(120px,16vw,420px);background:linear-gradient(135deg,var(--gold),#b9822c);color:#241a06;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(4px,.6vw,14px) clamp(6px,.8vw,18px);gap:clamp(1px,.2vw,4px)}
+.clock{font-size:var(--fs-clock);font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.cdate{font-size:var(--fs-date);font-weight:700;opacity:.9;text-align:center;line-height:1.15}
+.titlebox{flex:1;background:linear-gradient(135deg,var(--forest-light),var(--forest));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(4px,.6vw,16px);text-align:center}
+.titlebox h1{font-size:var(--fs-title);font-weight:900;line-height:1.08;letter-spacing:-.01em}
+.titlebox .sub{font-size:var(--fs-sub);font-weight:700;opacity:.9;margin-top:clamp(1px,.3vw,8px);letter-spacing:.02em}
+.brandbox{flex-shrink:0;width:clamp(84px,10vw,260px);background:linear-gradient(160deg,var(--gold-light),var(--gold));color:#241a06;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(3px,.5vw,12px);text-align:center;gap:clamp(1px,.2vw,4px)}
+.brandbox .b1{font-size:clamp(.6rem,1.05vw,1.6rem);font-weight:900;letter-spacing:.06em}
+.brandbox .b2{font-size:clamp(.45rem,.75vw,1.1rem);font-weight:700;opacity:.85;letter-spacing:.08em}
+
+/* ---------- body ---------- */
+main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
+.panel{border-radius:var(--r);background:var(--cream-2);box-shadow:0 6px 18px rgba(50,40,20,.10);display:flex;flex-direction:column;overflow:hidden;min-height:0;border:1px solid var(--edge)}
+.panel > h2{flex-shrink:0;font-size:var(--fs-h);font-weight:900;color:#fff;padding:clamp(4px,.7vw,16px) clamp(8px,1vw,22px);text-align:center;letter-spacing:.01em}
+.p-today{flex:1.15}
+.p-today > h2{background:linear-gradient(135deg,var(--green),#215c3a)}
+.p-week{flex:1}
+.p-week > h2{background:linear-gradient(135deg,var(--blue),#123f5e)}
+.p-news{flex:1.05}
+.p-news > h2{background:linear-gradient(135deg,var(--forest-light),var(--forest))}
+
+/* today rows */
+.rows{flex:1;overflow:hidden;padding:clamp(4px,.6vw,14px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:clamp(3px,.45vw,10px)}
+.row{display:flex;align-items:center;gap:clamp(6px,.8vw,16px);padding:clamp(3px,.5vw,12px) clamp(6px,.8vw,16px);border-radius:calc(var(--r) * .6);background:var(--sand);border:2px solid transparent}
+.row .t{font-size:var(--fs-time);font-weight:900;font-variant-numeric:tabular-nums;color:var(--forest);flex-shrink:0;min-width:clamp(52px,5.4vw,150px)}
+.row .n{font-size:var(--fs-row);font-weight:700;line-height:1.2}
+.row .d{font-size:calc(var(--fs-row) * .78);font-weight:500;color:var(--ink-soft);line-height:1.2;margin-top:clamp(1px,.15vw,3px)}
+.row.done{opacity:.5}
+.row.now{background:#fff6df;border-color:var(--gold);box-shadow:0 0 0 3px rgba(217,164,65,.25)}
+.row.next{background:#eef7f1;border-color:var(--green)}
+.tag{flex-shrink:0;font-size:calc(var(--fs-row) * .66);font-weight:900;color:#fff;background:var(--green);border-radius:999px;padding:clamp(1px,.2vw,5px) clamp(6px,.7vw,14px);white-space:nowrap}
+.row.now .tag{background:var(--gold);color:#241a06}
+
+/* week list */
+.week{padding:clamp(3px,.5vw,12px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:clamp(2px,.3vw,7px);overflow:hidden;flex:1}
+.wrow{display:flex;align-items:baseline;gap:clamp(5px,.7vw,14px);padding:clamp(2px,.35vw,8px) 0;border-bottom:1px dashed var(--edge)}
+.wrow:last-child{border-bottom:none}
+.wrow .day{font-size:var(--fs-row);font-weight:900;color:var(--blue);flex-shrink:0;min-width:clamp(46px,4.6vw,132px)}
+.wrow .acts{font-size:calc(var(--fs-row) * .84);font-weight:600;color:var(--ink-soft);line-height:1.25}
+.wrow.today{background:#fff6df;border-radius:calc(var(--r) * .5);padding-inline:clamp(4px,.5vw,10px);border-bottom-color:transparent}
+.wrow.today .day{color:var(--forest)}
+.wrow.closed .acts{color:#9aa39d}
+
+/* news */
+.newsbody{flex:1;overflow:hidden;position:relative;padding:clamp(4px,.6vw,14px) clamp(6px,.8vw,16px);min-height:0}
+.newsbody::before,.newsbody::after{content:"";position:absolute;left:0;right:0;height:clamp(10px,1.2vw,26px);z-index:2;pointer-events:none}
+.newsbody::before{top:0;background:linear-gradient(180deg,var(--cream-2),transparent)}
+.newsbody::after{bottom:0;background:linear-gradient(0deg,var(--cream-2),transparent)}
+#newsScroll{display:flex;flex-direction:column;gap:clamp(4px,.55vw,12px)}
+.card{background:#fff;border-radius:calc(var(--r) * .6);padding:clamp(4px,.6vw,14px) clamp(7px,.9vw,18px);box-shadow:0 2px 8px rgba(50,40,20,.07);border-right:clamp(5px,.55vw,12px) solid var(--blue)}
+.card.c-green{border-right-color:var(--green)}
+.card.c-orange{border-right-color:#d9822b}
+.card.c-purple{border-right-color:#6b4ea8}
+.card.c-blue{border-right-color:var(--blue)}
+.card.c-teal{border-right-color:var(--forest-light)}
+.card.c-gold{border-right-color:var(--gold)}
+.card.c-coral{border-right-color:var(--red)}
+.card.c-navy{border-right-color:#1b3a5c}
+.card .ct{font-size:calc(var(--fs-row) * .95);font-weight:800;line-height:1.2}
+.card .cd{font-size:calc(var(--fs-row) * .76);font-weight:500;color:var(--ink-soft);line-height:1.25;margin-top:clamp(1px,.15vw,3px)}
+.card .cw{display:inline-block;margin-top:clamp(2px,.25vw,6px);font-size:calc(var(--fs-row) * .72);font-weight:900;color:#7a4f06;background:#fdf1d5;border-radius:999px;padding:clamp(0,.1vw,2px) clamp(5px,.6vw,12px)}
+
+/* ---------- footer ---------- */
+.bottombar{flex-shrink:0;display:flex;align-items:stretch;gap:var(--gap);height:clamp(34px,4.4vw,110px)}
+.fhours{flex-shrink:0;display:flex;align-items:center;gap:clamp(4px,.6vw,12px);background:linear-gradient(135deg,var(--green),#215c3a);color:#fff;border-radius:var(--r);padding:0 clamp(8px,1vw,22px);font-size:var(--fs-foot);font-weight:900;white-space:nowrap}
+.fhours .lbl{opacity:.85;font-weight:700}
+.fcontact{flex-shrink:0;display:flex;align-items:center;background:linear-gradient(135deg,var(--forest-light),var(--forest));color:#fff;border-radius:var(--r);padding:0 clamp(8px,1vw,22px);font-size:var(--fs-foot);font-weight:700;white-space:nowrap}
+.tickerbox{flex:1;overflow:hidden;border-radius:var(--r);background:linear-gradient(135deg,var(--gold),#bf8c2f);display:flex;align-items:center;min-width:0}
+.tickerbox .tlbl{flex-shrink:0;color:#241a06;font-weight:900;font-size:var(--fs-foot);padding:0 clamp(8px,1vw,20px);border-left:2px solid rgba(0,0,0,.15)}
+.tickerclip{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;min-width:0}
+#tickerTrack{display:flex;gap:clamp(18px,2.4vw,54px);white-space:nowrap;animation:tick 90s linear infinite}
+#tickerTrack:hover{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tk{color:#241a06;font-size:var(--fs-foot);font-weight:700;display:inline-flex;align-items:center;gap:clamp(6px,.8vw,14px)}
+.tk .dot{width:clamp(5px,.55vw,10px);height:clamp(5px,.55vw,10px);border-radius:50%;background:#241a06;opacity:.45;flex-shrink:0}
+
+/* accessibility buttons */
+.a11y{position:fixed;bottom:calc(var(--pad) + 4px);left:calc(var(--pad) + 4px);display:flex;gap:6px;z-index:50;opacity:.25;transition:opacity .2s}
+.a11y:hover{opacity:1}
+.a11y button{font-family:'Heebo',sans-serif;font-weight:900;font-size:clamp(11px,.9vw,16px);background:#fff;color:var(--forest);border:2px solid var(--forest-light);border-radius:10px;padding:2px 9px;cursor:pointer}
+
+@media(max-width:900px){
+  main{flex-direction:column}
+  .p-today{flex:1.1}
+  .p-week,.p-news{flex:1}
+  .clockbox{width:clamp(96px,22vw,190px)}
+  .brandbox{display:none}
+  .bottombar{flex-wrap:wrap;height:auto}
+  .tickerbox{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+<div id="frame">
+
+  <header class="topbar">
+    <div class="box clockbox">
+      <div class="clock" id="clock">--:--</div>
+      <div class="cdate" id="cdate"></div>
+      <div class="cdate" id="hdate" style="opacity:.75"></div>
+    </div>
+    <div class="box titlebox">
+      <h1 id="clubName">מועדון לאזרחים ותיקים</h1>
+      <div class="sub" id="clubSub">נוה שרת · תל אביב-יפו</div>
+    </div>
+    <div class="box brandbox">
+      <div class="b1">INFO SCREEN</div>
+      <div class="b2">מסך מידע</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel p-today">
+      <h2 id="todayTitle">פעילות היום</h2>
+      <div class="rows" id="todayList"></div>
+    </section>
+
+    <section class="panel p-week">
+      <h2>לוח השבוע</h2>
+      <div class="week" id="weekList"></div>
+    </section>
+
+    <section class="panel p-news">
+      <h2>הודעות וברכות</h2>
+      <div class="newsbody"><div id="newsScroll"></div></div>
+    </section>
+  </main>
+
+  <footer class="bottombar">
+    <div class="box fhours"><span class="lbl">פתוח</span><span id="fHours">א׳-ה׳ 08:00-13:00</span></div>
+    <div class="box fcontact" id="fContact">קהילת קליבלנד 4 · 03-649-0886</div>
+    <div class="box tickerbox">
+      <div class="tlbl">מידע</div>
+      <div class="tickerclip"><div id="tickerTrack"></div></div>
+    </div>
+  </footer>
+
+</div>
+
+<div class="a11y">
+  <button onclick="bumpFont(1)">א+</button>
+  <button onclick="bumpFont(-1)">א-</button>
+</div>
+
+<script>
+/* ============================================================
+   מועדון לאזרחים ותיקים נוה שרת — מסך תצוגה בסגנון Info Screen
+   מבנה הלוח כמו לוח ספריית רחובות: שעון | שם המועדון | מיתוג
+   גוף: פעילות היום | לוח השבוע | הודעות וברכות
+   תחתית: שעות פתיחה | כתובת וטלפון | טיקר
+   ============================================================ */
+
+var DEFAULT_CLUB_ID = '6af495d9ad0232fa56b7d2c5';
+var P = new URLSearchParams(location.search);
+var CLUB_ID = P.get('club') || P.get('library_id') || DEFAULT_CLUB_ID;
+var API_URL = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/getLibraryContent';
+
+var CLUB = {
+  name: 'מועדון לאזרחים ותיקים',
+  sub: 'נוה שרת · תל אביב-יפו',
+  address: 'קהילת קליבלנד 4, נוה שרת',
+  phone: '03-649-0886',
+  hoursLabel: 'א׳-ה׳ 08:00-13:00',
+  ticker: 'ברוכים הבאים למועדון נוה שרת · קפה ועיתון כל בוקר · תכנית מופ״ת כוללת ארוחת צהריים והסעות לזכאים · לפרטים ולהרשמה: 03-649-0886'
+};
+
+/* לוח שבועי — ניתן לעדכן דרך מסך הניהול או כאן */
+var WEEK = [
+  {day:'ראשון',  acts:[{t:'09:00',n:'התעמלות בוקר',d:'אולם הפעילות · מדריך מוסמך'},{t:'10:30',n:'קפה ועיתון',d:'כיבוד קל ושיחה'},{t:'12:30',n:'ארוחת צהריים',d:'תכנית מופ״ת'}]},
+  {day:'שני',    acts:[{t:'09:00',n:'התעמלות בוקר',d:'אולם הפעילות'},{t:'10:30',n:'קפה ועיתון',d:'כיבוד קל ושיחה'},{t:'11:30',n:'פינת בריאות',d:'מדידת לחץ דם וסוכר'},{t:'12:30',n:'ארוחת צהריים',d:'תכנית מופ״ת'}]},
+  {day:'שלישי',  acts:[{t:'09:00',n:'התעמלות בוקר',d:'אולם הפעילות'},{t:'10:00',n:'מעגל דיגיטלי',d:'טלפון חכם צעד אחר צעד'},{t:'10:30',n:'קפה ועיתון',d:'כיבוד קל ושיחה'},{t:'12:30',n:'ארוחת צהריים',d:'תכנית מופ״ת'}]},
+  {day:'רביעי',  acts:[{t:'09:00',n:'התעמלות בוקר',d:'אולם הפעילות'},{t:'10:30',n:'קפה ועיתון',d:'כיבוד קל ושיחה'},{t:'11:00',n:'שירה בציבור',d:'עם ליווי אקורדיון'},{t:'12:30',n:'ארוחת צהריים',d:'תכנית מופ״ת'}]},
+  {day:'חמישי',  acts:[{t:'09:00',n:'התעמלות בוקר',d:'אולם הפעילות'},{t:'10:30',n:'מועדון ההרצאות',d:'הרצאה עם תמונות'},{t:'12:30',n:'ארוחת צהריים',d:'תכנית מופ״ת'},{t:'13:00',n:'יציאה לטיול',d:'לפי הרשמה מראש'}]},
+  {day:'שישי',   acts:[{t:'—',n:'המועדון סגור',d:'שבת שלום'}]},
+  {day:'שבת',    acts:[{t:'—',n:'המועדון סגור',d:'שבוע טוב'}]}
+];
+
+var FALLBACK_NOTICES = [
+  {title:'קפה ועיתון כל בוקר',description:'כולם מוזמנים, גם בלי להירשם',event_date:'10:30',badge_color:'teal'},
+  {title:'ארוחת צהריים חמה',description:'תכנית מופ״ת · תשלום מסובסד לזכאים',event_date:'12:30',badge_color:'orange'},
+  {title:'הסעות הלוך וחזור',description:'לזכאי מופ״ת · לתאום פנו למזכירות',event_date:'א׳-ה׳',badge_color:'green'},
+  {title:'מזל טוב לחוגגי יום ההולדת החודש',description:'כיבוד, עוגה וברכות — כולם מוזמנים',event_date:'פעם בחודש',badge_color:'coral'},
+  {title:'לפרטים והרשמה',description:'מזכירות המועדון · 03-649-0886',event_date:'',badge_color:'navy'}
+];
+
+var FALLBACK_TICKER = [
+  'הליכה של 20 דקות ביום טובה ללב, לשינה ולמצב הרוח',
+  'פעילות חברתית קבועה משפרת את הזיכרון ואת מצב הרוח',
+  'שתייה מרובה ושתי ארוחות מסודרות ביום — הבסיס לתחושה טובה',
+  'תלמידי בית הספר בשכונה מגיעים למועדון לפרויקט קשר בין דורי',
+  'מועדון נוה שרת · קהילת קליבלנד 4 · 03-649-0886'
+];
+
+var DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+var MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+
+/* ---------- שעון ותאריך ---------- */
+function pad(n){return String(n).padStart(2,'0')}
+function hebrewDate(d){
+  try{
+    return new Intl.DateTimeFormat('he-IL-u-ca-hebrew',{day:'numeric',month:'long',year:'numeric'}).format(d);
+  }catch(e){return ''}
+}
+function updateClock(){
+  var now=new Date();
+  document.getElementById('clock').textContent = pad(now.getHours())+':'+pad(now.getMinutes());
+  var hd = hebrewDate(now);
+  document.getElementById('cdate').textContent = 'יום '+DAYS[now.getDay()]+', '+now.getDate()+' ב'+MONTHS[now.getMonth()]+' '+(hd?('· '+hd):'');
+  document.getElementById('todayTitle').textContent = 'פעילות היום — יום '+DAYS[now.getDay()];
+  markToday();
+}
+updateClock();
+setInterval(updateClock,1000);
+
+/* ---------- פעילות היום ---------- */
+var TODAY_CACHE = [];
+function minutesOf(t){var p=String(t).split(':');if(p.length!==2)return null;var h=parseInt(p[0],10),m=parseInt(p[1],10);if(isNaN(h)||isNaN(m))return null;return h*60+m}
+
+function renderToday(){
+  var now=new Date();
+  var idx=now.getDay();
+  var day=WEEK[idx]||WEEK[0];
+  TODAY_CACHE = day.acts.slice();
+  var nowMin = now.getHours()*60 + now.getMinutes();
+  var list=document.getElementById('todayList');
+  var nextAssigned=false;
+  var html = TODAY_CACHE.map(function(a,i){
+    var m = minutesOf(a.t);
+    var cls='row', tag='';
+    if(m===null){cls+=' closedRow';}
+    else{
+      var end = m+70;
+      if(m<=nowMin && nowMin<end){cls+=' now'; tag='<span class="tag">עכשיו</span>'; nextAssigned=true;}
+      else if(nowMin<m && !nextAssigned){cls+=' next'; tag='<span class="tag">הבא</span>'; nextAssigned=true;}
+      else if(nowMin>=end){cls+=' done';}
+    }
+    return '<div class="'+cls+'" data-t="'+a.t+'">'
+      + '<span class="t">'+a.t+'</span>'
+      + '<span style="flex:1"><span class="n">'+a.n+'</span>'
+      + (a.d?'<span class="d" style="display:block">'+a.d+'</span>':'')+'</span>'
+      + tag + '</div>';
+  }).join('');
+  list.innerHTML = html;
+}
+
+/* סימון "עכשיו" בלי לרענן את כל הרשימה */
+function markToday(){
+  var rows=document.querySelectorAll('#todayList .row');
+  if(!rows.length) return;
+  var now=new Date(), nowMin=now.getHours()*60+now.getMinutes();
+  var nextAssigned=false;
+  rows.forEach(function(r){
+    var m=minutesOf(r.dataset.t);
+    r.classList.remove('now','next','done');
+    var tags=r.querySelector('.tag');
+    if(tags) tags.remove();
+    if(m===null) return;
+    var end=m+70;
+    var span=document.createElement('span');
+    span.className='tag';
+    if(m<=nowMin && nowMin<end){ r.classList.add('now'); span.textContent='עכשיו'; r.appendChild(span); nextAssigned=true; }
+    else if(nowMin<m && !nextAssigned){ r.classList.add('next'); span.textContent='הבא'; r.appendChild(span); nextAssigned=true; }
+    else if(nowMin>=end){ r.classList.add('done'); }
+  });
+}
+
+/* ---------- לוח השבוע ---------- */
+function renderWeek(){
+  var today=(new Date()).getDay();
+  document.getElementById('weekList').innerHTML = WEEK.map(function(d,i){
+    var closed = d.acts.length===1 && d.acts[0].t==='—';
+    var txt = d.acts.map(function(a){ return (a.t==='—'? '' : a.t+' ')+a.n; }).join(' · ');
+    return '<div class="wrow'+(i===today?' today':'')+(closed?' closed':'')+'">'
+      + '<span class="day">'+d.day+'</span>'
+      + '<span class="acts">'+txt+'</span></div>';
+  }).join('');
+}
+
+/* ---------- הודעות ---------- */
+function renderNotices(items){
+  if(!items || !items.length) items = FALLBACK_NOTICES;
+  var card=function(it){
+    var c='c-'+(it.badge_color||'blue');
+    return '<div class="card '+c+'">'
+      + '<div class="ct">'+esc(it.title||'')+'</div>'
+      + (it.description?'<div class="cd">'+String(it.description).replace(/<br\s*\/?>/gi,' · ')+'</div>':'')
+      + (it.event_date?'<span class="cw">'+esc(it.event_date)+'</span>':'')
+      + '</div>';
+  };
+  var box=document.getElementById('newsScroll');
+  if(items.length<5){
+    box.style.animation='none';
+    box.innerHTML=items.map(card).join('');
+    return;
+  }
+  var filled=items.slice();
+  while(filled.length<10) filled=filled.concat(items);
+  var html=filled.map(card).join('');
+  box.innerHTML=html+html;
+  var dur=Math.max(45, filled.length*7);
+  box.style.animation='scrollUp '+dur+'s linear infinite';
+}
+
+/* ---------- טיקר ---------- */
+function renderTicker(items){
+  var texts = (items&&items.length? items.map(function(i){return i.title}) : FALLBACK_TICKER.slice());
+  if(CLUB.ticker) texts.unshift(CLUB.ticker);
+  var html = texts.map(function(t){
+    return '<span class="tk"><span class="dot"></span><span>'+esc(t)+'</span></span>';
+  }).join('');
+  document.getElementById('tickerTrack').innerHTML = html+html;
+}
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ---------- טעינת תוכן מהמערכת ---------- */
+function mkTimeout(ms){try{var c=new AbortController();setTimeout(function(){c.abort()},ms||6000);return c.signal}catch(e){return undefined}}
+function loadContent(){
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({library_id:CLUB_ID,_t:Date.now()}),signal:mkTimeout(6000)})
+    .then(function(r){return r.json()})
+    .then(function(result){
+      if(!result || !result.success || !result.data) throw new Error('no data');
+      var d=result.data;
+      renderNotices(d.new_in_library||[]);
+      renderTicker(d.positive_news||[]);
+    })
+    .catch(function(){
+      renderNotices(FALLBACK_NOTICES);
+      renderTicker(FALLBACK_TICKER);
+    });
+}
+
+/* ---------- גופן גדול/קטן (נגישות לגיל השלישי) ---------- */
+var SCALE = parseFloat(localStorage.getItem('senior_scale')||'1');
+function applyScale(){
+  document.documentElement.style.setProperty('--sc', SCALE);
+  localStorage.setItem('senior_scale', SCALE);
+}
+function bumpFont(dir){
+  SCALE = Math.min(1.6, Math.max(0.75, +(SCALE + dir*0.1).toFixed(2)));
+  applyScale();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='+'||e.key==='=') bumpFont(1);
+  if(e.key==='-') bumpFont(-1);
+});
+
+/* ---------- הפעלה ---------- */
+applyScale();
+renderToday();
+renderWeek();
+renderNotices(FALLBACK_NOTICES);
+renderTicker(FALLBACK_TICKER);
+loadContent();
+setInterval(loadContent, 60000);
+setInterval(renderToday, 60000);
+setInterval(renderWeek, 3600000);
+</script>
+<style>
+@keyframes scrollUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+</style>
+</body>
+</html>

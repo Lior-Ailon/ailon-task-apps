@@ -1,0 +1,21 @@
+{
+  "name": "מועדון לאזרחים ותיקים נוה שרת",
+  "short_name": "מועדון נוה שרת",
+  "description": "מסך מידע למועדון אזרחים ותיקים — פעילות היום, לוח שבועי, הודעות וברכות",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#1e4a3d",
+  "theme_color": "#1e4a3d",
+  "icons": [
+    {
+      "src": "https://media.base44.com/images/public/69f63b4536d7a2c6688403df/a8e957c4e_generated_image.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
