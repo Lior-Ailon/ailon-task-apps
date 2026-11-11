@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>ניהול מסך · מועדון לאזרחים ותיקים נוה שרת</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#0d9488;--teal-dark:#0f766e;--navy:#123c3a;--ink:#16211f;--soft:#6b7a76;--line:#dde7e4;--bg:#f4f8f7;--r:16px}
+body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;direction:rtl}
+a{color:var(--teal-dark)}
+.hide{display:none !important}
+
+/* ---------- login ---------- */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,#0f3b36,#123c3a 45%,#0b2a27)}
+.lcard{background:#fff;border-radius:22px;padding:30px 26px;width:100%;max-width:400px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.lcard h1{font-size:1.35rem;font-weight:900;color:var(--navy);text-align:center}
+.lcard p{font-size:.9rem;color:var(--soft);text-align:center;margin:6px 0 20px}
+label{display:block;font-size:.85rem;font-weight:700;color:var(--navy);margin:12px 0 5px}
+input[type=text],input[type=password],textarea,select{width:100%;font-family:inherit;font-size:1rem;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+.btn{font-family:inherit;font-size:1rem;font-weight:800;border:none;border-radius:12px;padding:13px 20px;cursor:pointer;background:var(--teal);color:#fff;transition:.15s}
+.btn:hover{background:var(--teal-dark)}
+.btn.full{width:100%;margin-top:20px}
+.btn.ghost{background:#fff;color:var(--teal-dark);border:1.5px solid var(--teal)}
+.btn.danger{background:#fff;color:#b42318;border:1.5px solid #f0c2bc}
+.btn.sm{padding:7px 12px;font-size:.85rem;border-radius:10px}
+.err{color:#b42318;font-size:.85rem;margin-top:10px;text-align:center;font-weight:700;min-height:18px}
+
+/* ---------- app shell ---------- */
+header.app{background:#fff;border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+header.app .t{flex:1;min-width:180px}
+header.app h1{font-size:1.05rem;font-weight:900;color:var(--navy);line-height:1.2}
+header.app .sub{font-size:.78rem;color:var(--soft);font-weight:600}
+.tabs{display:flex;gap:8px;padding:12px 16px 0;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+.tab{font-family:inherit;font-size:.92rem;font-weight:800;border:1.5px solid var(--line);background:#fff;color:var(--soft);border-radius:999px;padding:9px 16px;cursor:pointer}
+.tab.on{background:var(--teal);border-color:var(--teal);color:#fff}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 60px}
+.panel{background:#fff;border-radius:var(--r);padding:16px;border:1px solid var(--line);margin-top:14px}
+.panel h2{font-size:1rem;font-weight:900;color:var(--navy);margin-bottom:4px}
+.panel .hint{font-size:.8rem;color:var(--soft);margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.pcard{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.pcard img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#e9efee;display:block}
+.pcard .b{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.pcard .nm{font-size:.85rem;font-weight:800;color:var(--navy);line-height:1.2}
+.pcard .acts{display:flex;gap:6px}
+.addcard{border:2px dashed var(--teal);border-radius:14px;background:#f0fdfa;color:var(--teal-dark);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.95rem;min-height:150px;cursor:pointer;text-align:center;padding:12px}
+.row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .txt{flex:1}
+.row .txt b{font-size:.92rem;color:var(--navy)}
+.row .txt div{font-size:.82rem;color:var(--soft)}
+.tag{display:inline-block;font-size:.7rem;font-weight:800;color:#fff;background:var(--teal);border-radius:999px;padding:2px 9px;margin-top:4px}
+.swatches{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.sw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer}
+.sw.on{border-color:var(--navy)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hours{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px}
+.hours .d{font-weight:800;font-size:.88rem;color:var(--navy)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-weight:800;font-size:.9rem;padding:11px 20px;border-radius:999px;opacity:0;transition:.25s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+#modal{position:fixed;inset:0;background:rgba(10,30,28,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+#modal.on{display:flex}
+.mbox{background:#fff;border-radius:18px;padding:18px;width:100%;max-width:440px;max-height:92vh;overflow:auto}
+.mbox h3{font-size:1.02rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+.mact{display:flex;gap:8px;margin-top:16px}
+.mact .btn{flex:1}
+.stat{font-size:.8rem;color:var(--soft);margin-top:6px}
+@media(max-width:600px){.f2{grid-template-columns:1fr}.pcard img{aspect-ratio:1/1}}
+</style>
+</head>
+<body>
+
+<section id="login">
+  <form class="lcard" onsubmit="doLogin(event)">
+    <h1>ניהול מסך המועדון</h1>
+    <p>מועדון לאזרחים ותיקים נוה שרת</p>
+    <label for="u">שם משתמש</label>
+    <input id="u" type="text" autocomplete="username" placeholder="נווה">
+    <label for="p">סיסמה</label>
+    <input id="p" type="password" autocomplete="current-password" placeholder="סיסמה">
+    <button class="btn full" type="submit">כניסה לניהול</button>
+    <div class="err" id="lerr"></div>
+  </form>
+</section>
+
+<section id="app" class="hide">
+  <header class="app">
+    <div class="t">
+      <h1 id="hName">מועדון לאזרחים ותיקים נוה שרת</h1>
+      <div class="sub" id="hSub">מסך ניהול · מסך תצוגה</div>
+    </div>
+    <a class="btn ghost sm" id="viewLink" href="index.html" target="_blank">צפייה במסך</a>
+    <button class="btn danger sm" onclick="logout()">יציאה</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="photos" onclick="setTab('photos')">תמונות פעילות</button>
+    <button class="tab" data-tab="notices" onclick="setTab('notices')">הודעות וברכות</button>
+    <button class="tab" data-tab="ticker" onclick="setTab('ticker')">טיקר תחתון</button>
+    <button class="tab" data-tab="club" onclick="setTab('club')">פרטי המועדון</button>
+  </div>
+
+  <main>
+    <div id="tab-photos" class="tabpane">
+      <div class="panel">
+        <h2>תמונות הפעילות במסך</h2>
+        <div class="hint">התמונות מתחלפות אוטומטית כל 7 שניות ומתאימות את עצמן לגודל החלון. אפשר להעלות תמונה מרובעת או רוחבית — היא תיחתך אוטומטית למסגרת.</div>
+        <div class="grid" id="photoGrid"></div>
+      </div>
+    </div>
+
+    <div id="tab-notices" class="tabpane hide">
+      <div class="panel">
+        <h2>הודעות וברכות</h2>
+        <div class="hint">ההודעות מופיעות בפאנל הימני השני ונגללות לאיטיות. כותרת קצרה וגדולה עובדת הכי טוב.</div>
+        <div style="margin-bottom:12px"><button class="btn sm" onclick="editNotice(null)">הוספת הודעה</button></div>
+        <div id="noticeList"></div>
+      </div>
+    </div>
+
+    <div id="tab-ticker" class="tabpane hide">
+      <div class="panel">
+        <h2>טיקר תחתון</h2>
+        <div class="hint">שורות קצרות שנעות בתחתית המסך. משפט אחד בכל שורה.</div>
+        <div style="margin-bottom:12px"><button class="btn sm" onclick="editTicker(null)">הוספת שורה</button></div>
+        <div id="tickerList"></div>
+      </div>
+    </div>
+
+    <div id="tab-club" class="tabpane hide">
+      <div class="panel">
+        <h2>פרטי המועדון ושעות פתיחה</h2>
+        <div class="hint">הפרטים מופיעים בכותרת המסך ובסרגל התחתון.</div>
+        <div class="f2">
+          <div><label for="c_name">שם המועדון</label><input id="c_name" type="text"></div>
+          <div><label for="c_phone">טלפון</label><input id="c_phone" type="text"></div>
+        </div>
+        <label for="c_addr">כתובת</label><input id="c_addr" type="text">
+        <label for="c_contact">גוף מפעיל / תיאור קצר</label><input id="c_contact" type="text">
+        <label for="c_ticker">שורת הפתיחה של הטיקר</label><input id="c_ticker" type="text">
+        <label>שעות פתיחה</label>
+        <div id="hoursBox"></div>
+        <button class="btn" style="margin-top:12px" onclick="saveClub()">שמירת פרטי המועדון</button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   מסך ניהול למועדון האזרחים הוותיקים נוה שרת
+   אותה Plattform של דקל: libraryAuth + libraryData + libraryFileUpload
+   ============================================================ */
+var API_BASE = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+var UPLOAD_URL = API_BASE + '/libraryFileUpload';
+var DEFAULT_CLUB_ID = '6af495d9ad0232fa56b7d2c5';
+var P = new URLSearchParams(location.search);
+var CLUB_ID = P.get('club') || DEFAULT_CLUB_ID;
+var S = {token:null, user:null, club:null, photos:[], notices:[], ticker:[]};
+var COLORS = ['blue','green','orange','purple','teal','gold','coral','navy'];
+
+function $(id){return document.getElementById(id)}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200)}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+async function auth(body){
+  var r = await fetch(API_BASE+'/libraryAuth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
+}
+async function admin(action, extra){
+  var payload = Object.assign({action:action, token:S.token, club_id:CLUB_ID}, extra||{});
+  var r = await fetch(API_BASE+'/seniorClubAdmin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  return r.json();
+}
+
+/* ---------- כניסה ---------- */
+async function doLogin(e){
+  e.preventDefault();
+  var u = $('u').value.trim(), p = $('p').value;
+  if(!u || !p){ $('lerr').textContent='נא למלא שם משתמש וסיסמה'; return; }
+  $('lerr').textContent = '';
+  try{
+    var d = await auth({action:'login', username:u, password:p});
+    if(!d.success){ $('lerr').textContent = d.message || 'שם משתמש או סיסמה שגויים'; return; }
+    S.token = d.token; S.user = d.user; S.club = d.library;
+    if(d.library && d.library.id) CLUB_ID = d.library.id;
+    sessionStorage.setItem('senior_token', d.token);
+    enterApp();
+  }catch(err){ $('lerr').textContent = 'לא הצלחתי להתחבר. בדוק חיבור לאינטרנט ונסה שוב.'; }
+}
+
+function logout(){
+  if(S.token) auth({action:'logout', session_token:S.token}).catch(function(){});
+  sessionStorage.removeItem('senior_token');
+  S = {token:null,user:null,club:null,photos:[],notices:[],ticker:[]};
+  $('app').classList.add('hide'); $('login').classList.remove('hide');
+}
+
+async function enterApp(){
+  $('login').classList.add('hide'); $('app').classList.remove('hide');
+  if(S.user && S.user.display_name) $('hSub').textContent = 'מסך ניהול · ' + S.user.display_name;
+  $('viewLink').href = 'index.html?club=' + CLUB_ID;
+  await loadAll();
+}
+
+/* ---------- טעינה ---------- */
+async function loadAll(){
+  var r = await admin('list');
+  if(!r || !r.success){ toast('טעינת התוכן נכשלה'); return; }
+  S.club = r.club || {};
+  S.content = r.content || [];
+  await Promise.all([loadPhotos(), loadNotices(), loadTicker()]);
+  renderClub();
+}
+
+function section(name){
+  return (S.content||[]).filter(function(c){return c.section===name})
+    .sort(function(a,b){return (a.sort_order||0)-(b.sort_order||0)});
+}
+
+async function loadPhotos(){
+  S.photos = section('photos');
+  var g = $('photoGrid');
+  g.innerHTML = '<div class="addcard" onclick="editPhoto(null)">הוספת תמונה<br>למסך</div>' +
+    S.photos.map(function(p){
+      return '<div class="pcard">'
+        + (p.image_url? '<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">' : '<div style="aspect-ratio:4/3;background:#e9efee"></div>')
+        + '<div class="b"><div class="nm">'+esc(p.title||'בלי כיתוב')+'</div>'
+        + '<div class="acts"><button class="btn ghost sm" onclick="editPhoto(\''+p.id+'\')">עריכה</button>'
+        + '<button class="btn danger sm" onclick="delContent(\''+p.id+'\',\'למחוק את התמונה?\',loadPhotos)">מחיקה</button></div></div>'
+        + '</div>';
+    }).join('');
+}
+
+async function loadNotices(){
+  S.notices = section('new_in_library');
+  $('noticeList').innerHTML = S.notices.length ? S.notices.map(function(n){
+    return '<div class="row"><div class="txt"><b>'+esc(n.title||'')+'</b>'
+      + (n.description? '<div>'+esc(n.description)+'</div>':'')
+      + (n.event_date? '<span class="tag">'+esc(n.event_date)+'</span>':'')
+      + '</div>'
+      + '<button class="btn ghost sm" onclick="editNotice(\''+n.id+'\')">עריכה</button>'
+      + '<button class="btn danger sm" onclick="delContent(\''+n.id+'\',\'למחוק את ההודעה?\',loadNotices)">מחיקה</button></div>';
+  }).join('') : '<div class="hint">אין הודעות עדיין.</div>';
+}
+
+async function loadTicker(){
+  S.ticker = section('positive_news');
+  $('tickerList').innerHTML = S.ticker.length ? S.ticker.map(function(t){
+    return '<div class="row"><div class="txt"><b>'+esc(t.title||'')+'</b></div>'
+      + '<button class="btn ghost sm" onclick="editTicker(\''+t.id+'\')">עריכה</button>'
+      + '<button class="btn danger sm" onclick="delContent(\''+t.id+'\',\'למחוק את השורה?\',loadTicker)">מחיקה</button></div>';
+  }).join('') : '<div class="hint">אין שורות טיקר עדיין.</div>';
+}
+
+function renderClub(){
+  var lib = S.club || {};
+  $('hName').textContent = lib.name || 'מועדון לאזרחים ותיקים נוה שרת';
+  $('c_name').value = lib.name || '';
+  $('c_phone').value = lib.phone || '';
+  $('c_addr').value = lib.address || '';
+  $('c_contact').value = lib.contact_person || '';
+  var ds = lib.display_settings || {};
+  $('c_ticker').value = ds.ticker || '';
+  var days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  var hours = Array.isArray(ds.hours) && ds.hours.length ? ds.hours : days.map(function(d){return {day:d,hh:'08:00 - 13:00',closed:false}});
+  $('hoursBox').innerHTML = hours.map(function(h,i){
+    return '<div class="hours"><div class="d">'+esc(h.day)+'</div>'
+      + '<input type="text" data-hh="'+i+'" value="'+esc(h.hh||'')+'" '+(h.closed?'disabled':'')+'>'
+      + '<label style="margin:0;font-size:.8rem;white-space:nowrap"><input type="checkbox" data-closed="'+i+'" '+(h.closed?'checked':'')+'> סגור</label></div>';
+  }).join('');
+  $('hoursBox').querySelectorAll('[data-closed]').forEach(function(cb){
+    cb.addEventListener('change', function(){
+      var i = cb.dataset.closed;
+      var inp = $('hoursBox').querySelector('[data-hh="'+i+'"]');
+      inp.disabled = cb.checked;
+      if(cb.checked) inp.value = 'סגור'; else inp.value = '08:00 - 13:00';
+    });
+  });
+}
+
+/* ---------- שמירה ---------- */
+async function saveClub(){
+  var days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  var hours = days.map(function(d,i){
+    var inp = $('hoursBox').querySelector('[data-hh="'+i+'"]');
+    var cb = $('hoursBox').querySelector('[data-closed="'+i+'"]');
+    return {day:d, hh:(inp? inp.value.trim():''), closed:!!(cb && cb.checked)};
+  });
+  var payload = {
+    name: $('c_name').value.trim(),
+    phone: $('c_phone').value.trim(),
+    address: $('c_addr').value.trim(),
+    contact_person: $('c_contact').value.trim(),
+    display_settings: Object.assign({}, (S.club && S.club.display_settings) || {}, {
+      hours: hours,
+      ticker: $('c_ticker').value.trim(),
+      mode: 'senior_club',
+      fonts: 'senior'
+    })
+  };
+  var r = await admin('saveClub', {club: payload});
+  if(r && r.success){ toast('פרטי המועדון נשמרו'); S.club = Object.assign({}, S.club, payload); }
+  else toast('שמירה נכשלה' + (r && r.message? ' · '+r.message : ''));
+}
+
+async function delContent(id, msg, cb){
+  if(!confirm(msg)) return;
+  var r = await admin('deleteContent', {id:id});
+  if(r && r.success){ toast('נמחק'); cb && cb(); } else toast('מחיקה נכשלה');
+}
+
+/* ---------- מודאל תמונה ---------- */
+function openModal(html){ $('mbox').innerHTML = html; $('modal').classList.add('on'); }
+function closeModal(){ $('modal').classList.remove('on'); }
+$('modal').addEventListener('click', function(e){ if(e.target.id==='modal') closeModal(); });
+
+function editPhoto(id){
+  var p = id ? S.photos.filter(function(x){return x.id===id})[0] : {title:'',image_url:'',sort_order:(S.photos.length+1)};
+  openModal(
+    '<h3>'+(id?'עריכת תמונה':'תמונה חדשה')+'</h3>'
+    + '<label>כיתוב על התמונה</label><input id="m_title" type="text" value="'+esc(p.title||'')+'" placeholder="לדוגמה: התעמלות בוקר">'
+    + '<label>תמונה מהמחשב</label><input id="m_file" type="file" accept="image/*">'
+    + '<div class="stat" id="m_stat"></div>'
+    + '<label>או כתובת תמונה (URL)</label><input id="m_url" type="text" value="'+esc(p.image_url||'')+'">'
+    + '<div class="mact"><button class="btn ghost" onclick="closeModal()">ביטול</button>'
+    + '<button class="btn" onclick="savePhoto('+(id?('\''+id+'\''):'null')+')">שמירה</button></div>'
+  );
+  $('m_file').addEventListener('change', async function(){
+    var f = this.files && this.files[0]; if(!f) return;
+    if(f.size > 10*1024*1024){ $('m_stat').textContent='קובץ גדול מדי (מקס 10MB)'; return; }
+    $('m_stat').textContent = 'מעלה תמונה…';
+    var fd = new FormData(); fd.append('file', f, f.name);
+    try{
+      var r = await fetch(UPLOAD_URL, {method:'POST', body:fd});
+      var j = await r.json();
+      if(j.success && j.file_url){ $('m_url').value = j.file_url; $('m_stat').textContent = 'התמונה הועלתה ✓'; }
+      else $('m_stat').textContent = 'העלאה נכשלה';
+    }catch(e){ $('m_stat').textContent = 'העלאה נכשלה'; }
+  });
+}
+
+async function savePhoto(id){
+  var d = {
+    section:'photos',
+    title: $('m_title').value.trim(),
+    image_url: $('m_url').value.trim(),
+    sort_order: id ? (S.photos.filter(function(x){return x.id===id})[0]||{}).sort_order || 99 : (S.photos.length+1),
+    status:'active'
+  };
+  if(!d.image_url){ toast('צריך תמונה'); return; }
+  var r = await admin('saveContent', {item: Object.assign({id:id||null}, d)});
+  if(r && r.success){ closeModal(); toast('נשמר'); loadPhotos(); } else toast('שמירה נכשלה');
+}
+
+/* ---------- מודאל הודעה ---------- */
+function editNotice(id){
+  var n = id ? S.notices.filter(function(x){return x.id===id})[0] : {title:'',description:'',event_date:'',badge_color:'green'};
+  openModal(
+    '<h3>'+(id?'עריכת הודעה':'הודעה חדשה')+'</h3>'
+    + '<label>כותרת</label><input id="m_title" type="text" value="'+esc(n.title||'')+'">'
+    + '<label>פירוט (לא חובה)</label><textarea id="m_desc" rows="3">'+esc(n.description||'')+'</textarea>'
+    + '<label>תאריך או זמן (לא חובה)</label><input id="m_date" type="text" value="'+esc(n.event_date||'')+'" placeholder="יום שני 11:30">'
+    + '<label>צבע</label><div class="swatches" id="m_sw">'
+    + COLORS.map(function(c){return '<span class="sw'+(c===(n.badge_color||'green')?' on':'')+'" data-c="'+c+'" style="background:'+colorHex(c)+'"></span>'}).join('')
+    + '</div>'
+    + '<div class="mact"><button class="btn ghost" onclick="closeModal()">ביטול</button>'
+    + '<button class="btn" onclick="saveNotice('+(id?('\''+id+'\''):'null')+')">שמירה</button></div>'
+  );
+  $('m_sw').querySelectorAll('.sw').forEach(function(s){
+    s.addEventListener('click', function(){
+      $('m_sw').querySelectorAll('.sw').forEach(function(x){x.classList.remove('on')});
+      s.classList.add('on');
+    });
+  });
+}
+
+function colorHex(c){
+  return {blue:'#1f5f8b',green:'#2f7d4f',orange:'#d9822b',purple:'#6b4ea8',teal:'#2f6b57',gold:'#d9a441',coral:'#b4442f',navy:'#1b3a5c'}[c]||'#1f5f8b';
+}
+
+async function saveNotice(id){
+  var sw = $('m_sw') && $('m_sw').querySelector('.sw.on');
+  var d = {
+    section:'new_in_library',
+    title: $('m_title').value.trim(),
+    description: $('m_desc').value.trim(),
+    event_date: $('m_date').value.trim(),
+    badge_color: sw ? sw.dataset.c : 'green',
+    sort_order: id ? (S.notices.filter(function(x){return x.id===id})[0]||{}).sort_order || 99 : (S.notices.length+1),
+    status:'active'
+  };
+  if(!d.title){ toast('צריך כותרת'); return; }
+  var r = await admin('saveContent', {item: Object.assign({id:id||null}, d)});
+  if(r && r.success){ closeModal(); toast('נשמר'); loadNotices(); } else toast('שמירה נכשלה');
+}
+
+/* ---------- מודאל טיקר ---------- */
+function editTicker(id){
+  var t = id ? S.ticker.filter(function(x){return x.id===id})[0] : {title:'',sort_order:(S.ticker.length+1)};
+  openModal(
+    '<h3>'+(id?'עריכת שורה':'שורה חדשה')+'</h3>'
+    + '<label>טקסט השורה</label><input id="m_title" type="text" value="'+esc(t.title||'')+'">'
+    + '<div class="mact"><button class="btn ghost" onclick="closeModal()">ביטול</button>'
+    + '<button class="btn" onclick="saveTicker('+(id?('\''+id+'\''):'null')+')">שמירה</button></div>'
+  );
+}
+
+async function saveTicker(id){
+  var d = {
+    section:'positive_news',
+    title: $('m_title').value.trim(),
+    sort_order: id ? (S.ticker.filter(function(x){return x.id===id})[0]||{}).sort_order || 99 : (S.ticker.length+1),
+    status:'active'
+  };
+  if(!d.title){ toast('צריך טקסט'); return; }
+  var r = await admin('saveContent', {item: Object.assign({id:id||null}, d)});
+  if(r && r.success){ closeModal(); toast('נשמר'); loadTicker(); } else toast('שמירה נכשלה');
+}
+
+/* ---------- טאבים ---------- */
+function setTab(name){
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab===name) });
+  document.querySelectorAll('.tabpane').forEach(function(p){ p.classList.toggle('hide', p.id!=='tab-'+name) });
+  if(name==='club') renderClub();
+}
+
+/* ---------- אתחול ---------- */
+(async function init(){
+  var t = sessionStorage.getItem('senior_token');
+  if(!t) return;
+  try{
+    S.token = t;
+    var d = await admin('verify');
+    if(d.success){ S.user=d.user; if(d.user && d.user.library_id) CLUB_ID=d.user.library_id; S.club=d.club; enterApp(); }
+    else sessionStorage.removeItem('senior_token');
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

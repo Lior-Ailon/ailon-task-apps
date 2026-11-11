@@ -50,12 +50,23 @@ body{font-family:'Heebo',system-ui,sans-serif;background:var(--cream);color:var(
 main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
 .panel{border-radius:var(--r);background:var(--cream-2);box-shadow:0 6px 18px rgba(50,40,20,.10);display:flex;flex-direction:column;overflow:hidden;min-height:0;border:1px solid var(--edge)}
 .panel > h2{flex-shrink:0;font-size:var(--fs-h);font-weight:900;color:#fff;padding:clamp(4px,.7vw,16px) clamp(8px,1vw,22px);text-align:center;letter-spacing:.01em}
-.p-today{flex:1.15}
+.p-today{flex:1.02}
 .p-today > h2{background:linear-gradient(135deg,var(--green),#215c3a)}
-.p-week{flex:1}
+.p-week{flex:.97}
 .p-week > h2{background:linear-gradient(135deg,var(--blue),#123f5e)}
-.p-news{flex:1.05}
+.p-news{flex:.95}
 .p-news > h2{background:linear-gradient(135deg,var(--forest-light),var(--forest))}
+
+
+/* ---------- פאנל תמונות (כמו ברחובות) ---------- */
+.p-photo{flex:1.25;position:relative;border-radius:var(--r);overflow:hidden;box-shadow:0 6px 18px rgba(50,40,20,.14);background:#20302b;border:1px solid var(--edge);min-height:0}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease-in-out}
+.slide.on{opacity:1}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.slide-cap{position:absolute;inset-inline:0;bottom:0;padding:clamp(6px,.9vw,20px) clamp(8px,1vw,22px);background:linear-gradient(0deg,rgba(12,26,22,.90),rgba(12,26,22,.55) 55%,rgba(12,26,22,0));color:#fff;font-size:calc(var(--fs-row) * .95);font-weight:900;text-align:center;line-height:1.15}
+.dots{position:absolute;top:clamp(5px,.7vw,14px);left:50%;transform:translateX(-50%);display:flex;gap:clamp(3px,.35vw,7px);z-index:5}
+.dot{width:clamp(5px,.5vw,9px);height:clamp(5px,.5vw,9px);border-radius:50%;background:rgba(255,255,255,.45);transition:all .3s}
+.dot.active{background:#fff;width:clamp(14px,1.3vw,26px);border-radius:4px}
 
 /* today rows */
 .rows{flex:1;overflow:hidden;padding:clamp(4px,.6vw,14px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:clamp(3px,.45vw,10px)}
@@ -148,6 +159,9 @@ main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
   </header>
 
   <main>
+    <section class="panel p-photo" id="photoPanel">
+      <div class="dots" id="photoDots"></div>
+    </section>
     <section class="panel p-today">
       <h2 id="todayTitle">פעילות היום</h2>
       <div class="rows" id="todayList"></div>
@@ -191,7 +205,9 @@ main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
 var DEFAULT_CLUB_ID = '6af495d9ad0232fa56b7d2c5';
 var P = new URLSearchParams(location.search);
 var CLUB_ID = P.get('club') || P.get('library_id') || DEFAULT_CLUB_ID;
-var API_URL = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/getLibraryContent';
+var API_BASE = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+var CLUB_API = API_BASE + '/seniorClubData';
+var API_URL = API_BASE + '/getLibraryContent';
 
 var CLUB = {
   name: 'מועדון לאזרחים ותיקים',
@@ -314,6 +330,51 @@ function renderWeek(){
   }).join('');
 }
 
+
+/* ---------- תמונות פעילות (AI) ---------- */
+var PHOTOS = [
+  {title:'התעמלות בוקר',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/aa6feec9b_generated_image.png'},
+  {title:'קפה ועיתון',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/f2d0fdf62_generated_image.png'},
+  {title:'שירה בציבור',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/2e58d90e6_generated_image.png'},
+  {title:'מועדון ההרצאות',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/9536ee425_generated_image.png'},
+  {title:'מעגל דיגיטלי',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/815290320_generated_image.png'},
+  {title:'ארוחת צהריים',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/ede0d64ad_generated_image.png'},
+  {title:'טיול מאורגן',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/49646281d_generated_image.png'},
+  {title:'יום הולדת חודשי',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/69ad95947_generated_image.png'},
+  {title:'סדנת יצירה',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/ba3b7c422_generated_image.png'},
+  {title:'פינת גינון',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/ffa2b0bf7_generated_image.png'},
+  {title:'שחמט ומשחקי קופסה',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/ce76ef19e_generated_image.png'},
+  {title:'ריקודים ותנועה',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/9b18183df_generated_image.png'},
+  {title:'פינת קריאה',image_url:'https://media.base44.com/images/public/69f63b4536d7a2c6688403df/f7e94205f_generated_image.png'}
+];
+var _photoTimer=null, _photoIdx=0;
+function renderPhotos(items){
+  if(!items || !items.length) items = PHOTOS;
+  var panel=document.getElementById('photoPanel');
+  var dots=document.getElementById('photoDots');
+  panel.querySelectorAll('.slide').forEach(function(el){el.remove()});
+  var html='';
+  items.forEach(function(it,i){
+    var img=it.image_url||'';
+    html+='<div class="slide'+(i===0?' on':'')+'">'
+      + (img? '<img src="'+esc(img)+'" alt="'+esc(it.title||'')+'">' : '')
+      + (it.title? '<div class="slide-cap">'+esc(it.title)+'</div>' : '')
+      + '</div>';
+  });
+  panel.insertAdjacentHTML('beforeend', html);
+  dots.innerHTML = items.map(function(_,i){return '<span class="dot'+(i===0?' active':'')+'" data-i="'+i+'"></span>'}).join('');
+  var slides=panel.querySelectorAll('.slide');
+  var dotEls=dots.querySelectorAll('.dot');
+  function show(i){
+    slides.forEach(function(el,j){el.classList.toggle('on', j===i)});
+    dotEls.forEach(function(el,j){el.classList.toggle('active', j===i)});
+    _photoIdx=i;
+  }
+  dotEls.forEach(function(d){ d.addEventListener('click', function(){ show(parseInt(d.dataset.i,10)) }) });
+  if(_photoTimer) clearInterval(_photoTimer);
+  _photoTimer=setInterval(function(){ show((_photoIdx+1)%slides.length) }, 7000);
+}
+
 /* ---------- הודעות ---------- */
 function renderNotices(items){
   if(!items || !items.length) items = FALLBACK_NOTICES;
@@ -353,18 +414,60 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
 
 /* ---------- טעינת תוכן מהמערכת ---------- */
 function mkTimeout(ms){try{var c=new AbortController();setTimeout(function(){c.abort()},ms||6000);return c.signal}catch(e){return undefined}}
+function applyClub(club){
+  if(!club) return;
+  if(club.name){ document.getElementById('clubName').textContent = club.name; }
+  var sub = [club.contact_person && '', ''];
+  var area = '';
+  if(club.address){
+    var parts = String(club.address).split(',');
+    area = parts.slice(1).join(',').trim() || parts[0].trim();
+  }
+  document.getElementById('clubSub').textContent = area || 'נוה שרת · תל אביב-יפו';
+  var contactBits = [];
+  if(club.address) contactBits.push(String(club.address).split(',')[0].trim());
+  if(club.phone) contactBits.push(club.phone);
+  if(contactBits.length) document.getElementById('fContact').textContent = contactBits.join(' · ');
+  if(Array.isArray(club.hours) && club.hours.length){
+    var open = club.hours.filter(function(h){return !h.closed});
+    var closed = club.hours.filter(function(h){return h.closed});
+    var txt = '';
+    if(open.length){
+      var first=open[0], last=open[open.length-1];
+      txt = (first===last ? first.day : first.day+'-'+last.day) + ' ' + (first.hh||'');
+    }
+    if(closed.length) txt += (txt?' · סגור ':'סגור ') + closed.map(function(h){return h.day}).join(', ');
+    if(txt) document.getElementById('fHours').textContent = txt;
+  }
+  if(club.ticker) CLUB.ticker = club.ticker;
+}
+
 function loadContent(){
-  fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({library_id:CLUB_ID,_t:Date.now()}),signal:mkTimeout(6000)})
+  fetch(CLUB_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({club_id:CLUB_ID,_t:Date.now()}),signal:mkTimeout(7000)})
     .then(function(r){return r.json()})
-    .then(function(result){
-      if(!result || !result.success || !result.data) throw new Error('no data');
-      var d=result.data;
-      renderNotices(d.new_in_library||[]);
-      renderTicker(d.positive_news||[]);
+    .then(function(res){
+      if(!res || !res.success) throw new Error('no club data');
+      applyClub(res.club);
+      renderPhotos(res.photos||[]);
+      renderNotices(res.notices||[]);
+      renderTicker(res.ticker_items||[]);
     })
     .catch(function(){
-      renderNotices(FALLBACK_NOTICES);
-      renderTicker(FALLBACK_TICKER);
+      /* גיבוי: הפונקציה של הפלטפורמה, ואם גם היא לא זמינה — תוכן מוטמע */
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({library_id:CLUB_ID,_t:Date.now()}),signal:mkTimeout(6000)})
+        .then(function(r){return r.json()})
+        .then(function(result){
+          if(!result || !result.success || !result.data) throw new Error('no data');
+          var d=result.data;
+          renderPhotos(d.photos||[]);
+          renderNotices(d.new_in_library||[]);
+          renderTicker(d.positive_news||[]);
+        })
+        .catch(function(){
+          renderPhotos(PHOTOS);
+          renderNotices(FALLBACK_NOTICES);
+          renderTicker(FALLBACK_TICKER);
+        });
     });
 }
 
@@ -387,6 +490,7 @@ document.addEventListener('keydown',function(e){
 applyScale();
 renderToday();
 renderWeek();
+renderPhotos(PHOTOS);
 renderNotices(FALLBACK_NOTICES);
 renderTicker(FALLBACK_TICKER);
 loadContent();
