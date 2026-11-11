@@ -70,8 +70,8 @@ main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
 .row.now .tag{background:var(--gold);color:#241a06}
 
 /* week list */
-.week{padding:clamp(3px,.5vw,12px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:clamp(2px,.3vw,7px);overflow:hidden;flex:1}
-.wrow{display:flex;align-items:baseline;gap:clamp(5px,.7vw,14px);padding:clamp(2px,.35vw,8px) 0;border-bottom:1px dashed var(--edge)}
+.week{padding:clamp(3px,.5vw,12px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:0;overflow:hidden;flex:1}
+.wrow{display:flex;align-items:center;gap:clamp(5px,.7vw,14px);padding:clamp(1px,.2vw,6px) 0;border-bottom:1px dashed var(--edge);flex:1;min-height:0}
 .wrow:last-child{border-bottom:none}
 .wrow .day{font-size:var(--fs-row);font-weight:900;color:var(--blue);flex-shrink:0;min-width:clamp(46px,4.6vw,132px)}
 .wrow .acts{font-size:calc(var(--fs-row) * .84);font-weight:600;color:var(--ink-soft);line-height:1.25}
