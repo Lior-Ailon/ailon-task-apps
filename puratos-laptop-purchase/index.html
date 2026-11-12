@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="version" content="2026-11-12-v1">
+<meta name="version" content="2026-11-12-v2">
 <title>רכישת מחשב נייד — קבוצת פוראטוס ישראל</title>
 <link rel="manifest" href="manifest.json?v=20261112">
 <meta name="theme-color" content="#e30613">
@@ -27,8 +27,10 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--dark);line-
 /* header */
 .hdr{background:linear-gradient(135deg,#2b2b2b 0%,#3d3d3d 55%,var(--red) 100%);color:#fff;border-radius:var(--radius);padding:26px 22px;margin-bottom:16px;box-shadow:0 8px 26px rgba(0,0,0,.18);position:relative;overflow:hidden}
 .hdr::after{content:"";position:absolute;inset-inline-start:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.07)}
-.hdr .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:.5px;opacity:.95;margin-bottom:10px}
-.hdr .brand .dot{width:26px;height:26px;border-radius:8px;background:#fff;color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px}
+.hdr .brand{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.hdr .logo-plate{background:#fff;border-radius:12px;padding:8px 16px;display:inline-flex;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.22)}
+.hdr .logo-plate img{height:40px;width:auto;display:block}
+.hdr .brand .brand-txt{font-size:11.5px;font-weight:600;letter-spacing:.6px;opacity:.92;text-align:end;line-height:1.4}
 .hdr h1{font-size:24px;font-weight:900;line-height:1.25;margin-bottom:6px}
 .hdr .sub{font-size:13.5px;opacity:.92}
 .hdr .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;font-size:12px}
@@ -126,6 +128,12 @@ textarea{min-height:74px;resize:vertical}
   .wrap,.hdr,.prog,.toast,.done{display:none !important}
   #printArea{display:block;padding:0}
   .p-doc{font-size:11.5pt;color:#000}
+  .p-doc .p-head{display:flex;justify-content:space-between;align-items:flex-start;gap:6mm;border-bottom:1.2px solid #000;padding-bottom:3mm;margin-bottom:5mm}
+  .p-doc .p-logo{height:15mm;width:auto;display:block}
+  .p-doc .p-org{font-size:8.5pt;text-align:left;color:#333;line-height:1.5}
+  .p-doc .p-org span{color:#666;font-size:7.5pt}
+  .p-doc .p-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #bbb;margin-top:8mm;padding-top:2.5mm;font-size:7.5pt;color:#555}
+  .p-doc .p-logo-sm{height:7mm;width:auto;display:block;opacity:.9}
   .p-doc h1{font-size:16pt;margin-bottom:2mm}
   .p-doc .p-sub{font-size:9.5pt;color:#444;margin-bottom:6mm}
   .p-doc table{width:100%;border-collapse:collapse;margin-bottom:6mm}
@@ -144,7 +152,10 @@ textarea{min-height:74px;resize:vertical}
 <div class="wrap" id="mainWrap">
 
   <div class="hdr">
-    <div class="brand"><span class="dot">P</span> PURATOS ISRAEL</div>
+    <div class="brand">
+      <div class="logo-plate"><img src="puratos-logo.svg?v=20261112b" alt="Puratos" width="189" height="106"></div>
+      <div class="brand-txt">קבוצת פוראטוס ישראל</div>
+    </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
     <div class="sub">קבוצת פוראטוס ישראל · מסירה, התחשבנות וקיזוז מהשכר</div>
     <div class="meta">
@@ -338,6 +349,10 @@ textarea{min-height:74px;resize:vertical}
 
 <div id="printArea">
   <div class="p-doc">
+    <div class="p-head">
+      <img class="p-logo" src="puratos-logo.svg?v=20261112b" alt="Puratos">
+      <div class="p-org">קבוצת פוראטוס ישראל<br><span>מחלקת מערכות מידע · IT@puratos.co.il</span></div>
+    </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
     <div class="p-sub">קבוצת פוראטוס ישראל · מסירה, התחשבנות וקיזוז מהשכר</div>
     <table id="pTable"></table>
@@ -347,6 +362,10 @@ textarea{min-height:74px;resize:vertical}
       <div>שם: <span id="pName">—</span></div>
       <div>תאריך: <span id="pDate">—</span></div>
     </div>
+    <div class="p-foot">
+      <span>פוראטוס ישראל · טופס רכישת מחשב נייד על ידי העובד</span>
+      <img class="p-logo-sm" src="puratos-logo.svg?v=20261112b" alt="Puratos">
+    </div>
   </div>
 </div>
 
@@ -354,7 +373,7 @@ textarea{min-height:74px;resize:vertical}
 
 <script>
 var API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
-var PAGE_VERSION = '2026-11-12-v1';
+var PAGE_VERSION = '2026-11-12-v2';
 
 function $(id){return document.getElementById(id)}
 function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3200)}
