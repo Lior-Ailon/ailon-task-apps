@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="version" content="2026-11-12-v2">
+<meta name="version" content="2026-11-12-v3">
 <title>רכישת מחשב נייד — קבוצת פוראטוס ישראל</title>
 <link rel="manifest" href="manifest.json?v=20261112">
 <meta name="theme-color" content="#e30613">
@@ -73,6 +73,15 @@ textarea{min-height:74px;resize:vertical}
 .calc{margin-top:12px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:var(--radius-sm);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .calc .lbl{font-size:13.5px;color:#475569;font-weight:600}
 .calc .val{font-size:22px;font-weight:900;color:var(--red)}
+
+/* optional extras */
+.more{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px;box-shadow:0 2px 10px rgba(15,23,42,.04);overflow:hidden}
+.more summary{cursor:pointer;list-style:none;padding:16px 20px;font-size:14px;font-weight:700;color:#475569;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px}
+.more summary::-webkit-details-marker{display:none}
+.more summary::after{content:"+";font-size:20px;font-weight:700;color:var(--red);line-height:1}
+.more[open] summary::after{content:"\2013"}
+.more[open] summary{border-bottom:1px solid var(--line)}
+.more .more-body{padding:18px 20px 20px}
 
 /* terms */
 .terms{counter-reset:t}
@@ -153,7 +162,7 @@ textarea{min-height:74px;resize:vertical}
 
   <div class="hdr">
     <div class="brand">
-      <div class="logo-plate"><img src="puratos-logo.svg?v=20261112b" alt="Puratos" width="189" height="106"></div>
+      <div class="logo-plate"><img src="puratos-logo.svg?v=20261112c" alt="Puratos" width="189" height="106"></div>
       <div class="brand-txt">קבוצת פוראטוס ישראל</div>
     </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
@@ -170,93 +179,31 @@ textarea{min-height:74px;resize:vertical}
   </div>
 
   <div class="card">
-    <div class="card-h"><div class="num">1</div><h2>פרטי העובד</h2></div>
-    <div class="card-sub">הפרטים משמשים לזיהוי העובד מול השכר ולחיוב בהתאם.</div>
+    <div class="card-h"><div class="num">1</div><h2>פרטי העובד והמחשב</h2></div>
+    <div class="card-sub">שלושה שדות וזה כל מה שצריך.</div>
     <div class="grid">
-      <div class="fld full"><label>שם מלא <span class="req">*</span></label>
+      <div class="fld"><label>שם מלא <span class="req">*</span></label>
         <input type="text" id="full_name" autocomplete="name" placeholder="שם פרטי ושם משפחה">
         <div class="err-msg">נא למלא שם מלא</div>
-      </div>
-      <div class="fld"><label>מספר עובד</label>
-        <input type="text" id="employee_number" placeholder="לפי תלוש השכר">
       </div>
       <div class="fld"><label>תעודת זהות <span class="req">*</span></label>
         <input type="text" id="id_number" inputmode="numeric" maxlength="9" placeholder="9 ספרות">
         <div class="err-msg">נא למלא תעודת זהות תקינה</div>
       </div>
-      <div class="fld"><label>מחלקה <span class="req">*</span></label>
-        <select id="department">
-          <option value="">בחר/י מחלקה</option>
-          <option>הנהלה</option>
-          <option>כספים ושכר</option>
-          <option>משאבי אנוש</option>
-          <option>מערכות מידע (IT)</option>
-          <option>מכירות</option>
-          <option>שיווק</option>
-          <option>ייצור</option>
-          <option>מעבדת יישומים / R&amp;D</option>
-          <option>בקרת איכות</option>
-          <option>לוגיסטיקה ומחסן</option>
-          <option>רכש</option>
-          <option>אחזקה</option>
-          <option>אחר</option>
-        </select>
-        <div class="err-msg">נא לבחור מחלקה</div>
-      </div>
-      <div class="fld"><label>תפקיד</label>
-        <input type="text" id="role" placeholder="לדוגמה: מנהל מערכות מידע">
-      </div>
-      <div class="fld"><label>אתר / מקום עבודה</label>
-        <input type="text" id="site" placeholder="לדוגמה: מפעל, משרד, מרחוק">
-      </div>
-      <div class="fld full"><label>דוא"ל בעבודה</label>
-        <input type="email" id="work_email" autocomplete="email" placeholder="name@puratos.co.il">
-        <div class="err-msg">נא למלא כתובת דוא"ל תקינה</div>
-      </div>
-      <div class="fld full"><label>טלפון נייד</label>
-        <input type="tel" id="phone" autocomplete="tel" placeholder="050-0000000">
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-h"><div class="num">2</div><h2>פרטי המחשב והמסירה</h2></div>
-    <div class="card-sub">מה בדיוק נמסר לעובד ומה מספרי הזיהוי שלו.</div>
-    <div class="grid">
       <div class="fld full"><label>דגם המחשב <span class="req">*</span></label>
         <input type="text" id="laptop_model" placeholder="לדוגמה: Lenovo ThinkPad E14 Gen 5">
         <div class="err-msg">נא למלא דגם מחשב</div>
       </div>
-      <div class="fld"><label>מספר סידורי / Service Tag</label>
-        <input type="text" id="serial_number" placeholder="כפי שמופיע על המחשב">
-      </div>
-      <div class="fld"><label>מערכת הפעלה</label>
-        <select id="operating_system">
-          <option value="Windows 11 Pro">Windows 11 Pro</option>
-          <option value="Windows 11 Home">Windows 11 Home</option>
-          <option value="Windows 10 Pro">Windows 10 Pro</option>
-          <option value="אחר">אחר</option>
-        </select>
-      </div>
-      <div class="fld"><label>תאריך מסירת המחשב</label>
-        <input type="date" id="handover_date">
-      </div>
-      <div class="fld"><label>ציוד שנמסר</label>
-        <input type="text" id="charger_note" value="מחשב נייד + מטען + מערכת הפעלה" disabled>
-      </div>
-      <div class="fld full"><label>הערות</label>
-        <textarea id="notes" placeholder="אם יש משהו שחשוב לציין לפני החתימה"></textarea>
-      </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-h"><div class="num">3</div><h2>עלות המחשב והקיזוז מהשכר</h2></div>
-    <div class="card-sub">העלות ששולמה בפועל עבור המחשב, ואיך היא מתקזזת מהתלוש.</div>
+    <div class="card-h"><div class="num">2</div><h2>סכום החיוב</h2></div>
+    <div class="card-sub">הסכום שיקוזז מהשכר, ואיך הוא מתחלק על התלושים.</div>
     <div class="grid">
-      <div class="fld"><label>עלות המחשב (₪, כולל מע"מ) <span class="req">*</span></label>
+      <div class="fld"><label>סכום לחיוב (₪, כולל מע"מ) <span class="req">*</span></label>
         <input type="number" id="cost_total" min="0" step="0.01" placeholder="0">
-        <div class="err-msg">נא למלא עלות</div>
+        <div class="err-msg">נא למלא סכום</div>
       </div>
       <div class="fld"><label>מספר תשלומים <span class="req">*</span></label>
         <select id="installments">
@@ -269,10 +216,7 @@ textarea{min-height:74px;resize:vertical}
           <option value="12">12 תשלומים</option>
         </select>
       </div>
-      <div class="fld"><label>חודש תחילת הניכוי</label>
-        <input type="month" id="start_month">
-      </div>
-      <div class="fld"><label>ניכוי חודשי מהתלוש</label>
+      <div class="fld full"><label>ניכוי חודשי מהתלוש</label>
         <input type="text" id="monthly_deduction" value="—" disabled>
       </div>
     </div>
@@ -282,12 +226,75 @@ textarea{min-height:74px;resize:vertical}
     </div>
   </div>
 
+  <details class="more" id="moreBox">
+    <summary>פרטים נוספים — לא חובה</summary>
+    <div class="more-body">
+      <div class="grid">
+        <div class="fld"><label>מספר עובד</label>
+          <input type="text" id="employee_number" placeholder="לפי תלוש השכר">
+        </div>
+        <div class="fld"><label>מחלקה</label>
+          <select id="department">
+            <option value="">לא צוין</option>
+            <option>הנהלה</option>
+            <option>כספים ושכר</option>
+            <option>משאבי אנוש</option>
+            <option>מערכות מידע (IT)</option>
+            <option>מכירות</option>
+            <option>שיווק</option>
+            <option>ייצור</option>
+            <option>מעבדת יישומים / R&amp;D</option>
+            <option>בקרת איכות</option>
+            <option>לוגיסטיקה ומחסן</option>
+            <option>רכש</option>
+            <option>אחזקה</option>
+            <option>אחר</option>
+          </select>
+        </div>
+        <div class="fld"><label>תפקיד</label>
+          <input type="text" id="role" placeholder="לדוגמה: מנהל מערכות מידע">
+        </div>
+        <div class="fld"><label>אתר / מקום עבודה</label>
+          <input type="text" id="site" placeholder="לדוגמה: מפעל, משרד, מרחוק">
+        </div>
+        <div class="fld"><label>דוא"ל בעבודה</label>
+          <input type="email" id="work_email" autocomplete="email" placeholder="name@puratos.co.il">
+          <div class="err-msg">נא למלא כתובת דוא"ל תקינה</div>
+        </div>
+        <div class="fld"><label>טלפון נייד</label>
+          <input type="tel" id="phone" autocomplete="tel" placeholder="050-0000000">
+        </div>
+        <div class="fld"><label>מספר סידורי / Service Tag</label>
+          <input type="text" id="serial_number" placeholder="כפי שמופיע על המחשב">
+        </div>
+        <div class="fld"><label>מערכת הפעלה</label>
+          <select id="operating_system">
+            <option value="Windows 11 Pro">Windows 11 Pro</option>
+            <option value="Windows 11 Home">Windows 11 Home</option>
+            <option value="Windows 10 Pro">Windows 10 Pro</option>
+            <option value="אחר">אחר</option>
+          </select>
+        </div>
+        <div class="fld"><label>תאריך מסירת המחשב</label>
+          <input type="date" id="handover_date">
+        </div>
+        <div class="fld"><label>חודש תחילת הניכוי</label>
+          <input type="month" id="start_month">
+        </div>
+        <div class="fld full"><label>הערות</label>
+          <textarea id="notes" placeholder="אם יש משהו שחשוב לציין לפני החתימה"></textarea>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:10px">השדות האלה נשמרים בטופס אבל לא חובה למלא. אם צריך אסמכתא מלאה למחלקת השכר — אפשר למלא כאן.</div>
+    </div>
+  </details>
+
   <div class="card">
-    <div class="card-h"><div class="num">4</div><h2>תנאי הרכישה</h2></div>
+    <div class="card-h"><div class="num">3</div><h2>תנאי הרכישה</h2></div>
     <div class="card-sub">נא לקרוא לפני החתימה. אלו התנאים שהעובד מאשר בחתימתו.</div>
     <div class="terms">
       <div class="term"><div class="n"></div><div class="tx"><b>הרכישה.</b> החברה רוכשת עבור העובד מחשב נייד, והעובד מקבל אותו לשימושו לפי העלות שנקבעה בטופס זה.</div></div>
-      <div class="term"><div class="n"></div><div class="tx"><b>התחשבנות וקיזוז מהשכר.</b> עלות המחשב תקוזז מתלוש השכר של העובד, בהתאם למספר התשלומים שנקבע בסעיף 3. הקיזוז יופיע בתלוש השכר.</div></div>
+      <div class="term"><div class="n"></div><div class="tx"><b>התחשבנות וקיזוז מהשכר.</b> עלות המחשב תקוזז מתלוש השכר של העובד, בהתאם למספר התשלומים שנקבע בסעיף 2. הקיזוז יופיע בתלוש השכר.</div></div>
       <div class="term"><div class="n"></div><div class="tx"><b>מה נמסר.</b> העובד מקבל את המחשב עצמו, את המטען ואת מערכת ההפעלה. לא נמסר ציוד נוסף מעבר למפורט בטופס.</div></div>
       <div class="term"><div class="n"></div><div class="tx"><b>תקופת בדיקה — עד 7 ימים.</b> לעובד תקופה של <span class="hl">עד 7 ימים ממועד המסירה</span> לבדוק את המחשב ולוודא כי הכול תקין.</div></div>
       <div class="term"><div class="n"></div><div class="tx"><b>אחריות.</b> בתום תקופת הבדיקה המחשב עובר לאחריותו של העובד בלבד. <span class="hl">לאחר תקופה זו לא תהיה כל אחריות מצד החברה</span> לנזק, לאובדן, לתקלה, לשיבוש או לתקלת תוכנה במחשב.</div></div>
@@ -296,13 +303,12 @@ textarea{min-height:74px;resize:vertical}
   </div>
 
   <div class="card">
-    <div class="card-h"><div class="num">5</div><h2>אישור וחתימה</h2></div>
+    <div class="card-h"><div class="num">4</div><h2>אישור וחתימה</h2></div>
     <div class="card-sub">יש לסמן את כל הסעיפים, לחתום ולשלוח.</div>
 
-    <label class="chk" id="chk1"><input type="checkbox" id="agree1"><span>קראתי והבנתי את תנאי הרכישה, לרבות קיזוז עלות המחשב מתלוש השכר שלי.</span></label>
+    <label class="chk" id="chk1"><input type="checkbox" id="agree1"><span>קראתי והבנתי את תנאי הרכישה, ואני מאשר/ת שקיזוז עלות המחשב יבוצע מהשכר שלי.</span></label>
     <label class="chk" id="chk2"><input type="checkbox" id="agree2"><span>קיבלתי לידיי את המחשב, את המטען ואת מערכת ההפעלה.</span></label>
-    <label class="chk" id="chk3"><input type="checkbox" id="agree3"><span>ידוע לי שיש לי עד 7 ימים ממועד המסירה לבדוק את המחשב, ובתום תקופה זו האחריות על המחשב היא עליי בלבד.</span></label>
-    <label class="chk" id="chk4"><input type="checkbox" id="agree4"><span>אני מאשר/ת כי כל הפרטים שמסרתי בטופס זה נכונים ומדויקים.</span></label>
+    <label class="chk" id="chk3"><input type="checkbox" id="agree3"><span>ידוע לי שיש לי עד 7 ימים לבדוק את המחשב, ובתום תקופה זו האחריות על המחשב היא עליי בלבד.</span></label>
 
     <div class="fld full" style="margin-top:16px">
       <label>שם החותם/ת <span class="req">*</span></label>
@@ -325,7 +331,7 @@ textarea{min-height:74px;resize:vertical}
 
   <div class="submit-wrap">
     <button class="btn-main" id="submitBtn" onclick="submitForm()" disabled>שלח את הטופס</button>
-    <div class="locknote" id="lockNote">יש למלא שדות חובה, לסמן את כל 4 הסעיפים ולחתום</div>
+    <div class="locknote" id="lockNote">שם, ת"ז, דגם וסכום, 3 סימונים וחתימה — וזה הכל</div>
   </div>
 
   <div class="foot">
@@ -350,7 +356,7 @@ textarea{min-height:74px;resize:vertical}
 <div id="printArea">
   <div class="p-doc">
     <div class="p-head">
-      <img class="p-logo" src="puratos-logo.svg?v=20261112b" alt="Puratos">
+      <img class="p-logo" src="puratos-logo.svg?v=20261112c" alt="Puratos">
       <div class="p-org">קבוצת פוראטוס ישראל<br><span>מחלקת מערכות מידע · IT@puratos.co.il</span></div>
     </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
@@ -364,7 +370,7 @@ textarea{min-height:74px;resize:vertical}
     </div>
     <div class="p-foot">
       <span>פוראטוס ישראל · טופס רכישת מחשב נייד על ידי העובד</span>
-      <img class="p-logo-sm" src="puratos-logo.svg?v=20261112b" alt="Puratos">
+      <img class="p-logo-sm" src="puratos-logo.svg?v=20261112c" alt="Puratos">
     </div>
   </div>
 </div>
@@ -373,7 +379,7 @@ textarea{min-height:74px;resize:vertical}
 
 <script>
 var API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
-var PAGE_VERSION = '2026-11-12-v2';
+var PAGE_VERSION = '2026-11-12-v3';
 
 function $(id){return document.getElementById(id)}
 function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3200)}
@@ -384,7 +390,7 @@ function money(n){return '₪' + (Number(n)||0).toLocaleString('he-IL',{maximumF
   $('hdrDate').textContent='התאריך היום: '+d.toLocaleDateString('he-IL',{day:'2-digit',month:'long',year:'numeric'});
 })();
 
-[1,2,3,4].forEach(function(i){
+[1,2,3].forEach(function(i){
   var box=$('chk'+i), inp=$('agree'+i);
   inp.addEventListener('change',function(){box.classList.toggle('on',inp.checked);refresh()});
 });
@@ -460,32 +466,29 @@ function validate(){
   var bad=false;
   if(!$('full_name').value.trim()){markErr('full_name',1);bad=true}else markErr('full_name',0);
   if(!validId($('id_number').value)){markErr('id_number',1);bad=true}else markErr('id_number',0);
-  if(!$('department').value){markErr('department',1);bad=true}else markErr('department',0);
   if(!validEmail($('work_email').value.trim())){markErr('work_email',1);bad=true}else markErr('work_email',0);
   if(!$('laptop_model').value.trim()){markErr('laptop_model',1);bad=true}else markErr('laptop_model',0);
   if(!(parseFloat($('cost_total').value)>0)){markErr('cost_total',1);bad=true}else markErr('cost_total',0);
   if(!$('signer_name').value.trim()){markErr('signer_name',1);bad=true}else markErr('signer_name',0);
   return !bad;
 }
-function allChecked(){return [1,2,3,4].every(function(i){return $('agree'+i).checked})}
+function allChecked(){return [1,2,3].every(function(i){return $('agree'+i).checked})}
 
 function refresh(){
   var filled=0;
   if($('full_name').value.trim())filled++;
   if($('id_number').value.trim())filled++;
-  if($('department').value)filled++;
-  if($('work_email').value.trim())filled++;
   if($('laptop_model').value.trim())filled++;
   if(parseFloat($('cost_total').value)>0)filled++;
   if($('signer_name').value.trim())filled++;
   if(hasSig)filled++;
-  var pct=Math.round(filled/8*100);
+  var pct=Math.round(filled/6*100);
   $('progFill').style.width=pct+'%';
   $('progTxt').textContent=pct+'% הושלם';
 
-  var ready = filled===8 && allChecked() && validate();
+  var ready = filled===6 && allChecked() && validate();
   $('submitBtn').disabled=!ready;
-  $('lockNote').innerHTML = ready ? '<b>הטופס מוכן לשליחה</b>' : 'יש למלא שדות חובה, לסמן את כל 4 הסעיפים ולחתום';
+  $('lockNote').innerHTML = ready ? '<b>הטופס מוכן לשליחה</b>' : 'שם, ת"ז, דגם וסכום, 3 סימונים וחתימה — וזה הכל';
 }
 ['full_name','id_number','department','work_email','laptop_model','cost_total','signer_name'].forEach(function(id){
   $(id).addEventListener('input',refresh);
@@ -496,21 +499,20 @@ var sending=false;
 function submitForm(){
   if(sending)return;
   if(!validate()){toast('נא למלא את כל שדות החובה');return}
-  if(!allChecked()){toast('נא לסמן את כל 4 הסעיפים');return}
+  if(!allChecked()){toast('נא לסמן את 3 הסעיפים');return}
   if(!hasSig){toast('נא לחתום לפני השליחה');return}
 
   var agreements=[
-    'קראתי והבנתי את תנאי הרכישה, לרבות קיזוז עלות המחשב מתלוש השכר',
+    'קראתי והבנתי את תנאי הרכישה, ומאשר/ת קיזוז עלות המחשב מהשכר',
     'קיבלתי לידיי את המחשב, את המטען ואת מערכת ההפעלה',
-    'ידוע לי שיש לי עד 7 ימים לבדוק את המחשב, ובתום תקופה זו האחריות עליי בלבד',
-    'הפרטים שמסרתי נכונים ומדויקים'
+    'ידוע לי שיש לי עד 7 ימים לבדוק את המחשב, ובתום תקופה זו האחריות עליי בלבד'
   ];
 
   var payload={
     full_name:$('full_name').value.trim(),
     employee_number:$('employee_number').value.trim(),
     id_number:$('id_number').value.trim(),
-    department:$('department').value,
+    department:$('department').value||'לא צוין',
     role:$('role').value.trim(),
     work_email:$('work_email').value.trim(),
     phone:$('phone').value.trim(),
@@ -555,22 +557,16 @@ function submitForm(){
 function buildPrint(p){
   var rows=[
     ['שם העובד',p.full_name],
-    ['מספר עובד',p.employee_number||'—'],
     ['תעודת זהות',p.id_number],
-    ['מחלקה',p.department],
-    ['תפקיד',p.role||'—'],
-    ['אתר / מקום עבודה',p.site||'—'],
-    ['דוא"ל',p.work_email||'—'],
-    ['טלפון',p.phone||'—'],
     ['דגם המחשב',p.laptop_model],
-    ['מספר סידורי',p.serial_number||'—'],
-    ['מערכת הפעלה',p.operating_system],
-    ['תאריך מסירה',p.handover_date||'—'],
-    ['עלות המחשב','₪'+(p.cost_total||0).toLocaleString('he-IL')],
+    ['סכום לחיוב','₪'+(p.cost_total||0).toLocaleString('he-IL')],
     ['מספר תשלומים',String(p.installments)],
-    ['ניכוי חודשי','₪'+Math.round((p.cost_total/p.installments)*100)/100],
-    ['חודש תחילת ניכוי',p.start_month||'—']
+    ['ניכוי חודשי','₪'+Math.round((p.cost_total/p.installments)*100)/100]
   ];
+  if(p.employee_number)rows.push(['מספר עובד',p.employee_number]);
+  if(p.department&&p.department!=='לא צוין')rows.push(['מחלקה',p.department]);
+  if(p.serial_number)rows.push(['מספר סידורי',p.serial_number]);
+  if(p.start_month)rows.push(['חודש תחילת ניכוי',p.start_month]);
   $('pTable').innerHTML=rows.map(function(r){
     return '<tr><th>'+r[0]+'</th><td>'+String(r[1]).replace(/</g,'&lt;')+'</td></tr>';
   }).join('');
