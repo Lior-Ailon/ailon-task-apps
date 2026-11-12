@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="2026-11-12-v1">
+<title>רכישת מחשב נייד — קבוצת פוראטוס ישראל</title>
+<link rel="manifest" href="manifest.json?v=20261112">
+<meta name="theme-color" content="#e30613">
+<link rel="icon" href="icon-192.png?v=20261112">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261112">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#e30613; --red-dark:#c00510;
+  --dark:#1f2937; --muted:#64748b; --line:#e2e8f0;
+  --bg:#f4f6f8; --card:#ffffff;
+  --radius:16px; --radius-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--dark);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 48px}
+
+/* header */
+.hdr{background:linear-gradient(135deg,#2b2b2b 0%,#3d3d3d 55%,var(--red) 100%);color:#fff;border-radius:var(--radius);padding:26px 22px;margin-bottom:16px;box-shadow:0 8px 26px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.hdr::after{content:"";position:absolute;inset-inline-start:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.07)}
+.hdr .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:.5px;opacity:.95;margin-bottom:10px}
+.hdr .brand .dot{width:26px;height:26px;border-radius:8px;background:#fff;color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px}
+.hdr h1{font-size:24px;font-weight:900;line-height:1.25;margin-bottom:6px}
+.hdr .sub{font-size:13.5px;opacity:.92}
+.hdr .meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;font-size:12px}
+.hdr .meta span{background:rgba(255,255,255,.16);padding:4px 11px;border-radius:20px}
+
+/* progress */
+.prog{position:sticky;top:8px;z-index:60;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+.prog .track{height:7px;background:#eef1f4;border-radius:8px;overflow:hidden}
+.prog .fill{height:100%;width:0;background:linear-gradient(90deg,#2b2b2b,var(--red));transition:width .35s ease}
+.prog .txt{font-size:12px;color:var(--muted);margin-top:6px;text-align:center;font-weight:500}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+.card-h{display:flex;align-items:center;gap:11px;margin-bottom:4px}
+.card-h .num{width:34px;height:34px;flex-shrink:0;border-radius:10px;background:#fef2f2;color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.card-h h2{font-size:17px;font-weight:800}
+.card-sub{font-size:12.5px;color:var(--muted);margin:0 0 16px 45px;line-height:1.55}
+
+/* fields */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid.one{grid-template-columns:1fr}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld.full{grid-column:1/-1}
+.fld label{font-size:13.5px;font-weight:600;color:#334155}
+.fld label .req{color:var(--red);font-weight:700}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],input[type=month],select,textarea{
+  width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--radius-sm);
+  font-family:'Heebo',sans-serif;font-size:15.5px;color:var(--dark);background:#fff;transition:border-color .15s,box-shadow .15s
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(227,6,19,.10)}
+input:disabled{background:#f8fafc;color:#475569;font-weight:700}
+textarea{min-height:74px;resize:vertical}
+.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.err{border-color:#dc2626 !important;background:#fef2f2 !important}
+.err-msg{font-size:12px;color:#dc2626;font-weight:600;display:none}
+.fld.has-err .err-msg{display:block}
+
+/* calc box */
+.calc{margin-top:12px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:var(--radius-sm);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.calc .lbl{font-size:13.5px;color:#475569;font-weight:600}
+.calc .val{font-size:22px;font-weight:900;color:var(--red)}
+
+/* terms */
+.terms{counter-reset:t}
+.term{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eef1f4}
+.term:last-child{border-bottom:none;padding-bottom:0}
+.term .n{counter-increment:t;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#2b2b2b;color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.term .n::before{content:counter(t)}
+.term .tx{font-size:14px;line-height:1.65}
+.term .tx b{font-weight:700}
+.term .tx .hl{background:#fff1f2;color:#9f1239;font-weight:700;padding:0 3px;border-radius:3px}
+
+/* checks */
+.chk{display:flex;align-items:flex-start;gap:11px;padding:13px 14px;border:1.5px solid var(--line);border-radius:var(--radius-sm);margin-bottom:9px;cursor:pointer;transition:all .15s;background:#fff}
+.chk:hover{border-color:#f3b4b8;background:#fffafa}
+.chk.on{border-color:var(--red);background:#fff5f5}
+.chk input{width:20px;height:20px;accent-color:var(--red);flex-shrink:0;margin-top:2px;cursor:pointer}
+.chk span{font-size:14px;line-height:1.55}
+
+/* signature */
+.sigbox{position:relative;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:#fff;overflow:hidden;touch-action:none}
+.sigbox canvas{display:block;width:100%;height:170px;cursor:crosshair}
+.sigbox .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#cbd5e1;font-size:14px;pointer-events:none}
+.sigbox.filled .ph{display:none}
+.sigbar{display:flex;justify-content:space-between;align-items:center;margin-top:7px;gap:10px;flex-wrap:wrap}
+.sigclear{background:#f1f5f9;border:1px solid var(--line);color:#475569;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:38px}
+.sigclear:hover{background:#e2e8f0}
+
+/* submit */
+.submit-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;text-align:center;box-shadow:0 4px 16px rgba(15,23,42,.06)}
+.btn-main{width:100%;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;font-family:inherit;font-size:17px;font-weight:800;cursor:pointer;min-height:54px;box-shadow:0 6px 18px rgba(227,6,19,.28);transition:transform .15s,box-shadow .15s}
+.btn-main:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 9px 24px rgba(227,6,19,.34)}
+.btn-main:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.locknote{font-size:12.5px;color:var(--muted);margin-top:10px}
+.locknote b{color:var(--red)}
+.foot{text-align:center;font-size:11.5px;color:#94a3b8;margin-top:18px;line-height:1.7}
+
+/* success */
+.done{display:none;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px 22px;text-align:center;box-shadow:0 8px 30px rgba(15,23,42,.08)}
+.done .ic{width:66px;height:66px;border-radius:50%;background:#ecfdf5;color:#059669;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 14px}
+.done h2{font-size:21px;font-weight:800;margin-bottom:8px}
+.done p{font-size:14px;color:var(--muted);margin-bottom:6px}
+.done .ref{display:inline-block;margin:14px 0 6px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:700;color:#334155;letter-spacing:.5px}
+.done .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn-sec{padding:12px 22px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:#334155;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;min-height:46px}
+.btn-sec:hover{border-color:var(--red);color:var(--red)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2937;color:#fff;padding:12px 22px;border-radius:30px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:all .3s;z-index:200;max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* print */
+#printArea{display:none}
+@media print{
+  body{background:#fff}
+  .wrap,.hdr,.prog,.toast,.done{display:none !important}
+  #printArea{display:block;padding:0}
+  .p-doc{font-size:11.5pt;color:#000}
+  .p-doc h1{font-size:16pt;margin-bottom:2mm}
+  .p-doc .p-sub{font-size:9.5pt;color:#444;margin-bottom:6mm}
+  .p-doc table{width:100%;border-collapse:collapse;margin-bottom:6mm}
+  .p-doc th,.p-doc td{border:1px solid #999;padding:4px 7px;text-align:right;font-size:9.5pt}
+  .p-doc th{background:#f0f0f0;width:34%;font-weight:700}
+  .p-doc .p-terms{margin:0 0 6mm;padding-inline-start:5mm;font-size:9.5pt;line-height:1.7}
+  .p-doc .p-sign{display:flex;justify-content:space-between;gap:10mm;margin-top:8mm}
+  .p-doc .p-sign div{flex:1;border-top:1px solid #000;padding-top:2mm;font-size:9pt;text-align:center}
+  .p-doc .p-sigimg{max-height:22mm;max-width:100%}
+  @page{size:A4;margin:14mm}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="mainWrap">
+
+  <div class="hdr">
+    <div class="brand"><span class="dot">P</span> PURATOS ISRAEL</div>
+    <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
+    <div class="sub">קבוצת פוראטוס ישראל · מסירה, התחשבנות וקיזוז מהשכר</div>
+    <div class="meta">
+      <span id="hdrDate">—</span>
+      <span>חתימה דיגיטלית</span>
+    </div>
+  </div>
+
+  <div class="prog">
+    <div class="track"><div class="fill" id="progFill"></div></div>
+    <div class="txt" id="progTxt">0% הושלם</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="num">1</div><h2>פרטי העובד</h2></div>
+    <div class="card-sub">הפרטים משמשים לזיהוי העובד מול השכר ולחיוב בהתאם.</div>
+    <div class="grid">
+      <div class="fld full"><label>שם מלא <span class="req">*</span></label>
+        <input type="text" id="full_name" autocomplete="name" placeholder="שם פרטי ושם משפחה">
+        <div class="err-msg">נא למלא שם מלא</div>
+      </div>
+      <div class="fld"><label>מספר עובד</label>
+        <input type="text" id="employee_number" placeholder="לפי תלוש השכר">
+      </div>
+      <div class="fld"><label>תעודת זהות <span class="req">*</span></label>
+        <input type="text" id="id_number" inputmode="numeric" maxlength="9" placeholder="9 ספרות">
+        <div class="err-msg">נא למלא תעודת זהות תקינה</div>
+      </div>
+      <div class="fld"><label>מחלקה <span class="req">*</span></label>
+        <select id="department">
+          <option value="">בחר/י מחלקה</option>
+          <option>הנהלה</option>
+          <option>כספים ושכר</option>
+          <option>משאבי אנוש</option>
+          <option>מערכות מידע (IT)</option>
+          <option>מכירות</option>
+          <option>שיווק</option>
+          <option>ייצור</option>
+          <option>מעבדת יישומים / R&amp;D</option>
+          <option>בקרת איכות</option>
+          <option>לוגיסטיקה ומחסן</option>
+          <option>רכש</option>
+          <option>אחזקה</option>
+          <option>אחר</option>
+        </select>
+        <div class="err-msg">נא לבחור מחלקה</div>
+      </div>
+      <div class="fld"><label>תפקיד</label>
+        <input type="text" id="role" placeholder="לדוגמה: מנהל מערכות מידע">
+      </div>
+      <div class="fld"><label>אתר / מקום עבודה</label>
+        <input type="text" id="site" placeholder="לדוגמה: מפעל, משרד, מרחוק">
+      </div>
+      <div class="fld full"><label>דוא"ל בעבודה</label>
+        <input type="email" id="work_email" autocomplete="email" placeholder="name@puratos.co.il">
+        <div class="err-msg">נא למלא כתובת דוא"ל תקינה</div>
+      </div>
+      <div class="fld full"><label>טלפון נייד</label>
+        <input type="tel" id="phone" autocomplete="tel" placeholder="050-0000000">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="num">2</div><h2>פרטי המחשב והמסירה</h2></div>
+    <div class="card-sub">מה בדיוק נמסר לעובד ומה מספרי הזיהוי שלו.</div>
+    <div class="grid">
+      <div class="fld full"><label>דגם המחשב <span class="req">*</span></label>
+        <input type="text" id="laptop_model" placeholder="לדוגמה: Lenovo ThinkPad E14 Gen 5">
+        <div class="err-msg">נא למלא דגם מחשב</div>
+      </div>
+      <div class="fld"><label>מספר סידורי / Service Tag</label>
+        <input type="text" id="serial_number" placeholder="כפי שמופיע על המחשב">
+      </div>
+      <div class="fld"><label>מערכת הפעלה</label>
+        <select id="operating_system">
+          <option value="Windows 11 Pro">Windows 11 Pro</option>
+          <option value="Windows 11 Home">Windows 11 Home</option>
+          <option value="Windows 10 Pro">Windows 10 Pro</option>
+          <option value="אחר">אחר</option>
+        </select>
+      </div>
+      <div class="fld"><label>תאריך מסירת המחשב</label>
+        <input type="date" id="handover_date">
+      </div>
+      <div class="fld"><label>ציוד שנמסר</label>
+        <input type="text" id="charger_note" value="מחשב נייד + מטען + מערכת הפעלה" disabled>
+      </div>
+      <div class="fld full"><label>הערות</label>
+        <textarea id="notes" placeholder="אם יש משהו שחשוב לציין לפני החתימה"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="num">3</div><h2>עלות המחשב והקיזוז מהשכר</h2></div>
+    <div class="card-sub">העלות ששולמה בפועל עבור המחשב, ואיך היא מתקזזת מהתלוש.</div>
+    <div class="grid">
+      <div class="fld"><label>עלות המחשב (₪, כולל מע"מ) <span class="req">*</span></label>
+        <input type="number" id="cost_total" min="0" step="0.01" placeholder="0">
+        <div class="err-msg">נא למלא עלות</div>
+      </div>
+      <div class="fld"><label>מספר תשלומים <span class="req">*</span></label>
+        <select id="installments">
+          <option value="1">תשלום אחד</option>
+          <option value="2">2 תשלומים</option>
+          <option value="3">3 תשלומים</option>
+          <option value="4">4 תשלומים</option>
+          <option value="6">6 תשלומים</option>
+          <option value="9">9 תשלומים</option>
+          <option value="12">12 תשלומים</option>
+        </select>
+      </div>
+      <div class="fld"><label>חודש תחילת הניכוי</label>
+        <input type="month" id="start_month">
+      </div>
+      <div class="fld"><label>ניכוי חודשי מהתלוש</label>
+        <input type="text" id="monthly_deduction" value="—" disabled>
+      </div>
+    </div>
+    <div class="calc">
+      <span class="lbl">סה"כ יקוזז מהשכר</span>
+      <span class="val" id="calcTotal">₪0</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="num">4</div><h2>תנאי הרכישה</h2></div>
+    <div class="card-sub">נא לקרוא לפני החתימה. אלו התנאים שהעובד מאשר בחתימתו.</div>
+    <div class="terms">
+      <div class="term"><div class="n"></div><div class="tx"><b>הרכישה.</b> החברה רוכשת עבור העובד מחשב נייד, והעובד מקבל אותו לשימושו לפי העלות שנקבעה בטופס זה.</div></div>
+      <div class="term"><div class="n"></div><div class="tx"><b>התחשבנות וקיזוז מהשכר.</b> עלות המחשב תקוזז מתלוש השכר של העובד, בהתאם למספר התשלומים שנקבע בסעיף 3. הקיזוז יופיע בתלוש השכר.</div></div>
+      <div class="term"><div class="n"></div><div class="tx"><b>מה נמסר.</b> העובד מקבל את המחשב עצמו, את המטען ואת מערכת ההפעלה. לא נמסר ציוד נוסף מעבר למפורט בטופס.</div></div>
+      <div class="term"><div class="n"></div><div class="tx"><b>תקופת בדיקה — עד 7 ימים.</b> לעובד תקופה של <span class="hl">עד 7 ימים ממועד המסירה</span> לבדוק את המחשב ולוודא כי הכול תקין.</div></div>
+      <div class="term"><div class="n"></div><div class="tx"><b>אחריות.</b> בתום תקופת הבדיקה המחשב עובר לאחריותו של העובד בלבד. <span class="hl">לאחר תקופה זו לא תהיה כל אחריות מצד החברה</span> לנזק, לאובדן, לתקלה, לשיבוש או לתקלת תוכנה במחשב.</div></div>
+      <div class="term"><div class="n"></div><div class="tx"><b>הצהרת העובד.</b> העובד מצהיר כי בדק את המחשב, כי קיבל את כל המפורט לעיל, וכי הפרטים שמסר בטופס נכונים ומדויקים.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="num">5</div><h2>אישור וחתימה</h2></div>
+    <div class="card-sub">יש לסמן את כל הסעיפים, לחתום ולשלוח.</div>
+
+    <label class="chk" id="chk1"><input type="checkbox" id="agree1"><span>קראתי והבנתי את תנאי הרכישה, לרבות קיזוז עלות המחשב מתלוש השכר שלי.</span></label>
+    <label class="chk" id="chk2"><input type="checkbox" id="agree2"><span>קיבלתי לידיי את המחשב, את המטען ואת מערכת ההפעלה.</span></label>
+    <label class="chk" id="chk3"><input type="checkbox" id="agree3"><span>ידוע לי שיש לי עד 7 ימים ממועד המסירה לבדוק את המחשב, ובתום תקופה זו האחריות על המחשב היא עליי בלבד.</span></label>
+    <label class="chk" id="chk4"><input type="checkbox" id="agree4"><span>אני מאשר/ת כי כל הפרטים שמסרתי בטופס זה נכונים ומדויקים.</span></label>
+
+    <div class="fld full" style="margin-top:16px">
+      <label>שם החותם/ת <span class="req">*</span></label>
+      <input type="text" id="signer_name" placeholder="שם מלא כפי שמופיע בת.ז">
+      <div class="err-msg">נא להקליד את שם החותם</div>
+    </div>
+
+    <div class="fld full" style="margin-top:14px">
+      <label>חתימה בכתב יד <span class="req">*</span></label>
+      <div class="sigbox" id="sigBox">
+        <span class="ph">חתמו כאן באצבע או בעכבר</span>
+        <canvas id="sigCanvas"></canvas>
+      </div>
+      <div class="sigbar">
+        <span class="hint" id="sigHint">החתימה נדרשת לשליחת הטופס</span>
+        <button type="button" class="sigclear" onclick="clearSig()">נקה חתימה</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="btn-main" id="submitBtn" onclick="submitForm()" disabled>שלח את הטופס</button>
+    <div class="locknote" id="lockNote">יש למלא שדות חובה, לסמן את כל 4 הסעיפים ולחתום</div>
+  </div>
+
+  <div class="foot">
+    קבוצת פוראטוס ישראל · טופס רכישת מחשב נייד<br>
+    המסמך נשמר באופן מאובטח ומשמש לתיעוד מול השכר
+  </div>
+</div>
+
+<div class="wrap" id="doneWrap" style="display:none">
+  <div class="done" id="doneBox" style="display:block">
+    <div class="ic">✓</div>
+    <h2>הטופס נשלח בהצלחה</h2>
+    <p>הטופס החתום נשמר ותועד. עותק ניתן להדפיס או לשמור כ-PDF.</p>
+    <div class="ref" id="doneRef">—</div>
+    <div class="acts">
+      <button class="btn-sec" onclick="printDoc()">הדפסה / שמירה כ-PDF</button>
+      <button class="btn-sec" onclick="location.reload()">טופס חדש</button>
+    </div>
+  </div>
+</div>
+
+<div id="printArea">
+  <div class="p-doc">
+    <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
+    <div class="p-sub">קבוצת פוראטוס ישראל · מסירה, התחשבנות וקיזוז מהשכר</div>
+    <table id="pTable"></table>
+    <ol class="p-terms" id="pTerms"></ol>
+    <div class="p-sign">
+      <div><img id="pSig" class="p-sigimg" alt=""><br>חתימת העובד</div>
+      <div>שם: <span id="pName">—</span></div>
+      <div>תאריך: <span id="pDate">—</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
+var PAGE_VERSION = '2026-11-12-v1';
+
+function $(id){return document.getElementById(id)}
+function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3200)}
+function money(n){return '₪' + (Number(n)||0).toLocaleString('he-IL',{maximumFractionDigits:2})}
+
+(function(){
+  var d=new Date();
+  $('hdrDate').textContent='התאריך היום: '+d.toLocaleDateString('he-IL',{day:'2-digit',month:'long',year:'numeric'});
+})();
+
+[1,2,3,4].forEach(function(i){
+  var box=$('chk'+i), inp=$('agree'+i);
+  inp.addEventListener('change',function(){box.classList.toggle('on',inp.checked);refresh()});
+});
+
+function recalc(){
+  var cost=parseFloat($('cost_total').value)||0;
+  var n=parseInt($('installments').value)||1;
+  var monthly=n>0?cost/n:cost;
+  $('calcTotal').textContent=money(cost);
+  $('monthly_deduction').value=cost>0?(money(Math.round(monthly*100)/100)+(n>1?' × '+n+' תשלומים':'')):'—';
+  refresh();
+}
+['cost_total','installments'].forEach(function(id){$(id).addEventListener('input',recalc);$(id).addEventListener('change',recalc)});
+
+var canvas=$('sigCanvas'), ctx=canvas.getContext('2d'), drawing=false, hasSig=false;
+function fitCanvas(){
+  var ratio=Math.max(window.devicePixelRatio||1,1);
+  var w=canvas.parentElement.clientWidth-2, h=170;
+  var saved=hasSig?canvas.toDataURL():null;
+  canvas.width=w*ratio; canvas.height=h*ratio;
+  canvas.style.height=h+'px';
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  ctx.lineWidth=2.1; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111827';
+  if(saved){var img=new Image();img.onload=function(){ctx.drawImage(img,0,0,w,h)};img.src=saved}
+}
+window.addEventListener('resize',fitCanvas);
+
+function pos(e){
+  var r=canvas.getBoundingClientRect();
+  var p=e.touches?e.touches[0]:e;
+  return {x:p.clientX-r.left, y:p.clientY-r.top};
+}
+function start(e){e.preventDefault();drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
+function move(e){
+  if(!drawing)return;
+  e.preventDefault();
+  var p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();
+  if(!hasSig){hasSig=true;$('sigBox').classList.add('filled');refresh()}
+}
+function end(){drawing=false}
+canvas.addEventListener('mousedown',start);
+canvas.addEventListener('mousemove',move);
+window.addEventListener('mouseup',end);
+canvas.addEventListener('touchstart',start,{passive:false});
+canvas.addEventListener('touchmove',move,{passive:false});
+canvas.addEventListener('touchend',end);
+canvas.addEventListener('touchcancel',end);
+
+function clearSig(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  hasSig=false; $('sigBox').classList.remove('filled'); refresh();
+}
+
+function validId(v){
+  v=String(v||'').replace(/\D/g,'');
+  if(v.length!==9)return false;
+  var s=0;
+  for(var i=0;i<9;i++){
+    var d=Number(v[i])*(i%2===0?1:2);
+    s+=Math.floor(d/10)+(d%10);
+  }
+  return s%10===0;
+}
+function validEmail(v){return !v||/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)}
+
+function markErr(id,bad){
+  var el=$(id); if(!el)return;
+  el.classList.toggle('err',!!bad);
+  if(el.parentElement)el.parentElement.classList.toggle('has-err',!!bad);
+}
+
+function validate(){
+  var bad=false;
+  if(!$('full_name').value.trim()){markErr('full_name',1);bad=true}else markErr('full_name',0);
+  if(!validId($('id_number').value)){markErr('id_number',1);bad=true}else markErr('id_number',0);
+  if(!$('department').value){markErr('department',1);bad=true}else markErr('department',0);
+  if(!validEmail($('work_email').value.trim())){markErr('work_email',1);bad=true}else markErr('work_email',0);
+  if(!$('laptop_model').value.trim()){markErr('laptop_model',1);bad=true}else markErr('laptop_model',0);
+  if(!(parseFloat($('cost_total').value)>0)){markErr('cost_total',1);bad=true}else markErr('cost_total',0);
+  if(!$('signer_name').value.trim()){markErr('signer_name',1);bad=true}else markErr('signer_name',0);
+  return !bad;
+}
+function allChecked(){return [1,2,3,4].every(function(i){return $('agree'+i).checked})}
+
+function refresh(){
+  var filled=0;
+  if($('full_name').value.trim())filled++;
+  if($('id_number').value.trim())filled++;
+  if($('department').value)filled++;
+  if($('work_email').value.trim())filled++;
+  if($('laptop_model').value.trim())filled++;
+  if(parseFloat($('cost_total').value)>0)filled++;
+  if($('signer_name').value.trim())filled++;
+  if(hasSig)filled++;
+  var pct=Math.round(filled/8*100);
+  $('progFill').style.width=pct+'%';
+  $('progTxt').textContent=pct+'% הושלם';
+
+  var ready = filled===8 && allChecked() && validate();
+  $('submitBtn').disabled=!ready;
+  $('lockNote').innerHTML = ready ? '<b>הטופס מוכן לשליחה</b>' : 'יש למלא שדות חובה, לסמן את כל 4 הסעיפים ולחתום';
+}
+['full_name','id_number','department','work_email','laptop_model','cost_total','signer_name'].forEach(function(id){
+  $(id).addEventListener('input',refresh);
+  $(id).addEventListener('change',refresh);
+});
+
+var sending=false;
+function submitForm(){
+  if(sending)return;
+  if(!validate()){toast('נא למלא את כל שדות החובה');return}
+  if(!allChecked()){toast('נא לסמן את כל 4 הסעיפים');return}
+  if(!hasSig){toast('נא לחתום לפני השליחה');return}
+
+  var agreements=[
+    'קראתי והבנתי את תנאי הרכישה, לרבות קיזוז עלות המחשב מתלוש השכר',
+    'קיבלתי לידיי את המחשב, את המטען ואת מערכת ההפעלה',
+    'ידוע לי שיש לי עד 7 ימים לבדוק את המחשב, ובתום תקופה זו האחריות עליי בלבד',
+    'הפרטים שמסרתי נכונים ומדויקים'
+  ];
+
+  var payload={
+    full_name:$('full_name').value.trim(),
+    employee_number:$('employee_number').value.trim(),
+    id_number:$('id_number').value.trim(),
+    department:$('department').value,
+    role:$('role').value.trim(),
+    work_email:$('work_email').value.trim(),
+    phone:$('phone').value.trim(),
+    site:$('site').value.trim(),
+    laptop_model:$('laptop_model').value.trim(),
+    serial_number:$('serial_number').value.trim(),
+    operating_system:$('operating_system').value,
+    handover_date:$('handover_date').value,
+    cost_total:parseFloat($('cost_total').value)||0,
+    installments:parseInt($('installments').value)||1,
+    start_month:$('start_month').value,
+    includes_charger:true,
+    notes:$('notes').value.trim(),
+    agreements:agreements,
+    signature_data:canvas.toDataURL('image/png')
+  };
+
+  sending=true;
+  var btn=$('submitBtn');
+  btn.disabled=true; btn.textContent='שולח...';
+
+  fetch(API+'/submitLaptopPurchase',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(function(r){return r.json()}).then(function(res){
+    if(!res || !res.success){
+      throw new Error((res&&res.error)||'שליחה נכשלה');
+    }
+    buildPrint(payload);
+    $('mainWrap').style.display='none';
+    $('doneWrap').style.display='block';
+    $('doneRef').textContent='אסמכתא: '+(res.id?String(res.id).slice(-8).toUpperCase():'—');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }).catch(function(err){
+    sending=false;
+    btn.disabled=false; btn.textContent='שלח את הטופס';
+    toast('השליחה נכשלה: '+(err&&err.message?err.message:'נסה שוב'));
+  });
+}
+
+function buildPrint(p){
+  var rows=[
+    ['שם העובד',p.full_name],
+    ['מספר עובד',p.employee_number||'—'],
+    ['תעודת זהות',p.id_number],
+    ['מחלקה',p.department],
+    ['תפקיד',p.role||'—'],
+    ['אתר / מקום עבודה',p.site||'—'],
+    ['דוא"ל',p.work_email||'—'],
+    ['טלפון',p.phone||'—'],
+    ['דגם המחשב',p.laptop_model],
+    ['מספר סידורי',p.serial_number||'—'],
+    ['מערכת הפעלה',p.operating_system],
+    ['תאריך מסירה',p.handover_date||'—'],
+    ['עלות המחשב','₪'+(p.cost_total||0).toLocaleString('he-IL')],
+    ['מספר תשלומים',String(p.installments)],
+    ['ניכוי חודשי','₪'+Math.round((p.cost_total/p.installments)*100)/100],
+    ['חודש תחילת ניכוי',p.start_month||'—']
+  ];
+  $('pTable').innerHTML=rows.map(function(r){
+    return '<tr><th>'+r[0]+'</th><td>'+String(r[1]).replace(/</g,'&lt;')+'</td></tr>';
+  }).join('');
+
+  var terms=[
+    'החברה רוכשת עבור העובד מחשב נייד, והעובד מקבל אותו לשימושו לפי העלות שנקבעה בטופס.',
+    'עלות המחשב תקוזז מתלוש השכר של העובד בהתאם למספר התשלומים שנקבע.',
+    'העובד מקבל את המחשב, את המטען ואת מערכת ההפעלה. לא נמסר ציוד נוסף.',
+    'לעובד תקופה של עד 7 ימים ממועד המסירה לבדוק את המחשב ולוודא תקינות.',
+    'בתום תקופת הבדיקה המחשב עובר לאחריות העובד בלבד, ולא תהיה כל אחריות מצד החברה לנזק, לאובדן, לתקלה או לתקלת תוכנה.',
+    'העובד מצהיר כי בדק את המחשב, כי קיבל את כל המפורט לעיל, וכי הפרטים שמסר נכונים.'
+  ];
+  $('pTerms').innerHTML=terms.map(function(t){return '<li>'+t+'</li>'}).join('');
+  $('pSig').src=p.signature_data;
+  $('pName').textContent=$('signer_name').value.trim();
+  $('pDate').textContent=new Date().toLocaleDateString('he-IL');
+}
+
+function printDoc(){window.print()}
+
+fitCanvas();
+recalc();
+refresh();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js?v=20261112').catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
