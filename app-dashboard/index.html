@@ -103,6 +103,9 @@ button{font-family:inherit}
 .copylink code{flex:1;min-width:0;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.7rem;color:#475569;direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .copylink button{background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:.7rem;font-weight:800;color:var(--teal-600);cursor:pointer;white-space:nowrap}
 .copylink button:hover{background:var(--teal-50);border-color:var(--teal-100)}
+.copylink .wa{display:inline-flex;align-items:center;gap:4px;background:#25D366;border:1px solid #1eb457;border-radius:8px;padding:4px 9px;font-size:.7rem;font-weight:800;color:#fff;white-space:nowrap;cursor:pointer;transition:.15s}
+.copylink .wa:hover{background:#1eb457}
+.copylink .wa svg{width:11px;height:11px;fill:#fff}
 .app-foot{display:flex;justify-content:space-between;align-items:center;font-size:.7rem;color:#94a3b8;font-weight:600;margin-top:2px}
 .stale{color:#b45309}
 .fresh{color:#047857}
@@ -305,6 +308,16 @@ button{font-family:inherit}
       cbtn.type='button'; cbtn.textContent='העתקה'; cbtn.setAttribute('aria-label','העתקת הקישור של '+a.name);
       cbtn.addEventListener('click',function(){ copyText(a.url); });
       cp.appendChild(cbtn);
+
+      var wa=document.createElement('a');
+      wa.className='wa';
+      wa.href='https://wa.me/?text='+encodeURIComponent(a.name+'\n'+a.url);
+      wa.target='_blank'; wa.rel='noopener';
+      wa.setAttribute('aria-label','שליחת הקישור של '+a.name+' בוואטסאפ');
+      wa.title='שליחה בוואטסאפ — בוחרים איש קשר';
+      wa.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.8-1.9-.9-.3-.1-.5-.2-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.6-1.6-.9-2.2-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 1.9 3 4.6 4.1 2.3.9 2.7.7 3.2.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg><span>וואטסאפ</span>';
+      cp.appendChild(wa);
+
       card.appendChild(cp);
 
       var foot=el('div','app-foot');
