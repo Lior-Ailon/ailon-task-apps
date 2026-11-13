@@ -1,0 +1,153 @@
+/* ==========================================================================
+   AILON Design System v1.0
+   Direction: Swiss editorial. One sans family, cool neutral surface, hairline
+   rules, asymmetric left-aligned grid, oversized tabular numerals, a single
+   deliberate accent (deep teal) plus one gold hairline for the brand.
+   Differentiator: a slow-drifting ink-and-teal aurora confined to the header
+   band, never behind body copy.
+
+   All tokens are namespaced --ai-* so this file can be dropped into any
+   existing app without colliding with the app's own variables.
+   ========================================================================== */
+
+:root{
+  --ai-ink:#0B1418;
+  --ai-ink-2:#142329;
+  --ai-ink-3:#1D3138;
+  --ai-teal:#0F766E;
+  --ai-teal-bright:#0D9488;
+  --ai-teal-pale:#E7F1EF;
+  --ai-gold:#C8A63E;
+  --ai-paper:#FFFFFF;
+  --ai-surface:#F5F6F7;
+  --ai-line:#E1E6E8;
+  --ai-line-strong:#C9D2D6;
+  --ai-text:#16262C;
+  --ai-muted:#697B82;
+  --ai-faint:#93A3A8;
+  --ai-radius:4px;
+  --ai-radius-lg:6px;
+  --ai-max:1320px;
+  --ai-ease:cubic-bezier(.22,.61,.36,1);
+}
+
+html.ailon-design{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+.ailon-design ::selection{background:var(--ai-teal);color:#fff}
+
+/* ---------------------------------------------------------------- aurora --
+   A band of three slow blobs. Sits inside .ai-hero / .ai-aurora, which clips it.
+   Nothing here is placed behind text you have to read for long.              */
+.ai-aurora{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+  border-radius:inherit;z-index:0;
+}
+.ai-hero > .ai-aurora{position:absolute!important;inset:0!important}
+.ai-aurora::before,
+.ai-aurora::after{
+  content:"";position:absolute;
+  width:78%;height:230%;border-radius:50%;
+  filter:blur(64px);
+  opacity:.55;
+  will-change:transform;
+}
+.ai-aurora::before{
+  inset-inline-start:-18%;top:-95%;
+  background:radial-gradient(closest-side,rgba(13,148,136,.85),rgba(13,148,136,0) 72%);
+  animation:ai-drift-a 84s var(--ai-ease) infinite alternate;
+}
+.ai-aurora::after{
+  inset-inline-end:-22%;top:-70%;
+  background:radial-gradient(closest-side,rgba(200,166,62,.42),rgba(200,166,62,0) 70%);
+  animation:ai-drift-b 112s var(--ai-ease) infinite alternate;
+}
+.ai-aurora .ai-aurora-c{
+  position:absolute;left:18%;top:-120%;width:70%;height:300%;border-radius:50%;
+  filter:blur(72px);opacity:.42;
+  background:radial-gradient(closest-side,rgba(60,120,170,.65),rgba(60,120,170,0) 70%);
+  animation:ai-drift-c 96s var(--ai-ease) infinite alternate;
+  will-change:transform;
+}
+@keyframes ai-drift-a{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(14%,7%,0) scale(1.14)}
+}
+@keyframes ai-drift-b{
+  from{transform:translate3d(0,0,0) scale(1.05)}
+  to{transform:translate3d(-16%,10%,0) scale(.92)}
+}
+@keyframes ai-drift-c{
+  from{transform:translate3d(0,0,0) scale(.95)}
+  to{transform:translate3d(10%,-8%,0) scale(1.12)}
+}
+
+/* Fine paper grain, 2%. Sits above the aurora, below content. */
+.ai-grain{
+  position:absolute;inset:0;pointer-events:none;opacity:.035;z-index:0;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ hero --
+   The brand band. Dark ink, aurora alive inside it, hairline base rule.      */
+.ai-hero{
+  position:relative;overflow:hidden;
+  background:var(--ai-ink);
+  color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.ai-hero > *{position:relative;z-index:2}
+.ai-hero > .ai-aurora,.ai-hero > .ai-grain{position:absolute;inset:0;z-index:0}
+.ai-hero .ai-eyebrow{
+  font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.56);
+}
+.ai-hero .ai-rule{height:1px;background:rgba(255,255,255,.16);border:0}
+.ai-hero .ai-gold-rule{height:2px;width:44px;background:var(--ai-gold);border:0}
+
+/* ------------------------------------------------------------- typography */
+.ailon-design .ai-display{
+  font-weight:900;letter-spacing:-.035em;line-height:1.02;
+}
+.ai-folio{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+/* ---------------------------------------------------------------- pieces */
+.ai-hairline{border:1px solid var(--ai-line)}
+.ai-card{
+  background:var(--ai-paper);
+  border:1px solid var(--ai-line);
+  border-radius:var(--ai-radius);
+  transition:border-color .18s var(--ai-ease),transform .18s var(--ai-ease),box-shadow .18s var(--ai-ease);
+}
+.ai-card:hover{
+  border-color:var(--ai-line-strong);
+  box-shadow:0 10px 24px -18px rgba(11,20,24,.55);
+}
+.ai-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:44px;padding:0 1.15rem;
+  border:1px solid var(--ai-ink);border-radius:var(--ai-radius);
+  background:var(--ai-ink);color:#fff;
+  font-family:inherit;font-size:.9rem;font-weight:700;letter-spacing:.01em;
+  cursor:pointer;transition:background .16s var(--ai-ease),color .16s var(--ai-ease),border-color .16s var(--ai-ease);
+}
+.ai-btn:hover{background:var(--ai-teal);border-color:var(--ai-teal)}
+.ai-btn--ghost{background:transparent;color:var(--ai-ink);border-color:var(--ai-line-strong)}
+.ai-btn--ghost:hover{background:transparent;color:var(--ai-teal);border-color:var(--ai-teal)}
+
+/* Scroll-reveal, opt-in via .ai-reveal + JS observer */
+.ai-reveal{opacity:0;transform:translateY(10px)}
+.ai-reveal.ai-in{opacity:1;transform:none;transition:opacity .5s var(--ai-ease),transform .5s var(--ai-ease)}
+.ailon-design .ai-reveal.ai-in{transition-delay:var(--ai-d,0ms)}
+
+/* Thin brand ribbon: 2px at the very top of the viewport. Non-breaking. */
+.ai-ribbon{position:fixed;top:0;left:0;right:0;height:2px;z-index:2147482999;
+  background:linear-gradient(90deg,var(--ai-teal) 0%,var(--ai-teal-bright) 42%,var(--ai-gold) 100%);
+  opacity:.9;pointer-events:none}
+
+@media (prefers-reduced-motion: reduce){
+  .ai-aurora::before,.ai-aurora::after,.ai-aurora .ai-aurora-c{animation:none}
+  .ai-reveal{opacity:1;transform:none}
+  .ai-card,.ai-btn{transition:none}
+}

@@ -17,13 +17,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/ailon-design.css?v=1">
+<script src="../_shared/ailon-design.js?v=1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
---teal:#0d9488;--teal-light:#14b8a6;--teal-dark:#0f766e;--navy:#1e3a5f;
---bg:#e0f2f1;--bg2:#f0fdfa;--card:#fff;--text:#37474f;--text2:#546e7a;--gray:#90a4ae;
---border:#e0e7e7;--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6;
---radius:14px;--shadow:0 2px 12px rgba(0,0,0,.06);--shadow-lg:0 8px 30px rgba(0,0,0,.12);
+--teal:#0F766E;--teal-light:#0D9488;--teal-dark:#0B5A54;--navy:#0B1418;
+--bg:#F4F5F6;--bg2:#FAFBFB;--card:#fff;--text:#16262C;--text2:#5B6C73;--gray:#93A3A8;
+--border:#E1E6E8;--red:#C0392B;--green:#0F766E;--amber:#B8860B;--blue:#2C6B8A;--purple:#6B5B95;
+--radius:8px;--shadow:0 1px 2px rgba(11,20,24,.04);--shadow-lg:0 18px 40px -24px rgba(11,20,24,.45);
 --font:'Heebo',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -240,8 +242,35 @@ tr:hover td{background:var(--bg)}
 <meta property="og:description" content="AILON TASK · מערכת CRM">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="he_IL">
+  <style>
+/* ============ AILON Design System v1 — overrides ============ */
+body{background:var(--bg)}
+.sidebar{box-shadow:none;border-inline-start:1px solid var(--border)}
+.sidebar-logo{letter-spacing:-.02em}
+.nav-item{border-radius:4px}
+.nav-item.active{background:var(--navy)!important;color:#fff;font-weight:700}
+.nav-section{letter-spacing:.16em;font-size:10px}
+.card,.stat-card{border:1px solid var(--border);box-shadow:none}
+.btn{border-radius:4px}
+.btn-primary{background:var(--navy)!important;border:1px solid var(--navy);border-radius:4px}
+.btn-primary:hover{background:var(--teal)!important;border-color:var(--teal);transform:none}
+.login-wrap,.login-left{background:var(--bg)}
+.login-card{border:1px solid var(--border);border-radius:6px;box-shadow:none}
+.login-right{background:var(--navy)}
+.login-right::before{display:none}
+.login-logo{font-weight:900;letter-spacing:.02em;font-size:22px}
+.login-sub{letter-spacing:.3em;font-size:11px;opacity:.55}
+.login-hero{font-weight:900;letter-spacing:-.04em}
+.login-hero-sub{opacity:.6}
+.hero-banner{background:var(--navy);border-radius:6px;text-align:right;padding:26px 28px;position:relative;overflow:hidden;color:#fff}
+.hero-banner::after{content:"";position:absolute;inset-inline-start:28px;bottom:16px;width:44px;height:2px;background:#C8A63E}
+.hero-banner > *{position:relative;z-index:2}
+.hero-banner h2{font-weight:900;letter-spacing:-.03em;font-size:22px}
+.quote-card{border-radius:6px;box-shadow:none}
+h1,h2,.page-title{letter-spacing:-.02em}
+  </style>
 </head>
-<body>
+<body data-ailon-hero>
 
 <!-- LOGIN -->
 <div class="login-wrap" id="loginWrap">
@@ -263,7 +292,7 @@ tr:hover td{background:var(--bg)}
 <div id="loginError" style="color:var(--red);font-size:13px;margin-top:8px;display:none"></div>
 </div>
 </div>
-<div class="login-right">
+<div class="login-right ai-hero">
 <div class="login-right-content">
 <div class="login-logo">AILON TASK</div>
 <div class="login-sub">CRM SYSTEM</div>
@@ -532,7 +561,7 @@ c.innerHTML = `
 <div class="quote-text">"${quotes[qi]}"</div>
 <div class="quote-author">– ${authors[qi]}</div>
 </div>
-<div class="hero-banner">
+<div class="hero-banner ai-hero">
 <h2>Dream it. Plan it. Achieve it.</h2>
 <p style="opacity:.8;font-size:14px;margin-top:4px">AILON TASK CRM</p>
 </div>

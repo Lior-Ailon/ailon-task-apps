@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" data-ailon-ribbon>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,12 +15,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{
-  --teal:#0d9488;--teal-600:#0f766e;--teal-50:#f0fdfa;--teal-100:#ccfbf1;
-  --navy:#12324d;--ink:#1e293b;--muted:#64748b;--line:#e2e8f0;
-  --bg:#f4f7fa;--card:#fff;
-  --green:#10b981;--amber:#f59e0b;--violet:#8b5cf6;--sky:#0ea5e9;--slate:#94a3b8;
-  --r:18px;--r-sm:12px;
-  --shadow:0 1px 2px rgba(16,42,67,.04),0 8px 24px -12px rgba(16,42,67,.18);
+  --teal:#0F766E;--teal-600:#0B5A54;--teal-50:#F0F6F4;--teal-100:#D8E6E2;
+  --navy:#0B1418;--ink:#16262C;--muted:#697B82;--line:#E1E6E8;
+  --bg:#F4F5F6;--card:#fff;
+  --green:#0F766E;--amber:#B8860B;--violet:#5B6B8A;--sky:#2C6B8A;--slate:#93A3A8;
+  --r:6px;--r-sm:4px;
+  --shadow:0 1px 2px rgba(11,20,24,.04);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -119,10 +119,42 @@ button{font-family:inherit}
 :focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:8px}
 @media(max-width:560px){.wrap{padding:0 14px 40px}.logo-plate img{height:30px}.kpi .num{font-size:1.55rem}.grid{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="../_shared/ailon-design.css?v=1">
+<script src="../_shared/ailon-design.js?v=1" defer></script>
+<style>
+/* ============ AILON Design System v1 — dashboard ============ */
+body{background:var(--bg)}
+.topbar{background:#0B1418;padding:26px 0 30px}
+.topbar::after{display:none}
+.topbar h1{font-weight:900;letter-spacing:-.03em}
+.topbar h1 span{font-weight:400;opacity:.55;letter-spacing:.01em}
+.pill{border-radius:3px;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);font-weight:500}
+.logo-plate{border-radius:3px;box-shadow:none;padding:7px 13px}
+.kpi{border-radius:4px;border:1px solid var(--line);box-shadow:none;padding:16px 18px}
+.kpi .num{font-size:1.75rem;color:var(--ink);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.kpi.teal .num,.kpi.green .num{color:var(--teal)}
+.kpi.amber .num,.kpi.violet .num,.kpi.sky .num{color:var(--ink)}
+.kpi .lbl{font-weight:500;letter-spacing:.04em;text-transform:uppercase;font-size:.66rem}
+.card,.chart-card,.app{border-radius:4px;border:1px solid var(--line);box-shadow:none}
+.chart-card h2{letter-spacing:-.01em}
+.app:hover{transform:none;border-color:var(--ink);box-shadow:none}
+.app-icon{background:#F4F5F6;border-color:var(--line);border-radius:3px}
+.app-name{font-weight:800;letter-spacing:-.015em}
+.badge{border-radius:2px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase}
+.chip{border-radius:2px;font-weight:600}
+.chip.on{background:var(--navy);border-color:var(--navy)}
+.open-btn{background:var(--navy);border-radius:3px}
+.open-btn:hover{background:var(--teal)}
+.copylink{border-radius:3px;border-style:solid;background:#FAFBFB}
+.copylink button,.copylink .wa{border-radius:2px}
+.searchbox input,.sel{border-radius:3px}
+.searchbox input:focus{box-shadow:none;border-color:var(--ink)}
+.cat-chip,.count-line{font-weight:500}
+</style>
 </head>
-<body>
+<body data-ailon-hero>
 
-<header class="topbar">
+<header class="topbar ai-hero">
   <div class="wrap">
     <div class="brandline">
       <div class="logo-plate"><img src="assets/ailon-logo.png" alt="AILON"></div>
@@ -199,8 +231,8 @@ button{font-family:inherit}
 (function(){
   var DATA=null, state={q:'',cat:'all',status:'all',sort:'cat'};
   var CAT_ICON={'עסקים':'🏢','פוראטוס':'🏭','מנטורינג':'🧭','מסכים ולוחות':'📺','תוכן ויהדות':'📖','ילדים ולמידה':'👶','אישי ומשפחה':'🏠','פורטלים':'🧰'};
-  var CAT_COLOR={'עסקים':'#0d9488','פוראטוס':'#0ea5e9','מנטורינג':'#8b5cf6','מסכים ולוחות':'#f59e0b','תוכן ויהדות':'#10b981','ילדים ולמידה':'#ec4899','אישי ומשפחה':'#f97316','פורטלים':'#64748b'};
-  var STATUS_COLOR={live:'#10b981',beta:'#f59e0b',demo:'#8b5cf6',archived:'#94a3b8'};
+  var CAT_COLOR={'עסקים':'#0F766E','פוראטוס':'#2C6B8A','מנטורינג':'#5B6B8A','מסכים ולוחות':'#C8A63E','תוכן ויהדות':'#3C7A6E','ילדים ולמידה':'#B4705C','אישי ומשפחה':'#8A6D14','פורטלים':'#93A3A8'};
+  var STATUS_COLOR={live:'#0F766E',beta:'#C8A63E',demo:'#5B6B8A',archived:'#C2CCD0'};
   var STATUS_NAME={live:'פעיל',beta:'בבנייה',demo:'דמו',archived:'ארכיון'};
 
   function fmtDate(d){ if(!d) return '—'; var p=d.split('-'); return p[2]+'.'+p[1]+'.'+p[0]; }
@@ -411,7 +443,7 @@ button{font-family:inherit}
     new Chart(document.getElementById('monthChart'),{
       type:'bar',
       data:{labels:labels,datasets:[{data:keys.map(function(k){return months[k];}),
-        backgroundColor:'#0d9488',hoverBackgroundColor:'#0f766e',borderRadius:6,barPercentage:.72}]},
+        backgroundColor:'#0F766E',hoverBackgroundColor:'#0B5A54',borderRadius:2,barPercentage:.72}]},
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y+' אפליקציות עודכנו';}}}},
         scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#eef2f7'},ticks:{precision:0,font:{size:11}}}}}

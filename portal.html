@@ -8,58 +8,135 @@
   <title>AILON Task · פורטל הכלים</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap">
+  <link rel="stylesheet" href="_shared/ailon-design.css?v=1">
+  <script src="_shared/ailon-design.js?v=1" defer></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Heebo', sans-serif; background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 50%, #f0fdfa 100%); color: #1e293b; min-height: 100vh; }
-    .header { background: linear-gradient(135deg, #0d9488, #14b8a6); color: #fff; padding: 32px 20px; text-align: center; box-shadow: 0 4px 24px rgba(13,148,136,0.25); }
-    .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .header p { font-size: 15px; opacity: 0.9; }
-    .header .slogan { margin-top: 8px; font-size: 13px; opacity: 0.8; font-style: italic; }
-    .search-bar { max-width: 600px; margin: -20px auto 0; padding: 0 20px; position: relative; z-index: 10; }
-    .search-bar input { width: 100%; padding: 14px 20px; border: 2px solid #0d9488; border-radius: 14px; font-size: 16px; font-family: inherit; box-shadow: 0 4px 20px rgba(0,0,0,0.08); outline: none; background: #fff; }
-    .search-bar input:focus { border-color: #14b8a6; box-shadow: 0 4px 20px rgba(20,184,166,0.2); }
-    .container { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
-    .category { margin-bottom: 32px; }
-    .category-title { font-size: 18px; font-weight: 700; color: #0d9488; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 2px solid #ccfbf1; }
-    .apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    .app-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.25s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; }
-    .app-card:hover { border-color: #14b8a6; box-shadow: 0 8px 28px rgba(13,148,136,0.12); transform: translateY(-2px); }
-    .app-card .icon { font-size: 32px; }
-    .app-card .name { font-size: 16px; font-weight: 700; color: #1e293b; }
-    .app-card .desc { font-size: 13px; color: #64748b; line-height: 1.5; }
-    .app-card .status { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; margin-top: 4px; }
-    .status-live { background: #d1fae5; color: #059669; }
-    .status-beta { background: #fef3c7; color: #d97706; }
-    .status-dev { background: #f1f5f9; color: #64748b; }
-    .footer { text-align: center; padding: 24px 20px; color: #94a3b8; font-size: 13px; }
-    .footer a { color: #0d9488; text-decoration: none; }
-    .no-results { text-align: center; padding: 40px; color: #94a3b8; font-size: 16px; display: none; }
-    @media (max-width: 640px) {
-      .apps-grid { grid-template-columns: 1fr; }
-      .header h1 { font-size: 22px; }
-    }
-  @media (prefers-color-scheme: dark){body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#e2e8f0}.header{background:linear-gradient(135deg,#0d9488,#0f766e)}.app-card{background:#1e293b;border-color:#334155}.app-card:hover{border-color:#14b8a6}.app-card .name{color:#f1f5f9}.app-card .desc{color:#94a3b8}.category-title{color:#14b8a6;border-bottom-color:#334155}.search-bar input{background:#1e293b;color:#e2e8f0;border-color:#0d9488}.status-dev{background:#334155;color:#94a3b8}.status-beta{background:#422006;color:#fbbf24}.status-live{background:#052e1b;color:#34d399}.footer{color:#475569}}.dark-toggle{position:fixed;top:16px;left:16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:100;color:#fff;}.dark-toggle:hover{background:rgba(255,255,255,0.3)}body.dark-active{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)!important;color:#e2e8f0!important}body.dark-active .header{background:linear-gradient(135deg,#0d9488,#0f766e)!important}body.dark-active .app-card{background:#1e293b!important;border-color:#334155!important}body.dark-active .app-card:hover{border-color:#14b8a6!important}body.dark-active .app-card .name{color:#f1f5f9!important}body.dark-active .app-card .desc{color:#94a3b8!important}body.dark-active .category-title{color:#14b8a6!important;border-bottom-color:#334155!important}body.dark-active .search-bar input{background:#1e293b!important;color:#e2e8f0!important}body.dark-active .status-dev{background:#334155!important;color:#94a3b8!important}body.dark-active .status-beta{background:#422006!important;color:#fbbf24!important}body.dark-active .status-live{background:#052e1b!important;color:#34d399!important}body.dark-active .footer{color:#475569!important}a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}.app-card:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}
-    .cat-block { margin-bottom: 28px; }
-    .card-wrap { position: relative; }
-    .card-wrap .app-card { height: 100%; }
-    .pin { position: absolute; top: 8px; inset-inline-end: 8px; background: transparent; border: none; font-size: 18px; line-height: 1; cursor: pointer; color: #cbd5e1; padding: 6px; border-radius: 8px; z-index: 2; }
-    .pin:hover { color: #f59e0b; background: rgba(245,158,11,0.1); }
-    .pin.on { color: #f59e0b; }
-    .result-count { max-width: 600px; margin: 10px auto 0; text-align: center; font-size: 13px; color: #64748b; }
-    .app-card mark { background: #fef3c7; color: inherit; border-radius: 4px; }
-</style>
-</head>
-<body>
-  <div class="header">
-    <h1>AILON Task</h1>
-    <p>פורטל הכלים המלא</p>
-    <div class="slogan">Dream it. Plan it. Achieve it.</div>
-    <a href="app-dashboard/" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px">📊 דשבורד מנהלים</a>
-  </div>
+:root{
+  --ink:#0B1418; --ink2:#14232A; --teal:#0F766E; --teal-b:#0D9488; --gold:#C8A63E;
+  --paper:#FFFFFF; --surface:#F4F5F6; --line:#E1E6E8; --line2:#C9D2D6;
+  --text:#16262C; --muted:#697B82; --faint:#93A3A8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Heebo',system-ui,-apple-system,sans-serif;background:var(--surface);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
 
-  <div class="search-bar">
-    <input type="text" id="searchInput" aria-label="חיפוש כלים" tabindex="1" placeholder="חיפוש כלי..." oninput="filterApps()">
+/* ---------- hero band: ink surface, slow aurora inside ---------- */
+.hero{position:relative;background:var(--ink);color:#fff;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.08)}
+.hero-inner{position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:46px 24px 26px}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+.eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.goldrule{width:44px;height:2px;background:var(--gold);margin:14px 0 18px}
+.hero h1{font-size:clamp(2.3rem,6.2vw,4rem);font-weight:900;letter-spacing:-.045em;line-height:.94}
+.hero h1 em{font-style:normal;color:#7FD8CE}
+.hero .sub{margin-top:16px;font-size:.98rem;color:rgba(255,255,255,.62);max-width:46ch}
+.hero-nav{display:flex;gap:10px;flex-wrap:wrap}
+.hero-nav a{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.24);color:#fff;text-decoration:none;font-size:.82rem;font-weight:700;border-radius:3px;transition:border-color .16s,background .16s}
+.hero-nav a:hover{border-color:#7FD8CE;background:rgba(127,216,206,.1)}
+.hero-nav a.solid{background:#fff;color:var(--ink);border-color:#fff}
+.hero-nav a.solid:hover{background:#7FD8CE;border-color:#7FD8CE}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap;margin-top:34px;padding-top:18px;border-top:1px solid rgba(255,255,255,.13)}
+.stat b{display:block;font-size:1.55rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.stat span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+
+/* ---------- search strip ---------- */
+.strip{background:var(--paper);border-bottom:1px solid var(--line)}
+.strip-inner{max-width:1320px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.strip input{flex:1;min-width:200px;border:0;border-bottom:2px solid transparent;background:transparent;padding:18px 2px;font-family:inherit;font-size:1rem;color:var(--text);outline:none;transition:border-color .16s}
+.strip input::placeholder{color:var(--faint)}
+.strip input:focus{border-bottom-color:var(--teal)}
+.strip .hint{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.strip .hint kbd{font-family:inherit;border:1px solid var(--line2);border-bottom-width:2px;border-radius:3px;padding:1px 6px;font-size:.72rem;color:var(--muted);background:#fff}
+
+/* ---------- layout ---------- */
+.container{max-width:1320px;margin:0 auto;padding:38px 24px 20px}
+.category{margin-bottom:34px}
+.category-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:9px;margin-bottom:0;border-bottom:1.5px solid var(--ink);font-size:.74rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.category-title .n{font-variant-numeric:tabular-nums;letter-spacing:0;color:var(--faint);font-size:.72rem}
+.apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(276px,1fr));border-inline-start:1px solid var(--line)}
+.card-wrap{position:relative;border-inline-end:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper);min-width:0}
+.app-card{display:flex;flex-direction:column;height:100%;gap:9px;padding:18px 20px 16px;text-decoration:none;color:inherit;transition:background .16s ease}
+.app-card:hover{background:#FAFBFB}
+.app-card:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+.card-top{display:flex;align-items:center;gap:10px}
+.folio{font-size:.7rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.06em;color:var(--faint)}
+.mono{width:30px;height:30px;display:none;place-items:center;border:1px solid var(--line);border-radius:3px;font-size:.68rem;font-weight:800;letter-spacing:.02em;color:var(--muted)}
+.app-card .name{font-size:1rem;font-weight:800;letter-spacing:-.015em;color:var(--ink);line-height:1.28}
+.app-card .desc{font-size:.83rem;color:var(--muted);line-height:1.5;flex:1}
+.app-card .arrow{font-size:.9rem;color:var(--faint);transition:transform .16s,color .16s;align-self:flex-end}
+.app-card:hover .arrow{transform:translateX(-4px);color:var(--teal)}
+.status{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:2px;border:1px solid}
+.status-live{color:var(--teal);border-color:#BFE0DB;background:#F0F8F6}
+.status-beta{color:#8A6D14;border-color:#EBDCB2;background:#FBF6E8}
+.status-dev,.status-archived{color:var(--muted);border-color:var(--line);background:#F8F9FA}
+.app-card mark{background:#FBEFC6;color:inherit}
+
+/* pin */
+.pin{position:absolute;top:10px;left:10px;background:transparent;border:0;font-size:15px;line-height:1;cursor:pointer;color:var(--line2);padding:6px;border-radius:3px;z-index:2;transition:color .16s,background .16s}
+.pin:hover{color:var(--gold);background:#FBF6E8}
+.pin.on{color:var(--gold)}
+
+/* ---------- footer ---------- */
+.footer{border-top:1px solid var(--line);margin-top:26px;padding:26px 24px 40px;text-align:center;font-size:.76rem;color:var(--faint)}
+.footer b{color:var(--ink);letter-spacing:.06em}
+.footer a{color:var(--teal);text-decoration:none}
+.no-results{max-width:1320px;margin:0 auto;padding:56px 24px;text-align:center;color:var(--faint);font-size:.9rem;display:none}
+
+/* dark */
+body.dark-active{background:#0D1417;color:#DDE5E7}
+body.dark-active .strip{background:#111C20;border-color:#1E2C31}
+body.dark-active .strip input{color:#DDE5E7}
+body.dark-active .card-wrap{background:#111C20;border-color:#1E2C31}
+body.dark-active .apps-grid{border-color:#1E2C31}
+body.dark-active .app-card:hover{background:#152329}
+body.dark-active .app-card .name{color:#F2F6F7}
+body.dark-active .app-card .desc{color:#8B9BA1}
+body.dark-active .category-title{color:#E7EEF0;border-bottom-color:#2C3E44}
+body.dark-active .mono{border-color:#2C3E44;color:#8B9BA1}
+body.dark-active .status-live{color:#6FD6CA;background:#0C2B27;border-color:#1D514A}
+body.dark-active .footer{color:#5D6E74}
+.dark-toggle{position:fixed;top:14px;left:14px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;border-radius:3px;cursor:pointer;font-size:15px;z-index:60}
+.dark-toggle:hover{border-color:#7FD8CE}
+a:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+@media(max-width:640px){
+  .container{padding:26px 16px 12px}
+  .hero-inner{padding:34px 16px 22px}
+  .strip-inner{padding:0 16px}
+  .apps-grid{grid-template-columns:1fr}
+  .hero-stats{gap:24px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body data-ailon-hero>
+  <header class="hero ai-hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">AILON · מרכז הכלים</div>
+          <div class="goldrule"></div>
+          <h1>כל הכלים<br><em>במקום אחד</em></h1>
+          <p class="sub">ניהול, אימון, תוכן וקהילה. כל אפליקציה של AILON נכנסת מכאן, ובוחרת את האדם שצריך אותה.</p>
+        </div>
+        <nav class="hero-nav" aria-label="ניווט ראשי">
+          <a class="solid" href="app-dashboard/">דשבורד מנהלים</a>
+          <a href="system-health/">בריאות המערכת</a>
+        </nav>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b id="appCount">0</b><span>כלים</span></div>
+        <div class="stat"><b id="catCount">0</b><span>קטגוריות</span></div>
+        <div class="stat"><b id="liveCount">0</b><span>פעילים</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="strip-inner">
+      <input type="text" id="searchInput" aria-label="חיפוש כלים" tabindex="1" placeholder="חיפוש לפי שם, תיאור או קטגוריה" oninput="filterApps()">
+      <span class="hint"><kbd>/</kbd> לחיפוש מהיר</span>
+    </div>
   </div>
 
   <div class="container" id="appsContainer">
@@ -80,7 +157,7 @@
 
   <div class="footer">
     <p>AILON Task · Dream it. Plan it. Achieve it.</p>
-    <p style="margin-top:4px;">כל הכלים במקום אחד · <span id="appCount">0</span> אפליקציות</p>
+    <p style="margin-top:6px;">כל הכלים במקום אחד · Dream it. Plan it. Achieve it.</p>
   </div>
 
   <script>
@@ -210,13 +287,16 @@ var FAV_KEY='ailon_favs', REC_KEY='ailon_recent';
 function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function cardHTML(app,withPin){
+function cardHTML(app,withPin,idx){
   var statusTxt = app.s==='live'?'פעיל':(app.s==='beta'?'בטא':'ארכיון');
-  var idx = (app.n+' '+app.d+' '+app.c+' '+app.p).toLowerCase();
-  var h = '<div class="card-wrap" data-s="'+esc(idx)+'"><a class="app-card" href="'+app.p+'" data-path="'+app.p+'">'+
-    '<div class="icon">'+app.i+'</div><div class="name">'+esc(app.n)+'</div>'+
+  var key = (app.n+' '+app.d+' '+app.c+' '+app.p).toLowerCase();
+  var num = idx==null ? '' : ('0'+idx).slice(-2);
+  var h = '<div class="card-wrap" data-s="'+esc(key)+'"><a class="app-card" href="'+app.p+'" data-path="'+app.p+'">'+
+    '<div class="card-top"><span class="folio">'+num+'</span>'+
+    '<span class="status status-'+app.s+'">'+statusTxt+'</span></div>'+
+    '<div class="name">'+esc(app.n)+'</div>'+
     '<div class="desc">'+esc(app.d)+'</div>'+
-    '<span class="status status-'+app.s+'">'+statusTxt+'</span></a>';
+    '<span class="arrow" aria-hidden="true">\u2190</span></a>';
   if(withPin){ h += '<button class="pin" data-path="'+app.p+'" aria-label="הוספה למועדפים" title="מועדפים">&#9734;</button>'; }
   h += '</div>';
   return h;
@@ -228,21 +308,24 @@ function render(){
   CATALOG.forEach(function(a){ (groups[a.c]=groups[a.c]||[]).push(a); });
   var html='';
   Object.keys(groups).forEach(function(c){
-    html += '<div class="category"><div class="category-title">'+c+'</div><div class="apps-grid">';
-    groups[c].forEach(function(a){ html += cardHTML(a,true); });
+    var label = c.replace(/^[^A-Za-z\u0590-\u05FF]+/,'');
+    html += '<div class="category"><div class="category-title"><span>'+esc(label)+'</span><span class="n">'+groups[c].length+'</span></div><div class="apps-grid">';
+    groups[c].forEach(function(a,k){ html += cardHTML(a,true,k+1); });
     html += '</div></div>';
   });
   cat.innerHTML = html;
   document.getElementById('appCount').textContent = CATALOG.length;
+  document.getElementById('catCount').textContent = Object.keys(groups).length;
+  document.getElementById('liveCount').textContent = CATALOG.filter(function(a){return a.s==='live'}).length;
   // favorites
   var pf=document.getElementById('pinnedBlock'), pg=document.getElementById('pinnedGrid');
   var favApps = CATALOG.filter(function(a){return favs.indexOf(a.p)>-1});
-  if(favApps.length){ pf.style.display=''; pg.innerHTML = favApps.map(function(a){return cardHTML(a,true)}).join(''); }
+  if(favApps.length){ pf.style.display=''; pg.innerHTML = favApps.map(function(a,k){return cardHTML(a,true,k+1)}).join(''); }
   else { pf.style.display='none'; pg.innerHTML=''; }
   // recents
   var rec = lsGet(REC_KEY).filter(function(p){return CATALOG.some(function(a){return a.p===p})}).slice(0,4);
   var rb=document.getElementById('recentBlock'), rg=document.getElementById('recentGrid');
-  if(rec.length){ rb.style.display=''; rg.innerHTML = rec.map(function(p){return cardHTML(CATALOG.filter(function(a){return a.p===p})[0],false)}).join(''); }
+  if(rec.length){ rb.style.display=''; rg.innerHTML = rec.map(function(p,k){return cardHTML(CATALOG.filter(function(a){return a.p===p})[0],false,k+1)}).join(''); }
   else { rb.style.display='none'; rg.innerHTML=''; }
   syncPins();
 }
