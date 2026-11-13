@@ -1,0 +1,15 @@
+/* AILON App Shell — shared UX/a11y layer. Additive only. */
+:root{--ailon-shell-gap:16px}
+.ailon-dock{position:fixed;bottom:var(--ailon-shell-gap);left:var(--ailon-shell-gap);z-index:2147483000;display:flex;flex-direction:column;gap:8px;font-family:'Heebo',system-ui,sans-serif}
+.ailon-dock button{width:44px;height:44px;min-width:44px;min-height:44px;border-radius:14px;border:none;cursor:pointer;font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;background:#0d9488;color:#fff;box-shadow:0 4px 14px rgba(13,148,136,.35);transition:transform .15s ease,background .15s ease;opacity:.92}
+.ailon-dock button:hover{transform:translateY(-2px);opacity:1;background:#14b8a6}
+.ailon-dock button:active{transform:scale(.95)}
+.ailon-dock button:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+.ailon-dock button.is-hidden{display:none}
+@media print{.ailon-dock{display:none!important}}
+@media (prefers-reduced-motion:reduce){.ailon-dock button{transition:none}}
+.ailon-toast{position:fixed;bottom:calc(var(--ailon-shell-gap) + 4px);left:calc(var(--ailon-shell-gap) + 56px);z-index:2147483000;background:#0f172a;color:#fff;padding:10px 14px;border-radius:12px;font:14px/1.4 'Heebo',system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:70vw}
+.ailon-offline{position:fixed;top:0;left:0;right:0;z-index:2147483001;background:#b45309;color:#fff;text-align:center;padding:6px;font:13px 'Heebo',system-ui,sans-serif}
+/* Accessible focus + touch targets for every interactive element */
+button,a[role="button"],input[type="submit"],.btn,.button{min-height:44px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid #0d9488;outline-offset:2px}

@@ -39,7 +39,16 @@
       .apps-grid { grid-template-columns: 1fr; }
       .header h1 { font-size: 22px; }
     }
-  @media (prefers-color-scheme: dark){body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#e2e8f0}.header{background:linear-gradient(135deg,#0d9488,#0f766e)}.app-card{background:#1e293b;border-color:#334155}.app-card:hover{border-color:#14b8a6}.app-card .name{color:#f1f5f9}.app-card .desc{color:#94a3b8}.category-title{color:#14b8a6;border-bottom-color:#334155}.search-bar input{background:#1e293b;color:#e2e8f0;border-color:#0d9488}.status-dev{background:#334155;color:#94a3b8}.status-beta{background:#422006;color:#fbbf24}.status-live{background:#052e1b;color:#34d399}.footer{color:#475569}}.dark-toggle{position:fixed;top:16px;left:16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:100;color:#fff;}.dark-toggle:hover{background:rgba(255,255,255,0.3)}body.dark-active{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)!important;color:#e2e8f0!important}body.dark-active .header{background:linear-gradient(135deg,#0d9488,#0f766e)!important}body.dark-active .app-card{background:#1e293b!important;border-color:#334155!important}body.dark-active .app-card:hover{border-color:#14b8a6!important}body.dark-active .app-card .name{color:#f1f5f9!important}body.dark-active .app-card .desc{color:#94a3b8!important}body.dark-active .category-title{color:#14b8a6!important;border-bottom-color:#334155!important}body.dark-active .search-bar input{background:#1e293b!important;color:#e2e8f0!important}body.dark-active .status-dev{background:#334155!important;color:#94a3b8!important}body.dark-active .status-beta{background:#422006!important;color:#fbbf24!important}body.dark-active .status-live{background:#052e1b!important;color:#34d399!important}body.dark-active .footer{color:#475569!important}a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}.app-card:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}</style>
+  @media (prefers-color-scheme: dark){body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);color:#e2e8f0}.header{background:linear-gradient(135deg,#0d9488,#0f766e)}.app-card{background:#1e293b;border-color:#334155}.app-card:hover{border-color:#14b8a6}.app-card .name{color:#f1f5f9}.app-card .desc{color:#94a3b8}.category-title{color:#14b8a6;border-bottom-color:#334155}.search-bar input{background:#1e293b;color:#e2e8f0;border-color:#0d9488}.status-dev{background:#334155;color:#94a3b8}.status-beta{background:#422006;color:#fbbf24}.status-live{background:#052e1b;color:#34d399}.footer{color:#475569}}.dark-toggle{position:fixed;top:16px;left:16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:100;color:#fff;}.dark-toggle:hover{background:rgba(255,255,255,0.3)}body.dark-active{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)!important;color:#e2e8f0!important}body.dark-active .header{background:linear-gradient(135deg,#0d9488,#0f766e)!important}body.dark-active .app-card{background:#1e293b!important;border-color:#334155!important}body.dark-active .app-card:hover{border-color:#14b8a6!important}body.dark-active .app-card .name{color:#f1f5f9!important}body.dark-active .app-card .desc{color:#94a3b8!important}body.dark-active .category-title{color:#14b8a6!important;border-bottom-color:#334155!important}body.dark-active .search-bar input{background:#1e293b!important;color:#e2e8f0!important}body.dark-active .status-dev{background:#334155!important;color:#94a3b8!important}body.dark-active .status-beta{background:#422006!important;color:#fbbf24!important}body.dark-active .status-live{background:#052e1b!important;color:#34d399!important}body.dark-active .footer{color:#475569!important}a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}.app-card:focus-visible{outline:3px solid #14b8a6;outline-offset:2px}
+    .cat-block { margin-bottom: 28px; }
+    .card-wrap { position: relative; }
+    .card-wrap .app-card { height: 100%; }
+    .pin { position: absolute; top: 8px; inset-inline-end: 8px; background: transparent; border: none; font-size: 18px; line-height: 1; cursor: pointer; color: #cbd5e1; padding: 6px; border-radius: 8px; z-index: 2; }
+    .pin:hover { color: #f59e0b; background: rgba(245,158,11,0.1); }
+    .pin.on { color: #f59e0b; }
+    .result-count { max-width: 600px; margin: 10px auto 0; text-align: center; font-size: 13px; color: #64748b; }
+    .app-card mark { background: #fef3c7; color: inherit; border-radius: 4px; }
+</style>
 </head>
 <body>
   <div class="header">
@@ -53,278 +62,24 @@
   </div>
 
   <div class="container" id="appsContainer">
-    
-    <div class="category" data-cat="mentoring">
-      <div class="category-title">🎯 פלטפורמת מנטורינג</div>
-      <div class="apps-grid">
-        <a class="app-card" href="mentorlon/index.html">
-          <div class="icon">🧭</div>
-          <div class="name">Mentor-IT</div>
-          <div class="desc">פלטפורמת המנטורינג המרכזית — התחברות, ניהול מתאמנים, קטלוג כלים</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/admin-dashboard.html">
-          <div class="icon">📊</div>
-          <div class="name">דשבורד מנהל</div>
-          <div class="desc">צפייה בכל המאמנים והמתאמנים, ניהול מערכת</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/trainee-login.html">
-          <div class="icon">🎓</div>
-          <div class="name">כניסת מתאמן</div>
-          <div class="desc">כניסה אישית למתאמנים — כלים ומעקב</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
+    <div class="cat-block" id="pinnedBlock" style="display:none">
+      <div class="category-title">&#11088; מועדפים</div>
+      <div class="apps-grid" id="pinnedGrid"></div>
     </div>
 
-    <div class="category" data-cat="coaching">
-      <div class="category-title">🧠 כלי אימון</div>
-      <div class="apps-grid">
-        <a class="app-card" href="mentorlon/coaching-session.html">
-          <div class="icon">🎙️</div>
-          <div class="name">שיחת אימון</div>
-          <div class="desc">9 שלבי אימון מקצועיים מפתיחה עד סיכום</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/wheel-of-life.html">
-          <div class="icon">☸️</div>
-          <div class="name">גלגל החיים</div>
-          <div class="desc">10 תחומי חיים, הערכה ויזואלית ותוכנית פעולה</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/strengths-finder.html">
-          <div class="icon">💪</div>
-          <div class="name">מצא את החוזקות</div>
-          <div class="desc">זיהוי חוזקות אישיות ותחומי צמיחה</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/equation-solver.html">
-          <div class="icon">➗</div>
-          <div class="name">פותר משוואות</div>
-          <div class="desc">ניתוח מצבים באמצעות E+R=O</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/solution-engine.html">
-          <div class="icon">⚙️</div>
-          <div class="name">מנוע הפתרונות</div>
-          <div class="desc">7 שלבים — מבעיה לתוכנית פעולה מותאמת</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="solution-lab/index.html">
-          <div class="icon">🧪</div>
-          <div class="name">מעבדת הפתרונות</div>
-          <div class="desc">11 עקרונות לפתרון נטול מאמץ — אינטראקטיבי</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="exit-strategy/index.html">
-          <div class="icon">♟️</div>
-          <div class="name">אסטרטגיית יציאה</div>
-          <div class="desc">ניתוח החלטות עם מטריצת אייזנהאור ו-E+R=O</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/emotions.html">
-          <div class="icon">😢</div>
-          <div class="name">ניהול רגשות</div>
-          <div class="desc">זיהוי והתמרת רגשות — כלים מעשיים</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/positive-thinking.html">
-          <div class="icon">☀️</div>
-          <div class="name">חשיבה חיובית</div>
-          <div class="desc">מיסגור מחדש של מחשבות שליליות</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/relationships.html">
-          <div class="icon">❤️</div>
-          <div class="name">ניהול זוגיות</div>
-          <div class="desc">הערכת מערכת יחסים וכלים לשיפור</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/parenting.html">
-          <div class="icon">👨‍👩‍👧‍👦</div>
-          <div class="name">חינוך ילדים</div>
-          <div class="desc">כלים להורות משמעותית ומכוונת</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="mentorlon/lecture-effortless.html">
-          <div class="icon">📖</div>
-          <div class="name">מערך הרצאה — פתרון נטול מאמץ</div>
-          <div class="desc">18 שקפים, 11 עקרונות, 4 חלקים</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
+    <div class="cat-block" id="recentBlock" style="display:none">
+      <div class="category-title">&#128336; לאחרונה</div>
+      <div class="apps-grid" id="recentGrid"></div>
     </div>
 
-    <div class="category" data-cat="habits">
-      <div class="category-title">🔄 הרגלים ושגרה</div>
-      <div class="apps-grid">
-        <a class="app-card" href="shkuf-habits/index.html">
-          <div class="icon">📋</div>
-          <div class="name">ש.ק.ו.פ — הטמעת הרגלים</div>
-          <div class="desc">21 ימים להרגל חדש, מבוסס Atomic Habits</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="shkuf-habits/formulas.html">
-          <div class="icon">📝</div>
-          <div class="name">נוסחאות הטמעה</div>
-          <div class="desc">דף נוסחאות להדפסה — 4 חוקי הרגל</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="loaz-shavuai/index.html">
-          <div class="icon">📅</div>
-          <div class="name">לוז שבועי</div>
-          <div class="desc">ניהול לו"ז שבועי עם דירוג מוטיבציה</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="career">
-      <div class="category-title">💼 קריירה וכיוון</div>
-      <div class="apps-grid">
-        <a class="app-card" href="matpen-kariera/index.html">
-          <div class="icon">🧭</div>
-          <div class="name">מצפן הקריירה</div>
-          <div class="desc">התאמה מקצועית עם לוגיקת Yes/No/Maybe</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="match-card/index.html">
-          <div class="icon">🗂️</div>
-          <div class="name">כרטיס התאמה</div>
-          <div class="desc">כלי התאמה מקצועית מהיר</div>
-          <span class="status status-beta">בטא</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="capsule">
-      <div class="category-title">📦 קפסולת אימון</div>
-      <div class="apps-grid">
-        <a class="app-card" href="capsule/index.html">
-          <div class="icon">📦</div>
-          <div class="name">AILON Capsule</div>
-          <div class="desc">הצטרפות מתאמן עם בחירת כלים ואישור פרטיות</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="capsule/dashboard.html">
-          <div class="icon">👁️</div>
-          <div class="name">דשבורד מאמן</div>
-          <div class="desc">צפייה במתאמנים רשומים ושיתוף</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="kids">
-      <div class="category-title">👶 כלים לילדים</div>
-      <div class="apps-grid">
-        <a class="app-card" href="summer-learning/index.html">
-          <div class="icon">☀️</div>
-          <div class="name">אתגר קיץ</div>
-          <div class="desc">למידת קיץ עם גמיפיקציה ופרסים — PWA</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="english-quest/index.html">
-          <div class="icon">🔤</div>
-          <div class="name">English Quest</div>
-          <div class="desc">משחק לימוד אנגלית לילדים</div>
-          <span class="status status-beta">בטא</span>
-        </a>
-        <a class="app-card" href="sefri-board/index.html">
-          <div class="icon">🏆</div>
-          <div class="name">לוח ספרים</div>
-          <div class="desc">מעקב קריאת ספרים עם ניקוד</div>
-          <span class="status status-beta">בטא</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="couple">
-      <div class="category-title">💑 זוגיות</div>
-      <div class="apps-grid">
-        <a class="app-card" href="couple-survey/index.html">
-          <div class="icon">💌</div>
-          <div class="name">סקר זוגיות</div>
-          <div class="desc">14 שאלות להערכת מערכת יחסים</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="business">
-      <div class="category-title">🏢 כלים עסקיים</div>
-      <div class="apps-grid">
-        <a class="app-card" href="yael-dj-booking/index.html">
-          <div class="icon">🎵</div>
-          <div class="name">הזמנת DJ יעל</div>
-          <div class="desc">טופס הזמנת אירועים עם תזכורות</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="shemrit-order/index.html">
-          <div class="icon">🛡️</div>
-          <div class="name">הזמנת שמירה</div>
-          <div class="desc">טופס הזמנת שירותי שמירה</div>
-          <span class="status status-beta">בטא</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="puratos">
-      <div class="category-title">🏭 Puratos Israel</div>
-      <div class="apps-grid">
-        <a class="app-card" href="puratos-data-mapping/index.html">
-          <div class="icon">🗺️</div>
-          <div class="name">מיפוי נתונים</div>
-          <div class="desc">מיפוי פערי נתונים ובקשות פלטפורמה</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="puratos-lab/index.html">
-          <div class="icon">🧫</div>
-          <div class="name">טופס מעבדה</div>
-          <div class="desc">טופס בקשות מעבדה</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="puratos-training/index.html">
-          <div class="icon">📚</div>
-          <div class="name">בקשת הכשרה</div>
-          <div class="desc">טופס בקשת קורסים והכשרות</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="puratos-laptop-purchase/index.html">
-          <div class="icon">💻</div>
-          <div class="name">רכישת מחשב נייד</div>
-          <div class="desc">טופס חתום, עלות וקיזוז מהשכר</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="category" data-cat="clients">
-      <div class="category-title">📋 לקוחות</div>
-      <div class="apps-grid">
-        <a class="app-card" href="aviad-questionnaire/index.html">
-          <div class="icon">🏗️</div>
-          <div class="name">שאלון ויגן</div>
-          <div class="desc">שאלון אפיון לניהול נדל"ן — Aviad/Wigan</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-        <a class="app-card" href="exam-tiuuch/index.html">
-          <div class="icon">📜</div>
-          <div class="name">מבחן רישוי תיווך</div>
-          <div class="desc">25 שאלות אקראיות עם הסברים משפטיים</div>
-          <span class="status status-live">פעיל</span>
-        </a>
-      </div>
-    </div>
-
+    <div id="catalog"></div>
   </div>
 
   <div class="no-results" id="noResults">לא נמצאו תוצאות עבור החיפוש 🔍</div>
 
   <div class="footer">
     <p>AILON Task · Dream it. Plan it. Achieve it.</p>
-    <p style="margin-top:4px;">כל הכלים במקום אחד · 24 אפליקציות פעילות</p>
+    <p style="margin-top:4px;">כל הכלים במקום אחד · <span id="appCount">0</span> אפליקציות</p>
   </div>
 
   <script>
@@ -378,6 +133,8 @@ window.addEventListener("beforeinstallprompt", (e) => {
 </script>
 <div class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</div><script>function toggleDark(){var b=document.body;b.classList.toggle("dark-active");var t=document.getElementById("darkToggle");if(b.classList.contains("dark-active")){t.textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}else{t.textContent="🌙";document.documentElement.style.setProperty("color-scheme","light")}try{localStorage.setItem("ailon_dark",b.classList.contains("dark-active")?"1":"0")}catch(e){}}try{if(localStorage.getItem("ailon_dark")==="1"){document.body.classList.add("dark-active");document.getElementById("darkToggle").textContent="☀️";document.documentElement.style.setProperty("color-scheme","dark")}}catch(e){}</script><!-- AILON Task Feedback Widget -->
 <!-- Include this before </body> on any app page -->
+
+</body> on any app page -->
 <style>
 .ailon-fab{position:fixed;bottom:16px;left:16px;width:48px;height:48px;background:#0d9488;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(13,148,136,0.4);z-index:9998;transition:all .2s}
 .ailon-fab:hover{transform:scale(1.1)}
@@ -444,6 +201,96 @@ function ailonSubmitFeedback(){
   ailonRatingValue=0;
   document.getElementById('ailonRating').querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
 }
+</script>
+<script>
+/* AILON Portal catalog v2 — data-driven, favorites, recents, keyboard search */
+var CATALOG = [{"p": "mentorlon/index.html", "n": "Mentor-IT", "d": "פלטפורמת המנטורינג המלאה", "i": "🧭", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/admin-dashboard.html", "n": "דשבורד מאמן", "d": "ניהול מתאמנים, כלים ומעקב", "i": "📊", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/emotions.html", "n": "ניהול רגשות", "d": "8 רגשות, 5 שלבים לוויסות", "i": "💚", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/positive-thinking.html", "n": "חשיבה חיובית", "d": "המרת מחשבות שליליות למועילות", "i": "☀️", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/parenting.html", "n": "חינוך ילדים", "d": "6 עקרונות + 4 תרחישים", "i": "👨‍👩‍👧", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/relationships.html", "n": "ניהול זוגיות", "d": "4 עמודי תווך ומד זוגיות", "i": "💞", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/solution-engine.html", "n": "מנוע הפתרונות", "d": "מפת בעיה לפתרון נטול מאמץ", "i": "⚙️", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "mentorlon/lecture-effortless.html", "n": "מערך הרצאה", "d": "ניהול בעיות לפתרון נטול מאמץ", "i": "🎤", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "solution-lab/index.html", "n": "מעבדת הפתרונות", "d": "5 מודלים: E+R=O, ליצן, 3 מעגלים", "i": "🔬", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "coaching-landing/index.html", "n": "דף נחיתה — ליאור", "d": "מאמן אישי, NLP וסדנאות", "i": "🌐", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "coaching-tracker/index.html", "n": "מעקב אימון זוגי", "d": "טבלת מעקב ליניר וזוהר", "i": "📈", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "coaching-intake-liran/index.html", "n": "שאלון אפיון — לירן", "d": "שאלון פתיחה לאימון אישי", "i": "📝", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "capsule/index.html", "n": "AILON Capsule", "d": "הצטרפות מתאמן לקפסולה", "i": "📦", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "capsule/dashboard.html", "n": "דשבורד קפסולה", "d": "ניהול מתאמנים בקפסולה", "i": "🗂️", "c": "🎯 מנטורינג ואימון", "s": "live"}, {"p": "shkuf-habits/index.html", "n": "ש.ק.ו.פ", "d": "הטמעת הרגלים + Atomic Habits", "i": "🔄", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "shkuf-habits/formulas.html", "n": "נוסחאות הטמעה", "d": "נוסחאות מעשיות לבניית הרגל", "i": "🧮", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "loaz-shavuai/index.html", "n": "לוז שבועי", "d": "ניהול מוטיבציה ושבוע", "i": "🗓️", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "matpen-kariera/index.html", "n": "מצפן הקריירה", "d": "מיפוי כיוון מקצועי", "i": "🧭", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "match-card/index.html", "n": "כרטיס התאמה", "d": "מסגרת MATCH להתאמת תפקיד", "i": "🃏", "c": "🧠 כלים לתהליך ולשינוי", "s": "beta"}, {"p": "exit-strategy/index.html", "n": "אסטרטגיית יציאה", "d": "כלי קבלת החלטות עסקיות", "i": "🚪", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "exam-tiuuch/index.html", "n": "מבחן רישוי תיווך", "d": "שאלות אקראיות עם הסברים", "i": "📜", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "tiuuch-avatar/index.html", "n": "אווטארית התיווך", "d": "תרגול בעל פה עם מנוע קולי", "i": "🗣️", "c": "🧠 כלים לתהליך ולשינוי", "s": "live"}, {"p": "couple-survey/index.html", "n": "סקר זוגיות", "d": "14 שאלות לחיזוק הזוגיות", "i": "💞", "c": "💑 משפחה וזוגיות", "s": "live"}, {"p": "who-knows-natali/index.html", "n": "מי מכיר את נתלי", "d": "משחק יום הולדת", "i": "🎂", "c": "💑 משפחה וזוגיות", "s": "live"}, {"p": "natali-birthday/index.html", "n": "יום הולדת לנתלי", "d": "דף ברכה אישי", "i": "🎁", "c": "💑 משפחה וזוגיות", "s": "live"}, {"p": "event-checklist/index.html", "n": "רשימת אירוע", "d": "צ'קליסט קניות לאירוע", "i": "✅", "c": "💑 משפחה וזוגיות", "s": "live"}, {"p": "epilepsy-care/index.html", "n": "מעקב בריאותי — אלרן", "d": "תיעוד אירועים וטרנדים", "i": "🩺", "c": "💑 משפחה וזוגיות", "s": "live"}, {"p": "summer-learning/index.html", "n": "לומדים בקיץ", "d": "PWA למידה עם תגמול ומעקב", "i": "☀️", "c": "👶 ילדים ולמידה", "s": "live"}, {"p": "english-quest/index.html", "n": "English Quest", "d": "לומד אנגלית בסגנון משחק", "i": "🔤", "c": "👶 ילדים ולמידה", "s": "beta"}, {"p": "sefri-board/index.html", "n": "ספרי-בורד", "d": "לוח מודעות חכם לספריות", "i": "📚", "c": "👶 ילדים ולמידה", "s": "beta"}, {"p": "ip-ring-game/index.html", "n": "משחק IP Ring", "d": "משחק זיכרון לרשת ומרכזי נתונים", "i": "🎮", "c": "👶 ילדים ולמידה", "s": "live"}, {"p": "crm-v3/index.html", "n": "CRM — AILON Task", "d": "לידים, לקוחות, פרויקטים והכנסות", "i": "📇", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "real-estate-manager/index.html", "n": "ציון ישראל — פרויקטים", "d": "ניהול פרויקטי נדל\"ן", "i": "🏗️", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "construction-manager/index.html", "n": "ניהול פרויקטי נדל\"ן", "d": "שטחים, קומות, תקציב ועלויות", "i": "🏢", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "construction-manager-demo/index.html", "n": "BuildFlow — דמו", "d": "תצוגת דמו לניהול פרויקטים", "i": "🧪", "c": "🏢 עסקים ופרויקטים", "s": "beta"}, {"p": "law-office/index.html", "n": "AILON LawDesk", "d": "ניהול תיקים ומועדים למשרד עו\"ד", "i": "⚖️", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "law-flyer/index.html", "n": "דף נחיתה — משרדי עו\"ד", "d": "פתרונות AI למשרדי עורכי דין", "i": "📄", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "dekel-flyer/index.html", "n": "Info Screen — מכירה", "d": "מסך הודעות לכל עסק", "i": "📺", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "yael-dj-booking/index.html", "n": "הזמנת DJ יהל", "d": "טופס הזמנות עם תזכורות", "i": "🎵", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "shemrit-order/index.html", "n": "הזמנת שמרית", "d": "טופס הזמנת אוכל", "i": "🍽️", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "landing/index.html", "n": "AILON Task — נחיתה", "d": "פתרונות טכנולוגיה לעסקים", "i": "🚀", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "showcase/index.html", "n": "קטלוג המערכות", "d": "תצוגת כל המערכות ללקוח", "i": "🖼️", "c": "🏢 עסקים ופרויקטים", "s": "live"}, {"p": "puratos-bakery-report/index.html", "n": "דוח ניסויים — לחמים", "d": "דוח מאפייה דיגיטלי v4.2", "i": "🥖", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-bakery-knowledge/index.html", "n": "מאגר דוחות ניסויים", "d": "חיפוש בכל דוחות ה-R&D", "i": "🔎", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-lab/index.html", "n": "טופס מעבדה", "d": "בקשות בדיקות מעבדה", "i": "🧫", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-data-mapping/index.html", "n": "מיפוי נתונים", "d": "פערי דאטא ובקשות פלטפורמה", "i": "🗺️", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-task-mapping/index.html", "n": "מיפוי משימות", "d": "משימות דיגיטליות חוזרות", "i": "🔁", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-training/index.html", "n": "בקשות הדרכה", "d": "טופס בקשת קורסים", "i": "📚", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-laptop-purchase/index.html", "n": "רכישת מחשב נייד", "d": "טופס חתום, עלות וקיזוז מהשכר", "i": "💻", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "puratos-car-policy/index.html", "n": "מדיניות רכבים", "d": "טופס רכב דיגיטלי", "i": "🚗", "c": "🏭 Puratos Israel", "s": "live"}, {"p": "school-manager/index.html", "n": "SB — ניהול מסכים בבתי ספר", "d": "פורטל ניהול רב-בית-ספרי", "i": "🏫", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "school-board/index.html", "n": "לוח בית הספר", "d": "מסך תצוגה לבית ספר", "i": "🖥️", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "shul-manager/index.html", "n": "BK — ניהול מסכים בבתי כנסת", "d": "פורטל ניהול רב-קהילתי", "i": "🕍", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "beit-knesset/index.html", "n": "לוח הקהילה — שיח יוסף", "d": "זמני תפילה, הלכה ואזכרות", "i": "🕎", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "shul-editor/index.html", "n": "עריכת הלוח", "d": "עורך תוכן ללוח הקהילה", "i": "✏️", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "board-feedback/index.html", "n": "הצבעה והערכה", "d": "משוב קהילתי על השיעורים", "i": "🗳️", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "dekel-senior/index.html", "n": "מועדון ותיקים — נוה שרת", "d": "מסך נגיש לאזרחים ותיקים", "i": "👴", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "aviad-questionnaire/index.html", "n": "שאלון ויגן", "d": "שאלון אפיון לניהול נדל\"ן", "i": "🏗️", "c": "📋 לקוחות ומוסדות", "s": "live"}, {"p": "otzma/index.html", "n": "העוצמה שבפרשה", "d": "שיתוף הפרק השבועי", "i": "📤", "c": "📖 תוכן ומיזמים", "s": "live"}, {"p": "hagit-stories/index.html", "n": "סיפורים מהלב", "d": "סיפור לכל פרשת שבוע", "i": "🎧", "c": "📖 תוכן ומיזמים", "s": "live"}, {"p": "lior-brand/index.html", "n": "ליאור סופר — מיתוג", "d": "מנטור ומאמן בשיטת NLP", "i": "🪪", "c": "📖 תוכן ומיזמים", "s": "live"}, {"p": "election-bet/index.html", "n": "הימור בחירות", "d": "טופס ניחושים לכנסת 26", "i": "🗳️", "c": "📖 תוכן ומיזמים", "s": "live"}, {"p": "ganalyst/index.html", "n": "GANALYST", "d": "קורס מסחר בשיטת גאן", "i": "📉", "c": "📖 תוכן ומיזמים", "s": "live"}, {"p": "lecture-companion/index.html", "n": "AILON Interpreter", "d": "ליווי הרצאה בזמן אמת", "i": "🎙️", "c": "📖 תוכן ומיזמים", "s": "live"}, {"p": "system-health/index.html", "n": "בריאות המערכת", "d": "בדיקת זמינות כל האפליקציות", "i": "❤️", "c": "⚙️ תפעול ובריאות מערכת", "s": "live"}, {"p": "app-dashboard/index.html", "n": "דשבורד אפליקציות", "d": "מצב כל האפליקציות במקום אחד", "i": "📊", "c": "⚙️ תפעול ובריאות מערכת", "s": "live"}, {"p": "engagement-survey/index.html", "n": "סקר מחוברות 2026", "d": "סקר עובדים והשתתפות", "i": "📈", "c": "⚙️ תפעול ובריאות מערכת", "s": "live"}, {"p": "crm-v2/index.html", "n": "CRM v2 (ישן)", "d": "גרסה קודמת — לא בשימוש", "i": "🗄️", "c": "⚙️ תפעול ובריאות מערכת", "s": "dev"}];
+var FAV_KEY='ailon_favs', REC_KEY='ailon_recent';
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function cardHTML(app,withPin){
+  var statusTxt = app.s==='live'?'פעיל':(app.s==='beta'?'בטא':'ארכיון');
+  var idx = (app.n+' '+app.d+' '+app.c+' '+app.p).toLowerCase();
+  var h = '<div class="card-wrap" data-s="'+esc(idx)+'"><a class="app-card" href="'+app.p+'" data-path="'+app.p+'">'+
+    '<div class="icon">'+app.i+'</div><div class="name">'+esc(app.n)+'</div>'+
+    '<div class="desc">'+esc(app.d)+'</div>'+
+    '<span class="status status-'+app.s+'">'+statusTxt+'</span></a>';
+  if(withPin){ h += '<button class="pin" data-path="'+app.p+'" aria-label="הוספה למועדפים" title="מועדפים">&#9734;</button>'; }
+  h += '</div>';
+  return h;
+}
+function render(){
+  var favs = lsGet(FAV_KEY);
+  var cat = document.getElementById('catalog');
+  var groups = {};
+  CATALOG.forEach(function(a){ (groups[a.c]=groups[a.c]||[]).push(a); });
+  var html='';
+  Object.keys(groups).forEach(function(c){
+    html += '<div class="category"><div class="category-title">'+c+'</div><div class="apps-grid">';
+    groups[c].forEach(function(a){ html += cardHTML(a,true); });
+    html += '</div></div>';
+  });
+  cat.innerHTML = html;
+  document.getElementById('appCount').textContent = CATALOG.length;
+  // favorites
+  var pf=document.getElementById('pinnedBlock'), pg=document.getElementById('pinnedGrid');
+  var favApps = CATALOG.filter(function(a){return favs.indexOf(a.p)>-1});
+  if(favApps.length){ pf.style.display=''; pg.innerHTML = favApps.map(function(a){return cardHTML(a,true)}).join(''); }
+  else { pf.style.display='none'; pg.innerHTML=''; }
+  // recents
+  var rec = lsGet(REC_KEY).filter(function(p){return CATALOG.some(function(a){return a.p===p})}).slice(0,4);
+  var rb=document.getElementById('recentBlock'), rg=document.getElementById('recentGrid');
+  if(rec.length){ rb.style.display=''; rg.innerHTML = rec.map(function(p){return cardHTML(CATALOG.filter(function(a){return a.p===p})[0],false)}).join(''); }
+  else { rb.style.display='none'; rg.innerHTML=''; }
+  syncPins();
+}
+function syncPins(){
+  var favs = lsGet(FAV_KEY);
+  document.querySelectorAll('.pin').forEach(function(b){
+    var on = favs.indexOf(b.dataset.path)>-1;
+    b.classList.toggle('on', on);
+    b.innerHTML = on ? '&#9733;' : '&#9734;';
+  });
+}
+document.addEventListener('click', function(e){
+  var pin = e.target.closest('.pin');
+  if(pin){
+    e.preventDefault(); e.stopPropagation();
+    var favs = lsGet(FAV_KEY), p = pin.dataset.path, k = favs.indexOf(p);
+    if(k>-1) favs.splice(k,1); else favs.push(p);
+    lsSet(FAV_KEY,favs); render();
+    return;
+  }
+  var a = e.target.closest('.app-card');
+  if(a && a.dataset.path){
+    var rec = lsGet(REC_KEY).filter(function(x){return x!==a.dataset.path});
+    rec.unshift(a.dataset.path); lsSet(REC_KEY, rec.slice(0,8));
+  }
+});
+function filterApps(){
+  var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  var found = 0;
+  document.querySelectorAll('#catalog .category').forEach(function(cat){
+    var visible = 0;
+    cat.querySelectorAll('.card-wrap').forEach(function(w){
+      var t = w.getAttribute('data-s')||'';
+      var show = !q || t.indexOf(q)>-1;
+      w.style.display = show ? '' : 'none';
+      if(show) visible++;
+    });
+    cat.style.display = visible ? '' : 'none';
+    found += visible;
+  });
+  if(q){ document.getElementById('pinnedBlock').style.display='none'; document.getElementById('recentBlock').style.display='none'; }
+  else { var f=lsGet(FAV_KEY).length, r=lsGet(REC_KEY).length; if(f) document.getElementById('pinnedBlock').style.display=''; if(r) document.getElementById('recentBlock').style.display=''; }
+  document.getElementById('noResults').style.display = (found===0 && q) ? 'block' : 'none';
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='/' && document.activeElement.id!=='searchInput'){ e.preventDefault(); document.getElementById('searchInput').focus(); }
+  if(e.key==='Escape'){ var s=document.getElementById('searchInput'); if(document.activeElement===s){ s.value=''; filterApps(); s.blur(); } }
+});
+render();
 </script>
 </body>
 </html>
