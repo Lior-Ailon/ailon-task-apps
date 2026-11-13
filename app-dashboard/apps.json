@@ -1,6 +1,6 @@
 {
  "generated": "2026-11-13",
- "total": 60,
+ "total": 61,
  "categories": [
   "עסקים",
   "פוראטוס",
@@ -1002,10 +1002,26 @@
    "desc2": "מתעדכן אוטומטית עם כל אפליקציה חדשה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/app-dashboard/",
    "local": "app-dashboard/index.html",
-   "updated": "2026-11-13",
+   "updated": "2026-09-06",
    "daysSince": 68,
    "sizeKB": 257,
    "children": []
+  },
+  {
+   "slug": "test-auto-sync",
+   "name": "בדיקת סנכרון אוטומטי",
+   "icon": "✨",
+   "cat": "עסקים",
+   "status": "live",
+   "statusLabel": "פעיל",
+   "desc": "אפליקציית בדיקה זמנית שנועדה לוודא שהדשבורד קולט אפליקציות חדשות אוטומטית.",
+   "desc2": "",
+   "url": "https://lior-ailon.github.io/ailon-task-apps/test-auto-sync/",
+   "local": "test-auto-sync/index.html",
+   "updated": "2026-11-13",
+   "sizeKB": null,
+   "children": [],
+   "auto": true
   }
  ]
 }
