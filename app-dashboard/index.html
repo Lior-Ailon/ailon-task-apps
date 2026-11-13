@@ -201,6 +201,12 @@ button{font-family:inherit}
   var STATUS_NAME={live:'פעיל',beta:'בבנייה',demo:'דמו',archived:'ארכיון'};
 
   function fmtDate(d){ if(!d) return '—'; var p=d.split('-'); return p[2]+'.'+p[1]+'.'+p[0]; }
+  function daysOf(d){
+    if(!d) return null;
+    var t=new Date(d+'T00:00:00').getTime();
+    if(isNaN(t)) return null;
+    return Math.max(0,Math.floor((Date.now()-t)/86400000));
+  }
   function ago(days){
     if(days==='' || days===null || days===undefined || isNaN(days)) return {txt:'לא ידוע',cls:''};
     if(days<=0) return {txt:'עודכן היום',cls:'fresh'};
@@ -249,7 +255,7 @@ button{font-family:inherit}
       cat:function(a,b){ return DATA.categories.indexOf(a.cat)-DATA.categories.indexOf(b.cat) || a.name.localeCompare(b.name,'he'); },
       name:function(a,b){ return a.name.localeCompare(b.name,'he'); },
       recent:function(a,b){ return String(b.updated).localeCompare(String(a.updated)); },
-      stale:function(a,b){ return (Number(b.daysSince)||0)-(Number(a.daysSince)||0); }
+      stale:function(a,b){ return (daysOf(b.updated)||0)-(daysOf(a.updated)||0); }
     }[state.sort];
     list.sort(cmp);
 
@@ -302,7 +308,7 @@ button{font-family:inherit}
       card.appendChild(cp);
 
       var foot=el('div','app-foot');
-      var ag=ago(a.daysSince);
+      var ag=ago(daysOf(a.updated));
       foot.appendChild(el('span',ag.cls,ag.txt));
       foot.appendChild(el('span','',a.updated?('עודכן '+fmtDate(a.updated)):''));
       card.appendChild(foot);
@@ -332,8 +338,8 @@ button{font-family:inherit}
     var s=DATA.apps;
     var live=s.filter(function(a){return a.status==='live';}).length;
     var beta=s.filter(function(a){return a.status==='beta'||a.status==='demo';}).length;
-    var fresh=s.filter(function(a){return Number(a.daysSince)<=30;}).length;
-    var stale=s.filter(function(a){return Number(a.daysSince)>=60;}).length;
+    var fresh=s.filter(function(a){var d=daysOf(a.updated);return d!==null&&d<=30;}).length;
+    var stale=s.filter(function(a){var d=daysOf(a.updated);return d===null||d>=60;}).length;
     var cats=DATA.categories.filter(function(c){return s.some(function(a){return a.cat===c;});}).length;
     var items=[
       ['teal',  s.length,'סה״כ אפליקציות'],
