@@ -1,6 +1,6 @@
 {
  "generated": "2026-11-13",
- "total": 61,
+ "total": 60,
  "categories": [
   "עסקים",
   "פוראטוס",
@@ -1006,22 +1006,6 @@
    "daysSince": 68,
    "sizeKB": 257,
    "children": []
-  },
-  {
-   "slug": "test-auto-sync",
-   "name": "בדיקת סנכרון אוטומטי",
-   "icon": "✨",
-   "cat": "עסקים",
-   "status": "live",
-   "statusLabel": "פעיל",
-   "desc": "אפליקציית בדיקה זמנית שנועדה לוודא שהדשבורד קולט אפליקציות חדשות אוטומטית.",
-   "desc2": "",
-   "url": "https://lior-ailon.github.io/ailon-task-apps/test-auto-sync/",
-   "local": "test-auto-sync/index.html",
-   "updated": "2026-11-13",
-   "sizeKB": null,
-   "children": [],
-   "auto": true
   }
  ]
 }
