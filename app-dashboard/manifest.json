@@ -1,13 +1,13 @@
 {
-  "name": "דשבורד אפליקציות",
-  "short_name": "דשבורד אפליק",
+  "name": "דשבורד מנהלים · AILON",
+  "short_name": "דשבורד מנהלים",
   "lang": "he",
   "dir": "rtl",
   "start_url": "./",
   "scope": ".",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#f0fdfa",
+  "background_color": "#f4f7fa",
   "theme_color": "#0d9488",
   "icons": [
     {
@@ -28,5 +28,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "description": "כל אפליקציות AILON במקום אחד: תיאור, כניסה וקישור להעתקה"
 }
