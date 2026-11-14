@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-13",
+ "generated": "2026-11-14",
  "total": 60,
  "categories": [
   "עסקים",
@@ -23,7 +23,7 @@
    "desc2": "מחליף את האקסל של המשרד בלוח אחד שמראה מה דחוף היום.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/law-office/",
    "local": "law-office/index.html",
-   "updated": "2026-09-15",
+   "updated": "2026-11-13",
    "daysSince": 59,
    "sizeKB": 27,
    "children": []
@@ -39,7 +39,7 @@
    "desc2": "מציג את הכלים, היכולות ודרכי הקשר.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/landing/",
    "local": "landing/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 142,
    "children": []
@@ -55,7 +55,7 @@
    "desc2": "אותו רעיון, בלי נתוני אמת — נועד לשיחת מכירה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/construction-manager-demo/",
    "local": "construction-manager-demo/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 551,
    "children": []
@@ -71,7 +71,7 @@
    "desc2": "לא בשימוש; במקומה רץ ה-CRM הנוכחי.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/crm-v2/",
    "local": "crm-v2/index.html",
-   "updated": "2026-09-11",
+   "updated": "2026-11-13",
    "daysSince": 63,
    "sizeKB": 422,
    "children": []
@@ -103,7 +103,7 @@
    "desc2": "נבנה עבור יגאל סקולניק — דוגמה למוצר תוכן עם מנויים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/ganalyst/",
    "local": "ganalyst/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 133,
    "children": []
@@ -119,7 +119,7 @@
    "desc2": "כלי שיווקי ללקוחות עסקיים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/dekel-flyer/",
    "local": "dekel-flyer/index.html",
-   "updated": "2026-09-08",
+   "updated": "2026-11-13",
    "daysSince": 66,
    "sizeKB": 1158,
    "children": []
@@ -135,7 +135,7 @@
    "desc2": "נשלח ללידים ומפנה לטופס יצירת קשר.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/law-flyer/",
    "local": "law-flyer/index.html",
-   "updated": "2026-09-16",
+   "updated": "2026-11-13",
    "daysSince": 58,
    "sizeKB": 590,
    "children": []
@@ -151,7 +151,7 @@
    "desc2": "מחליף את לוח הפגישות הידני של העסק.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/yael-dj-booking/",
    "local": "yael-dj-booking/index.html",
-   "updated": "2026-11-09",
+   "updated": "2026-11-13",
    "daysSince": 4,
    "sizeKB": 138,
    "children": []
@@ -167,7 +167,7 @@
    "desc2": "מתאים לעסק קטן שמוכר מנות בהזמנה מראש.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/shemrit-order/",
    "local": "shemrit-order/index.html",
-   "updated": "2026-08-13",
+   "updated": "2026-11-13",
    "daysSince": 92,
    "sizeKB": 19,
    "children": []
@@ -183,7 +183,7 @@
    "desc2": "הועברה לכתובת החדשה infoscreen.co.il.",
    "url": "https://infoscreen.co.il/dekel-library/",
    "local": "dekel-library/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 95,
    "children": []
@@ -199,7 +199,7 @@
    "desc2": "מיועד לקבלן או יזם שרוצה לדעת איפה הכסף והזמן באמת הולכים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/construction-manager/",
    "local": "construction-manager/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 150,
    "children": []
@@ -215,7 +215,7 @@
    "desc2": "מסך אחד לכל הפרויקטים, עם תמונת מצב של מה שנסגר ומה תקוע.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/real-estate-manager/",
    "local": "real-estate-manager/index.html",
-   "updated": "2026-11-09",
+   "updated": "2026-11-13",
    "daysSince": 4,
    "sizeKB": 181,
    "children": []
@@ -231,7 +231,7 @@
    "desc2": "משמש כ\"תיק עבודות\" חי שמתעדכן לבד.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/showcase/",
    "local": "showcase/index.html",
-   "updated": "2026-09-11",
+   "updated": "2026-11-13",
    "daysSince": 63,
    "sizeKB": 365,
    "children": []
@@ -247,7 +247,7 @@
    "desc2": "מרכז את כל הבקשות לבדיקה ואישור.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-training/",
    "local": "puratos-training/index.html",
-   "updated": "2026-10-12",
+   "updated": "2026-11-13",
    "daysSince": 32,
    "sizeKB": 118,
    "children": []
@@ -279,7 +279,7 @@
    "desc2": "מייתר את המיילים והוואטסאפ של המעבדה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-lab/",
    "local": "puratos-lab/index.html",
-   "updated": "2026-09-11",
+   "updated": "2026-11-13",
    "daysSince": 63,
    "sizeKB": 118,
    "children": []
@@ -295,7 +295,7 @@
    "desc2": "כך יודעים מה כבר נוסה ולא ממציאים את הגלגל מחדש.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-bakery-knowledge/",
    "local": "puratos-bakery-knowledge/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 108,
    "children": []
@@ -311,7 +311,7 @@
    "desc2": "שקוף לעובד וחוסך שאלות חוזרות ל-HR.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-car-policy/",
    "local": "puratos-car-policy/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 122,
    "children": []
@@ -327,7 +327,7 @@
    "desc2": "מכאן נגזר סדר העדיפויות של האוטומציות.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-task-mapping/",
    "local": "puratos-task-mapping/index.html",
-   "updated": "2026-11-09",
+   "updated": "2026-11-13",
    "daysSince": 4,
    "sizeKB": 114,
    "children": []
@@ -343,7 +343,7 @@
    "desc2": "בסיס פרויקט אימוץ ה-AI והמעבר ל-SharePoint.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-data-mapping/",
    "local": "puratos-data-mapping/index.html",
-   "updated": "2026-11-09",
+   "updated": "2026-11-13",
    "daysSince": 4,
    "sizeKB": 134,
    "children": []
@@ -359,7 +359,7 @@
    "desc2": "התוצאות נאספות אוטומטית לדוח אקסל.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/engagement-survey/",
    "local": "engagement-survey/index.html",
-   "updated": "2026-10-28",
+   "updated": "2026-11-13",
    "daysSince": 16,
    "sizeKB": 204,
    "children": []
@@ -375,7 +375,7 @@
    "desc2": "ארבעה שדות בלבד — הנתונים המלאים בחלק מקופל.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-laptop-purchase/",
    "local": "puratos-laptop-purchase/index.html",
-   "updated": "2026-11-12",
+   "updated": "2026-11-13",
    "daysSince": 1,
    "sizeKB": 139,
    "children": []
@@ -391,7 +391,7 @@
    "desc2": "מיועד לקבוצות למידה ולקהילות מנויים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/capsule/",
    "local": "capsule/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 113,
    "children": [
@@ -412,7 +412,7 @@
    "desc2": "כלי עזר למי שמעביר הרצאות לקהל מעורב.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/lecture-companion/",
    "local": "lecture-companion/index.html",
-   "updated": "2026-10-10",
+   "updated": "2026-11-13",
    "daysSince": 34,
    "sizeKB": 24,
    "children": []
@@ -428,7 +428,7 @@
    "desc2": "הבית שלוותה את התהליך מהמפגש הראשון ועד הסיכום.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/mentorlon/",
    "local": "mentorlon/index.html",
-   "updated": "2026-11-09",
+   "updated": "2026-11-13",
    "daysSince": 4,
    "sizeKB": 487,
    "children": [
@@ -469,7 +469,7 @@
    "desc2": "מוציא החלטות מהבטן אל השולחן.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/exit-strategy/",
    "local": "exit-strategy/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 243,
    "children": []
@@ -485,7 +485,7 @@
    "desc2": "מסתיים בטופס לשיחת היכרות קצרה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/coaching-landing/",
    "local": "coaching-landing/index.html",
-   "updated": "2026-10-09",
+   "updated": "2026-11-13",
    "daysSince": 35,
    "sizeKB": 80,
    "children": []
@@ -501,7 +501,7 @@
    "desc2": "עוזר להחליט לפני שמתחילים, ולא אחרי שנה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/match-card/",
    "local": "match-card/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 104,
    "children": []
@@ -517,7 +517,7 @@
    "desc2": "הכלי שמחזיק את השגרה בין המפגשים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/loaz-shavuai/",
    "local": "loaz-shavuai/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 443,
    "children": []
@@ -533,7 +533,7 @@
    "desc2": "כלי לחשוב על בעיה ולפרק אותה לפתרון.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/solution-lab/",
    "local": "solution-lab/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 153,
    "children": []
@@ -549,7 +549,7 @@
    "desc2": "שקוף לשני הצדדים לאורך התהליך.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/coaching-tracker/",
    "local": "coaching-tracker/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 114,
    "children": []
@@ -565,7 +565,7 @@
    "desc2": "מתאים למי שעומד בצומת ולא יודע לאן.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/matpen-kariera/",
    "local": "matpen-kariera/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 955,
    "children": []
@@ -581,7 +581,7 @@
    "desc2": "מתרגם כוונה טובה להרגל שמחזיק.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/shkuf-habits/",
    "local": "shkuf-habits/index.html",
-   "updated": "2026-08-13",
+   "updated": "2026-11-13",
    "daysSince": 92,
    "sizeKB": 232,
    "children": [
@@ -602,7 +602,7 @@
    "desc2": "מקצר את מפגש האפיון וממקד אותו.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/coaching-intake-liran/",
    "local": "coaching-intake-liran/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 115,
    "children": []
@@ -618,7 +618,7 @@
    "desc2": "נקודת הפתיחה של פרויקט לקוח.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/aviad-questionnaire/",
    "local": "aviad-questionnaire/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 143,
    "children": []
@@ -634,7 +634,7 @@
    "desc2": "כל קהילה מנהלת את הלוח שלה בעצמה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/shul-manager/",
    "local": "shul-manager/index.html",
-   "updated": "2026-10-12",
+   "updated": "2026-11-13",
    "daysSince": 32,
    "sizeKB": 35,
    "children": []
@@ -650,7 +650,7 @@
    "desc2": "כל בית ספר מנהל את המסכים שלו.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/school-manager/",
    "local": "school-manager/index.html",
-   "updated": "2026-10-06",
+   "updated": "2026-11-13",
    "daysSince": 38,
    "sizeKB": 35,
    "children": []
@@ -666,7 +666,7 @@
    "desc2": "נותן לקהילה קול ומלמד מה עובד.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/board-feedback/",
    "local": "board-feedback/index.html",
-   "updated": "2026-10-09",
+   "updated": "2026-11-13",
    "daysSince": 35,
    "sizeKB": 12,
    "children": []
@@ -682,7 +682,7 @@
    "desc2": "מיועד למבואה או למסך בכיתה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/school-board/",
    "local": "school-board/index.html",
-   "updated": "2026-10-06",
+   "updated": "2026-11-13",
    "daysSince": 38,
    "sizeKB": 27,
    "children": []
@@ -698,7 +698,7 @@
    "desc2": "הכל מחושב לפי מיקום וזמן — בלי עדכון ידני.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/beit-knesset/",
    "local": "beit-knesset/index.html",
-   "updated": "2026-10-12",
+   "updated": "2026-11-13",
    "daysSince": 32,
    "sizeKB": 5234,
    "children": []
@@ -714,7 +714,7 @@
    "desc2": "נגישות אמיתית, לא סלוגן.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/dekel-senior/",
    "local": "dekel-senior/index.html",
-   "updated": "2026-11-11",
+   "updated": "2026-11-13",
    "daysSince": 2,
    "sizeKB": 53,
    "children": []
@@ -730,7 +730,7 @@
    "desc2": "מתאים ללובי ספרייה ציבורית.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/sefri-board/",
    "local": "sefri-board/index.html",
-   "updated": "2026-09-11",
+   "updated": "2026-11-13",
    "daysSince": 63,
    "sizeKB": 163,
    "children": []
@@ -746,7 +746,7 @@
    "desc2": "כניסה מהירה לגורם שמעדכן את הלוח.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/shul-editor/",
    "local": "shul-editor/index.html",
-   "updated": "2026-10-09",
+   "updated": "2026-11-13",
    "daysSince": 35,
    "sizeKB": 14,
    "children": []
@@ -762,7 +762,7 @@
    "desc2": "מדמה מבחן אמיתי, בלי לחכות לבוחן.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/tiuuch-avatar/",
    "local": "tiuuch-avatar/index.html",
-   "updated": "2026-11-08",
+   "updated": "2026-11-13",
    "daysSince": 5,
    "sizeKB": 22156,
    "children": []
@@ -778,7 +778,7 @@
    "desc2": "כל ערוצי המיזם במקום אחד.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/otzma/",
    "local": "otzma/index.html",
-   "updated": "2026-11-09",
+   "updated": "2026-11-13",
    "daysSince": 4,
    "sizeKB": 13,
    "children": []
@@ -794,7 +794,7 @@
    "desc2": "משמש ככרטיס ביקור דיגיטלי.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/lior-brand/",
    "local": "lior-brand/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 111,
    "children": []
@@ -810,7 +810,7 @@
    "desc2": "כלי תרגול לפני המבחן הממשלתי.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/exam-tiuuch/",
    "local": "exam-tiuuch/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 308,
    "children": []
@@ -826,7 +826,7 @@
    "desc2": "המיזם של חגית — תוכן חינוכי שנבנה פרק אחר פרק.",
    "url": "https://lior-ailon.github.io/hagit-stories/",
    "local": "hagit-stories/index.html",
-   "updated": "2026-11-04",
+   "updated": "2026-11-13",
    "daysSince": 9,
    "sizeKB": 4596,
    "children": []
@@ -842,7 +842,7 @@
    "desc2": "מתרגל אוצר מילים בלי שזה ירגיש כמו שיעור.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/english-quest/",
    "local": "english-quest/index.html",
-   "updated": "2026-10-01",
+   "updated": "2026-11-13",
    "daysSince": 43,
    "sizeKB": 187,
    "children": []
@@ -858,7 +858,7 @@
    "desc2": "ההורים רואים כמה נצבר — והילד רואה התקדמות.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/summer-learning/",
    "local": "summer-learning/index.html",
-   "updated": "2026-08-17",
+   "updated": "2026-11-13",
    "daysSince": 88,
    "sizeKB": 99,
    "children": []
@@ -874,7 +874,7 @@
    "desc2": "כלי הוראה למי שמלמד IT — או חידוד לידע אישי.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/ip-ring-game/",
    "local": "ip-ring-game/index.html",
-   "updated": "2026-10-09",
+   "updated": "2026-11-13",
    "daysSince": 35,
    "sizeKB": 18,
    "children": []
@@ -890,7 +890,7 @@
    "desc2": "משחק חברתי סביב יום הבחירות.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/election-bet/",
    "local": "election-bet/index.html",
-   "updated": "2026-10-27",
+   "updated": "2026-11-13",
    "daysSince": 17,
    "sizeKB": 12,
    "children": []
@@ -906,7 +906,7 @@
    "desc2": "מחווה דיגיטלית ליום ההולדת.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/natali-birthday/",
    "local": "natali-birthday/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 585,
    "children": []
@@ -922,7 +922,7 @@
    "desc2": "נבנה פעם אחת, נשאר במשפחה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/who-knows-natali/",
    "local": "who-knows-natali/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 109,
    "children": []
@@ -938,7 +938,7 @@
    "desc2": "מגלה דפוסים לאורך זמן — מידע אמיתי לרופא.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/epilepsy-care/",
    "local": "epilepsy-care/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 127,
    "children": []
@@ -954,7 +954,7 @@
    "desc2": "מונע את \"מי הביא את הקרח?\"",
    "url": "https://lior-ailon.github.io/ailon-task-apps/event-checklist/",
    "local": "event-checklist/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 105,
    "children": []
@@ -970,7 +970,7 @@
    "desc2": "כלי פתיחה לשיחה כנה, לא מבחן.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/couple-survey/",
    "local": "couple-survey/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 115,
    "children": []
@@ -986,7 +986,7 @@
    "desc2": "מוודא שמה שאמור לעלות — עולה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/system-health/",
    "local": "system-health/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 109,
    "children": []
@@ -1002,7 +1002,7 @@
    "desc2": "מתעדכן אוטומטית עם כל אפליקציה חדשה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/app-dashboard/",
    "local": "app-dashboard/index.html",
-   "updated": "2026-09-06",
+   "updated": "2026-11-13",
    "daysSince": 68,
    "sizeKB": 257,
    "children": []
