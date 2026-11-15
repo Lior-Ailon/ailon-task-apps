@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="version" content="2026-11-15-v4">
+<meta name="version" content="2026-11-15-v5">
 <title>רכישת מחשב נייד — קבוצת פוראטוס ישראל</title>
-<link rel="manifest" href="manifest.json?v=20261115">
+<link rel="manifest" href="manifest.json?v=20261115b">
 <meta name="theme-color" content="#e30613">
-<link rel="icon" href="icon-192.png?v=20261115">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261115">
+<link rel="icon" href="icon-192.png?v=20261115b">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261115b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -108,6 +108,10 @@ textarea{min-height:74px;resize:vertical}
 .sigbar{display:flex;justify-content:space-between;align-items:center;margin-top:7px;gap:10px;flex-wrap:wrap}
 .sigclear{background:#f1f5f9;border:1px solid var(--line);color:#475569;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:38px}
 .sigclear:hover{background:#e2e8f0}
+.sigalt{margin-top:9px}
+.sigalt .sigclear{width:100%;font-size:12.5px;min-height:42px}
+.sigbox.signed{border-color:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.10)}
+.hint.ok{color:#059669;font-weight:700}
 
 /* submit */
 .submit-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;text-align:center;box-shadow:0 4px 16px rgba(15,23,42,.06)}
@@ -164,7 +168,7 @@ textarea{min-height:74px;resize:vertical}
 
   <div class="hdr">
     <div class="brand">
-      <div class="logo-plate"><img src="puratos-logo.svg?v=20261115" alt="Puratos" width="189" height="106"></div>
+      <div class="logo-plate"><img src="puratos-logo.svg?v=20261115b" alt="Puratos" width="189" height="106"></div>
       <div class="brand-txt">קבוצת פוראטוס ישראל</div>
     </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
@@ -328,6 +332,10 @@ textarea{min-height:74px;resize:vertical}
         <span class="hint" id="sigHint">החתימה נדרשת לשליחת הטופס</span>
         <button type="button" class="sigclear" onclick="clearSig()">נקה חתימה</button>
       </div>
+      <div class="sigalt">
+        <button type="button" class="sigclear" onclick="document.getElementById('sigFile').click()">לא מצליח/ה לחתום באצבע? העלו תמונה של חתימה בכתב יד</button>
+        <input type="file" id="sigFile" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" tabindex="-1">
+      </div>
     </div>
   </div>
 
@@ -358,7 +366,7 @@ textarea{min-height:74px;resize:vertical}
 <div id="printArea">
   <div class="p-doc">
     <div class="p-head">
-      <img class="p-logo" src="puratos-logo.svg?v=20261115" alt="Puratos">
+      <img class="p-logo" src="puratos-logo.svg?v=20261115b" alt="Puratos">
       <div class="p-org">קבוצת פוראטוס ישראל<br><span>מחלקת מערכות מידע · IT@puratos.co.il</span></div>
     </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
@@ -372,7 +380,7 @@ textarea{min-height:74px;resize:vertical}
     </div>
     <div class="p-foot">
       <span>פוראטוס ישראל · טופס רכישת מחשב נייד על ידי העובד</span>
-      <img class="p-logo-sm" src="puratos-logo.svg?v=20261115" alt="Puratos">
+      <img class="p-logo-sm" src="puratos-logo.svg?v=20261115b" alt="Puratos">
     </div>
   </div>
 </div>
@@ -381,7 +389,7 @@ textarea{min-height:74px;resize:vertical}
 
 <script>
 var API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
-var PAGE_VERSION = '2026-11-15-v4';
+var PAGE_VERSION = '2026-11-15-v5';
 
 function $(id){return document.getElementById(id)}
 function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3200)}
@@ -407,43 +415,149 @@ function recalc(){
 }
 ['cost_total','installments'].forEach(function(id){$(id).addEventListener('input',recalc);$(id).addEventListener('change',recalc)});
 
-var canvas=$('sigCanvas'), ctx=canvas.getContext('2d'), drawing=false, hasSig=false;
-function fitCanvas(){
-  var ratio=Math.max(window.devicePixelRatio||1,1);
-  var w=canvas.parentElement.clientWidth-2, h=170;
-  var saved=hasSig?canvas.toDataURL():null;
-  canvas.width=w*ratio; canvas.height=h*ratio;
-  canvas.style.height=h+'px';
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  ctx.lineWidth=2.1; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111827';
-  if(saved){var img=new Image();img.onload=function(){ctx.drawImage(img,0,0,w,h)};img.src=saved}
-}
-window.addEventListener('resize',fitCanvas);
+/* ---------- signature engine: pointer + touch + mouse, keeps strokes on resize ---------- */
+var canvas=$('sigCanvas'), ctx=canvas.getContext('2d');
+var strokes=[], drawing=false, hasSig=false, sigPhoto=null, sigImg=null, sigW=0, sigH=170;
+var RATIO=Math.max(window.devicePixelRatio||1,1);
 
+function sizeCanvas(){
+  var parentW=canvas.parentElement?canvas.parentElement.clientWidth:0;
+  var w=Math.max((parentW||300)-2,140);
+  sigW=w; sigH=170;
+  canvas.width=Math.round(w*RATIO);
+  canvas.height=Math.round(sigH*RATIO);
+  canvas.style.width=w+'px';
+  canvas.style.height=sigH+'px';
+  render();
+}
+function render(){
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.setTransform(RATIO,0,0,RATIO,0,0);
+  ctx.lineWidth=2.1; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111827'; ctx.fillStyle='#111827';
+  if(sigImg && !strokes.length){
+    var maxW=sigW-16, maxH=sigH-16;
+    var sc=Math.min(maxW/sigImg.width, maxH/sigImg.height, 1);
+    var iw=sigImg.width*sc, ih=sigImg.height*sc;
+    try{ctx.drawImage(sigImg,(sigW-iw)/2,(sigH-ih)/2,iw,ih)}catch(e){}
+  }
+  strokes.forEach(function(st){
+    if(!st||!st.length)return;
+    ctx.beginPath();
+    if(st.length===1){ctx.arc(st[0].x,st[0].y,1.7,0,Math.PI*2);ctx.fill();return}
+    ctx.moveTo(st[0].x,st[0].y);
+    for(var i=1;i<st.length;i++)ctx.lineTo(st[i].x,st[i].y);
+    ctx.stroke();
+  });
+}
 function pos(e){
   var r=canvas.getBoundingClientRect();
-  var p=e.touches?e.touches[0]:e;
-  return {x:p.clientX-r.left, y:p.clientY-r.top};
+  var sx=sigW/(r.width||sigW), sy=sigH/(r.height||sigH);
+  return {x:(e.clientX-r.left)*sx, y:(e.clientY-r.top)*sy};
 }
-function start(e){e.preventDefault();drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
-function move(e){
+function startStroke(e){
+  drawing=true;
+  strokes.push([pos(e)]);
+  markSigned();
+  render();
+}
+function addPoint(e){
   if(!drawing)return;
-  e.preventDefault();
-  var p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();
-  if(!hasSig){hasSig=true;$('sigBox').classList.add('filled');refresh()}
+  var st=strokes[strokes.length-1]; if(!st)return;
+  st.push(pos(e));
+  render();
 }
-function end(){drawing=false}
-canvas.addEventListener('mousedown',start);
-canvas.addEventListener('mousemove',move);
-window.addEventListener('mouseup',end);
-canvas.addEventListener('touchstart',start,{passive:false});
-canvas.addEventListener('touchmove',move,{passive:false});
-canvas.addEventListener('touchend',end);
-canvas.addEventListener('touchcancel',end);
+function endStroke(){drawing=false}
+
+function markSigned(){
+  if(!hasSig){
+    hasSig=true;
+    $('sigBox').classList.add('filled');
+    $('sigBox').classList.add('signed');
+    var st=$('sigHint');
+    if(st){st.textContent='✓ החתימה נקלטה'; st.classList.add('ok')}
+  }
+  refresh();
+}
+
+if(window.PointerEvent){
+  canvas.addEventListener('pointerdown',function(e){
+    e.preventDefault();
+    try{if(canvas.setPointerCapture)canvas.setPointerCapture(e.pointerId)}catch(err){}
+    startStroke(e);
+  });
+  canvas.addEventListener('pointermove',function(e){if(!drawing)return;e.preventDefault();addPoint(e)});
+  canvas.addEventListener('pointerup',endStroke);
+  canvas.addEventListener('pointercancel',endStroke);
+  canvas.addEventListener('pointerleave',function(e){if(!e.buttons)endStroke()});
+}else{
+  canvas.addEventListener('mousedown',function(e){e.preventDefault();startStroke(e)});
+  canvas.addEventListener('mousemove',function(e){if(!drawing)return;e.preventDefault();addPoint(e)});
+  canvas.addEventListener('mouseup',endStroke);
+  canvas.addEventListener('mouseleave',endStroke);
+  canvas.addEventListener('touchstart',function(e){e.preventDefault();if(e.touches&&e.touches[0])startStroke(e.touches[0])},{passive:false});
+  canvas.addEventListener('touchmove',function(e){e.preventDefault();if(e.touches&&e.touches[0])addPoint(e.touches[0])},{passive:false});
+  canvas.addEventListener('touchend',endStroke);
+  canvas.addEventListener('touchcancel',endStroke);
+}
+/* block page scroll/zoom gestures over the pad on every engine */
+['touchstart','touchmove'].forEach(function(ev){
+  canvas.addEventListener(ev,function(e){if(e.cancelable)e.preventDefault()},{passive:false});
+});
+
+var sigFile=$('sigFile');
+if(sigFile){
+  sigFile.addEventListener('change',function(){
+    var f=this.files&&this.files[0];
+    if(!f)return;
+    var fr=new FileReader();
+    fr.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var c=document.createElement('canvas');
+        var sc=Math.min(1,900/img.width);
+        c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc);
+        var x=c.getContext('2d');
+        x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height);
+        x.drawImage(img,0,0,c.width,c.height);
+        sigPhoto=c.toDataURL('image/jpeg',0.82);
+        sigImg=img; strokes=[];
+        markSigned(); render();
+        toast('תמונת החתימה נקלטה');
+      };
+      img.onerror=function(){toast('לא הצלחתי לקרוא את התמונה, נסו תמונה אחרת')};
+      img.src=fr.result;
+    };
+    fr.onerror=function(){toast('לא הצלחתי לקרוא את הקובץ')};
+    fr.readAsDataURL(f);
+  });
+}
+
+function sigDataUrl(){
+  if(sigPhoto)return sigPhoto;
+  var out=document.createElement('canvas');
+  var sc=Math.min(1,900/canvas.width);
+  out.width=Math.max(1,Math.round(canvas.width*sc));
+  out.height=Math.max(1,Math.round(canvas.height*sc));
+  var c2=out.getContext('2d');
+  c2.fillStyle='#fff'; c2.fillRect(0,0,out.width,out.height);
+  c2.drawImage(canvas,0,0,out.width,out.height);
+  return out.toDataURL('image/jpeg',0.85);
+}
+
+var rzT=null;
+window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(sizeCanvas,120)});
+window.addEventListener('orientationchange',function(){setTimeout(sizeCanvas,350)});
+if(window.ResizeObserver){try{new ResizeObserver(function(){sizeCanvas()}).observe(canvas.parentElement)}catch(e){}}
 
 function clearSig(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  hasSig=false; $('sigBox').classList.remove('filled'); refresh();
+  strokes=[]; sigPhoto=null; sigImg=null; hasSig=false;
+  $('sigBox').classList.remove('filled');
+  $('sigBox').classList.remove('signed');
+  var st=$('sigHint');
+  if(st){st.textContent='החתימה נדרשת לשליחת הטופס';st.classList.remove('ok')}
+  var f=$('sigFile'); if(f){try{f.value=''}catch(e){}}
+  render(); refresh();
 }
 
 function validId(v){
@@ -489,8 +603,26 @@ function refresh(){
   $('progTxt').textContent=pct+'% הושלם';
 
   var ready = filled===6 && allChecked() && validate();
-  $('submitBtn').disabled=!ready;
-  $('lockNote').innerHTML = ready ? '<b>הטופס מוכן לשליחה</b>' : 'שם, ת"ז, דגם וסכום, 3 סימונים וחתימה — וזה הכל';
+  if(!sending){$('submitBtn').disabled=false}
+  var miss=missingList();
+  $('lockNote').innerHTML = ready
+    ? '<b>הטופס מוכן לשליחה</b>'
+    : 'חסר כדי לשלוח: '+miss.join(' · ');
+}
+
+function missingList(){
+  var m=[];
+  if(!$('full_name').value.trim())m.push('שם מלא');
+  if(!$('id_number').value.trim())m.push('תעודת זהות');
+  else if(!validId($('id_number').value))m.push('ת"ז תקינה (9 ספרות)');
+  if(!$('laptop_model').value.trim())m.push('דגם המחשב');
+  if(!(parseFloat($('cost_total').value)>0))m.push('סכום לחיוב');
+  if(!$('signer_name').value.trim())m.push('שם החותם/ת');
+  if(!validEmail($('work_email').value.trim()))m.push('דוא"ל תקין');
+  if(!hasSig)m.push('חתימה');
+  var un=[1,2,3].filter(function(i){return !$('agree'+i).checked});
+  if(un.length)m.push(un.length===3?'סימון 3 הסעיפים':('עוד '+(3-un.length)+' סימונים'));
+  return m;
 }
 ['full_name','id_number','department','work_email','laptop_model','cost_total','signer_name'].forEach(function(id){
   $(id).addEventListener('input',refresh);
@@ -500,9 +632,21 @@ function refresh(){
 var sending=false;
 function submitForm(){
   if(sending)return;
-  if(!validate()){toast('נא למלא את כל שדות החובה');return}
-  if(!allChecked()){toast('נא לסמן את 3 הסעיפים');return}
-  if(!hasSig){toast('נא לחתום לפני השליחה');return}
+  var miss=missingList();
+  if(miss.length){
+    toast('חסר: '+miss.join(' · '));
+    var target=!$('full_name').value.trim()?$('full_name')
+      :(!validId($('id_number').value)?$('id_number')
+      :(!$('laptop_model').value.trim()?$('laptop_model')
+      :(!(parseFloat($('cost_total').value)>0)?$('cost_total')
+      :(!$('signer_name').value.trim()?$('signer_name')
+      :(!validEmail($('work_email').value.trim())?$('work_email')
+      :(!hasSig?$('sigBox'):$('agree1')))))));
+    try{target.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}
+    validate();
+    return;
+  }
+  validate();
 
   var agreements=[
     'קראתי והבנתי את תנאי הרכישה, ומאשר/ת קיזוז עלות המחשב מהשכר',
@@ -529,7 +673,7 @@ function submitForm(){
     includes_charger:true,
     notes:$('notes').value.trim(),
     agreements:agreements,
-    signature_data:canvas.toDataURL('image/png')
+    signature_data:sigDataUrl()
   };
 
   sending=true;
@@ -627,13 +771,13 @@ function printDoc(){window.print()}
   if(prog&&prog.parentNode)prog.parentNode.insertBefore(note,prog);
 })();
 
-fitCanvas();
+sizeCanvas();
 recalc();
 refresh();
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
-    navigator.serviceWorker.register('sw.js?v=20261115').catch(function(){});
+    navigator.serviceWorker.register('sw.js?v=20261115b').catch(function(){});
   });
 }
 </script>
