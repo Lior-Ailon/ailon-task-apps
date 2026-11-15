@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="version" content="2026-11-12-v3">
+<meta name="version" content="2026-11-15-v4">
 <title>רכישת מחשב נייד — קבוצת פוראטוס ישראל</title>
-<link rel="manifest" href="manifest.json?v=20261112">
+<link rel="manifest" href="manifest.json?v=20261115">
 <meta name="theme-color" content="#e30613">
-<link rel="icon" href="icon-192.png?v=20261112">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261112">
+<link rel="icon" href="icon-192.png?v=20261115">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261115">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -164,7 +164,7 @@ textarea{min-height:74px;resize:vertical}
 
   <div class="hdr">
     <div class="brand">
-      <div class="logo-plate"><img src="puratos-logo.svg?v=20261112c" alt="Puratos" width="189" height="106"></div>
+      <div class="logo-plate"><img src="puratos-logo.svg?v=20261115" alt="Puratos" width="189" height="106"></div>
       <div class="brand-txt">קבוצת פוראטוס ישראל</div>
     </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
@@ -358,7 +358,7 @@ textarea{min-height:74px;resize:vertical}
 <div id="printArea">
   <div class="p-doc">
     <div class="p-head">
-      <img class="p-logo" src="puratos-logo.svg?v=20261112c" alt="Puratos">
+      <img class="p-logo" src="puratos-logo.svg?v=20261115" alt="Puratos">
       <div class="p-org">קבוצת פוראטוס ישראל<br><span>מחלקת מערכות מידע · IT@puratos.co.il</span></div>
     </div>
     <h1>טופס רכישת מחשב נייד על ידי העובד</h1>
@@ -372,7 +372,7 @@ textarea{min-height:74px;resize:vertical}
     </div>
     <div class="p-foot">
       <span>פוראטוס ישראל · טופס רכישת מחשב נייד על ידי העובד</span>
-      <img class="p-logo-sm" src="puratos-logo.svg?v=20261112c" alt="Puratos">
+      <img class="p-logo-sm" src="puratos-logo.svg?v=20261115" alt="Puratos">
     </div>
   </div>
 </div>
@@ -381,7 +381,7 @@ textarea{min-height:74px;resize:vertical}
 
 <script>
 var API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
-var PAGE_VERSION = '2026-11-12-v3';
+var PAGE_VERSION = '2026-11-15-v4';
 
 function $(id){return document.getElementById(id)}
 function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3200)}
@@ -589,13 +589,51 @@ function buildPrint(p){
 
 function printDoc(){window.print()}
 
+
+/* --------- personalised prefill: ?name=&model=&cost=&id=&... --------- */
+(function(){
+  var qs; try{qs=new URLSearchParams(location.search)}catch(e){return}
+  if(!qs||!qs.toString())return;
+  var map={name:'full_name',idn:'id_number',emp:'employee_number',model:'laptop_model',
+           cost:'cost_total',inst:'installments',serial:'serial_number',os:'operating_system',
+           handover:'handover_date',start:'start_month',dept:'department',role:'role',
+           site:'site',email:'work_email',phone:'phone',notes:'notes',signer:'signer_name'};
+  var lockList=(qs.get('lock')===null?'name,model,cost':qs.get('lock')).split(',');
+  var applied=[];
+  Object.keys(map).forEach(function(k){
+    var v=qs.get(k); if(v===null||v==='')return;
+    var el=$(map[k]); if(!el)return;
+    el.value=v; applied.push(map[k]);
+    if(lockList.indexOf(k)>-1 && map[k]!=='signer_name'){
+      if(el.tagName==='SELECT'){
+        el.setAttribute('data-locked','1'); el.style.pointerEvents='none';
+        el.style.background='#f8fafc'; el.style.fontWeight='700';
+      } else {
+        el.readOnly=true; el.style.background='#f8fafc'; el.style.fontWeight='700';
+      }
+    }
+  });
+  if(!applied.length)return;
+
+  var nm=qs.get('name')||'';
+  var note=document.createElement('div');
+  note.className='card';
+  note.style.borderRight='4px solid var(--red)';
+  note.innerHTML='<div style="font-size:14px;line-height:1.65">'
+    + '<b>הטופס הזה הוכן'+(nm?' עבור '+nm.replace(/</g,'&lt;'):' מראש')+'.</b><br>'
+    + 'השם, דגם המחשב והסכום כבר מופיעים בו ואין צורך לשנות אותם. '
+    + 'נשאר למלא <b>תעודת זהות</b>, לסמן את שלושת הסעיפים, לחתום ולשלוח.</div>';
+  var prog=document.querySelector('#mainWrap .prog');
+  if(prog&&prog.parentNode)prog.parentNode.insertBefore(note,prog);
+})();
+
 fitCanvas();
 recalc();
 refresh();
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
-    navigator.serviceWorker.register('sw.js?v=20261112').catch(function(){});
+    navigator.serviceWorker.register('sw.js?v=20261115').catch(function(){});
   });
 }
 </script>
