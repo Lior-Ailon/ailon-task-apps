@@ -1,6 +1,6 @@
 {
  "generated": "2026-11-16",
- "total": 60,
+ "total": 61,
  "categories": [
   "עסקים",
   "פוראטוס",
@@ -12,6 +12,22 @@
   "פורטלים"
  ],
  "apps": [
+  {
+   "slug": "migdalhaor",
+   "name": "מגדל האור — ליאור סופר",
+   "icon": "🗼",
+   "cat": "מנטורינג",
+   "status": "live",
+   "statusLabel": "פעיל",
+   "desc": "האתר האישי: אימון אישי, עסקי וזוגי, סדנאות מנהיגות, ליווי לוחמי צה״ל והעוצמה שבפרשה.",
+   "desc2": "הבית של המותג — חמישה מסלולים, סיפור אישי וכל הפרקים מהיוטיוב.",
+   "url": "https://migdalhaor.com/",
+   "local": "",
+   "updated": "2026-11-16",
+   "daysSince": 0,
+   "sizeKB": 344,
+   "children": []
+  },
   {
    "slug": "law-office",
    "name": "AILON LawDesk",
