@@ -81,14 +81,18 @@ main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
 .row.now .tag{background:var(--gold);color:#241a06}
 
 /* week list */
-.week{padding:clamp(3px,.5vw,12px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:0;overflow:hidden;flex:1}
-.wrow{display:flex;align-items:center;gap:clamp(5px,.7vw,14px);padding:clamp(1px,.2vw,6px) 0;border-bottom:1px dashed var(--edge);flex:1;min-height:0}
+.week{padding:clamp(3px,.5vw,12px) clamp(6px,.8vw,16px);display:flex;flex-direction:column;gap:0;overflow:hidden;flex:1;min-height:0}
+/* כל יום מקבל גובה יחסי לכמות הפעילויות שלו (flex-grow נקבע ב-JS), בלי חפיפה */
+.wrow{display:flex;align-items:center;gap:clamp(5px,.7vw,14px);padding:clamp(1px,.2vw,5px) 0;border-bottom:1px dashed var(--edge);flex:1 1 0;min-height:0;overflow:hidden}
 .wrow:last-child{border-bottom:none}
-.wrow .day{font-size:var(--fs-row);font-weight:900;color:var(--blue);flex-shrink:0;min-width:clamp(46px,4.6vw,132px)}
-.wrow .acts{font-size:calc(var(--fs-row) * .84);font-weight:600;color:var(--ink-soft);line-height:1.25}
+.wrow .day{font-size:calc(var(--fs-row) * .92);font-weight:900;color:var(--blue);flex-shrink:0;min-width:clamp(46px,4.6vw,132px)}
+.wrow .acts{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:0}
+.wrow .act{display:flex;align-items:baseline;gap:clamp(4px,.5vw,10px);font-size:calc(var(--fs-row) * .68);font-weight:600;color:var(--ink-soft);line-height:1.18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .act .at{font-weight:800;color:var(--forest);font-variant-numeric:tabular-nums;flex-shrink:0}
+.wrow .act .an{overflow:hidden;text-overflow:ellipsis}
 .wrow.today{background:#fff6df;border-radius:calc(var(--r) * .5);padding-inline:clamp(4px,.5vw,10px);border-bottom-color:transparent}
 .wrow.today .day{color:var(--forest)}
-.wrow.closed .acts{color:#9aa39d}
+.wrow.closed .act{color:#9aa39d;font-size:calc(var(--fs-row) * .8)}
 
 /* news */
 .newsbody{flex:1;overflow:hidden;position:relative;padding:clamp(4px,.6vw,14px) clamp(6px,.8vw,16px);min-height:0}
@@ -325,10 +329,13 @@ function renderWeek(){
   var today=(new Date()).getDay();
   document.getElementById('weekList').innerHTML = WEEK.map(function(d,i){
     var closed = d.acts.length===1 && d.acts[0].t==='—';
-    var txt = d.acts.map(function(a){ return (a.t==='—'? '' : a.t+' ')+a.n; }).join(' · ');
-    return '<div class="wrow'+(i===today?' today':'')+(closed?' closed':'')+'">'
+    var n = Math.max(1, d.acts.length);
+    var lines = d.acts.map(function(a){
+      return '<div class="act">'+(a.t==='—'?'':'<span class="at">'+a.t+'</span>')+'<span class="an">'+a.n+'</span></div>';
+    }).join('');
+    return '<div class="wrow'+(i===today?' today':'')+(closed?' closed':'')+'" style="flex-grow:'+n+'">'
       + '<span class="day">'+d.day+'</span>'
-      + '<span class="acts">'+txt+'</span></div>';
+      + '<span class="acts">'+lines+'</span></div>';
   }).join('');
 }
 
