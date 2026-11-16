@@ -130,7 +130,8 @@ main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
 /* accessibility buttons */
 .a11y{position:fixed;bottom:calc(var(--pad) + 4px);left:calc(var(--pad) + 4px);display:flex;gap:6px;z-index:50;opacity:.25;transition:opacity .2s}
 .a11y:hover{opacity:1}
-.a11y button{font-family:'Heebo',sans-serif;font-weight:900;font-size:clamp(11px,.9vw,16px);background:#fff;color:var(--forest);border:2px solid var(--forest-light);border-radius:10px;padding:2px 9px;cursor:pointer}
+.a11y button,.a11y a{font-family:'Heebo',sans-serif;font-weight:900;font-size:clamp(11px,.9vw,16px);background:#fff;color:var(--forest);border:2px solid var(--forest-light);border-radius:10px;padding:2px 9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.a11y a.mgr{color:#fff;background:var(--forest-light);border-color:var(--forest)}
 
 @media(max-width:900px){
   main{flex-direction:column}
@@ -198,6 +199,7 @@ main{flex:1;display:flex;gap:var(--gap);min-height:0;overflow:hidden}
 <div class="a11y">
   <button onclick="bumpFont(1)">א+</button>
   <button onclick="bumpFont(-1)">א-</button>
+  <a class="mgr" id="mgrLink" href="manager.html">ניהול</a>
 </div>
 
 <script>
@@ -325,6 +327,12 @@ function markToday(){
 }
 
 /* ---------- לוח השבוע ---------- */
+/* קישור לניהול — נשמר אותו מועדון (club) שמוצג כרגע */
+(function(){
+  var el=document.getElementById('mgrLink');
+  if(el) el.href='manager.html?club='+encodeURIComponent(CLUB_ID)+'&v=20261116';
+})();
+
 function renderWeek(){
   var today=(new Date()).getDay();
   document.getElementById('weekList').innerHTML = WEEK.map(function(d,i){
