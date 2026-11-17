@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>סקר מחוברות 2026 · דשבורד מנהלים</title>
+<meta name="theme-color" content="#0f766e">
+<style>
+:root{--teal:#0d9488;--teal-d:#0f766e;--ink:#12211f;--soft:#5b6b68;--line:#e3e9e7;--paper:#f6f8f7;--card:#fff;--green:#15a34a;--amber:#d97706;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Heebo","Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px 56px}
+header.top{background:linear-gradient(135deg,#0f766e,#115e59);color:#fff;padding:22px 0 20px;margin-bottom:22px}
+header.top .wrap{padding-bottom:0;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
+.sub{opacity:.85;font-size:.85rem;margin-top:4px}
+.who{font-size:.85rem;text-align:left;opacity:.95}
+.btn{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .l{font-size:.78rem;color:var(--soft);font-weight:600}
+.kpi .v{font-size:1.7rem;font-weight:800;letter-spacing:-.02em;margin:2px 0}
+.kpi .f{font-size:.75rem;color:var(--soft)}
+.qrow{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:0}
+.qname{font-size:.9rem;font-weight:600}
+.qmeta{font-size:.75rem;color:var(--soft)}
+.bar{height:9px;border-radius:99px;background:#eef2f1;overflow:hidden;position:relative;grid-column:1/-1}
+.bar i{display:block;height:100%;border-radius:99px}
+.bar i.ref{position:absolute;top:0;height:100%;width:2px;background:#12211f;opacity:.45}
+.pill{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px}
+.p-green{background:#e7f7ed;color:#0f7a37}.p-amber{background:#fdf3e3;color:#a35b06}.p-red{background:#fdeaea;color:#b91c1c}
+h2{font-size:1.02rem;margin:0 0 4px;font-weight:800}
+.hint{font-size:.8rem;color:var(--soft);margin:0 0 12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+ul.clean{margin:0;padding-inline-start:18px}
+ul.clean li{margin-bottom:8px;font-size:.9rem}
+.login{max-width:420px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
+.login h2{font-size:1.2rem;margin-bottom:6px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:.8rem;font-weight:700;color:var(--soft);margin-bottom:5px}
+.field input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fbfcfc}
+.field input:focus{outline:2px solid var(--teal);border-color:transparent}
+.err{background:#fdeaea;color:#b91c1c;border-radius:10px;padding:9px 12px;font-size:.85rem;margin-bottom:12px}
+.note{background:#fdf8e8;border:1px solid #f0e2b8;color:#7a5c10;border-radius:10px;padding:10px 13px;font-size:.85rem;margin-bottom:14px}
+.cmt{background:#fbfcfc;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:.86rem}
+.cmt b{color:var(--teal-d);font-size:.75rem;display:block;margin-bottom:2px}
+.sel{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sel select{padding:9px 12px;border-radius:10px;border:1px solid var(--line);font:inherit;background:#fff;min-width:180px}
+.hide{display:none!important}
+footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
+</style>
+</head>
+<body>
+
+<div id="loginView">
+  <div class="login">
+    <h2>דשבורד מנהלים · סקר מחוברות 2026</h2>
+    <p class="hint">כניסה עם קוד המשתמש והסיסמה שקיבלת. כל מנהל רואה רק את המחלקה שלו.</p>
+    <div id="loginErr" class="err hide"></div>
+    <div class="field"><label>קוד משתמש</label><input id="u" autocomplete="username" placeholder="לדוגמה PAMLS" dir="ltr"></div>
+    <div class="field"><label>סיסמה</label><input id="p" type="password" autocomplete="current-password" dir="ltr"></div>
+    <button class="btn btn-primary" style="width:100%" id="loginBtn">כניסה</button>
+  </div>
+</div>
+
+<div id="appView" class="hide">
+  <header class="top">
+    <div class="wrap">
+      <div>
+        <h1 id="title">סקר מחוברות 2026</h1>
+        <div class="sub" id="periodLine"></div>
+      </div>
+      <div style="text-align:left">
+        <div class="who" id="whoLine"></div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="logout()">יציאה</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div id="adminBar" class="card hide">
+      <h2>בחירת היקף</h2>
+      <p class="hint">אתם רואים את כל החברות. בחירת מחלקה מציגה אותה מול ממוצע החברה שלה.</p>
+      <div class="sel">
+        <select id="selDept" onchange="pickDept(this.value)"></select>
+        <button class="btn btn-ghost" style="background:#eef2f1;color:var(--ink);border-color:var(--line)" onclick="pickDept('')">חזרה לכל החברות</button>
+      </div>
+    </div>
+
+    <div id="noteBox" class="note hide"></div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card">
+      <h2>12 ההיגדים</h2>
+      <p class="hint" id="barsHint">אחוז העונים "מסכים" או "מסכים מאוד". ירוק 80 ומעלה, כתום 50-79, אדום מתחת ל-50. הפס השחור = ממוצע החברה.</p>
+      <div id="bars"></div>
+    </div>
+
+    <div class="two">
+      <div class="card"><h2>מה חזק</h2><p class="hint">שני ההיגדים הגבוהים בהיקף שלך.</p><ul class="clean" id="strong"></ul></div>
+      <div class="card"><h2>מה כואב</h2><p class="hint">שני ההיגדים הנמוכים — שם מתחילים.</p><ul class="clean" id="weak"></ul></div>
+    </div>
+
+    <div class="card">
+      <h2>מה זה אומר</h2>
+      <p class="hint">מסקנות שנגזרות אוטומטית מהנתונים של ההיקף שלך.</p>
+      <ul class="clean" id="insights"></ul>
+    </div>
+
+    <div class="card">
+      <h2>שאלות לדיון בצוות</h2>
+      <p class="hint">לא צריך את כולן. שתיים או שלוש, בשיחה אחת.</p>
+      <ul class="clean" id="prompts"></ul>
+    </div>
+
+    <div class="card" id="cmtCard">
+      <h2>קולות מהשטח</h2>
+      <p class="hint">תשובות פתוחות אנונימיות מהמחלקה שלך.</p>
+      <div id="comments"></div>
+    </div>
+
+    <footer>הנתונים מצטברים בלבד. מחלקה עם פחות מ-5 משיבים אינה מוצגת, להגנת האנונימיות.</footer>
+  </div>
+</div>
+
+<script>
+const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mahbarutApi';
+let TOKEN = sessionStorage.getItem('mb_token') || '';
+let STATE = null;
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function pct(v){return (v==null)?'—':v.toFixed(1)+'%';}
+function color(v){return v>=80?'var(--green)':v>=50?'var(--amber)':'var(--red)';}
+function pill(v){return '<span class="pill '+(v>=80?'p-green':v>=50?'p-amber':'p-red')+'">'+pct(v)+'</span>';}
+
+async function api(body){
+  const r = await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
+}
+
+async function doLogin(){
+  const u=document.getElementById('u').value.trim(), p=document.getElementById('p').value;
+  const err=document.getElementById('loginErr');
+  err.classList.add('hide');
+  if(!u||!p){err.textContent='צריך למלא קוד משתמש וסיסמה';err.classList.remove('hide');return;}
+  document.getElementById('loginBtn').textContent='מתחבר…';
+  const r=await api({action:'login',username:u,password:p});
+  document.getElementById('loginBtn').textContent='כניסה';
+  if(!r.success){err.textContent='קוד המשתמש או הסיסמה לא נכונים';err.classList.remove('hide');return;}
+  TOKEN=r.token; sessionStorage.setItem('mb_token',TOKEN);
+  await load();
+}
+
+async function load(){
+  const r=await api({action:'data',token:TOKEN});
+  if(!r.success){ sessionStorage.removeItem('mb_token'); TOKEN=''; showLogin(); return; }
+  STATE=r.data; render();
+}
+
+function showLogin(){
+  document.getElementById('appView').classList.add('hide');
+  document.getElementById('loginView').classList.remove('hide');
+}
+
+function logout(){
+  api({action:'logout',token:TOKEN});
+  sessionStorage.removeItem('mb_token'); TOKEN=''; STATE=null;
+  document.getElementById('u').value=''; document.getElementById('p').value='';
+  showLogin();
+}
+
+function currentSlice(){ return STATE.view || STATE.mine || null; }
+function currentRef(){ return STATE.viewRef || STATE.company || null; }
+
+function render(){
+  document.getElementById('loginView').classList.add('hide');
+  document.getElementById('appView').classList.remove('hide');
+  document.getElementById('title').textContent='סקר מחוברות 2026 — ' + STATE.scope.label;
+  document.getElementById('periodLine').textContent='עודכן '+(STATE.generated||'')+' · '+(STATE.period||'');
+  document.getElementById('whoLine').innerHTML=esc(STATE.scope.name||'');
+
+  const admin = !!(STATE.departments && STATE.departments.length);
+  document.getElementById('adminBar').classList.toggle('hide', !admin);
+  if(admin){
+    const sel=document.getElementById('selDept');
+    if(!sel.dataset.built){
+      sel.innerHTML='<option value="">כל החברות</option>'+STATE.departments.map(d=>
+        '<option value="'+esc(d.company+'|'+d.dept)+'">'+esc(d.dept+' · '+d.company)+' ('+d.n+')</option>').join('');
+      sel.dataset.built='1';
+    }
+  }
+
+  const nb=document.getElementById('noteBox');
+  if(STATE.note){nb.textContent=STATE.note;nb.classList.remove('hide');}else nb.classList.add('hide');
+
+  drawKpis(); drawBars(); drawLists();
+}
+
+function drawKpis(){
+  const box=document.getElementById('kpis');
+  const s=currentSlice();
+  if(STATE.scope.all && !STATE.view){
+    box.innerHTML=[
+      kpi('שיעור היענות','84.8%', STATE.overall.n+' מתוך '+STATE.overall.roster+' עובדים'),
+      kpi('מדד מחוברות', avgOf(STATE.overall.q).toFixed(2), 'ממוצע 12 ההיגדים, סולם 1-5'),
+      kpi('ציון המנהל הישיר', Math.round(mgrScore(STATE.overall.q))+'', 'אמון, תמיכה, משוב ונגישות'),
+      kpi('משיבים', String(STATE.overall.n), 'כל החברות')
+    ].join('');
+    return;
+  }
+  const ref=currentRef();
+  const cmp = ref && s ? ' · חברה: '+pct(ref.completion) : '';
+  box.innerHTML=[
+    kpi('שיעור היענות', pct(s?s.completion:null), (s? s.n+' מתוך '+s.roster+' עובדים':'—')+cmp),
+    kpi('מדד מחוברות', s?avgOf(s.q).toFixed(2):'—', 'ממוצע 12 ההיגדים'),
+    kpi('ציון המנהל הישיר', s?Math.round(mgrScore(s.q))+'':'—', 'אמון, תמיכה, משוב ונגישות'),
+    kpi('משיבים בהיקף', String(s?s.n:STATE.overall.n), s? (s.dept+' · '+s.company) : 'כל החברות')
+  ].join('');
+}
+function kpi(l,v,f){return '<div class="kpi"><div class="l">'+esc(l)+'</div><div class="v">'+esc(v)+'</div><div class="f">'+esc(f)+'</div></div>';}
+function avgOf(q){const ks=Object.keys(q||{});if(!ks.length)return 0;return ks.reduce((a,k)=>a+q[k].avg,0)/ks.length;}
+function mgrScore(q){const ks=['q2','q3','q7','q10'].filter(k=>q&&q[k]);if(!ks.length)return 0;return ks.reduce((a,k)=>a+q[k].fav,0)/ks.length;}
+
+function drawBars(){
+  const s=currentSlice()||{q:STATE.overall.q};
+  const ref=currentRef();
+  const qs=STATE.questions||[];
+  document.getElementById('bars').innerHTML=qs.map(q=>{
+    const d=s.q&&s.q[q.id]; if(!d) return '';
+    const r=ref&&ref.q&&ref.q[q.id]?ref.q[q.id].fav:null;
+    return '<div class="qrow"><div class="qname">'+esc(q.short)+'</div><div>'+pill(d.fav)+'</div>'
+      +'<div class="bar"><i style="width:'+d.fav+'%;background:'+color(d.fav)+'"></i>'+(r!=null?'<i class="ref" style="right:'+r+'%;background:#12211f;opacity:.5;width:2px;position:absolute;top:0;height:100%"></i>':'')+'</div>'
+      +'<div class="qmeta">ממוצע '+d.avg.toFixed(2)+' · '+d.n+' משיבים'+(r!=null?' · חברה '+pct(r):'')+'</div></div>';
+  }).join('');
+}
+
+function drawLists(){
+  const s=currentSlice()||{q:STATE.overall.q};
+  const qs=STATE.questions||[];
+  const arr=qs.filter(q=>s.q&&s.q[q.id]).map(q=>({id:q.id,short:q.short,...s.q[q.id]}));
+  arr.sort((a,b)=>b.fav-a.fav);
+  const top=arr.slice(0,2), low=arr.slice(-2).reverse();
+  const ref=currentRef();
+  document.getElementById('strong').innerHTML=top.map(x=>'<li><b>'+esc(x.short)+'</b> — '+pct(x.fav)+' הסכמה'+(ref&&ref.q&&ref.q[x.id]?' (חברה '+pct(ref.q[x.id].fav)+')':'')+'</li>').join('');
+  document.getElementById('weak').innerHTML=low.map(x=>'<li><b>'+esc(x.short)+'</b> — '+pct(x.fav)+' הסכמה'+(ref&&ref.q&&ref.q[x.id]?' (חברה '+pct(ref.q[x.id].fav)+')':'')+'</li>').join('');
+
+  const ins=[];
+  const mg=mgrScore(s.q);
+  const org=(s.q&&s.q.q5)?s.q.q5.fav:null;
+  if(org!=null&&mg-org>10) ins.push('המנהל הישיר מדורג גבוה ב-'+Math.round(mg-org)+' נקודות מהארגון ('+pct(mg)+' מול '+pct(org)+'). מה שמפריע לאנשים הוא מה שמעליכם, לא אצלכם.');
+  if(org!=null&&org-mg>10) ins.push('הארגון מדורג גבוה מהמנהל הישיר ('+pct(org)+' מול '+pct(mg)+'). כאן נקודת החיכוך היא מקומית — שווה שיחה אישית.');
+  if(org!=null&&org<80) ins.push('תקשורת על החלטות ושינויים עומדת על '+pct(org)+', מתחת לרף ה-80. זה ההיגד שכדאי לקחת לדיון.');
+  if(s.q&&s.q.q8&&s.q.q8.fav<80) ins.push('רק '+pct(s.q.q8.fav)+' רואים את עצמם כאן בעוד שנתיים.');
+  if(ref&&ref.completion&&s.completion&&Math.abs(s.completion-ref.completion)>10) ins.push('שיעור ההיענות שלכם '+pct(s.completion)+' מול '+pct(ref.completion)+' בחברה — ככל שיותר עונים, התמונה מדויקת יותר.');
+  ins.push('היקף המשיבים: '+s.n+' עובדים'+(s.completion!=null?' ('+pct(s.completion)+' מהמצבה)':'')+'.');
+  document.getElementById('insights').innerHTML=ins.map(t=>'<li>'+esc(t)+'</li>').join('');
+
+  const lowQ=low[0], topQ=top[0];
+  const pr=[];
+  if(lowQ) pr.push('מה היה צריך לקרות כדי שההיגד "'+lowQ.short+'" ירגיש אחרת אצלנו?');
+  if(topQ) pr.push('"' + topQ.short + '" עובד טוב אצלנו. מה בדיוק אנחנו עושים שם נכון, ואיך מעבירים את זה לשאר?');
+  pr.push('אילו שינויים בשנתיים האחרונות לא הוסברו מספיק, ומי היה צריך להסביר אותם?');
+  pr.push('מה הייתם רוצים לדעת על החלטות שמתקבלות מעלינו, ומה חסר היום?');
+  pr.push('מה הדבר האחד שאני, כמנהל ישיר, יכול לשנות עד סוף החודש?');
+  document.getElementById('prompts').innerHTML=pr.map(t=>'<li>'+esc(t)+'</li>').join('');
+
+  const c=(s.comments||[]);
+  document.getElementById('cmtCard').classList.toggle('hide', !c.length);
+  document.getElementById('comments').innerHTML=c.map(x=>'<div class="cmt"><b>'+esc(x.topic)+'</b>'+esc(x.text)+'</div>').join('');
+}
+
+function pickDept(key){
+  if(!key){ STATE.view=null; STATE.viewRef=null; render(); document.getElementById('title').textContent='סקר מחוברות 2026 — כל החברות'; return; }
+  const d=STATE.departments.find(x=>x.company+'|'+x.dept===key);
+  if(!d) return;
+  STATE.view=d; STATE.viewRef=STATE.companies[d.company]||null;
+  render();
+  document.getElementById('title').textContent='סקר מחוברות 2026 — '+d.dept+' · '+d.company;
+}
+
+document.getElementById('loginBtn').addEventListener('click',doLogin);
+document.getElementById('p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('u').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('p').focus();});
+
+if(TOKEN){ load(); } else { showLogin(); }
+</script>
+</body>
+</html>
