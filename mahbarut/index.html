@@ -61,10 +61,9 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 <div id="loginView">
   <div class="login">
     <h2>דשבורד מנהלים · סקר מחוברות 2026</h2>
-    <p class="hint">כניסה עם קוד המשתמש והסיסמה שקיבלת. כל מנהל רואה רק את המחלקה שלו.</p>
+    <p class="hint">נכנסים עם קוד המשתמש בלבד. כל מנהל רואה רק את המחלקה שלו.</p>
     <div id="loginErr" class="err hide"></div>
     <div class="field"><label>קוד משתמש</label><input id="u" autocomplete="username" placeholder="לדוגמה PAMLS" dir="ltr"></div>
-    <div class="field"><label>סיסמה</label><input id="p" type="password" autocomplete="current-password" dir="ltr"></div>
     <button class="btn btn-primary" style="width:100%" id="loginBtn">כניסה</button>
   </div>
 </div>
@@ -148,14 +147,14 @@ async function api(body){
 }
 
 async function doLogin(){
-  const u=document.getElementById('u').value.trim(), p=document.getElementById('p').value;
+  const u=document.getElementById('u').value.trim();
   const err=document.getElementById('loginErr');
   err.classList.add('hide');
-  if(!u||!p){err.textContent='צריך למלא קוד משתמש וסיסמה';err.classList.remove('hide');return;}
+  if(!u){err.textContent='צריך למלא קוד משתמש';err.classList.remove('hide');return;}
   document.getElementById('loginBtn').textContent='מתחבר…';
-  const r=await api({action:'login',username:u,password:p});
+  const r=await api({action:'login',username:u});
   document.getElementById('loginBtn').textContent='כניסה';
-  if(!r.success){err.textContent='קוד המשתמש או הסיסמה לא נכונים';err.classList.remove('hide');return;}
+  if(!r.success){err.textContent='קוד המשתמש לא נמצא. בדקו אותו ונסו שוב.';err.classList.remove('hide');return;}
   TOKEN=r.token; sessionStorage.setItem('mb_token',TOKEN);
   await load();
 }
@@ -174,7 +173,7 @@ function showLogin(){
 function logout(){
   api({action:'logout',token:TOKEN});
   sessionStorage.removeItem('mb_token'); TOKEN=''; STATE=null;
-  document.getElementById('u').value=''; document.getElementById('p').value='';
+  document.getElementById('u').value='';
   showLogin();
 }
 
@@ -289,7 +288,7 @@ function pickDept(key){
 
 document.getElementById('loginBtn').addEventListener('click',doLogin);
 document.getElementById('p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('u').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('p').focus();});
+document.getElementById('u').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 if(TOKEN){ load(); } else { showLogin(); }
 </script>
