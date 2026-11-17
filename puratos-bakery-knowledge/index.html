@@ -34,6 +34,17 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 .report-status{font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700;}
 .status-submitted{background:#fef3c7;color:#92400e;}
 .status-approved{background:#dcfce7;color:#166534;}
+.status-draft{background:#e2e8f0;color:#475569;}
+.result-count{font-size:13px;color:var(--g500);font-weight:600;margin:0 4px 12px;display:block;}
+.report-card:focus-visible{outline:3px solid rgba(204,9,47,.45);outline-offset:2px;}
+.btn:focus-visible,.modal-close:focus-visible{outline:3px solid rgba(204,9,47,.45);outline-offset:2px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:20px;padding-top:16px;border-top:1px solid var(--g200);}
+@media print{
+  body{background:#fff;padding:0;}
+  .header,.search-bar,.back-link,#reportsList,.modal-close,.modal-actions{display:none !important;}
+  .modal-overlay{position:static;display:block !important;background:none;padding:0;overflow:visible;}
+  .modal{box-shadow:none;max-width:100%;padding:0;margin:0;}
+}
 .report-purpose{font-size:13px;color:var(--g500);margin-top:6px;}
 .report-conclusions{font-size:13px;color:var(--g600);margin-top:8px;padding-top:8px;border-top:1px solid var(--g100);max-height:60px;overflow:hidden;text-overflow:ellipsis;}
 .empty-state{text-align:center;padding:60px 20px;color:var(--g400);}
@@ -66,6 +77,12 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 <meta name="apple-mobile-web-app-title" content="Puratos · מא">
 <link rel="stylesheet" href="../_shared/ailon-design.css?v=1">
 <script src="../_shared/ailon-design.js?v=1" defer></script>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="description" content="Puratos · מאגר דוחות ניסויים">
+<meta property="og:title" content="Puratos · מאגר דוחות ניסויים">
+<meta property="og:description" content="Puratos · מאגר דוחות ניסויים">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
 </head>
 <body>
 <div class="header">
@@ -87,12 +104,13 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 
   <div class="search-bar">
     <div class="search-row">
-      <input type="text" id="searchInput" class="search-input" placeholder="חיפוש לפי שם פרויקט, חוקר, מאשר או מטרת ניסוי..." oninput="debounceSearch()">
+      <input type="text" id="searchInput" class="search-input" aria-label="חיפוש דוחות" placeholder="חיפוש לפי שם פרויקט, חוקר, מאשר או מטרת ניסוי..." oninput="debounceSearch()">
       <button class="btn btn-primary" onclick="loadReports()">🔍 חפש</button>
       <button class="btn btn-secondary" onclick="clearSearch()">נקה</button>
     </div>
   </div>
 
+  <span class="result-count" id="resultCount" role="status" aria-live="polite"></span>
   <div id="reportsList">
     <div class="loading">
       <div class="spinner"></div>
@@ -102,7 +120,7 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 </div>
 
 <div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modalContent"></div>
+  <div class="modal" id="modalContent" role="dialog" aria-modal="true" aria-label="פרטי דוח ניסוי"></div>
 </div>
 
 <script>
@@ -123,7 +141,7 @@ function loadReports(){
   document.getElementById('reportsList').innerHTML='<div class="loading"><div class="spinner"></div><p>טוען...</p></div>';
   
   fetch(url)
-    .then(function(res){return res.json();})
+    .then(function(res){if(!res.ok)throw new Error('HTTP '+res.status);return res.json();})
     .then(function(data){
       allReports=data.reports||[];
       renderReports();
@@ -135,8 +153,12 @@ function loadReports(){
 
 function renderReports(){
   var list=document.getElementById('reportsList');
+  var cnt=document.getElementById('resultCount');
+  var term=document.getElementById('searchInput').value.trim();
+  var n=allReports.length;
+  cnt.textContent=n===0?'':(term?(n===1?'נמצא דוח אחד':'נמצאו '+n+' דוחות'):(n===1?'דוח אחד במאגר':'מציג '+n+' דוחות'));
   if(allReports.length===0){
-    list.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p>אין דוחות במאגר</p><small>דוחות שיישמרו בטופס יופיעו כאן</small></div>';
+    list.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p>'+(term?'לא נמצאו דוחות מתאימים':'אין דוחות במאגר')+'</p><small>'+(term?'נסה מילה אחרת או נקה את החיפוש':'דוחות שיישמרו בטופס יופיעו כאן')+'</small></div>';
     return;
   }
   
@@ -144,10 +166,10 @@ function renderReports(){
   allReports.forEach(function(r){
     var dateStr=r.execDate?new Date(r.execDate).toLocaleDateString('he-IL'):'—';
     var createdStr=r.createdDate?new Date(r.createdDate).toLocaleDateString('he-IL'):'—';
-    var statusClass=r.status==='approved'?'status-approved':'status-submitted';
-    var statusText=r.status==='approved'?'מאושר':'הוגש';
+    var statusClass=r.status==='approved'?'status-approved':(r.status==='draft'?'status-draft':'status-submitted');
+    var statusText=r.status==='approved'?'מאושר':(r.status==='draft'?'טיוטה':'הוגש');
     
-    html+='<div class="report-card" onclick="viewReport(\''+r.id+'\')">';
+    html+='<div class="report-card" role="button" tabindex="0" onclick="viewReport(\''+r.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();viewReport(\''+r.id+'\');}">';
     html+='<div class="report-header">';
     html+='<div class="report-title">'+escapeHtml(r.projectName||'ללא שם')+'</div>';
     html+='<div class="report-date">'+createdStr+'</div>';
@@ -236,13 +258,22 @@ function viewReport(id){
     html+='<div class="modal-section"><div class="modal-section-title">➡️ Next Steps</div><div class="modal-section-content">'+escapeHtml(r.nextSteps).replace(/\n/g,'<br>')+'</div></div>';
   }
   
+  html+='<div class="modal-actions"><button class="btn btn-secondary" onclick="printReport()">🖨️ הדפסה / PDF</button></div>';
   modal.innerHTML=html;
   document.getElementById('reportModal').classList.add('show');
+  document.body.style.overflow='hidden';
 }
 
 function closeModal(){
   document.getElementById('reportModal').classList.remove('show');
+  document.body.style.overflow='';
 }
+function printReport(){
+  window.print();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.getElementById('reportModal').classList.contains('show'))closeModal();
+});
 
 function clearSearch(){
   document.getElementById('searchInput').value='';
@@ -259,5 +290,6 @@ loadReports();
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 </script>
+<script src="../_shared/ailon-shell.js" defer></script>
 </body>
 </html>
