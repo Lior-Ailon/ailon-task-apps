@@ -1,6 +1,6 @@
 {
- "generated": "2026-11-16",
- "total": 61,
+ "generated": "2026-11-17",
+ "total": 62,
  "categories": [
   "עסקים",
   "פוראטוס",
@@ -12,6 +12,22 @@
   "פורטלים"
  ],
  "apps": [
+  {
+   "slug": "fitness-watch",
+   "name": "לוח דופק חי — אימון",
+   "icon": "❤️",
+   "cat": "מסכים ולוחות",
+   "status": "live",
+   "statusLabel": "פעיל",
+   "desc": "לוח אימון חי: דופק בזמן אמת משעון בלוטות׳, אזורי מאמץ, קלוריות ודירוג בין המתאמנים.",
+   "desc2": "עד 20 מתאמנים על מסך אחד, כולל גשר Bluetooth מקומי למחשב.",
+   "url": "https://lior-ailon.github.io/fitness-watch-project/",
+   "local": "",
+   "updated": "2026-11-17",
+   "daysSince": 0,
+   "sizeKB": 100,
+   "children": []
+  },
   {
    "slug": "migdalhaor",
    "name": "מגדל האור — ליאור סופר",
