@@ -133,7 +133,7 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 
 <script>
 const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mahbarutApi';
-let TOKEN = sessionStorage.getItem('mb_token') || '';
+let TOKEN = '';   // הטוקן נשמר בזיכרון בלבד: כל טעינת דף מחייבת קוד משתמש
 let STATE = null;
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -155,13 +155,14 @@ async function doLogin(){
   const r=await api({action:'login',username:u});
   document.getElementById('loginBtn').textContent='כניסה';
   if(!r.success){err.textContent='קוד המשתמש לא נמצא. בדקו אותו ונסו שוב.';err.classList.remove('hide');return;}
-  TOKEN=r.token; sessionStorage.setItem('mb_token',TOKEN);
+  TOKEN=r.token;
+  resetIdle();
   await load();
 }
 
 async function load(){
   const r=await api({action:'data',token:TOKEN});
-  if(!r.success){ sessionStorage.removeItem('mb_token'); TOKEN=''; showLogin(); return; }
+  if(!r.success){ TOKEN=''; showLogin(); return; }
   STATE=r.data; render();
 }
 
@@ -172,10 +173,21 @@ function showLogin(){
 
 function logout(){
   api({action:'logout',token:TOKEN});
-  sessionStorage.removeItem('mb_token'); TOKEN=''; STATE=null;
+  TOKEN=''; STATE=null;
   document.getElementById('u').value='';
   showLogin();
 }
+
+/* יציאה אוטומטית אחרי 30 דקות ללא פעילות — נתוני HR לא נשארים פתוחים */
+var idleT=null;
+function resetIdle(){
+  clearTimeout(idleT);
+  if(!TOKEN) return;
+  idleT=setTimeout(function(){ if(TOKEN){ logout(); } },30*60*1000);
+}
+['click','keydown','mousemove','touchstart'].forEach(function(ev){
+  document.addEventListener(ev,resetIdle,{passive:true});
+});
 
 function currentSlice(){ return STATE.view || STATE.mine || null; }
 function currentRef(){ return STATE.viewRef || STATE.company || null; }
