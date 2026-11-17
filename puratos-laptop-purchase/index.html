@@ -102,7 +102,7 @@ textarea{min-height:74px;resize:vertical}
 
 /* signature */
 .sigbox{position:relative;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:#fff;overflow:hidden;touch-action:none}
-.sigbox canvas{display:block;width:100%;height:170px;cursor:crosshair}
+.sigbox canvas{display:block;width:100%;height:170px;cursor:crosshair;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 .sigbox .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#cbd5e1;font-size:14px;pointer-events:none}
 .sigbox.filled .ph{display:none}
 .sigbar{display:flex;justify-content:space-between;align-items:center;margin-top:7px;gap:10px;flex-wrap:wrap}
@@ -500,10 +500,12 @@ if(window.PointerEvent){
   canvas.addEventListener('touchend',endStroke);
   canvas.addEventListener('touchcancel',endStroke);
 }
-/* block page scroll/zoom gestures over the pad on every engine */
-['touchstart','touchmove'].forEach(function(ev){
-  canvas.addEventListener(ev,function(e){if(e.cancelable)e.preventDefault()},{passive:false});
-});
+/* block page scroll/zoom gestures over the pad only where touch events drive the pad */
+if(!window.PointerEvent){
+  ['touchstart','touchmove'].forEach(function(ev){
+    canvas.addEventListener(ev,function(e){if(e.cancelable)e.preventDefault()},{passive:false});
+  });
+}
 
 var sigFile=$('sigFile');
 if(sigFile){
