@@ -1,6 +1,6 @@
 {
- "generated": "2026-11-17",
- "total": 62,
+ "generated": "2026-11-18",
+ "total": 63,
  "categories": [
   "עסקים",
   "פוראטוס",
@@ -407,7 +407,7 @@
    "desc2": "ארבעה שדות בלבד — הנתונים המלאים בחלק מקופל.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-laptop-purchase/",
    "local": "puratos-laptop-purchase/index.html",
-   "updated": "2026-11-15",
+   "updated": "2026-11-17",
    "daysSince": 1,
    "sizeKB": 139,
    "children": []
@@ -1038,6 +1038,22 @@
    "daysSince": 68,
    "sizeKB": 257,
    "children": []
+  },
+  {
+   "slug": "mahbarut",
+   "name": "סקר מחוברות 2026 · דשבורד מנהלים",
+   "icon": "✨",
+   "cat": "עסקים",
+   "status": "live",
+   "statusLabel": "פעיל",
+   "desc": "סקר מחוברות 2026 · דשבורד מנהלים — נוסף אוטומטית לדשבורד.",
+   "desc2": "",
+   "url": "https://lior-ailon.github.io/ailon-task-apps/mahbarut/",
+   "local": "mahbarut/index.html",
+   "updated": "2026-11-17",
+   "sizeKB": null,
+   "children": [],
+   "auto": true
   }
  ]
 }
