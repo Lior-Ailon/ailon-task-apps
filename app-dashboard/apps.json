@@ -1041,19 +1041,18 @@
   },
   {
    "slug": "mahbarut",
-   "name": "סקר מחוברות 2026 · דשבורד מנהלים",
-   "icon": "✨",
+   "name": "סקר מחוברות 2026",
+   "icon": "📋",
    "cat": "עסקים",
    "status": "live",
    "statusLabel": "פעיל",
-   "desc": "סקר מחוברות 2026 · דשבורד מנהלים — נוסף אוטומטית לדשבורד.",
-   "desc2": "",
+   "desc": "דשבורד מנהלים לסקר מחוברות: 12 היגדים, ציונים מול ממוצע החברה וקולות מהשטח.",
+   "desc2": "כל מנהל נכנס בקוד משתמש ורואה רק את המחלקה שלו. הנתונים אנונימיים ומצטברים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/mahbarut/",
    "local": "mahbarut/index.html",
    "updated": "2026-11-17",
    "sizeKB": null,
-   "children": [],
-   "auto": true
+   "children": []
   }
  ]
 }
