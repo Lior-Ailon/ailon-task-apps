@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-18",
+ "generated": "2026-11-19",
  "total": 63,
  "categories": [
   "עסקים",
@@ -327,7 +327,7 @@
    "desc2": "כך יודעים מה כבר נוסה ולא ממציאים את הגלגל מחדש.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/puratos-bakery-knowledge/",
    "local": "puratos-bakery-knowledge/index.html",
-   "updated": "2026-11-13",
+   "updated": "2026-11-18",
    "daysSince": 68,
    "sizeKB": 108,
    "children": []
@@ -1018,7 +1018,7 @@
    "desc2": "מוודא שמה שאמור לעלות — עולה.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/system-health/",
    "local": "system-health/index.html",
-   "updated": "2026-11-13",
+   "updated": "2026-11-18",
    "daysSince": 68,
    "sizeKB": 109,
    "children": []
@@ -1050,7 +1050,7 @@
    "desc2": "כל מנהל נכנס בקוד משתמש ורואה רק את המחלקה שלו. הנתונים אנונימיים ומצטברים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/mahbarut/",
    "local": "mahbarut/index.html",
-   "updated": "2026-11-17",
+   "updated": "2026-11-18",
    "sizeKB": null,
    "children": []
   }
