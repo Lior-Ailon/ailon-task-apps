@@ -159,6 +159,12 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
       <div style="overflow-x:auto"><table class="tbl" id="tbl"></table></div>
     </div>
 
+    <div class="card" id="y22box" style="display:none">
+      <h2>בנצ'מרק 2022 — תחומי הסקר הקודם</h2>
+      <p class="hint">הסקר של 2022 פורסם ברמת פוראטוס בלבד, בלי פילוח מחלקות. אלה 15 התחומים והציונים שלהם, להשוואה מול 2026.</p>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th class="l">תחום (2022)</th><th>ציון</th><th>חיובי</th><th>שלילי</th></tr></thead><tbody id="y22rows"></tbody></table></div>
+    </div>
+
     <div class="card">
       <h2>קולות מהשטח: תמות מרכזיות</h2>
       <p class="hint">התשובות הפתוחות מקובצות לתמות. אפשר לפתוח כל תמה ואת כל המלל.</p>
@@ -308,7 +314,7 @@ function render(){
     kpi('אחוז מילוי',pct(s.completion),B.grp?'קבוצה: '+pct(B.grp.completion):'')+
     kpi('ציון ממוצע',avg.toFixed(2),B.grp?'קבוצה: '+groupAvg(B.grp):'')+
     kpi('אחוז חיובי (4-5)',pct(fav),B.grp?'קבוצה: '+pct(groupFav(B.grp)):'');
-  fillPie(s,B); domPies(s); table(s,B); themes(s);
+  fillPie(s,B); domPies(s); table(s,B); cats2022(); themes(s);
 }
 function kpi(l,v,f){return `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="f">${f||'&nbsp;'}</div></div>`}
 function groupAvg(g){const a=Object.values(g.q);return (a.reduce((x,y)=>x+y.avg*y.n,0)/a.reduce((x,y)=>x+y.n,0)).toFixed(2)}
@@ -329,6 +335,21 @@ function domPies(s){
       <div class="n">${dm.name}</div><div class="s">ממוצע ${d.avg}</div></div>`}).join('');
 }
 
+/* ---------- 2022 baseline ---------- */
+function domain2022(did){
+  const dm=(D.meta.domains||[]).find(x=>x.id===did); if(!dm) return null;
+  const b=D.meta.baseline2022||{};
+  const vals=dm.qs.map(q=>b[q]&&b[q].avg).filter(v=>v!=null);
+  if(!vals.length) return null;
+  return vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+function cats2022(){
+  const list=(D.meta.baseline2022Domains||[]);
+  if(!list.length){ $('y22box').style.display='none'; return }
+  $('y22box').style.display='';
+  $('y22rows').innerHTML=list.map(c=>`<tr><td class="l">${esc(c.name)}</td><td class="avg">${c.avg.toFixed(2)}</td><td>${c.fav.toFixed(0)}%</td><td>${c.low.toFixed(0)}%</td></tr>`).join('');
+}
+
 /* ---------- domain table ---------- */
 function table(s,B){
   const cols=[];
@@ -341,7 +362,7 @@ function table(s,B){
   D.meta.domains.forEach(dm=>{
     const d=s.domains&&s.domains[dm.id]; if(!d) return;
     const g=B.grp&&B.grp.domains[dm.id], c=B.co&&B.co.domains&&B.co.domains[dm.id];
-    const y=D.meta.baseline2022&&D.meta.baseline2022[dm.id];
+    const y=domain2022(dm.id);
     rows+=`<tr class="dom" data-d="${dm.id}"><td class="l"><span class="car">◂</span>${dm.name}</td><td class="avg">${d.avg.toFixed(2)}</td><td>${distBar(d.low,d.mid,d.high,d.n)}</td>`+
       cols.map(cc=>cell(cc.k,d.avg,g&&g.avg,c&&c.avg,y)).join('')+'</tr>';
     dm.qs.forEach(id=>{
@@ -365,7 +386,10 @@ function table(s,B){
 function cell(k,own,grp,co,y22){
   if(k==='grp') return `<td>${grp!=null?grp.toFixed(2)+' '+dlt(own,grp):'—'}</td>`;
   if(k==='co')  return `<td>${co!=null?co.toFixed(2)+' '+dlt(own,co):'—'}</td>`;
-  if(k==='y22') return `<td>${y22!=null?y22.toFixed(2)+' '+dlt(own,y22):'<span class="delta na">—</span>'}</td>`;
+  if(k==='y22'){
+    const v=(y22&&typeof y22==='object')?y22.avg:y22;
+    return `<td>${v!=null?v.toFixed(2)+' '+dlt(own,v):'<span class="delta na">—</span>'}</td>`;
+  }
   return '<td>—</td>';
 }
 function distBar(lo,mi,hi,n){
