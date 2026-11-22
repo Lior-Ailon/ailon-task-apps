@@ -155,7 +155,7 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 
     <div class="card">
       <h2>ההיגדים לפי תחום</h2>
-      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בירוק (עלייה) או באדום (ירידה).</p>
+      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בכחול (עלייה) או באדום (ירידה).</p>
       <div style="overflow-x:auto"><table class="tbl" id="tbl"></table></div>
     </div>
 
@@ -375,9 +375,30 @@ function distBar(lo,mi,hi,n){
 }
 
 /* ---------- themes ---------- */
+function mergeComments(){
+  const out={};
+  Object.keys(D.slices).forEach(k=>{
+    if(!k.startsWith('dept:')) return;
+    const sl=D.slices[k]; if(!sl.comments) return;
+    Object.keys(sl.comments).forEach(t=>{
+      const src=sl.comments[t];
+      if(!out[t]) out[t]={short:src.short,answered:0,themes:[],all:[]};
+      out[t].answered+=src.answered||0;
+      out[t].all=out[t].all.concat(src.all||[]);
+      (src.themes||[]).forEach(th=>{
+        const ex=out[t].themes.find(x=>x.name===th.name);
+        if(ex){ex.count+=th.count;(ex.quotes=ex.quotes||[]).push(...(th.quotes||[]))}
+        else out[t].themes.push({name:th.name,count:th.count,quotes:(th.quotes||[]).slice()});
+      });
+    });
+  });
+  Object.keys(out).forEach(t=>out[t].themes.sort((a,b)=>b.count-a.count));
+  return Object.keys(out).length?out:null;
+}
 function themes(s){
-  const cm=s.comments;
-  if(!cm){ $('topicChips').innerHTML='';$('themes').innerHTML='<p class="hint">התשובות הפתוחות מוצגות ברמת מחלקה. בחרו מחלקה כדי לראות אותן.</p>';return}
+  let cm=s.comments;
+  if(!cm && ST.dept==='*') cm=mergeComments();
+  if(!cm){ $('topicChips').innerHTML='';$('themes').innerHTML='<p class="hint">בחרו מחלקה כדי לראות את התשובות הפתוחות שלה.</p>';return}
   const topics=Object.keys(cm);
   if(!cm[ST.topic]) ST.topic=topics[0];
   $('topicChips').innerHTML=topics.map(t=>`<button class="chip ${t===ST.topic?'on':''}" data-t="${esc(t)}">${esc(cm[t].short)}<b>${cm[t].answered}</b></button>`).join('');
