@@ -4,55 +4,107 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>סקר מחוברות 2026 · דשבורד מנהלים</title>
-<meta name="theme-color" content="#0f766e">
+<meta name="theme-color" content="#b3000f">
 <style>
-:root{--teal:#0d9488;--teal-d:#0f766e;--ink:#12211f;--soft:#5b6b68;--line:#e3e9e7;--paper:#f6f8f7;--card:#fff;--green:#15a34a;--amber:#d97706;--red:#dc2626}
+:root{
+  --brand:#e30613;--brand-d:#b3000f;--brand-l:#fdecee;
+  --ink:#1b1b1f;--soft:#62666d;--line:#e6e8eb;--paper:#f6f6f7;--card:#fff;
+  --hi:#2a9d8f;--mid:#9aa1a9;--lo:#e5484d;
+  --up:#17803d;--down:#c4141f;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"Heebo","Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.5}
-.wrap{max-width:1080px;margin:0 auto;padding:0 18px 56px}
-header.top{background:linear-gradient(135deg,#0f766e,#115e59);color:#fff;padding:22px 0 20px;margin-bottom:22px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Heebo","Segoe UI",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 56px}
+header.top{background:linear-gradient(135deg,var(--brand),var(--brand-d));color:#fff;padding:22px 0 20px;margin-bottom:20px}
 header.top .wrap{padding-bottom:0;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
-h1{margin:0;font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
-.sub{opacity:.85;font-size:.85rem;margin-top:4px}
-.who{font-size:.85rem;text-align:left;opacity:.95}
-.btn{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer;transition:.15s}
-.btn-primary{background:var(--teal);color:#fff}
-.btn-primary:hover{background:var(--teal-d)}
-.btn-ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35)}
+h1{margin:0;font-size:1.45rem;font-weight:800}
+.sub{opacity:.9;font-size:.85rem;margin-top:4px}
+.who{font-size:.85rem;opacity:.95}
+.btn{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.btn-primary{background:var(--brand);color:#fff}.btn-primary:hover{background:var(--brand-d)}
+.btn-ghost{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-.kpi .l{font-size:.78rem;color:var(--soft);font-weight:600}
-.kpi .v{font-size:1.7rem;font-weight:800;letter-spacing:-.02em;margin:2px 0}
-.kpi .f{font-size:.75rem;color:var(--soft)}
-.qrow{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:9px 0;border-bottom:1px solid var(--line)}
-.qrow:last-child{border-bottom:0}
-.qname{font-size:.9rem;font-weight:600}
-.qmeta{font-size:.75rem;color:var(--soft)}
-.bar{height:9px;border-radius:99px;background:#eef2f1;overflow:hidden;position:relative;grid-column:1/-1}
-.bar i{display:block;height:100%;border-radius:99px}
-.bar i.ref{position:absolute;top:0;height:100%;width:2px;background:#12211f;opacity:.45}
-.pill{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px}
-.p-green{background:#e7f7ed;color:#0f7a37}.p-amber{background:#fdf3e3;color:#a35b06}.p-red{background:#fdeaea;color:#b91c1c}
 h2{font-size:1.02rem;margin:0 0 4px;font-weight:800}
 .hint{font-size:.8rem;color:var(--soft);margin:0 0 12px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:760px){.two{grid-template-columns:1fr}}
-ul.clean{margin:0;padding-inline-start:18px}
-ul.clean li{margin-bottom:8px;font-size:.9rem}
+.hide{display:none!important}
+
+/* login */
 .login{max-width:420px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
-.login h2{font-size:1.2rem;margin-bottom:6px}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:.8rem;font-weight:700;color:var(--soft);margin-bottom:5px}
-.field input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fbfcfc}
-.field input:focus{outline:2px solid var(--teal);border-color:transparent}
+.field input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font:inherit}
+.field input:focus{outline:2px solid var(--brand);border-color:transparent}
 .err{background:#fdeaea;color:#b91c1c;border-radius:10px;padding:9px 12px;font-size:.85rem;margin-bottom:12px}
-.note{background:#fdf8e8;border:1px solid #f0e2b8;color:#7a5c10;border-radius:10px;padding:10px 13px;font-size:.85rem;margin-bottom:14px}
-.cmt{background:#fbfcfc;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:.86rem}
-.cmt b{color:var(--teal-d);font-size:.75rem;display:block;margin-bottom:2px}
-.sel{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.sel select{padding:9px 12px;border-radius:10px;border:1px solid var(--line);font:inherit;background:#fff;min-width:180px}
-.hide{display:none!important}
+.help{font-size:.8rem;color:var(--soft);margin-top:14px;text-align:center}
+
+/* filter bar */
+.filters{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:.72rem;font-weight:800;color:var(--soft);letter-spacing:.02em}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;padding:8px 14px;font:inherit;font-size:.85rem;font-weight:700;color:var(--soft);cursor:pointer;border-inline-start:1px solid var(--line)}
+.seg button:first-child{border-inline-start:0}
+.seg button.on{background:var(--brand);color:#fff}
+.seg button:disabled{opacity:.35;cursor:not-allowed}
+select.sel{padding:8px 12px;border-radius:10px;border:1px solid var(--line);font:inherit;background:#fff;min-width:190px}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .l{font-size:.76rem;color:var(--soft);font-weight:700}
+.kpi .v{font-size:1.7rem;font-weight:800;margin:2px 0}
+.kpi .f{font-size:.74rem;color:var(--soft)}
+
+/* charts row */
+.charts{display:grid;grid-template-columns:1.05fr 1.6fr;gap:16px;margin-bottom:16px}
+@media(max-width:860px){.charts{grid-template-columns:1fr}}
+.pie-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.pie{width:150px;height:150px;border-radius:50%;position:relative;flex:none}
+.pie::after{content:"";position:absolute;inset:26px;background:#fff;border-radius:50%}
+.pie b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;font-size:1.5rem;font-weight:800}
+.legend{font-size:.82rem;line-height:1.9}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:7px}
+.minipies{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:14px}
+.mp{text-align:center}
+.mp .pie{width:92px;height:92px;margin:0 auto 6px}
+.mp .pie::after{inset:18px}
+.mp .pie b{font-size:.95rem}
+.mp .n{font-size:.78rem;font-weight:800}
+.mp .s{font-size:.7rem;color:var(--soft)}
+
+/* domain table */
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
+.tbl th{font-size:.7rem;color:var(--soft);font-weight:800;text-align:center;padding:8px 6px;border-bottom:2px solid var(--line);white-space:nowrap}
+.tbl th.l{text-align:right}
+.tbl td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.tbl td.l{text-align:right}
+.tbl tr.dom td{background:#fbfbfc;font-weight:800;cursor:pointer}
+.tbl tr.dom:hover td{background:var(--brand-l)}
+.tbl tr.q td.l{padding-inline-start:30px;font-weight:500;color:#33363b}
+.tbl tr.q{display:none}
+.tbl tr.q.open{display:table-row}
+.car{display:inline-block;width:14px;transition:.15s;color:var(--soft);margin-inline-end:6px}
+tr.dom.open .car{transform:rotate(90deg)}
+.dist{display:flex;height:24px;border-radius:5px;overflow:hidden;min-width:210px;background:#eee;font-size:.72rem;font-weight:700;color:#fff}
+.dist span{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden}
+.dist .h{background:var(--hi)}.dist .m{background:var(--mid)}.dist .lo{background:var(--lo)}
+.avg{font-weight:800}
+.delta{font-weight:800;font-size:.82rem}
+.delta.up{color:var(--up)}.delta.down{color:var(--down)}.delta.na{color:#b4b8be;font-weight:500}
+.tip{position:fixed;z-index:50;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:.8rem;box-shadow:0 8px 24px rgba(0,0,0,.14);pointer-events:none;min-width:150px}
+.tip div{display:flex;justify-content:space-between;gap:16px}
+
+/* comments */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 13px;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}
+.chip b{color:var(--brand);margin-inline-start:6px}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}.chip.on b{color:#fff}
+.quote{background:#fbfbfc;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:7px;font-size:.86rem}
+.tcard{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.tcard h3{margin:0 0 6px;font-size:.92rem}
+.tcard h3 span{background:var(--brand-l);color:var(--brand-d);border-radius:99px;padding:1px 9px;font-size:.75rem;margin-inline-start:6px}
+details.all summary{cursor:pointer;font-weight:800;color:var(--brand-d);font-size:.85rem;margin-top:6px}
+.note{background:#fff6e5;border:1px solid #f1dfae;color:#775a10;border-radius:10px;padding:10px 13px;font-size:.85rem;margin-bottom:14px}
 footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 </style>
 </head>
@@ -61,249 +113,282 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 <div id="loginView">
   <div class="login">
     <h2>דשבורד מנהלים · סקר מחוברות 2026</h2>
-    <p class="hint">נכנסים עם קוד המשתמש בלבד. כל מנהל רואה רק את המחלקה שלו.</p>
-    <p class="hint" id="loginHelp" style="margin-top:2px">שכחתם את קוד המשתמש? פנו לרנתה או לנועה.</p>
+    <p class="hint">נכנסים עם קוד המשתמש בלבד. כל מנהל רואה רק את המחלקות שלו.</p>
     <div id="loginErr" class="err hide"></div>
     <div class="field"><label>קוד משתמש</label><input id="u" autocomplete="username" placeholder="לדוגמה PAMLS" dir="ltr"></div>
     <button class="btn btn-primary" style="width:100%" id="loginBtn">כניסה</button>
+    <div class="help">שכחתם את קוד המשתמש? פנו לרנתה או לנועה.</div>
   </div>
 </div>
 
 <div id="appView" class="hide">
   <header class="top">
     <div class="wrap">
-      <div>
-        <h1 id="title">סקר מחוברות 2026</h1>
-        <div class="sub" id="periodLine"></div>
-      </div>
-      <div style="text-align:left">
-        <div class="who" id="whoLine"></div>
-        <div style="margin-top:8px;display:flex;gap:8px">
-          <button class="btn btn-ghost" onclick="logout()">יציאה</button>
-        </div>
-      </div>
+      <div><h1 id="title">סקר מחוברות 2026</h1><div class="sub" id="periodLine"></div></div>
+      <div style="text-align:left"><div class="who" id="whoLine"></div>
+        <div style="margin-top:8px"><button class="btn btn-ghost" onclick="logout()">יציאה</button></div></div>
     </div>
   </header>
 
   <div class="wrap">
-    <div id="adminBar" class="card hide">
-      <h2>בחירת היקף</h2>
-      <p class="hint">אתם רואים את כל החברות. בחירת מחלקה מציגה אותה מול ממוצע החברה שלה.</p>
-      <div class="sel">
-        <select id="selDept" onchange="pickDept(this.value)"></select>
-        <button class="btn btn-ghost" style="background:#eef2f1;color:var(--ink);border-color:var(--line)" onclick="pickDept('')">חזרה לכל החברות</button>
+    <div class="card">
+      <div class="filters">
+        <div class="fg"><label>אוכלוסייה</label>
+          <div class="seg" id="segPop">
+            <button data-v="all" class="on">כולם</button>
+            <button data-v="employee">עובדים</button>
+            <button data-v="manager">מנהלים</button>
+          </div></div>
+        <div class="fg"><label>חברה</label><select class="sel" id="selCo"></select></div>
+        <div class="fg"><label>מחלקה</label><select class="sel" id="selDept"></select></div>
       </div>
+      <p class="hint" style="margin:10px 0 0" id="scopeHint"></p>
     </div>
 
     <div id="noteBox" class="note hide"></div>
-
     <div class="kpis" id="kpis"></div>
 
-    <div class="card">
-      <h2>12 ההיגדים</h2>
-      <p class="hint" id="barsHint">אחוז העונים "מסכים" או "מסכים מאוד". ירוק 80 ומעלה, כתום 50-79, אדום מתחת ל-50. הפס השחור = ממוצע החברה.</p>
-      <div id="bars"></div>
-    </div>
-
-    <div class="two">
-      <div class="card"><h2>מה חזק</h2><p class="hint">שני ההיגדים הגבוהים בהיקף שלך.</p><ul class="clean" id="strong"></ul></div>
-      <div class="card"><h2>מה כואב</h2><p class="hint">שני ההיגדים הנמוכים — שם מתחילים.</p><ul class="clean" id="weak"></ul></div>
+    <div class="charts">
+      <div class="card"><h2>אחוז מילוי</h2><p class="hint" id="pieHint"></p><div class="pie-wrap" id="fillPie"></div></div>
+      <div class="card"><h2>התפלגות לפי תחום</h2><p class="hint">גבוה (4-5) · בינוני (3) · נמוך (1-2)</p><div class="minipies" id="domPies"></div></div>
     </div>
 
     <div class="card">
-      <h2>מה זה אומר</h2>
-      <p class="hint">מסקנות שנגזרות אוטומטית מהנתונים של ההיקף שלך.</p>
-      <ul class="clean" id="insights"></ul>
+      <h2>ההיגדים לפי תחום</h2>
+      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בירוק (עלייה) או באדום (ירידה).</p>
+      <div style="overflow-x:auto"><table class="tbl" id="tbl"></table></div>
     </div>
 
     <div class="card">
-      <h2>שאלות לדיון בצוות</h2>
-      <p class="hint">לא צריך את כולן. שתיים או שלוש, בשיחה אחת.</p>
-      <ul class="clean" id="prompts"></ul>
-    </div>
-
-    <div class="card" id="cmtCard">
-      <h2>קולות מהשטח</h2>
-      <p class="hint">תשובות פתוחות אנונימיות מהמחלקה שלך.</p>
-      <div id="comments"></div>
+      <h2>קולות מהשטח: תמות מרכזיות</h2>
+      <p class="hint">התשובות הפתוחות מקובצות לתמות. אפשר לפתוח כל תמה ואת כל המלל.</p>
+      <div class="chips" id="topicChips"></div>
+      <div id="themes"></div>
     </div>
 
     <footer>הנתונים מצטברים בלבד. מחלקה עם פחות מ-5 משיבים אינה מוצגת, להגנת האנונימיות.</footer>
   </div>
 </div>
+<div id="tip" class="tip hide"></div>
 
 <script>
-const API = 'https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mahbarutApi';
-let TOKEN = '';   // הטוקן נשמר בזיכרון בלבד: כל טעינת דף מחייבת קוד משתמש
-let STATE = null;
+const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mahbarutApi';
+let TOKEN=null, D=null, ST={pop:'all',co:'*',dept:'*',topic:'o1 — מה מחבר אותך'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const pct=v=>v==null?'—':(Math.round(v*10)/10)+'%';
 
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function pct(v){return (v==null)?'—':v.toFixed(1)+'%';}
-function color(v){return v>=80?'var(--green)':v>=50?'var(--amber)':'var(--red)';}
-function pill(v){return '<span class="pill '+(v>=80?'p-green':v>=50?'p-amber':'p-red')+'">'+pct(v)+'</span>';}
-
-async function api(body){
-  const r = await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  return r.json();
-}
-
-async function doLogin(){
-  const u=document.getElementById('u').value.trim();
-  const err=document.getElementById('loginErr');
-  err.classList.add('hide');
-  if(!u){err.textContent='צריך למלא קוד משתמש';err.classList.remove('hide');return;}
-  document.getElementById('loginBtn').textContent='מתחבר…';
+async function api(body){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return r.json();}
+$('u').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click()});
+$('loginBtn').onclick=async()=>{
+  const u=$('u').value.trim(), err=$('loginErr'); err.classList.add('hide');
+  if(!u){err.textContent='נא להזין קוד משתמש';err.classList.remove('hide');return}
   const r=await api({action:'login',username:u});
-  document.getElementById('loginBtn').textContent='כניסה';
-  if(!r.success){err.textContent='קוד המשתמש לא נמצא. בדקו אותו ונסו שוב.';err.classList.remove('hide');return;}
-  TOKEN=r.token;
-  resetIdle();
-  await load();
-}
-
+  if(!r.success){err.textContent='קוד משתמש לא מוכר';err.classList.remove('hide');return}
+  TOKEN=r.token; await load();
+};
 async function load(){
   const r=await api({action:'data',token:TOKEN});
-  if(!r.success){ TOKEN=''; showLogin(); return; }
-  STATE=r.data; render();
+  if(!r.success){logout();return}
+  D=r.data; $('loginView').classList.add('hide'); $('appView').classList.remove('hide');
+  $('whoLine').textContent=D.scope.name+(D.scope.all?' · כל המחלקות':'');
+  $('periodLine').textContent=D.meta.period;
+  initFilters(); render();
+}
+function logout(){TOKEN=null;D=null;$('appView').classList.add('hide');$('loginView').classList.remove('hide');$('u').value=''}
+
+/* ---------- filters ---------- */
+function initFilters(){
+  const cos=[...new Set(D.scope.departments.map(d=>d.company))];
+  const selCo=$('selCo');
+  selCo.innerHTML=(cos.length>1||D.scope.all?'<option value="*">כל הקבוצה</option>':'')+cos.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  ST.co=selCo.value; fillDepts();
+  selCo.onchange=()=>{ST.co=selCo.value;ST.dept='*';fillDepts();render()};
+  $('selDept').onchange=e=>{ST.dept=e.target.value;render()};
+  document.querySelectorAll('#segPop button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#segPop button').forEach(x=>x.classList.remove('on'));b.classList.add('on');ST.pop=b.dataset.v;render()});
+}
+function fillDepts(){
+  const ds=D.scope.departments.filter(d=>ST.co==='*'||d.company===ST.co);
+  $('selDept').innerHTML='<option value="*">כל המחלקות'+(ST.co==='*'?'':' של '+esc(ST.co))+'</option>'+
+    ds.map(d=>`<option value="${esc(d.key)}">${esc(d.dept)}${ST.co==='*'?' · '+esc(d.company):''}</option>`).join('');
+  $('selDept').value=ST.dept;
 }
 
-function showLogin(){
-  document.getElementById('appView').classList.add('hide');
-  document.getElementById('loginView').classList.remove('hide');
+/* ---------- slice resolution ---------- */
+function sliceFor(pop,co,dept){
+  let key;
+  if(dept&&dept!=='*') key='dept:'+dept;
+  else if(co&&co!=='*') key='company:'+co;
+  else key='group';
+  let s=D.slices[key]; if(!s) return null;
+  if(pop!=='all'&&s.roles&&s.roles[pop]) s=Object.assign({},s,s.roles[pop],{label:s.label,roster:s.roster,completion:s.completion});
+  return s;
+}
+/* when the user picked a single department, aggregate manager scope across all allowed depts */
+function currentSlice(){
+  if(ST.dept==='*'&&ST.co==='*'&&!D.scope.all&&D.scope.departments.length){
+    return mergeDepts(D.scope.departments.filter(()=>true));
+  }
+  if(ST.dept==='*'&&ST.co!=='*'&&!D.scope.all){
+    return mergeDepts(D.scope.departments.filter(d=>d.company===ST.co));
+  }
+  return sliceFor(ST.pop,ST.co,ST.dept);
+}
+function mergeDepts(list){
+  if(list.length===1) return sliceFor(ST.pop,'*',list[0].key);
+  const parts=list.map(d=>sliceFor(ST.pop,'*',d.key)).filter(Boolean);
+  if(!parts.length) return null;
+  const q={}, doms={}, QIDS=D.meta.questions.map(x=>x.id);
+  QIDS.forEach(id=>{
+    const dist=[0,0,0,0,0]; let n=0;
+    parts.forEach(p=>{const d=p.q&&p.q[id]; if(!d) return; d.dist.forEach((v,i)=>dist[i]+=v); n+=d.n});
+    if(!n) return;
+    const avg=dist.reduce((a,v,i)=>a+v*(i+1),0)/n;
+    q[id]={n,dist,avg:Math.round(avg*100)/100,fav:Math.round((dist[3]+dist[4])/n*1000)/10,
+      low:Math.round((dist[0]+dist[1])/n*1000)/10,mid:Math.round(dist[2]/n*1000)/10,high:Math.round((dist[3]+dist[4])/n*1000)/10};
+  });
+  D.meta.domains.forEach(dm=>{
+    const dist=[0,0,0,0,0]; let n=0;
+    dm.qs.forEach(id=>{const d=q[id]; if(!d) return; d.dist.forEach((v,i)=>dist[i]+=v); n+=d.n});
+    if(!n) return;
+    doms[dm.id]={n,dist,avg:Math.round(dist.reduce((a,v,i)=>a+v*(i+1),0)/n*100)/100,
+      low:Math.round((dist[0]+dist[1])/n*1000)/10,mid:Math.round(dist[2]/n*1000)/10,high:Math.round((dist[3]+dist[4])/n*1000)/10};
+  });
+  const n=parts.reduce((a,p)=>a+p.n,0), roster=parts.reduce((a,p)=>a+(p.roster||0),0);
+  return {label:list.map(d=>d.dept).join(' + '),n,roster,completion:roster?Math.round(n/roster*1000)/10:null,q,domains:doms,
+    comments:mergeComments(parts)};
+}
+function mergeComments(parts){
+  const out={};
+  parts.forEach(p=>{if(!p.comments) return; Object.keys(p.comments).forEach(t=>{
+    const c=p.comments[t]; const o=out[t]||(out[t]={short:c.short,count:0,answered:0,themes:{},other:0,all:[]});
+    o.count+=c.count;o.answered+=c.answered;o.other+=c.other;o.all=o.all.concat(c.all);
+    (c.themes||[]).forEach(th=>{const x=o.themes[th.name]||(o.themes[th.name]={name:th.name,count:0,quotes:[]});x.count+=th.count;x.quotes=x.quotes.concat(th.quotes).slice(0,3)});
+  })});
+  Object.values(out).forEach(o=>o.themes=Object.values(o.themes).sort((a,b)=>b.count-a.count));
+  return out;
 }
 
-function logout(){
-  api({action:'logout',token:TOKEN});
-  TOKEN=''; STATE=null;
-  document.getElementById('u').value='';
-  showLogin();
+/* ---------- benchmarks ---------- */
+function bench(){
+  const s=currentSlice(); if(!s) return {};
+  const grp=D.slices['group'];
+  let co=null;
+  if(ST.dept!=='*'){const d=D.scope.departments.find(x=>x.key===ST.dept); if(d) co=D.slices['company:'+d.company];}
+  else if(ST.co!=='*') co=D.slices['company:'+ST.co];
+  else if(!D.scope.all&&D.scope.companies.length===1) co=D.slices['company:'+D.scope.companies[0]];
+  const isPakaOnly=co&&co.company==='שמרית';
+  const hasGroupOnly=!co||isPakaOnly;
+  return {s,grp,co,showCo:!!co&&!isPakaOnly,show2022:D.meta.has2022};
 }
 
-/* יציאה אוטומטית אחרי 30 דקות ללא פעילות — נתוני HR לא נשארים פתוחים */
-var idleT=null;
-function resetIdle(){
-  clearTimeout(idleT);
-  if(!TOKEN) return;
-  idleT=setTimeout(function(){ if(TOKEN){ logout(); } },30*60*1000);
+function dlt(a,b){
+  if(a==null||b==null) return '<span class="delta na">—</span>';
+  const d=Math.round((a-b)*10)/10;
+  if(d===0) return '<span class="delta na">0.0</span>';
+  return `<span class="delta ${d>0?'up':'down'}">${d>0?'+':''}${d.toFixed(1)}</span>`;
 }
-['click','keydown','mousemove','touchstart'].forEach(function(ev){
-  document.addEventListener(ev,resetIdle,{passive:true});
-});
 
-function currentSlice(){ return STATE.view || STATE.mine || null; }
-function currentRef(){ return STATE.viewRef || STATE.company || null; }
-
+/* ---------- render ---------- */
 function render(){
-  document.getElementById('loginView').classList.add('hide');
-  document.getElementById('appView').classList.remove('hide');
-  document.getElementById('title').textContent='סקר מחוברות 2026 — ' + STATE.scope.label;
-  document.getElementById('periodLine').textContent='עודכן '+(STATE.generated||'')+' · '+(STATE.period||'');
-  document.getElementById('whoLine').innerHTML=esc(STATE.scope.name||'');
+  const B=bench(); const s=B.s;
+  if(!s){$('noteBox').textContent='אין נתונים להיקף שנבחר, או שיש פחות מ-5 משיבים.';$('noteBox').classList.remove('hide');
+    $('kpis').innerHTML='';$('tbl').innerHTML='';$('domPies').innerHTML='';$('fillPie').innerHTML='';$('themes').innerHTML='';return}
+  $('noteBox').classList.add('hide');
+  $('title').textContent='סקר מחוברות 2026 · '+s.label;
+  const popTxt={all:'כל האוכלוסייה',employee:'עובדים בלבד',manager:'מנהלים בלבד'}[ST.pop];
+  $('scopeHint').textContent=popTxt+(ST.pop==='manager'?' · מוצגים רק ברמת חברה/קבוצה כדי לשמור על דיסקרטיות':'');
+  const all=Object.values(s.q||{});
+  const avg=all.length?all.reduce((a,x)=>a+x.avg*x.n,0)/all.reduce((a,x)=>a+x.n,0):0;
+  const fav=all.length?all.reduce((a,x)=>a+x.fav*x.n,0)/all.reduce((a,x)=>a+x.n,0):0;
+  $('kpis').innerHTML=
+    kpi('משיבים',s.n,'מתוך '+(s.roster||'—')+' רשומים')+
+    kpi('אחוז מילוי',pct(s.completion),B.grp?'קבוצה: '+pct(B.grp.completion):'')+
+    kpi('ציון ממוצע',avg.toFixed(2),B.grp?'קבוצה: '+groupAvg(B.grp):'')+
+    kpi('אחוז חיובי (4-5)',pct(fav),B.grp?'קבוצה: '+pct(groupFav(B.grp)):'');
+  fillPie(s,B); domPies(s); table(s,B); themes(s);
+}
+function kpi(l,v,f){return `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="f">${f||'&nbsp;'}</div></div>`}
+function groupAvg(g){const a=Object.values(g.q);return (a.reduce((x,y)=>x+y.avg*y.n,0)/a.reduce((x,y)=>x+y.n,0)).toFixed(2)}
+function groupFav(g){const a=Object.values(g.q);return a.reduce((x,y)=>x+y.fav*y.n,0)/a.reduce((x,y)=>x+y.n,0)}
 
-  const admin = !!(STATE.departments && STATE.departments.length);
-  document.getElementById('adminBar').classList.toggle('hide', !admin);
-  if(admin){
-    const sel=document.getElementById('selDept');
-    if(!sel.dataset.built){
-      sel.innerHTML='<option value="">כל החברות</option>'+STATE.departments.map(d=>
-        '<option value="'+esc(d.company+'|'+d.dept)+'">'+esc(d.dept+' · '+d.company)+' ('+d.n+')</option>').join('');
-      sel.dataset.built='1';
-    }
-  }
-
-  const nb=document.getElementById('noteBox');
-  if(STATE.note){nb.textContent=STATE.note;nb.classList.remove('hide');}else nb.classList.add('hide');
-
-  drawKpis(); drawBars(); drawLists();
+function pieCss(parts){let acc=0;return 'conic-gradient('+parts.map(p=>{const a=acc;acc+=p.v;return `${p.c} ${a}% ${acc}%`}).join(',')+')'}
+function fillPie(s,B){
+  const c=s.completion||0;
+  $('pieHint').textContent=(ST.dept!=='*'?'המחלקה שנבחרה':(ST.co!=='*'?'החברה שנבחרה':'כל הקבוצה'))+' · '+s.n+' מתוך '+(s.roster||'—');
+  let html=`<div class="pie" style="background:${pieCss([{v:c,c:'var(--brand)'},{v:100-c,c:'#e9eaec'}])}"><b>${pct(c)}</b></div>
+    <div class="legend"><div><i style="background:var(--brand)"></i>מילאו: ${s.n}</div><div><i style="background:#e9eaec"></i>לא מילאו: ${Math.max(0,(s.roster||0)-s.n)}</div></div>`;
+  $('fillPie').innerHTML=html;
+}
+function domPies(s){
+  $('domPies').innerHTML=D.meta.domains.map(dm=>{
+    const d=s.domains&&s.domains[dm.id]; if(!d) return '';
+    return `<div class="mp"><div class="pie" style="background:${pieCss([{v:d.high,c:'var(--hi)'},{v:d.mid,c:'var(--mid)'},{v:d.low,c:'var(--lo)'}])}"><b>${Math.round(d.high)}%</b></div>
+      <div class="n">${dm.name}</div><div class="s">ממוצע ${d.avg}</div></div>`}).join('');
 }
 
-function drawKpis(){
-  const box=document.getElementById('kpis');
-  const s=currentSlice();
-  if(STATE.scope.all && !STATE.view){
-    box.innerHTML=[
-      kpi('שיעור היענות','84.8%', STATE.overall.n+' מתוך '+STATE.overall.roster+' עובדים'),
-      kpi('מדד מחוברות', avgOf(STATE.overall.q).toFixed(2), 'ממוצע 12 ההיגדים, סולם 1-5'),
-      kpi('ציון המנהל הישיר', Math.round(mgrScore(STATE.overall.q))+'', 'אמון, תמיכה, משוב ונגישות'),
-      kpi('משיבים', String(STATE.overall.n), 'כל החברות')
-    ].join('');
-    return;
-  }
-  const ref=currentRef();
-  const cmp = ref && s ? ' · חברה: '+pct(ref.completion) : '';
-  box.innerHTML=[
-    kpi('שיעור היענות', pct(s?s.completion:null), (s? s.n+' מתוך '+s.roster+' עובדים':'—')+cmp),
-    kpi('מדד מחוברות', s?avgOf(s.q).toFixed(2):'—', 'ממוצע 12 ההיגדים'),
-    kpi('ציון המנהל הישיר', s?Math.round(mgrScore(s.q))+'':'—', 'אמון, תמיכה, משוב ונגישות'),
-    kpi('משיבים בהיקף', String(s?s.n:STATE.overall.n), s? (s.dept+' · '+s.company) : 'כל החברות')
-  ].join('');
+/* ---------- domain table ---------- */
+function table(s,B){
+  const cols=[];
+  cols.push({k:'grp',t:'קבוצה',on:true});
+  if(B.showCo) cols.push({k:'co',t:B.co.company,on:true});
+  if(B.show2022) cols.push({k:'y22',t:'2022',on:true});
+  const head=`<tr><th class="l">תחום / היגד</th><th>ציון</th><th style="min-width:230px">התפלגות</th>${cols.map(c=>`<th>${esc(c.t)}</th>`).join('')}</tr>`;
+  let rows='';
+  D.meta.domains.forEach(dm=>{
+    const d=s.domains&&s.domains[dm.id]; if(!d) return;
+    const g=B.grp&&B.grp.domains[dm.id], c=B.co&&B.co.domains&&B.co.domains[dm.id];
+    const y=D.meta.baseline2022&&D.meta.baseline2022[dm.id];
+    rows+=`<tr class="dom" data-d="${dm.id}"><td class="l"><span class="car">◂</span>${dm.name}</td><td class="avg">${d.avg.toFixed(2)}</td><td>${distBar(d.low,d.mid,d.high,d.n)}</td>`+
+      cols.map(cc=>cell(cc.k,d.avg,g&&g.avg,c&&c.avg,y)).join('')+'</tr>';
+    dm.qs.forEach(id=>{
+      const q=s.q[id]; if(!q) return;
+      const meta=D.meta.questions.find(x=>x.id===id);
+      const gq=B.grp&&B.grp.q[id], cq=B.co&&B.co.q&&B.co.q[id], yq=D.meta.baseline2022&&D.meta.baseline2022[id];
+      rows+=`<tr class="q" data-p="${dm.id}"><td class="l">${esc(meta.text)}</td><td class="avg">${q.avg.toFixed(2)}</td><td>${distBar(q.low,q.mid,q.high,q.n)}</td>`+
+        cols.map(cc=>cell(cc.k,q.avg,gq&&gq.avg,cq&&cq.avg,yq)).join('')+'</tr>';
+    });
+  });
+  $('tbl').innerHTML='<thead>'+head+'</thead><tbody>'+rows+'</tbody>';
+  $('tbl').querySelectorAll('tr.dom').forEach(tr=>tr.onclick=()=>{
+    tr.classList.toggle('open');
+    $('tbl').querySelectorAll(`tr.q[data-p="${tr.dataset.d}"]`).forEach(x=>x.classList.toggle('open'));
+  });
+  $('tbl').querySelectorAll('.dist').forEach(el=>{
+    el.onmousemove=e=>{const t=$('tip');t.innerHTML=el.dataset.tip;t.classList.remove('hide');t.style.left=(e.clientX-170)+'px';t.style.top=(e.clientY+16)+'px'};
+    el.onmouseleave=()=>$('tip').classList.add('hide');
+  });
 }
-function kpi(l,v,f){return '<div class="kpi"><div class="l">'+esc(l)+'</div><div class="v">'+esc(v)+'</div><div class="f">'+esc(f)+'</div></div>';}
-function avgOf(q){const ks=Object.keys(q||{});if(!ks.length)return 0;return ks.reduce((a,k)=>a+q[k].avg,0)/ks.length;}
-function mgrScore(q){const ks=['q2','q3','q7','q10'].filter(k=>q&&q[k]);if(!ks.length)return 0;return ks.reduce((a,k)=>a+q[k].fav,0)/ks.length;}
-
-function drawBars(){
-  const s=currentSlice()||{q:STATE.overall.q};
-  const ref=currentRef();
-  const qs=STATE.questions||[];
-  document.getElementById('bars').innerHTML=qs.map(q=>{
-    const d=s.q&&s.q[q.id]; if(!d) return '';
-    const r=ref&&ref.q&&ref.q[q.id]?ref.q[q.id].fav:null;
-    return '<div class="qrow"><div class="qname">'+esc(q.short)+'</div><div>'+pill(d.fav)+'</div>'
-      +'<div class="bar"><i style="width:'+d.fav+'%;background:'+color(d.fav)+'"></i>'+(r!=null?'<i class="ref" style="right:'+r+'%;background:#12211f;opacity:.5;width:2px;position:absolute;top:0;height:100%"></i>':'')+'</div>'
-      +'<div class="qmeta">ממוצע '+d.avg.toFixed(2)+' · '+d.n+' משיבים'+(r!=null?' · חברה '+pct(r):'')+'</div></div>';
-  }).join('');
+function cell(k,own,grp,co,y22){
+  if(k==='grp') return `<td>${grp!=null?grp.toFixed(2)+' '+dlt(own,grp):'—'}</td>`;
+  if(k==='co')  return `<td>${co!=null?co.toFixed(2)+' '+dlt(own,co):'—'}</td>`;
+  if(k==='y22') return `<td>${y22!=null?y22.toFixed(2)+' '+dlt(own,y22):'<span class="delta na">—</span>'}</td>`;
+  return '<td>—</td>';
 }
-
-function drawLists(){
-  const s=currentSlice()||{q:STATE.overall.q};
-  const qs=STATE.questions||[];
-  const arr=qs.filter(q=>s.q&&s.q[q.id]).map(q=>({id:q.id,short:q.short,...s.q[q.id]}));
-  arr.sort((a,b)=>b.fav-a.fav);
-  const top=arr.slice(0,2), low=arr.slice(-2).reverse();
-  const ref=currentRef();
-  document.getElementById('strong').innerHTML=top.map(x=>'<li><b>'+esc(x.short)+'</b> — '+pct(x.fav)+' הסכמה'+(ref&&ref.q&&ref.q[x.id]?' (חברה '+pct(ref.q[x.id].fav)+')':'')+'</li>').join('');
-  document.getElementById('weak').innerHTML=low.map(x=>'<li><b>'+esc(x.short)+'</b> — '+pct(x.fav)+' הסכמה'+(ref&&ref.q&&ref.q[x.id]?' (חברה '+pct(ref.q[x.id].fav)+')':'')+'</li>').join('');
-
-  const ins=[];
-  const mg=mgrScore(s.q);
-  const org=(s.q&&s.q.q5)?s.q.q5.fav:null;
-  if(org!=null&&mg-org>10) ins.push('המנהל הישיר מדורג גבוה ב-'+Math.round(mg-org)+' נקודות מהארגון ('+pct(mg)+' מול '+pct(org)+'). מה שמפריע לאנשים הוא מה שמעליכם, לא אצלכם.');
-  if(org!=null&&org-mg>10) ins.push('הארגון מדורג גבוה מהמנהל הישיר ('+pct(org)+' מול '+pct(mg)+'). כאן נקודת החיכוך היא מקומית — שווה שיחה אישית.');
-  if(org!=null&&org<80) ins.push('תקשורת על החלטות ושינויים עומדת על '+pct(org)+', מתחת לרף ה-80. זה ההיגד שכדאי לקחת לדיון.');
-  if(s.q&&s.q.q8&&s.q.q8.fav<80) ins.push('רק '+pct(s.q.q8.fav)+' רואים את עצמם כאן בעוד שנתיים.');
-  if(ref&&ref.completion&&s.completion&&Math.abs(s.completion-ref.completion)>10) ins.push('שיעור ההיענות שלכם '+pct(s.completion)+' מול '+pct(ref.completion)+' בחברה — ככל שיותר עונים, התמונה מדויקת יותר.');
-  ins.push('היקף המשיבים: '+s.n+' עובדים'+(s.completion!=null?' ('+pct(s.completion)+' מהמצבה)':'')+'.');
-  document.getElementById('insights').innerHTML=ins.map(t=>'<li>'+esc(t)+'</li>').join('');
-
-  const lowQ=low[0], topQ=top[0];
-  const pr=[];
-  if(lowQ) pr.push('מה היה צריך לקרות כדי שההיגד "'+lowQ.short+'" ירגיש אחרת אצלנו?');
-  if(topQ) pr.push('"' + topQ.short + '" עובד טוב אצלנו. מה בדיוק אנחנו עושים שם נכון, ואיך מעבירים את זה לשאר?');
-  pr.push('אילו שינויים בשנתיים האחרונות לא הוסברו מספיק, ומי היה צריך להסביר אותם?');
-  pr.push('מה הייתם רוצים לדעת על החלטות שמתקבלות מעלינו, ומה חסר היום?');
-  pr.push('מה הדבר האחד שאני, כמנהל ישיר, יכול לשנות עד סוף החודש?');
-  document.getElementById('prompts').innerHTML=pr.map(t=>'<li>'+esc(t)+'</li>').join('');
-
-  const c=(s.comments||[]);
-  document.getElementById('cmtCard').classList.toggle('hide', !c.length);
-  document.getElementById('comments').innerHTML=c.map(x=>'<div class="cmt"><b>'+esc(x.topic)+'</b>'+esc(x.text)+'</div>').join('');
+function distBar(lo,mi,hi,n){
+  const seg=(c,v)=>v>0?`<span class="${c}" style="width:${v}%">${v>=9?Math.round(v)+'%':''}</span>`:'';
+  const tip=`<div><b>גבוה (4-5)</b><b>${hi.toFixed(1)}%</b></div><div><span>בינוני (3)</span><span>${mi.toFixed(1)}%</span></div><div><span>נמוך (1-2)</span><span>${lo.toFixed(1)}%</span></div><div style="color:#888;margin-top:3px"><span>משיבים</span><span>${n}</span></div>`;
+  return `<div class="dist" data-tip='${tip.replace(/'/g,"&#39;")}'>${seg('h',hi)}${seg('m',mi)}${seg('lo',lo)}</div>`;
 }
 
-function pickDept(key){
-  if(!key){ STATE.view=null; STATE.viewRef=null; render(); document.getElementById('title').textContent='סקר מחוברות 2026 — כל החברות'; return; }
-  const d=STATE.departments.find(x=>x.company+'|'+x.dept===key);
-  if(!d) return;
-  STATE.view=d; STATE.viewRef=STATE.companies[d.company]||null;
-  render();
-  document.getElementById('title').textContent='סקר מחוברות 2026 — '+d.dept+' · '+d.company;
+/* ---------- themes ---------- */
+function themes(s){
+  const cm=s.comments;
+  if(!cm){ $('topicChips').innerHTML='';$('themes').innerHTML='<p class="hint">התשובות הפתוחות מוצגות ברמת מחלקה. בחרו מחלקה כדי לראות אותן.</p>';return}
+  const topics=Object.keys(cm);
+  if(!cm[ST.topic]) ST.topic=topics[0];
+  $('topicChips').innerHTML=topics.map(t=>`<button class="chip ${t===ST.topic?'on':''}" data-t="${esc(t)}">${esc(cm[t].short)}<b>${cm[t].answered}</b></button>`).join('');
+  $('topicChips').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ST.topic=b.dataset.t;themes(s)});
+  const c=cm[ST.topic];
+  let html='';
+  (c.themes||[]).slice(0,6).forEach(th=>{
+    html+=`<div class="tcard"><h3>${esc(th.name)}<span>${th.count}</span></h3>${(th.quotes||[]).map(q=>`<div class="quote">${esc(q)}</div>`).join('')}</div>`;
+  });
+  if(!(c.themes||[]).length) html+='<p class="hint">לא זוהו תמות חוזרות בתשובות של ההיקף הזה (מעט תשובות או תשובות מגוונות מאוד).</p>';
+  html+=`<details class="all"><summary>פתיחת כל המלל (${c.all.length})</summary>${c.all.map(q=>`<div class="quote">${esc(q)}</div>`).join('')}</details>`;
+  $('themes').innerHTML=html;
 }
-
-document.getElementById('loginBtn').addEventListener('click',doLogin);
-document.getElementById('p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('u').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-
-if(TOKEN){ load(); } else { showLogin(); }
 </script>
 </body>
 </html>
