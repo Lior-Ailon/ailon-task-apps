@@ -9,8 +9,8 @@
 :root{
   --brand:#e30613;--brand-d:#b3000f;--brand-l:#fdecee;
   --ink:#1b1b1f;--soft:#62666d;--line:#e6e8eb;--paper:#f6f6f7;--card:#fff;
-  --hi:#2a9d8f;--mid:#9aa1a9;--lo:#e5484d;
-  --up:#17803d;--down:#c4141f;
+  --hi:#e30613;--mid:#f0b6ba;--lo:#7d0d15;
+  --up:#1d4ed8;--down:#c4141f;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"Heebo","Segoe UI",system-ui,sans-serif;line-height:1.5}
@@ -280,7 +280,8 @@ function bench(){
   else if(!D.scope.all&&D.scope.companies.length===1) co=D.slices['company:'+D.scope.companies[0]];
   const isPakaOnly=co&&co.company==='שמרית';
   const hasGroupOnly=!co||isPakaOnly;
-  return {s,grp,co,showCo:!!co&&!isPakaOnly,show2022:D.meta.has2022};
+  const isGroupOwn = (ST.dept==='*' && (ST.co==='*' || !co));
+  return {s,grp,co,showCo:!!co&&!isPakaOnly,showGrp:!isGroupOwn,show2022:true};
 }
 
 function dlt(a,b){
@@ -331,10 +332,11 @@ function domPies(s){
 /* ---------- domain table ---------- */
 function table(s,B){
   const cols=[];
-  cols.push({k:'grp',t:'קבוצה',on:true});
+  if(B.showGrp) cols.push({k:'grp',t:'קבוצה',on:true});
   if(B.showCo) cols.push({k:'co',t:B.co.company,on:true});
   if(B.show2022) cols.push({k:'y22',t:'2022',on:true});
-  const head=`<tr><th class="l">תחום / היגד</th><th>ציון</th><th style="min-width:230px">התפלגות</th>${cols.map(c=>`<th>${esc(c.t)}</th>`).join('')}</tr>`;
+  const ownLabel=(ST.dept!=='*')?'המחלקה':(ST.co!=='*'?'החברה':'הקבוצה');
+  const head='<tr><th class="l">תחום / היגד</th><th>ציון '+esc(ownLabel)+'</th><th style="min-width:230px">התפלגות</th>'+cols.map(c=>'<th>'+esc(c.t)+'</th>').join('')+'</tr>';
   let rows='';
   D.meta.domains.forEach(dm=>{
     const d=s.domains&&s.domains[dm.id]; if(!d) return;
