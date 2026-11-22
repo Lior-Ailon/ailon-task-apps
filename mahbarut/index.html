@@ -155,7 +155,7 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 
     <div class="card">
       <h2>ההיגדים לפי תחום</h2>
-      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בכחול (עלייה) או באדום (ירידה).</p>
+      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בכחול (עלייה) או באדום (ירידה). נתוני 2022 הם ברמת פוראטוס בלבד, בלי פילוח מחלקות.</p>
       <div style="overflow-x:auto"><table class="tbl" id="tbl"></table></div>
     </div>
 
@@ -355,7 +355,7 @@ function table(s,B){
   const cols=[];
   if(B.showGrp) cols.push({k:'grp',t:'קבוצה',on:true});
   if(B.showCo) cols.push({k:'co',t:B.co.company,on:true});
-  if(B.show2022) cols.push({k:'y22',t:'2022',on:true});
+  if(B.show2022) cols.push({k:'y22',t:'2022 (פוראטוס)',on:true});
   const ownLabel=(ST.dept!=='*')?'המחלקה':(ST.co!=='*'?'החברה':'הקבוצה');
   const head='<tr><th class="l">תחום / היגד</th><th>ציון '+esc(ownLabel)+'</th><th style="min-width:230px">התפלגות</th>'+cols.map(c=>'<th>'+esc(c.t)+'</th>').join('')+'</tr>';
   let rows='';
