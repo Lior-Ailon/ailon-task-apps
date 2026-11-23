@@ -62,6 +62,8 @@ select.sel{padding:8px 12px;border-radius:10px;border:1px solid var(--line);font
 .pie{width:150px;height:150px;border-radius:50%;position:relative;flex:none}
 .pie::after{content:"";position:absolute;inset:26px;background:#fff;border-radius:50%}
 .pie b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;font-size:1.5rem;font-weight:800}
+.qsrc{font-size:.72rem;color:#8b8b93;margin-top:4px;line-height:1.35}
+.quote .qsrc span{opacity:.85}
 .legend{font-size:.82rem;line-height:1.9}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:7px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin:2px 0 12px;font-size:.78rem;color:var(--soft)}
@@ -189,6 +191,13 @@ const OPENQ={
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const pct=v=>v==null?'—':(Math.round(v*10)/10)+'%';
+const LANGNAME={ru:'ברוסית',en:'באנגלית',ar:'בערבית',hi:'בהינדי',th:'בתאית'};
+function qhtml(x){
+  const v=(typeof x==='string')?{t:x,o:null,l:null}:x;
+  let src='';
+  if(v.o){ src=`<div class="qsrc">מקור ${LANGNAME[v.l]||''} · <span dir="auto">${esc(v.o)}</span></div>`; }
+  return `<div class="quote">${esc(v.t)}${src}</div>`;
+}
 
 async function api(body){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return r.json();}
 $('u').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click()});
@@ -439,10 +448,10 @@ function themes(s){
   const c=cm[ST.topic];
   let html='';
   (c.themes||[]).slice(0,6).forEach(th=>{
-    html+=`<div class="tcard"><h3>${esc(th.name)}<span>${th.count}</span></h3>${(th.quotes||[]).map(q=>`<div class="quote">${esc(q)}</div>`).join('')}</div>`;
+    html+=`<div class="tcard"><h3>${esc(th.name)}<span>${th.count}</span></h3>${(th.quotes||[]).map(q=>qhtml(q)).join('')}</div>`;
   });
   if(!(c.themes||[]).length) html+='<p class="hint">לא זוהו תמות חוזרות בתשובות של ההיקף הזה (מעט תשובות או תשובות מגוונות מאוד).</p>';
-  html+=`<details class="all"><summary>פתיחת כל המלל (${c.all.length})</summary>${c.all.map(q=>`<div class="quote">${esc(q)}</div>`).join('')}</details>`;
+  html+=`<details class="all"><summary>פתיחת כל המלל (${c.all.length})</summary>${c.all.map(q=>qhtml(q)).join('')}</details>`;
   $('themes').innerHTML=html;
 }
 </script>
