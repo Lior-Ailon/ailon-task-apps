@@ -249,7 +249,7 @@ function currentSlice(){
 }
 function mergeDepts(list){
   if(list.length===1){
-    let one=D.slices[list[0].key]; if(!one) return null;
+    let one=D.slices['dept:'+list[0].key]; if(!one) return null;
     if(ST.pop!=='all'&&one.roles&&one.roles[ST.pop]) one=Object.assign({},one,one.roles[ST.pop]);
     return one;
   }
