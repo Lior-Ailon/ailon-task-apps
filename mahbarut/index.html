@@ -124,7 +124,7 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
     <div class="field"><label>קוד משתמש</label><input id="u" autocomplete="username" placeholder="לדוגמה PAMLS" dir="ltr">
         <input id="pw" type="password" autocomplete="current-password" placeholder="סיסמה (רק אם ניתנה לך)" dir="ltr" style="margin-top:8px"></div>
     <button class="btn btn-primary" style="width:100%" id="loginBtn">כניסה</button>
-    <div class="help">שכחתם את קוד המשתמש? פנו לרנתה או לנועה.</div>
+    <div class="help">שכחתם את קוד המשתמש? פנו לנתלי ב-HR, או לרנתה ונועה.</div>
   </div>
 </div>
 
@@ -163,7 +163,7 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 
     <div class="card">
       <h2>ההיגדים לפי תחום</h2>
-      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בכחול (עלייה) או באדום (ירידה). נתוני 2022 הם ברמת פוראטוס בלבד, בלי פילוח מחלקות.</p>
+      <p class="hint">לחצו על שורת תחום כדי לפתוח את ההיגדים שלו. ההפרש מול ההשוואה מסומן בכחול (עלייה) או באדום (ירידה). נתוני הסקר הקודם (2024) הם ברמת פוראטוס בלבד, בלי פילוח מחלקות.</p>
       <div style="overflow-x:auto"><table class="tbl" id="tbl"></table></div>
     </div>
 
@@ -353,7 +353,7 @@ function domPies(s){
       <div class="n">${dm.name}</div><div class="s">ממוצע ${d.avg}</div></div>`}).join('');
 }
 
-/* ---------- 2022 baseline ---------- */
+/* ---------- 2024 baseline ---------- */
 function domain2022(did){
   const dm=(D.meta.domains||[]).find(x=>x.id===did); if(!dm) return null;
   const b=D.meta.baseline2022||{};
@@ -367,7 +367,7 @@ function table(s,B){
   const cols=[];
   if(B.showGrp) cols.push({k:'grp',t:'קבוצה',on:true});
   if(B.showCo) cols.push({k:'co',t:B.co.company,on:true});
-  if(B.show2022) cols.push({k:'y22',t:'2022 (פוראטוס)',on:true});
+  if(B.show2022) cols.push({k:'y22',t:'2024 (פוראטוס)',on:true});
   const ownLabel=(ST.dept!=='*')?'המחלקה':(ST.co!=='*'?'החברה':'הקבוצה');
   const head='<tr><th class="l">תחום / היגד</th><th>ציון '+esc(ownLabel)+'</th><th style="min-width:230px">התפלגות</th>'+cols.map(c=>'<th>'+esc(c.t)+'</th>').join('')+'</tr>';
   let rows='';
