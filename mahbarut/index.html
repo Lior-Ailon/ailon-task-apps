@@ -119,12 +119,11 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 <div id="loginView">
   <div class="login">
     <h2>דשבורד מנהלים · סקר מחוברות 2026</h2>
-    <p class="hint">נכנסים עם קוד המשתמש בלבד. כל מנהל רואה רק את המחלקות שלו.</p>
+    <p class="hint">כניסה בסיסמה אישית בלבד. כל מנהל רואה רק את המחלקות שלו.</p>
     <div id="loginErr" class="err hide"></div>
-    <div class="field"><label>קוד משתמש</label><input id="u" autocomplete="username" placeholder="לדוגמה PAMLS" dir="ltr">
-        <input id="pw" type="password" autocomplete="current-password" placeholder="סיסמה (רק אם ניתנה לך)" dir="ltr" style="margin-top:8px"></div>
+    <div class="field"><label>סיסמה אישית</label><input id="u" autocomplete="off" placeholder="הסיסמה האישית שלך" dir="ltr"></div>
     <button class="btn btn-primary" style="width:100%" id="loginBtn">כניסה</button>
-    <div class="help">שכחתם את קוד המשתמש? פנו לנתלי ב-HR, או לרנתה ונועה.</div>
+    <div class="help">שכחתם את הסיסמה? פנו לנתלי ב-HR, או לרנתה ונועה.</div>
   </div>
 </div>
 
@@ -195,13 +194,11 @@ async function api(body){const r=await fetch(API,{method:'POST',headers:{'Conten
 $('u').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click()});
 $('loginBtn').onclick=async()=>{
   const u=$('u').value.trim(), err=$('loginErr'); err.classList.add('hide');
-  if(!u){err.textContent='נא להזין קוד משתמש';err.classList.remove('hide');return}
-  const pw=$('pw')?$('pw').value:'';
-  const r=await api({action:'login',username:u,password:pw});
+  if(!u){err.textContent='נא להזין סיסמה';err.classList.remove('hide');return}
+  const r=await api({action:'login',username:u});
   if(!r.success){
-    err.textContent=(r.error==='password_required')?'נדרשת סיסמה לקוד הזה':(r.error==='bad_credentials'?'קוד או סיסמה שגויים':'קוד משתמש לא מוכר');
+    err.textContent='הסיסמה לא מזוהה';
     err.classList.remove('hide');
-    if(r.error==='password_required'||r.error==='bad_credentials'){const p=$('pw');if(p)p.focus()}
     return}
   TOKEN=r.token; await load();
 };
@@ -213,7 +210,7 @@ async function load(){
   $('periodLine').textContent=D.meta.period;
   initFilters(); render();
 }
-function logout(){TOKEN=null;D=null;$('appView').classList.add('hide');$('loginView').classList.remove('hide');$('u').value='';const p=$('pw');if(p)p.value=''}
+function logout(){TOKEN=null;D=null;$('appView').classList.add('hide');$('loginView').classList.remove('hide');$('u').value=''}
 
 /* ---------- filters ---------- */
 function initFilters(){
