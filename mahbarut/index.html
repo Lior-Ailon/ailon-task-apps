@@ -64,6 +64,12 @@ select.sel{padding:8px 12px;border-radius:10px;border:1px solid var(--line);font
 .pie b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;font-size:1.5rem;font-weight:800}
 .legend{font-size:.82rem;line-height:1.9}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:7px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:2px 0 12px;font-size:.78rem;color:var(--soft)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.legend i.hi{background:var(--hi)}
+.legend i.mid{background:var(--mid)}
+.legend i.lo{background:var(--lo)}
 .minipies{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:14px}
 .mp{text-align:center}
 .mp .pie{width:92px;height:92px;margin:0 auto 6px}
@@ -150,7 +156,8 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 
     <div class="charts">
       <div class="card"><h2>אחוז מילוי</h2><p class="hint" id="pieHint"></p><div class="pie-wrap" id="fillPie"></div></div>
-      <div class="card"><h2>התפלגות לפי תחום</h2><p class="hint">גבוה (4-5) · בינוני (3) · נמוך (1-2)</p><div class="minipies" id="domPies"></div></div>
+      <div class="card"><h2>התפלגות לפי תחום</h2><p class="hint">התפלגות התשובות בכל תחום</p>
+      <div class="legend"><span><i class="hi"></i>גבוה 4-5</span><span><i class="mid"></i>בינוני 3</span><span><i class="lo"></i>נמוך 1-2</span></div><div class="minipies" id="domPies"></div></div>
     </div>
 
     <div class="card">
@@ -159,11 +166,6 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
       <div style="overflow-x:auto"><table class="tbl" id="tbl"></table></div>
     </div>
 
-    <div class="card" id="y22box" style="display:none">
-      <h2>בנצ'מרק 2022 — תחומי הסקר הקודם</h2>
-      <p class="hint">הסקר של 2022 פורסם ברמת פוראטוס בלבד, בלי פילוח מחלקות. אלה 15 התחומים והציונים שלהם, להשוואה מול 2026.</p>
-      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th class="l">תחום (2022)</th><th>ציון</th><th>חיובי</th><th>שלילי</th></tr></thead><tbody id="y22rows"></tbody></table></div>
-    </div>
 
     <div class="card">
       <h2>קולות מהשטח: תמות מרכזיות</h2>
@@ -180,6 +182,10 @@ footer{font-size:.75rem;color:var(--soft);text-align:center;padding-top:8px}
 <script>
 const API='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions/mahbarutApi';
 let TOKEN=null, D=null, ST={pop:'all',co:'*',dept:'*',topic:'o1 — מה מחבר אותך'};
+const OPENQ={
+ 'o1 — מה מחבר אותך':'מהי, לדעתך, הסיבה הטובה ביותר לעבוד בפוראטוס?',
+ 'o2 — מה מרחיק אותך':'מהו הדבר האחד שאם נשפר בשנה הקרובה ישפיע במידה הרבה ביותר על חוויית העבודה שלך?',
+ 'o3 — מה היית משנה':'מה חשוב שההנהלה תדע ואולי אינה יודעת כיום?'};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const pct=v=>v==null?'—':(Math.round(v*10)/10)+'%';
@@ -242,7 +248,11 @@ function currentSlice(){
   return sliceFor(ST.pop,ST.co,ST.dept);
 }
 function mergeDepts(list){
-  if(list.length===1) return sliceFor(ST.pop,'*',list[0].key);
+  if(list.length===1){
+    let one=D.slices[list[0].key]; if(!one) return null;
+    if(ST.pop!=='all'&&one.roles&&one.roles[ST.pop]) one=Object.assign({},one,one.roles[ST.pop]);
+    return one;
+  }
   const parts=list.map(d=>sliceFor(ST.pop,'*',d.key)).filter(Boolean);
   if(!parts.length) return null;
   const q={}, doms={}, QIDS=D.meta.questions.map(x=>x.id);
@@ -300,7 +310,9 @@ function dlt(a,b){
 /* ---------- render ---------- */
 function render(){
   const B=bench(); const s=B.s;
-  if(!s){$('noteBox').textContent='אין נתונים להיקף שנבחר, או שיש פחות מ-5 משיבים.';$('noteBox').classList.remove('hide');
+  if(!s){
+    const msg=(D.scope&&D.scope.blocked)?'הדוח אינו מוצג לחשבון זה.':(D.scope&&D.scope.companyOnly?'אין נתונים להצגה.':'אין נתונים להיקף שנבחר, או שיש פחות מ-5 משיבים.');
+    $('noteBox').textContent=msg;$('noteBox').classList.remove('hide');
     $('kpis').innerHTML='';$('tbl').innerHTML='';$('domPies').innerHTML='';$('fillPie').innerHTML='';$('themes').innerHTML='';return}
   $('noteBox').classList.add('hide');
   $('title').textContent='סקר מחוברות 2026 · '+s.label;
@@ -314,7 +326,7 @@ function render(){
     kpi('אחוז מילוי',pct(s.completion),B.grp?'קבוצה: '+pct(B.grp.completion):'')+
     kpi('ציון ממוצע',avg.toFixed(2),B.grp?'קבוצה: '+groupAvg(B.grp):'')+
     kpi('אחוז חיובי (4-5)',pct(fav),B.grp?'קבוצה: '+pct(groupFav(B.grp)):'');
-  fillPie(s,B); domPies(s); table(s,B); cats2022(); themes(s);
+  fillPie(s,B); domPies(s); table(s,B); themes(s);
 }
 function kpi(l,v,f){return `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="f">${f||'&nbsp;'}</div></div>`}
 function groupAvg(g){const a=Object.values(g.q);return (a.reduce((x,y)=>x+y.avg*y.n,0)/a.reduce((x,y)=>x+y.n,0)).toFixed(2)}
@@ -342,12 +354,6 @@ function domain2022(did){
   const vals=dm.qs.map(q=>b[q]&&b[q].avg).filter(v=>v!=null);
   if(!vals.length) return null;
   return vals.reduce((a,b)=>a+b,0)/vals.length;
-}
-function cats2022(){
-  const list=(D.meta.baseline2022Domains||[]);
-  if(!list.length){ $('y22box').style.display='none'; return }
-  $('y22box').style.display='';
-  $('y22rows').innerHTML=list.map(c=>`<tr><td class="l">${esc(c.name)}</td><td class="avg">${c.avg.toFixed(2)}</td><td>${c.fav.toFixed(0)}%</td><td>${c.low.toFixed(0)}%</td></tr>`).join('');
 }
 
 /* ---------- domain table ---------- */
@@ -425,7 +431,7 @@ function themes(s){
   if(!cm){ $('topicChips').innerHTML='';$('themes').innerHTML='<p class="hint">בחרו מחלקה כדי לראות את התשובות הפתוחות שלה.</p>';return}
   const topics=Object.keys(cm);
   if(!cm[ST.topic]) ST.topic=topics[0];
-  $('topicChips').innerHTML=topics.map(t=>`<button class="chip ${t===ST.topic?'on':''}" data-t="${esc(t)}">${esc(cm[t].short)}<b>${cm[t].answered}</b></button>`).join('');
+  $('topicChips').innerHTML=topics.map(t=>`<button class="chip ${t===ST.topic?'on':''}" data-t="${esc(t)}">${esc(OPENQ[t]||cm[t].short)}<b>${cm[t].answered}</b></button>`).join('');
   $('topicChips').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ST.topic=b.dataset.t;themes(s)});
   const c=cm[ST.topic];
   let html='';
