@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-23",
+ "generated": "2026-11-24",
  "total": 63,
  "categories": [
   "עסקים",
@@ -1050,7 +1050,7 @@
    "desc2": "כל מנהל נכנס בקוד משתמש ורואה רק את המחלקה שלו. הנתונים אנונימיים ומצטברים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/mahbarut/",
    "local": "mahbarut/index.html",
-   "updated": "2026-11-22",
+   "updated": "2026-11-23",
    "sizeKB": null,
    "children": []
   }
