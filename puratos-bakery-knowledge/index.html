@@ -6,6 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="version" content="1.0">
 <title>Puratos · מאגר דוחות ניסויים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--pr:#CC092F;--pd:#8B0620;--pl:#fdf2f4;--g50:#f8fafc;--g100:#f1f5f9;--g200:#e2e8f0;--g300:#cbd5e1;--g400:#94a3b8;--g500:#64748b;--g600:#475569;--g700:#334155;--g800:#1e293b;--green:#16a34a;}
@@ -64,7 +66,7 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 .modal-section{margin-bottom:16px;}
 .modal-section-title{font-size:14px;font-weight:700;color:var(--g700);margin-bottom:6px;}
 .modal-section-content{font-size:14px;color:var(--g600);line-height:1.6;}
-.modal-close{position:relative;float:left;background:var(--g100);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--g600);}
+.modal-close{position:relative;float:left;background:var(--g100);border:none;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--g600);}
 .modal-close:hover{background:var(--g200);}
 @media(max-width:640px){.header{padding:12px 16px;}.search-row{flex-direction:column;}.btn{width:100%;}.report-meta{flex-direction:column;gap:6px;}}
 </style>
@@ -74,13 +76,15 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 <meta name="theme-color" content="#0d9488">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Puratos · מא">
+<meta name="apple-mobile-web-app-title" content="דוחות Puratos">
 <link rel="stylesheet" href="../_shared/ailon-design.css?v=1">
 <script src="../_shared/ailon-design.js?v=1" defer></script>
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="description" content="Puratos · מאגר דוחות ניסויים">
+<meta name="description" content="מאגר דוחות ניסויים של Puratos ישראל, תחום הלחמים: חיפוש לפי פרויקט, חוקר או מטרה, צפייה במסקנות ובייצוא ל-CSV.">
 <meta property="og:title" content="Puratos · מאגר דוחות ניסויים">
-<meta property="og:description" content="Puratos · מאגר דוחות ניסויים">
+<meta property="og:description" content="כל דוחות הניסויים של Puratos במקום אחד — חיפוש, מסקנות וייצוא.">
+<meta property="og:image" content="https://lior-ailon.github.io/ailon-task-apps/puratos-bakery-knowledge/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="he_IL">
 </head>
@@ -107,6 +111,7 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
       <input type="text" id="searchInput" class="search-input" aria-label="חיפוש דוחות" placeholder="חיפוש לפי שם פרויקט, חוקר, מאשר או מטרת ניסוי..." oninput="debounceSearch()">
       <button class="btn btn-primary" onclick="loadReports()">🔍 חפש</button>
       <button class="btn btn-secondary" onclick="clearSearch()">נקה</button>
+      <button class="btn btn-secondary" onclick="exportCsv()" title="ייצוא הדוחות המוצגים לקובץ CSV">⬇ ייצוא CSV</button>
     </div>
   </div>
 
@@ -127,6 +132,7 @@ body{font-family:'Heebo',sans-serif;background:var(--g100);color:var(--g800);lin
 var API_BASE='https://base44.app/api/apps/69f63b4536d7a2c6688403df/functions';
 var allReports=[];
 var searchTimer;
+var lastFocus=null;
 
 function debounceSearch(){
   clearTimeout(searchTimer);
@@ -181,7 +187,7 @@ function renderReports(){
     html+='<div class="report-meta-item">📅 '+dateStr+'</div>';
     html+='<div class="report-status '+statusClass+'">'+statusText+'</div>';
     html+='</div>';
-    if(r.conclusions)html+='<div class="report-conclusions">'+escapeHtml(r.conclusions.substring(0,150))+(r.conclusions.length>150?'...':'')+'</div>';
+    if(r.conclusions){var cc=String(r.conclusions);html+='<div class="report-conclusions">'+escapeHtml(cc.substring(0,150))+(cc.length>150?'...':'')+'</div>';}
     html+='</div>';
   });
   list.innerHTML=html;
@@ -211,7 +217,8 @@ function viewReport(id){
     html+='<div class="modal-section"><div class="modal-section-title">🧪 חומרי גלם</div><div class="modal-section-content">';
     for(var i=1;i<=6;i++){
       var ings=r.experiments[i]||[];
-      var hasData=ings.some(function(ing){return ing.name||ing.gram;});
+      if(!Array.isArray(ings))ings=[];
+      var hasData=ings.some(function(ing){return ing&&(ing.name||ing.gram);});
       if(hasData){
         html+='<strong>ניסוי '+i+':</strong><br>';
         ings.forEach(function(ing){
@@ -260,13 +267,16 @@ function viewReport(id){
   
   html+='<div class="modal-actions"><button class="btn btn-secondary" onclick="printReport()">🖨️ הדפסה / PDF</button></div>';
   modal.innerHTML=html;
+  lastFocus=document.activeElement;
   document.getElementById('reportModal').classList.add('show');
   document.body.style.overflow='hidden';
+  var cb=modal.querySelector('.modal-close'); if(cb)cb.focus();
 }
 
 function closeModal(){
   document.getElementById('reportModal').classList.remove('show');
   document.body.style.overflow='';
+  if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
 function printReport(){
   window.print();
@@ -274,6 +284,25 @@ function printReport(){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&document.getElementById('reportModal').classList.contains('show'))closeModal();
 });
+
+function exportCsv(){
+  if(!allReports.length){alert('אין דוחות לייצוא');return;}
+  var rows=[['פרויקט','מטרת ניסוי','חוקר','מאשר','תאריך ביצוע','תאריך עדכון','סטטוס','מסקנות','המשך']];
+  allReports.forEach(function(r){
+    rows.push([r.projectName||'',r.expPurpose||'',r.researcher||'',r.approver||'',
+      r.execDate?new Date(r.execDate).toLocaleDateString('he-IL'):'',r.updateDate||'',
+      r.status==='approved'?'מאושר':(r.status==='draft'?'טיוטה':'הוגש'),
+      r.conclusions||'',r.nextSteps||'']);
+  });
+  var csv='\ufeff'+rows.map(function(row){
+    return row.map(function(v){v=String(v==null?'':v);return '"'+v.replace(/"/g,'""')+'"';}).join(',');
+  }).join('\r\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='puratos-reports-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+}
 
 function clearSearch(){
   document.getElementById('searchInput').value='';

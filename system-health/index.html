@@ -124,8 +124,9 @@ tr:last-child td { border-bottom: none; }
 .status-bad { background: #fee2e2; color: #991b1b; }
 .status-na { background: #e2e8f0; color: #64748b; }
 
-.app-link { color: var(--teal); text-decoration: none; font-weight: 700; }
+.app-link { color: var(--teal); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; min-height: 40px; padding: 4px 2px; }
 .app-link:hover { text-decoration: underline; }
+.app-link:focus-visible { outline: 3px solid rgba(13,148,136,.45); outline-offset: 2px; border-radius: 6px; }
 .live-dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-left:6px; vertical-align:middle; background:#cbd5e1; flex:0 0 auto; }
 .live-dot.ok { background:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,.18); }
 .live-dot.down { background:#ef4444; box-shadow:0 0 0 3px rgba(239,68,68,.18); }
@@ -159,15 +160,17 @@ tr:last-child td { border-bottom: none; }
 <meta name="theme-color" content="#0d9488">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="בריאות המערכ">
+<meta name="apple-mobile-web-app-title" content="בריאות המערכת">
 <link rel="stylesheet" href="../_shared/ailon-design.css?v=1">
 <script src="../_shared/ailon-design.js?v=1" defer></script>
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="description" content="בריאות המערכת | AILON Task">
+<meta name="description" content="דשבורד בריאות המערכת של AILON: בדיקת זמינות חיה לכל האפליקציות, סטטוס אחסון, אבטחה ופערים מול שיטות עבודה מומלצות.">
 <meta property="og:title" content="בריאות המערכת | AILON Task">
-<meta property="og:description" content="בריאות המערכת | AILON Task">
+<meta property="og:description" content="בדיקת זמינות חיה לכל אפליקציות AILON — מי מגיבה, מי נופלת, ומה דורש טיפול.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="he_IL">
+<meta property="og:image" content="https://lior-ailon.github.io/ailon-task-apps/system-health/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <div class="container">
@@ -178,9 +181,9 @@ tr:last-child td { border-bottom: none; }
     <div class="subtitle">דשבורד ניטור ארכיטקטורה | עדכון אחרון: 15.11.2026</div>
   </div>
   <div class="meta">
-    <span class="meta-tag">📊 קרדיטים: 5/250 הודעות</span>
-    <span class="meta-tag">🔌 אינטגרציות: 25/10000</span>
-    <span class="meta-tag">📅 ביקורת הבאה: 1.12.26</span>
+    <span class="meta-tag">📊 קרדיטים (23.11): 41/250 הודעות</span>
+    <span class="meta-tag">🔌 אינטגרציות (23.11): 70.7/10000</span>
+    <span class="meta-tag">📅 ביקורת הבאה: <span id="nextAudit">1.12.26</span></span>
   </div>
 </div>
 
@@ -401,6 +404,19 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+
+<div class="section" id="allAppsSection">
+  <div class="section-title"><span>🌐</span> בדיקת זמינות לכל האפליקציות</div>
+  <p class="section-note" style="font-size:13px;color:#64748b;margin:-4px 0 10px">הטבלה שלמעלה מפרטת את האפליקציות המרכזיות. כאן הקטלוג המלא — לחיצה על כפתור בודקת כל אפליקציה בזמן אמת.</p>
+  <div class="check-row">
+    <button class="check-btn" id="checkAllBtn" type="button">בדוק את כל הקטלוג</button>
+    <input type="search" id="allFilter" placeholder="סינון לפי שם…" aria-label="סינון אפליקציות"
+      style="flex:1;min-width:180px;padding:9px 14px;border-radius:10px;border:1.5px solid #cbd5e1;font-family:inherit;font-size:14px">
+    <span class="check-note" id="checkAllNote" role="status" aria-live="polite">טוען את רשימת האפליקציות…</span>
+  </div>
+  <div id="allAppsList" style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px"></div>
+</div>
+
 <div class="last-audit">
   <h3>📝 ביקורת אחרונה — 26.08.2026</h3>
   <p>
@@ -483,6 +499,10 @@ tr:last-child td { border-bottom: none; }
   }
   countStatus();
 
+  // next monthly audit = 1st of next month
+  var na=document.getElementById('nextAudit');
+  if(na){ var now=new Date(); var nx=new Date(now.getFullYear(),now.getMonth()+1,1);
+    na.textContent=nx.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
   // dynamic "last update" date
   var sub=document.querySelector('.subtitle');
   if(sub){
@@ -497,6 +517,83 @@ tr:last-child td { border-bottom: none; }
 })();
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 </script>
+
+<script>
+(function(){
+  var CATALOG='../app-dashboard/apps.json';
+  var listEl=document.getElementById('allAppsList');
+  var noteEl=document.getElementById('checkAllNote');
+  var btn=document.getElementById('checkAllBtn');
+  var filterEl=document.getElementById('allFilter');
+  var items=[];
+  if(!listEl) return;
+
+  function slug(u){ return (u||'').replace(/\/$/,'').split('/').pop(); }
+
+  function row(a){
+    var d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;min-height:44px;font-size:13px';
+    d.setAttribute('data-name',(a.name||'').toLowerCase());
+    var dot=document.createElement('span');
+    dot.className='live-dot'; dot.setAttribute('aria-hidden','true');
+    dot.style.cssText='width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex:0 0 auto';
+    var a2=document.createElement('a');
+    a2.href=a.url; a2.target='_blank'; a2.rel='noopener';
+    a2.textContent=a.name; a2.style.cssText='color:#0f766e;font-weight:600;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-flex;align-items:center;min-height:32px;flex:1';
+    d.appendChild(dot); d.appendChild(a2);
+    d._dot=dot; d._url=a.url;
+    return d;
+  }
+
+  function paint(){
+    var q=(filterEl.value||'').trim().toLowerCase();
+    [].slice.call(listEl.children).forEach(function(c){
+      c.style.display=(!q||c.getAttribute('data-name').indexOf(q)>-1)?'':'none';
+    });
+  }
+
+  function probe(el){
+    var dot=el._dot;
+    dot.style.background='#f59e0b';
+    var opts={method:'GET',cache:'no-store',redirect:'follow'};
+    if(typeof AbortSignal!=='undefined'&&AbortSignal.timeout)opts.signal=AbortSignal.timeout(12000);
+    return fetch(el._url,opts).then(function(r){
+      dot.style.background=r.ok?'#16a34a':'#dc2626';
+      dot.title=r.ok?'מגיב ('+r.status+')':'שגיאה '+r.status;
+      return r.ok;
+    }).catch(function(){
+      dot.style.background='#dc2626'; dot.title='לא מגיב'; return false;
+    });
+  }
+
+  fetch(CATALOG+'?v='+Date.now(),{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(d){
+      items=(d.apps||[]).filter(function(a){return a.url;});
+      items.sort(function(a,b){return String(a.name).localeCompare(String(b.name),'he');});
+      items.forEach(function(a){listEl.appendChild(row(a));});
+      noteEl.textContent=items.length+' אפליקציות בקטלוג · לחצו לבדיקה';
+      filterEl.addEventListener('input',paint);
+      btn.addEventListener('click',function(){
+        btn.disabled=true;
+        var all=[].slice.call(listEl.children).filter(function(c){return c.style.display!=='none';});
+        var done=0,ok=0;
+        noteEl.textContent='בודק '+all.length+'…';
+        Promise.all(all.map(function(el){
+          return probe(el).then(function(good){done++;if(good)ok++;
+            noteEl.textContent='בודק… '+done+'/'+all.length;});
+        })).then(function(){
+          btn.disabled=false;
+          var bad=all.length-ok;
+          noteEl.textContent=(bad===0?'כל '+all.length+' האפליקציות מגיבות ✓':bad+' מתוך '+all.length+' לא מגיבות כרגע');
+          noteEl.style.color=bad>0?'#b91c1c':'#047857';
+        });
+      });
+    })
+    .catch(function(e){ noteEl.textContent='לא הצלחתי לטעון את הקטלוג ('+e.message+')'; });
+})();
+</script>
+
 <script src="../_shared/ailon-shell.js" defer></script>
 </body>
 </html>

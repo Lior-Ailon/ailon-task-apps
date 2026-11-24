@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
 <style>
 :root{
   --teal:#0F766E;--teal-600:#0B5A54;--teal-50:#F0F6F4;--teal-100:#D8E6E2;
@@ -151,6 +151,13 @@ body{background:var(--bg)}
 .searchbox input:focus{box-shadow:none;border-color:var(--ink)}
 .cat-chip,.count-line{font-weight:500}
 </style>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta property="og:title" content="דשבורד מנהלים · AILON">
+<meta property="og:image" content="https://lior-ailon.github.io/ailon-task-apps/app-dashboard/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="כל אפליקציות AILON במסך אחד — חיפוש, סינון, גרפים וייצוא ל-CSV.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
 </head>
 <body data-ailon-hero>
 
@@ -197,7 +204,7 @@ body{background:var(--bg)}
     <div class="searchrow">
       <div class="searchbox">
         <span class="mag">🔍</span>
-        <input id="q" type="search" placeholder="חיפוש לפי שם, תיאור או קטגוריה…" autocomplete="off">
+        <input id="q" type="search" placeholder="חיפוש לפי שם, תיאור או קטגוריה…" aria-label="חיפוש אפליקציות" autocomplete="off">
       </div>
       <select class="sel" id="statusFilter">
         <option value="all">כל המצבים</option>
@@ -212,13 +219,14 @@ body{background:var(--bg)}
         <option value="recent">מיון: עדכון אחרון</option>
         <option value="stale">מיון: הזנחה</option>
       </select>
+      <button class="sel" id="csvBtn" type="button" title="ייצוא הרשימה המסוננת לקובץ CSV">⬇ ייצוא CSV</button>
     </div>
     <div class="chips" id="chips"></div>
     <div class="count-line" id="countLine"></div>
   </section>
 
   <section class="grid" id="grid" aria-live="polite"></section>
-  <div class="empty" id="empty" hidden>לא נמצאו אפליקציות שמתאימות לסינון.</div>
+  <div class="empty" id="empty" hidden>לא נמצאו אפליקציות שמתאימות לסינון. <button id="clearFilters" type="button" style="margin-inline-start:8px;background:#0F766E;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:inherit;font-weight:600;cursor:pointer">נקה סינון</button></div>
 
   <div class="footer">
     <b>AILON</b> · Dream it. Plan it. Achieve it. · הדשבורד מתעדכן עם כל אפליקציה חדשה
@@ -229,7 +237,7 @@ body{background:var(--bg)}
 
 <script>
 (function(){
-  var DATA=null, state={q:'',cat:'all',status:'all',sort:'cat'};
+  var DATA=null, currentList=[], state={q:'',cat:'all',status:'all',sort:'cat'};
   var CAT_ICON={'עסקים':'🏢','פוראטוס':'🏭','מנטורינג':'🧭','מסכים ולוחות':'📺','תוכן ויהדות':'📖','ילדים ולמידה':'👶','אישי ומשפחה':'🏠','פורטלים':'🧰'};
   var CAT_COLOR={'עסקים':'#0F766E','פוראטוס':'#2C6B8A','מנטורינג':'#5B6B8A','מסכים ולוחות':'#C8A63E','תוכן ויהדות':'#3C7A6E','ילדים ולמידה':'#B4705C','אישי ומשפחה':'#8A6D14','פורטלים':'#93A3A8'};
   var STATUS_COLOR={live:'#0F766E',beta:'#C8A63E',demo:'#5B6B8A',archived:'#C2CCD0'};
@@ -274,6 +282,8 @@ body{background:var(--bg)}
     }
   }
 
+  function esc(v){ return String(v===null||v===undefined?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
   function el(tag,cls,html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!==undefined)e.innerHTML=html; return e; }
 
   function render(){
@@ -281,7 +291,7 @@ body{background:var(--bg)}
       if(state.cat!=='all' && a.cat!==state.cat) return false;
       if(state.status!=='all' && a.status!==state.status) return false;
       if(state.q){
-        var hay=(a.name+' '+a.desc+' '+a.desc2+' '+a.cat+' '+a.slug).toLowerCase();
+        var hay=((a.name||'')+' '+(a.desc||'')+' '+(a.desc2||'')+' '+(a.cat||'')+' '+(a.slug||'')).toLowerCase();
         if(hay.indexOf(state.q.toLowerCase())===-1) return false;
       }
       return true;
@@ -293,6 +303,7 @@ body{background:var(--bg)}
       stale:function(a,b){ return (daysOf(b.updated)||0)-(daysOf(a.updated)||0); }
     }[state.sort];
     list.sort(cmp);
+    currentList=list;
 
     document.getElementById('countLine').textContent='מציג '+list.length+' מתוך '+DATA.total+' אפליקציות';
 
@@ -305,14 +316,14 @@ body{background:var(--bg)}
       var head=el('div','app-head');
       head.appendChild(el('div','app-icon',a.icon||'📄'));
       var title=el('div','app-title');
-      title.appendChild(el('div','app-name',a.name));
-      title.appendChild(el('div','app-cat',(CAT_ICON[a.cat]||'')+' '+a.cat));
+      title.appendChild(el('div','app-name',esc(a.name)));
+      title.appendChild(el('div','app-cat',esc((CAT_ICON[a.cat]||'')+' '+a.cat)));
       head.appendChild(title);
       head.appendChild(el('span','badge '+a.status,a.statusLabel||STATUS_NAME[a.status]));
 
       var desc=el('div','app-desc');
-      desc.appendChild(el('div','',a.desc));
-      if(a.desc2) desc.appendChild(el('div','second',a.desc2));
+      desc.appendChild(el('div','',esc(a.desc)));
+      if(a.desc2) desc.appendChild(el('div','second',esc(a.desc2)));
 
       card.appendChild(head);
       card.appendChild(desc);
@@ -368,7 +379,7 @@ body{background:var(--bg)}
     function add(val,label,count){
       var b=document.createElement('button');
       b.className='chip'+(state.cat===val?' on':'');
-      b.innerHTML=label+(count!==undefined?' <span class="n">'+count+'</span>':'');
+      b.innerHTML=esc(label)+(count!==undefined?' <span class="n">'+count+'</span>':'');
       b.addEventListener('click',function(){ state.cat=val; buildChips(); render(); });
       box.appendChild(b);
     }
@@ -405,6 +416,12 @@ body{background:var(--bg)}
   }
 
   function charts(){
+    if(typeof Chart==='undefined'){
+      [].slice.call(document.querySelectorAll('.chart-box')).forEach(function(b){
+        b.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#93a3a8;font-size:.8rem;text-align:center">הגרפים לא נטענו (אין חיבור ל-CDN). הרשימה והסינון עובדים כרגיל.</div>';
+      });
+      return;
+    }
     Chart.defaults.font.family="'Heebo',sans-serif";
     Chart.defaults.color='#64748b';
     var s=DATA.apps;
@@ -450,9 +467,39 @@ body{background:var(--bg)}
     });
   }
 
+  function csvCell(v){ v=(v===null||v===undefined)?'':String(v); return '"'+v.replace(/"/g,'""')+'"'; }
+
+  function exportCsv(){
+    if(!currentList.length){ toast('אין שורות לייצוא'); return; }
+    var head=['שם','קטגוריה','סטטוס','תיאור','כתובת','עודכן'];
+    var rows=[head.map(csvCell).join(',')];
+    currentList.forEach(function(a){
+      rows.push([a.name,a.cat,(a.statusLabel||STATUS_NAME[a.status]||a.status),a.desc,a.url,a.updated].map(csvCell).join(','));
+    });
+    var blob=new Blob(['\ufeff'+rows.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+    var url=URL.createObjectURL(blob);
+    var link=document.createElement('a');
+    link.href=url;
+    link.download='ailon-apps-'+new Date().toISOString().slice(0,10)+'.csv';
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setTimeout(function(){URL.revokeObjectURL(url);},1500);
+    toast('יוצאו '+currentList.length+' אפליקציות');
+  }
+
   function bind(){
+    var csvBtn=document.getElementById('csvBtn');
+    if(csvBtn) csvBtn.addEventListener('click',exportCsv);
     var q=document.getElementById('q');
     q.addEventListener('input',function(){ state.q=q.value.trim(); render(); });
+    document.addEventListener('keydown',function(e){
+      var tag=(e.target.tagName||'').toLowerCase();
+      if(e.key==='/'&&tag!=='input'&&tag!=='select'&&tag!=='textarea'){ e.preventDefault(); q.focus(); }
+      if(e.key==='Escape'&&document.activeElement===q){ q.value=''; state.q=''; render(); }
+    });
+    var cf=document.getElementById('clearFilters');
+    if(cf) cf.addEventListener('click',function(){ state.q=''; state.cat='all'; state.status='all';
+      document.getElementById('q').value=''; document.getElementById('statusFilter').value='all';
+      buildChips(); render(); });
     document.getElementById('statusFilter').addEventListener('change',function(e){ state.status=e.target.value; render(); });
     document.getElementById('sortBy').addEventListener('change',function(e){ state.sort=e.target.value; render(); });
   }
@@ -474,5 +521,6 @@ body{background:var(--bg)}
   if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
 })();
 </script>
+<script src="../_shared/ailon-shell.js" defer></script>
 </body>
 </html>
