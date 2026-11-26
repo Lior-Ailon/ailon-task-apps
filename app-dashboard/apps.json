@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-25",
+ "generated": "2026-11-26",
  "total": 63,
  "categories": [
   "עסקים",
@@ -391,7 +391,7 @@
    "desc2": "התוצאות נאספות אוטומטית לדוח אקסל.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/engagement-survey/",
    "local": "engagement-survey/index.html",
-   "updated": "2026-11-13",
+   "updated": "2026-11-25",
    "daysSince": 16,
    "sizeKB": 204,
    "children": []
@@ -1050,7 +1050,7 @@
    "desc2": "כל מנהל נכנס בקוד משתמש ורואה רק את המחלקה שלו. הנתונים אנונימיים ומצטברים.",
    "url": "https://lior-ailon.github.io/ailon-task-apps/mahbarut/",
    "local": "mahbarut/index.html",
-   "updated": "2026-11-23",
+   "updated": "2026-11-25",
    "sizeKB": null,
    "children": []
   }
